@@ -1,4 +1,4 @@
 coherence-hibernate-integration
 ===============================
 
-Coherence Hibernate Integration
+Welcome to the Coherence Hibernate Integration 
