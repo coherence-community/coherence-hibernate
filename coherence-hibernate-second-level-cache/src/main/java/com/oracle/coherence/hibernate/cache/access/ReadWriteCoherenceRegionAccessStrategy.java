@@ -44,7 +44,7 @@ extends CoherenceRegionAccessStrategy<T>
     @Override
     public Object get(Object key, long txTimestamp) throws CacheException
     {
-        debugf("%s.get(%s, %s)", this, key, txTimestamp);
+        debugf("%s.getValue(%s, %s)", this, key, txTimestamp);
         return getCoherenceRegion().invoke(key, new GetProcessor());
     }
 

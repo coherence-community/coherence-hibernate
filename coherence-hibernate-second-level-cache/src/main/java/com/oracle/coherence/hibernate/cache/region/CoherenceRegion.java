@@ -7,7 +7,6 @@ import com.tangosol.util.Base;
 import com.tangosol.util.ConcurrentMap;
 import com.tangosol.util.InvocableMap;
 import com.tangosol.util.extractor.IdentityExtractor;
-import com.tangosol.util.extractor.KeyExtractor;
 import com.tangosol.util.filter.AlwaysFilter;
 import com.tangosol.util.processor.ConditionalPut;
 import com.tangosol.util.processor.ConditionalRemove;
@@ -30,7 +29,7 @@ import java.util.UUID;
  * Note that there is a concept (and therefore terminology) mapping between the Hibernate world and the Coherence world.
  * Hibernate uses "cache" to mean the whole, and "region" to mean a part of the whole.  Coherence uses "data grid" to
  * mean the whole, and "NamedCache" to mean a part of the whole.  So a "region" to Hibernate is a NamedCache to
- * Coherence.  Therefore CoherenceRegion is basically and Adapter, adapting the Region SPI to the NamedCache API by
+ * Coherence.  Therefore CoherenceRegion is basically an Adapter, adapting the Region SPI to the NamedCache API by
  * encapsulating and delegating to a NamedCache.
  *
  * @author Randy Stafford
@@ -55,7 +54,7 @@ implements Region
     /**
     * The default lock lease duration in milliseconds.
     */
-    protected static final int DEFAULT_LOCK_LEASE_DURATION = 60 * 1000;
+    public static final int DEFAULT_LOCK_LEASE_DURATION = 60 * 1000;
 
 
     // ---- Fields
@@ -81,7 +80,7 @@ implements Region
      */
     public CoherenceRegion(NamedCache namedCache, Properties properties)
     {
-        debugf("%s(%s, %s)", getClass().getName(), properties);
+        debugf("%s(%s, %s)", getClass().getName(), namedCache, properties);
         lockLeaseDuration = (int) getDurationProperty(
                 properties,
                 LOCK_LEASE_DURATION_PROPERTY_NAME,
@@ -114,7 +113,7 @@ implements Region
     {
         StringBuilder stringBuilder = new StringBuilder(getClass().getName());
         stringBuilder.append("(");
-        stringBuilder.append(getName());
+        stringBuilder.append(namedCache.getCacheName());
         stringBuilder.append(")");
         return stringBuilder.toString();
     }
@@ -139,10 +138,10 @@ implements Region
      *
      * @return the Value at the argument key in this CoherenceRegion
      */
-    public Value get(Object key)
+    public Value getValue(Object key)
     {
         //don't use an EntryProcessor here, because that precludes near cache hits.
-        //access strategies with more strict concurrency control requirements call invoke() not get().
+        //access strategies with more strict concurrency control requirements call invoke() not getValue().
         return (Value) getNamedCache().get(key);
     }
 
@@ -152,7 +151,7 @@ implements Region
      * @param key the key at which to put the value
      * @param value the value to put
      */
-    public void put(Object key, Object value)
+    public void putValue(Object key, Value value)
     {
         getNamedCache().invoke(key, new ConditionalPut(AlwaysFilter.INSTANCE, value));
     }
@@ -236,8 +235,7 @@ implements Region
     public boolean contains(Object key)
     {
         debugf("%s.contains(%s)", this, key);
-        Object cachedKey = getNamedCache().invoke(key, new ExtractorProcessor(new KeyExtractor(IdentityExtractor.INSTANCE)));
-        return cachedKey != null;
+        return getNamedCache().invoke(key, new ExtractorProcessor(IdentityExtractor.INSTANCE)) != null;
     }
 
     /**
@@ -474,6 +472,37 @@ implements Region
 
         // ---- interface java.lang.Object
 
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean equals(Object someObject)
+        {
+            if (this == someObject) return true;
+            if (someObject == null || getClass() != someObject.getClass()) return false;
+
+            Value value1 = (Value) someObject;
+
+            if (timestamp != value1.timestamp) return false;
+            if (!value.equals(value1.value)) return false;
+            if (version != null ? !version.equals(value1.version) : value1.version != null) return false;
+
+            return true;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int hashCode()
+        {
+            int result = (int) (timestamp ^ (timestamp >>> 32));
+            result = 31 * result + value.hashCode();
+            result = 31 * result + (version != null ? version.hashCode() : 0);
+            return result;
+        }
+
         /**
          * {@inheritDoc}
          */
@@ -661,6 +690,7 @@ implements Region
 
             // ---- interface java.lang.Object
 
+
             /**
              * {@inheritDoc}
              */
@@ -673,8 +703,7 @@ implements Region
                 SoftLock softLock = (SoftLock) someObject;
 
                 if (sequenceNumber != softLock.sequenceNumber) return false;
-                if (acquirerId != null ? !acquirerId.equals(softLock.acquirerId) : softLock.acquirerId != null)
-                    return false;
+                if (!acquirerId.equals(softLock.acquirerId)) return false;
 
                 return true;
             }
@@ -685,7 +714,7 @@ implements Region
             @Override
             public int hashCode()
             {
-                int result = acquirerId != null ? acquirerId.hashCode() : 0;
+                int result = acquirerId.hashCode();
                 result = 31 * result + (int) (sequenceNumber ^ (sequenceNumber >>> 32));
                 return result;
             }

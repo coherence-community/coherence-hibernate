@@ -68,7 +68,7 @@ implements EntityRegionAccessStrategy
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
         debugf("%s.afterInsert(%s, %s, %s)", getClass().getName(), key, value, version);
-        getCoherenceRegion().put(key, newCacheValue(value, version));
+        getCoherenceRegion().putValue(key, newCacheValue(value, version));
         return true;
     }
 

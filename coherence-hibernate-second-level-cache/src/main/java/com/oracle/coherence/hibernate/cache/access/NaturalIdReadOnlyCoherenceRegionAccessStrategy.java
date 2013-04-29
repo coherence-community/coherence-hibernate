@@ -69,7 +69,7 @@ implements NaturalIdRegionAccessStrategy
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
         debugf("%s.afterInsert(%s, %s)", getClass().getName(), key, value);
-        getCoherenceRegion().put(key, newCacheValue(value, null));
+        getCoherenceRegion().putValue(key, newCacheValue(value, null));
         return true;
     }
 

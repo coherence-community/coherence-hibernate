@@ -30,4 +30,26 @@ implements GeneralDataRegion
     }
 
 
+    // ---- Interface org.hibernate.cache.spi.GeneralDataRegion
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object get(Object key)
+    {
+        Value cacheValue = super.getValue(key);
+        return (cacheValue == null) ? null : cacheValue.getValue();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void put(Object key, Object value)
+    {
+        super.putValue(key, new Value(value, null, nextTimestamp()));
+    }
+
+
 }

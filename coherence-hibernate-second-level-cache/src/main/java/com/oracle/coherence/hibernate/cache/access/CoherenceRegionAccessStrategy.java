@@ -56,7 +56,7 @@ implements RegionAccessStrategy
      * A sequence number for soft locks acquired by this CoherenceRegionAccessStrategy.
      * Monotonically increasing characteristic enforced by usage.
      */
-    private AtomicLong softLockSequenceNumber = new AtomicLong(1L);
+    private AtomicLong softLockSequenceNumber = new AtomicLong(0L);
 
     /**
      * A unique identifier of this CoherenceRegionAccessStrategy.
@@ -139,8 +139,8 @@ implements RegionAccessStrategy
     @Override
     public Object get(Object key, long txTimestamp) throws CacheException
     {
-        debugf("%s.get(%s, %s)", this, key, txTimestamp);
-        CoherenceRegion.Value cacheValue = getCoherenceRegion().get(key);
+        debugf("%s.getValue(%s, %s)", this, key, txTimestamp);
+        CoherenceRegion.Value cacheValue = getCoherenceRegion().getValue(key);
         return (cacheValue == null)? null : cacheValue.getValue();
     }
 

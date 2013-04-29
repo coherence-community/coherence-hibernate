@@ -44,6 +44,16 @@ implements RegionFactory
     public static final String CACHE_CONFIG_FILE_PATH_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "cache_config_file_path";
 
     /**
+     * The name of the property specifying the severity level at which debug messages should be logged.
+     */
+    public static final String DEBUG_MESSAGE_SEVERITY_LEVEL_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "debug_message_severity_level";
+
+    /**
+     * The severity level at which debug messages should be logged by default.
+     */
+    public static final int DEFAULT_DEBUG_MESSAGE_SEVERITY_LEVEL = 7;
+
+    /**
      * The name of the property specifying whether to dump stack on debug messages.
      */
     public static final String DUMP_STACK_ON_DEBUG_MESSAGE_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "dump_stack_on_debug_message";
@@ -51,10 +61,15 @@ implements RegionFactory
     /**
      * The default path to the cache configuration file.
      */
-    protected static final String DEFAULT_CACHE_CONFIG_FILE_PATH = "config/hibernate-cache-config.xml";
+    protected static final String DEFAULT_CACHE_CONFIG_FILE_PATH = "hibernate-second-level-cache-config.xml";
 
 
     // ---- Fields
+
+    /**
+     * The severity level at which debug messages should be logged.
+     */
+    private static int debugMessageSeverityLevel = DEFAULT_DEBUG_MESSAGE_SEVERITY_LEVEL;
 
     /**
      * A flag indicating whether to dump stack on debug messages.
@@ -105,7 +120,7 @@ implements RegionFactory
      */
     public static void debugf(String message, Object ... arguments)
     {
-        CacheFactory.log(String.format(message, arguments), 9);
+        CacheFactory.log(String.format(message, arguments), debugMessageSeverityLevel);
         if (dumpStackOnDebugMessage) Thread.dumpStack();
     }
 
@@ -137,6 +152,7 @@ implements RegionFactory
                 getClass().getClassLoader());
         setConfigurableCacheFactory(factory);
 
+        debugMessageSeverityLevel = Integer.getInteger(DEBUG_MESSAGE_SEVERITY_LEVEL_PROPERTY_NAME, DEFAULT_DEBUG_MESSAGE_SEVERITY_LEVEL);
         dumpStackOnDebugMessage = Boolean.getBoolean(DUMP_STACK_ON_DEBUG_MESSAGE_PROPERTY_NAME);
     }
 
