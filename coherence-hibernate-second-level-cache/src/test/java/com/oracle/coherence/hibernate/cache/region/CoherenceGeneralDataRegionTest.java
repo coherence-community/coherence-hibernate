@@ -1,12 +1,6 @@
 package com.oracle.coherence.hibernate.cache.region;
 
-import com.oracle.coherence.hibernate.cache.CoherenceRegionFactory;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Map;
-import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -17,43 +11,20 @@ import static org.junit.Assert.*;
  * @author Randy Stafford
  */
 public class CoherenceGeneralDataRegionTest
+extends AbstractCoherenceRegionTest
 {
 
 
-    // ---- Fields
+    // ---- Subclass responsibility
 
     /**
-     * The CoherenceTimestampsRegion in the test fixture.
+     * Return a new CoherenceRegion of the appropriate subtype.
+     *
+     * @return a CoherenceRegion of the appropriate subtype
      */
-    private CoherenceTimestampsRegion coherenceTimestampsRegion;
-
-
-    // ---- Fixture lifecycle
-
-    /**
-     * Set up the test fixture.
-     */
-    @Before
-    public void setUp()
+    protected CoherenceRegion newCoherenceRegion()
     {
-        //use a started CoherenceRegionFactory to build the CoherenceTimestampsRegion in the test fixture, as a convenience
-        //to ensure the cluster is joined and the cache factory is configured etc.
-        Properties properties = new Properties();
-        CoherenceRegionFactory coherenceRegionFactory = new CoherenceRegionFactory();
-        coherenceRegionFactory.start(null, properties);
-
-        String regionName = "CoherenceGeneralDataRegionTest";
-        coherenceTimestampsRegion = (CoherenceTimestampsRegion) coherenceRegionFactory.buildTimestampsRegion(regionName, properties);
-    }
-
-    /**
-     * Tear down the test fixture.
-     */
-    @After
-    public void tearDown()
-    {
-        coherenceTimestampsRegion.destroy();
-        coherenceTimestampsRegion = null;
+        return newCoherenceTimestampsRegion();
     }
 
 
@@ -65,6 +36,7 @@ public class CoherenceGeneralDataRegionTest
     @Test
     public void testPutGet()
     {
+        CoherenceTimestampsRegion coherenceTimestampsRegion = getCoherenceTimestampsRegion();
         Object key = "testPutGet";
         Object objectPut = "testObject";
         coherenceTimestampsRegion.put(key, objectPut);

@@ -44,7 +44,7 @@ extends CoherenceRegionAccessStrategy<T>
     @Override
     public Object get(Object key, long txTimestamp) throws CacheException
     {
-        debugf("%s.getValue(%s, %s)", this, key, txTimestamp);
+        debugf("%s.get(%s, %s)", this, key, txTimestamp);
         return getCoherenceRegion().invoke(key, new GetProcessor());
     }
 
@@ -54,7 +54,7 @@ extends CoherenceRegionAccessStrategy<T>
     @Override
     public org.hibernate.cache.spi.access.SoftLock lockItem(Object key, Object version) throws CacheException
     {
-        debugf("%s.lockItem(%s, %s, %s)", this, key, version);
+        debugf("%s.lockItem(%s, %s)", this, key, version);
         CoherenceRegion.Value valueIfAbsent = newCacheValue(null, version);
         CoherenceRegion.Value.SoftLock newSoftLock = newSoftLock();
         SoftLockItemProcessor processor = new SoftLockItemProcessor(valueIfAbsent, newSoftLock);
@@ -82,7 +82,7 @@ extends CoherenceRegionAccessStrategy<T>
     @Override
     public void unlockItem(Object key, org.hibernate.cache.spi.access.SoftLock lock) throws CacheException
     {
-        debugf("%s.unlockItem(%s, %s, %s)", this, key, lock);
+        debugf("%s.unlockItem(%s, %s)", this, key, lock);
         SoftUnlockItemProcessor processor = new SoftUnlockItemProcessor(lock, getCoherenceRegion().nextTimestamp());
         getCoherenceRegion().invoke(key, processor);
     }
@@ -576,8 +576,9 @@ extends CoherenceRegionAccessStrategy<T>
         {
             if (entry.isPresent())
             {
-                CoherenceRegion.Value cacheValue = (CoherenceRegion.Value) entry;
+                CoherenceRegion.Value cacheValue = (CoherenceRegion.Value) entry.getValue();
                 cacheValue.releaseSoftLock(softLock, timeOfRelease);
+                entry.setValue(cacheValue);
             }
             return null;
         }

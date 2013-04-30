@@ -1,16 +1,10 @@
 package com.oracle.coherence.hibernate.cache.region;
 
-import com.oracle.coherence.hibernate.cache.CoherenceRegionFactory;
 import com.tangosol.util.extractor.IdentityExtractor;
 import com.tangosol.util.processor.ExtractorProcessor;
-import org.hibernate.cache.internal.CacheDataDescriptionImpl;
-import org.hibernate.cache.spi.CacheDataDescription;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
-import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -21,51 +15,20 @@ import static org.junit.Assert.*;
  * @author Randy Stafford
  */
 public class CoherenceRegionTest
+extends AbstractCoherenceRegionTest
 {
 
 
-    // ---- Constants
+    // ---- Subclass responsibility
 
     /**
-     * The name of the CoherenceRegion used in tests.
+     * Return a new CoherenceRegion of the appropriate subtype.
+     *
+     * @return a CoherenceRegion of the appropriate subtype
      */
-    private static final String REGION_NAME = "CoherenceRegionTest";
-
-
-    // ---- Fields
-
-    /**
-     * The CoherenceEntityRegion in the test fixture.
-     */
-    private CoherenceEntityRegion coherenceEntityRegion;
-
-
-    // ---- Fixture lifecycle
-
-    /**
-     * Set up the test fixture.
-     */
-    @Before
-    public void setUp()
+    protected CoherenceRegion newCoherenceRegion()
     {
-        //use a started CoherenceRegionFactory to build the CoherenceEntityRegion in the test fixture, as a convenience
-        //to ensure the cluster is joined and the cache factory is configured etc.
-        Properties properties = new Properties();
-        CoherenceRegionFactory coherenceRegionFactory = new CoherenceRegionFactory();
-        coherenceRegionFactory.start(null, properties);
-
-        CacheDataDescription cacheDataDescription = new CacheDataDescriptionImpl(true, false, null);
-        coherenceEntityRegion = (CoherenceEntityRegion) coherenceRegionFactory.buildEntityRegion(REGION_NAME, properties, cacheDataDescription);
-    }
-
-    /**
-     * Tear down the test fixture.
-     */
-    @After
-    public void tearDown()
-    {
-        coherenceEntityRegion.destroy();
-        coherenceEntityRegion = null;
+        return newCoherenceEntityRegion();
     }
 
 
@@ -78,7 +41,7 @@ public class CoherenceRegionTest
     public void testToString()
     {
         //this is mainly to ensure no NPEs, infinite loops, etc. in toString()
-        String toString = coherenceEntityRegion.toString();
+        String toString = getCoherenceEntityRegion().toString();
         assertNotNull("Expect non-null toString()", toString);
         assertTrue("Expect non-empty toString()", toString.length() > 0);
     }
@@ -94,7 +57,7 @@ public class CoherenceRegionTest
         CoherenceRegion.Value valuePut = putValue(key);
         Object objectPut = valuePut.getValue();
 
-        CoherenceRegion.Value valueGot = coherenceEntityRegion.getValue(key);
+        CoherenceRegion.Value valueGot = getCoherenceEntityRegion().getValue(key);
         Object objectGot = valueGot.getValue();
 
         assertEquals("Expect got same value as put", valuePut, valueGot);
@@ -107,15 +70,17 @@ public class CoherenceRegionTest
     @Test
     public void testEvict()
     {
+        CoherenceEntityRegion coherenceEntityRegion = getCoherenceEntityRegion();
+
         Object key = "testEvict";
         putValue(key);
 
         long elementCountPreEviction = coherenceEntityRegion.getElementCountInMemory();
-        coherenceEntityRegion.evict(key);
+        getCoherenceEntityRegion().evict(key);
         long elementCountPostEviction = coherenceEntityRegion.getElementCountInMemory();
 
         assertEquals("Expect one less element post-eviction", elementCountPreEviction-1, elementCountPostEviction);
-        assertTrue("Expect region not to contain evicted key", !coherenceEntityRegion.contains(key));
+        assertTrue("Expect region not to contain evicted key", !getCoherenceEntityRegion().contains(key));
     }
 
     /**
@@ -124,6 +89,8 @@ public class CoherenceRegionTest
     @Test
     public void testEvictAll()
     {
+        CoherenceEntityRegion coherenceEntityRegion = getCoherenceEntityRegion();
+
         Object key = "testEvictAll";
         putValue(key);
 
@@ -137,7 +104,7 @@ public class CoherenceRegionTest
     //@Test
     public void testLockCache()
     {
-        //how to test this?
+        //TODO: how to test this?
     }
 
     /**
@@ -146,7 +113,7 @@ public class CoherenceRegionTest
     //@Test
     public void testUnlockCache()
     {
-        //how to test this?
+        //TODO: how to test this?
     }
 
     /**
@@ -157,7 +124,7 @@ public class CoherenceRegionTest
     {
         Object key = "testInvoke";
         CoherenceRegion.Value valuePut = putValue(key);
-        Object invocationReturnValue = coherenceEntityRegion.invoke(key, new ExtractorProcessor(IdentityExtractor.INSTANCE));
+        Object invocationReturnValue = getCoherenceEntityRegion().invoke(key, new ExtractorProcessor(IdentityExtractor.INSTANCE));
         assertEquals("Expect ExtractorProcessor invocation to return same value put", valuePut, invocationReturnValue);
     }
 
@@ -168,7 +135,7 @@ public class CoherenceRegionTest
     @Test
     public void testGetName()
     {
-        assertEquals("Expect correct region name", REGION_NAME, coherenceEntityRegion.getName());
+        assertEquals("Expect correct region name", getRegionName(), getCoherenceEntityRegion().getName());
     }
 
     /**
@@ -177,7 +144,7 @@ public class CoherenceRegionTest
     //@Test
     public void testDestroy()
     {
-        //how to test this?
+        //TODO: how to test this?
     }
 
     /**
@@ -188,7 +155,7 @@ public class CoherenceRegionTest
     {
         Object key = "testContains";
         putValue(key);
-        assertTrue("Expect region contains value put", coherenceEntityRegion.contains(key));
+        assertTrue("Expect region contains value put", getCoherenceEntityRegion().contains(key));
     }
 
     /**
@@ -197,7 +164,7 @@ public class CoherenceRegionTest
     @Test
     public void testGetSizeInMemory()
     {
-        assertEquals("Expect size in memory -1", -1, coherenceEntityRegion.getSizeInMemory());
+        assertEquals("Expect size in memory -1", -1, getCoherenceEntityRegion().getSizeInMemory());
     }
 
     /**
@@ -206,6 +173,7 @@ public class CoherenceRegionTest
     @Test
     public void testGetElementCountInMemory()
     {
+        CoherenceEntityRegion coherenceEntityRegion = getCoherenceEntityRegion();
         coherenceEntityRegion.evictAll();
         assertEquals("Expect element count in memory 0", 0, coherenceEntityRegion.getElementCountInMemory());
         putValue("testGetElementCountInMemory");
@@ -218,7 +186,7 @@ public class CoherenceRegionTest
     @Test
     public void testGetElementCountOnDisk()
     {
-        assertEquals("Expect element count on disk -1", -1, coherenceEntityRegion.getElementCountOnDisk());
+        assertEquals("Expect element count on disk -1", -1, getCoherenceEntityRegion().getElementCountOnDisk());
     }
 
     /**
@@ -227,7 +195,7 @@ public class CoherenceRegionTest
     @Test
     public void testToMap()
     {
-        assertTrue("Expect a Map", coherenceEntityRegion.toMap() instanceof Map);
+        assertTrue("Expect a Map", getCoherenceEntityRegion().toMap() instanceof Map);
     }
 
     /**
@@ -236,7 +204,7 @@ public class CoherenceRegionTest
     @Test
     public void testNextTimestamp()
     {
-        long currentTime = coherenceEntityRegion.nextTimestamp();
+        long currentTime = getCoherenceEntityRegion().nextTimestamp();
         assertTrue("Expect positive current time value", currentTime > 0);
     }
 
@@ -246,7 +214,7 @@ public class CoherenceRegionTest
     @Test
     public void testTimeout()
     {
-        assertEquals("Expect default lock lease duration", CoherenceRegion.DEFAULT_LOCK_LEASE_DURATION, coherenceEntityRegion.getTimeout());
+        assertEquals("Expect default lock lease duration", CoherenceRegion.DEFAULT_LOCK_LEASE_DURATION, getCoherenceEntityRegion().getTimeout());
     }
 
 
@@ -260,6 +228,7 @@ public class CoherenceRegionTest
      */
     private CoherenceRegion.Value putValue(Object key)
     {
+        CoherenceEntityRegion coherenceEntityRegion = getCoherenceEntityRegion();
         Object objectPut = "testObject";
         Object versionPut = 1;
         CoherenceRegion.Value valuePut = new CoherenceRegion.Value(objectPut, versionPut, coherenceEntityRegion.nextTimestamp());

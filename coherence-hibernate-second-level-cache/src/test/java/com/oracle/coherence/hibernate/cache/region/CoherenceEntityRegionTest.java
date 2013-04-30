@@ -1,17 +1,12 @@
 package com.oracle.coherence.hibernate.cache.region;
 
-import com.oracle.coherence.hibernate.cache.CoherenceRegionFactory;
 import com.oracle.coherence.hibernate.cache.access.CoherenceRegionAccessStrategy;
 import com.oracle.coherence.hibernate.cache.access.EntityNonstrictReadWriteCoherenceRegionAccessStrategy;
 import com.oracle.coherence.hibernate.cache.access.EntityReadOnlyCoherenceRegionAccessStrategy;
 import com.oracle.coherence.hibernate.cache.access.EntityReadWriteCoherenceRegionAccessStrategy;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cache.internal.CacheDataDescriptionImpl;
-import org.hibernate.cache.spi.CacheDataDescription;
 import org.hibernate.cache.spi.access.AccessType;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Properties;
@@ -24,51 +19,20 @@ import static org.junit.Assert.*;
  * @author Randy Stafford
  */
 public class CoherenceEntityRegionTest
+extends AbstractCoherenceRegionTest
 {
 
 
-    // ---- Constants
+    // ---- Subclass responsibility
 
     /**
-     * The name of the CoherenceEntityRegion used in tests.
+     * Return a new CoherenceRegion of the appropriate subtype.
+     *
+     * @return a CoherenceRegion of the appropriate subtype
      */
-    private static final String REGION_NAME = "CoherenceEntityRegionTest";
-
-
-    // ---- Fields
-
-    /**
-     * The CoherenceEntityRegion in the test fixture.
-     */
-    private CoherenceEntityRegion coherenceEntityRegion;
-
-
-    // ---- Fixture lifecycle
-
-    /**
-     * Set up the test fixture.
-     */
-    @Before
-    public void setUp()
+    protected CoherenceRegion newCoherenceRegion()
     {
-        //use a started CoherenceRegionFactory to build the CoherenceEntityRegion in the test fixture, as a convenience
-        //to ensure the cluster is joined and the cache factory is configured etc.
-        Properties properties = new Properties();
-        CoherenceRegionFactory coherenceRegionFactory = new CoherenceRegionFactory();
-        coherenceRegionFactory.start(null, properties);
-
-        CacheDataDescription cacheDataDescription = new CacheDataDescriptionImpl(true, false, null);
-        coherenceEntityRegion = (CoherenceEntityRegion) coherenceRegionFactory.buildEntityRegion(REGION_NAME, properties, cacheDataDescription);
-    }
-
-    /**
-     * Tear down the test fixture.
-     */
-    @After
-    public void tearDown()
-    {
-        coherenceEntityRegion.destroy();
-        coherenceEntityRegion = null;
+        return newCoherenceEntityRegion();
     }
 
 
@@ -109,7 +73,7 @@ public class CoherenceEntityRegionTest
     {
         try
         {
-            coherenceEntityRegion.buildAccessStrategy(AccessType.TRANSACTIONAL);
+            getCoherenceEntityRegion().buildAccessStrategy(AccessType.TRANSACTIONAL);
             fail("Expect CacheException building AccessType.TRANSACTIONAL strategy");
         }
         catch (CacheException ex)
@@ -123,6 +87,7 @@ public class CoherenceEntityRegionTest
 
     protected void testBuildAccessStrategy(AccessType accessType, Class expectedStrategyClass)
     {
+        CoherenceEntityRegion coherenceEntityRegion = getCoherenceEntityRegion();
         EntityRegionAccessStrategy strategy = coherenceEntityRegion.buildAccessStrategy(accessType);
         assertTrue("Expect correct strategy type", expectedStrategyClass.isAssignableFrom(strategy.getClass()));
         assertEquals("Expect correct region", coherenceEntityRegion, strategy.getRegion());

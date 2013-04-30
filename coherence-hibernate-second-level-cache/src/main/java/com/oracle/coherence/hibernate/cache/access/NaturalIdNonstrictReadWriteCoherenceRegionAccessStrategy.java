@@ -55,7 +55,7 @@ implements NaturalIdRegionAccessStrategy
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting a natural ID.
         //"Synchronous" (i.e. transactional) access strategies should insert the cache entry here, but
         //"asynchrononous" (i.e. non-transactional) strategies should insert it in afterInsert instead.
-        debugf("%s.insert(%s, %s, %s)", this, key, value);
+        debugf("%s.insert(%s, %s)", this, key, value);
         return false;
     }
 

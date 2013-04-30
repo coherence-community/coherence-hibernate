@@ -196,6 +196,7 @@ implements RegionAccessStrategy
     @Override
     public void unlockItem(Object key, SoftLock lock) throws CacheException
     {
+        debugf("%s.lockItem(%s, %s)", this, key, lock);
         //for the majority of access strategies unlockItem is a no-op
     }
 
