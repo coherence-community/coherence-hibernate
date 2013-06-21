@@ -80,7 +80,7 @@ implements Region
      */
     public CoherenceRegion(NamedCache namedCache, Properties properties)
     {
-        debugf("%s(%s, %s)", getClass().getName(), namedCache, properties);
+        debugf("%s(%s, properties)", getClass().getName(), namedCache);
         lockLeaseDuration = (int) getDurationProperty(
                 properties,
                 LOCK_LEASE_DURATION_PROPERTY_NAME,

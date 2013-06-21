@@ -24,13 +24,11 @@
         <dependency>
             <groupId>com.oracle.coherence</groupId>
             <artifactId>coherence</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>

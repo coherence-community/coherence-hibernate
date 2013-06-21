@@ -110,6 +110,23 @@ implements RegionFactory
     }
 
 
+    // ---- interface java.lang.Object
+
+    /**
+     * {@inheritDoc}}
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder stringBuilder = new StringBuilder(getClass().getName());
+        stringBuilder.append("(");
+        stringBuilder.append("cacheFactory=").append(cacheFactory);
+        stringBuilder.append(", settings=").append(settings);
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
+
+
     // ---- API: logging support
 
     /**
@@ -154,6 +171,8 @@ implements RegionFactory
 
         debugMessageSeverityLevel = Integer.getInteger(DEBUG_MESSAGE_SEVERITY_LEVEL_PROPERTY_NAME, DEFAULT_DEBUG_MESSAGE_SEVERITY_LEVEL);
         dumpStackOnDebugMessage = Boolean.getBoolean(DUMP_STACK_ON_DEBUG_MESSAGE_PROPERTY_NAME);
+
+        debugf("%s.start(%s, %s)", this, settings, properties);
     }
 
     /**

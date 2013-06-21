@@ -124,8 +124,8 @@ implements RegionAccessStrategy
         StringBuilder stringBuilder = new StringBuilder(getClass().getName());
         stringBuilder.append("(");
         stringBuilder.append("coherenceRegion=").append(getCoherenceRegion());
-        stringBuilder.append("uuid=").append(uuid);
-        stringBuilder.append("softLockSequenceNumber=").append(softLockSequenceNumber);
+        stringBuilder.append(", uuid=").append(uuid);
+        stringBuilder.append(", softLockSequenceNumber=").append(softLockSequenceNumber);
         stringBuilder.append(")");
         return stringBuilder.toString();
     }

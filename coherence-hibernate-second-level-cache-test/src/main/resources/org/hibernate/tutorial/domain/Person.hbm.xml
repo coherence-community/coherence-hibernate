@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!-- File contents copied from http://docs.jboss.org/hibernate/orm/4.2/manual/en-US/html/ch01.html -->
+
+<hibernate-mapping package="org.hibernate.tutorial.domain">
+
+    <class name="Person" table="PERSON">
+        <cache usage="read-write" />
+        <id name="id" column="PERSON_ID">
+            <generator class="native"/>
+        </id>
+        <property name="age"/>
+        <property name="firstname"/>
+        <property name="lastname"/>
+
+        <set name="events" table="PERSON_EVENT">
+            <cache usage="read-write" />
+            <key column="PERSON_ID"/>
+            <many-to-many column="EVENT_ID" class="Event"/>
+        </set>
+
+        <set name="emailAddresses" table="PERSON_EMAIL_ADDR">
+            <cache usage="read-write" />
+            <key column="PERSON_ID"/>
+            <element type="string" column="EMAIL_ADDR"/>
+        </set>
+    </class>
+
+</hibernate-mapping>

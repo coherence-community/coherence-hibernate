@@ -77,7 +77,7 @@ public abstract class AbstractCoherenceRegionFactoryTest
      * Set up the test fixture.
      */
     @Before
-    public void setUpAbstractTest()
+    public void setUpAbstractCoherenceRegionFactoryTest()
     {
         //use a started CoherenceRegionFactory in the test, as a convenience
         //to ensure the cluster is joined and the cache factory is configured etc.
@@ -88,7 +88,7 @@ public abstract class AbstractCoherenceRegionFactoryTest
      * Tear down the test fixture.
      */
     @After
-    public void tearDownAbstractTest()
+    public void tearDownAbstractCoherenceRegionFactoryTest()
     {
         if (coherenceRegionFactory == null) return;
         coherenceRegionFactory.stop();
