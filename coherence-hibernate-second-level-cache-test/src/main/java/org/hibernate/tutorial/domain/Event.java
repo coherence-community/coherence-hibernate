@@ -11,6 +11,7 @@ public class Event {
     private Long id;
 
     private String title;
+
     private Date date;
 
     private Set participants = new HashSet();
@@ -41,7 +42,7 @@ public class Event {
         this.title = title;
     }
 
-    protected Set getParticipants() {
+    public Set getParticipants() {
         return participants;
     }
 

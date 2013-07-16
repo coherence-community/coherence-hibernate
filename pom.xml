@@ -76,7 +76,6 @@
         <coherence.version>3.7.1.7</coherence.version>
         <hibernate.version>4.2.0.Final</hibernate.version>
         <junit.version>4.11</junit.version>
-        <mockito.version>1.9.5</mockito.version>
     </properties>
 
     <dependencyManagement>
@@ -99,11 +98,6 @@
                 <version>${junit.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 

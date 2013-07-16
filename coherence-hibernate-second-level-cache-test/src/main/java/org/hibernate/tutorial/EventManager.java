@@ -1,5 +1,6 @@
 package org.hibernate.tutorial;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 import java.util.*;
@@ -28,15 +29,6 @@ public class EventManager {
                 );
             }
         }
-        else if (args[0].equals("listpersons")) {
-                List persons = mgr.listPersons();
-                for (int i = 0; i < persons.size(); i++) {
-                    Person thePerson = (Person) persons.get(i);
-                    System.out.println(
-                            "Person " + thePerson.getId() + ": " + thePerson.getFirstname() + " " + thePerson.getLastname() + " Age: " + thePerson.getAge()
-                    );
-                }
-            }
         else if (args[0].equals("addpersontoevent")) {
                 Long eventId = mgr.createAndStoreEvent("My Event", new Date());
                 Long personId = mgr.createAndStorePerson("Foo", "Bar", 10);
@@ -52,7 +44,7 @@ public class EventManager {
         HibernateUtil.getSessionFactory().close();
     }
 
-    private Long createAndStoreEvent(String title, Date theDate) {
+    public Long createAndStoreEvent(String title, Date theDate) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
@@ -66,23 +58,27 @@ public class EventManager {
         return theEvent.getId();
     }
 
-    private List listEvents() {
+    public List listEvents() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        List result = session.createQuery("from Event").list();
+        Query query = session.createQuery("from Event");
+        query.setCacheable(true);
+        List result = query.list();
         session.getTransaction().commit();
         return result;
     }
 
-    private List listPersons() {
+    public List listPersons() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        List result = session.createQuery("from Person").list();
+        Query query = session.createQuery("from Person");
+        query.setCacheable(true);
+        List result = query.list();
         session.getTransaction().commit();
         return result;
     }
 
-    private Long createAndStorePerson(String firstName, String lastName, int age) {
+    public Long createAndStorePerson(String firstName, String lastName, int age) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
@@ -97,14 +93,15 @@ public class EventManager {
         return thePerson.getId();
     }
 
-    private void addPersonToEvent(Long personId, Long eventId) {
+    public void addPersonToEvent(Long personId, Long eventId) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
-        Person aPerson = (Person) session
+        Query query = session
                 .createQuery("select p from Person p left join fetch p.events where p.id = :pid")
-                .setParameter("pid", personId)
-                .uniqueResult(); // Eager fetch the collection so we can use it detached
+                .setParameter("pid", personId);
+        query.setCacheable(true);
+        Person aPerson = (Person) query.uniqueResult(); // Eager fetch the collection so we can use it detached
         Event anEvent = (Event) session.load(Event.class, eventId);
 
         session.getTransaction().commit();
@@ -122,7 +119,7 @@ public class EventManager {
         session2.getTransaction().commit();
     }
 
-    private void addEmailToPerson(Long personId, String emailAddress) {
+    public void addEmailToPerson(Long personId, String emailAddress) {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
 

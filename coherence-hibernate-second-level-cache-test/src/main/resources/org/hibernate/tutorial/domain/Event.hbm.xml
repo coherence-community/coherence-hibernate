@@ -7,17 +7,23 @@
 
 <hibernate-mapping package="org.hibernate.tutorial.domain">
     <class name="Event" table="EVENTS">
+
         <cache usage="read-write" />
+
         <id name="id" column="EVENT_ID">
             <generator class="native"/>
         </id>
-        <property name="date" type="timestamp" column="EVENT_DATE"/>
-        <property name="title"/>
+
+        <natural-id>
+            <property name="date" type="timestamp" column="EVENT_DATE"/>
+            <property name="title"/>
+        </natural-id>
 
         <set name="participants" table="PERSON_EVENT" inverse="true">
             <cache usage="read-write" />
             <key column="EVENT_ID"/>
             <many-to-many column="PERSON_ID" class="Person"/>
         </set>
+
     </class>
 </hibernate-mapping>

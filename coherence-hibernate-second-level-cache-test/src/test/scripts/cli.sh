@@ -1,9 +1,10 @@
 #!/bin/bash
 
 mvn exec:java \
--Dexec.mainClass="com.tangosol.net.DefaultCacheServer" \
+-DskipTests \
+-Dmaven.test.skip=true \
+-Dexec.mainClass="com.tangosol.net.CacheFactory" \
 -Dtangosol.coherence.wka="localhost" \
 -Dtangosol.coherence.wka.port="8088" \
 -Dtangosol.coherence.cacheconfig="hibernate-second-level-cache-config.xml" \
--Dcom.sun.management.jmxremote \
--Dtangosol.coherence.management=all
+-Dtangosol.coherence.distributed.localstorage=false
