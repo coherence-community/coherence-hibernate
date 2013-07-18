@@ -43,7 +43,7 @@ import static org.junit.Assert.*;
  * the execution of the test suite.
  *
  * Note there is not currently functional test coverage of Natural ID caches.  Despite modifying the Event class in the
- * Hibernate tutorial example application to declare natural id fields (via annotation), saving and listing Events
+ * Hibernate tutorial example application to declare natural id fields (via hbm.xml), saving and listing Events
  * in this test suite does not result in the creation of any Natural ID caches.  From stepping through in a debugger,
  * the test fails on line 356 of the Hibernate SessionFactoryImpl constructor, which guards the creation of a NaturalId
  * cache, because the region name is null.  From googling this appears to be a buggy area of Hibernate.  Annotations
@@ -156,7 +156,7 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
         //EventManager.createAndStoreEvent() doesn't execute any queries
         assertEquals("Expect no query cache insertion creating new Event", 0, getQueryCache().size());
 
-        //Hibernate puts two entries in the timestamps cache on new Event save - one each for the Events and Person.events caches
+        //Hibernate puts two entries in the timestamps cache on new Event save - one each for the EVENTS and PERSON_EVENTS tables
         assertEquals("Expect two timestamps cache entries on creating new Event", 2, getTimestampCache().size());
     }
 
@@ -174,7 +174,7 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
         //EventManager.listEvents() executes a cacheable query, causing one entry in the query cache
         assertEquals("Expect one query cache insertion listing Events", 1, getQueryCache().size());
 
-        //Hibernate puts two entries in the timestamps cache on listing Events - one each for the Events and Person.events caches
+        //Hibernate puts two entries in the timestamps cache on listing Events - one each for the EVENTS and PERSON_EVENTS tables
         assertEquals("Expect two timestamps cache entries on listing Events", 2, getTimestampCache().size());
     }
 
@@ -195,7 +195,7 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
         assertEquals("Expect no query cache insertion creating new Person", 0, getQueryCache().size());
 
         //Hibernate puts three entries in the timestamps cache on new Person save -
-        //one each for the Persons, Person.emailAddresses, and Persons.events caches
+        //one each for the PERSON, PERSON_EMAIL_ADDR, and PERSON_EVENTS tables
         assertEquals("Expect three timestamps cache entries on creating new Person", 3, getTimestampCache().size());
     }
 
@@ -214,7 +214,7 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
         assertEquals("Expect one query cache insertion listing Persons", 1, getQueryCache().size());
 
         //Hibernate puts three entries in the timestamps cache on listing Persons -
-        //one each for the Persons, Person.emailAddresses, and Persons.events caches
+        //one each for the PERSON, PERSON_EMAIL_ADDR, and PERSON_EVENTS tables
         assertEquals("Expect three timestamps cache entries on listing Persons", 3, getTimestampCache().size());
     }
 
