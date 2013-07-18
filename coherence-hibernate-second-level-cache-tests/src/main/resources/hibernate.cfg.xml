@@ -27,16 +27,16 @@
         <!-- Disable the second-level cache
         <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
         -->
+        <property name="hibernate.cache.region.factory_class">com.oracle.coherence.hibernate.cache.CoherenceRegionFactory</property>
+        <property name="hibernate.cache.use_second_level_cache">true</property>
+        <property name="hibernate.cache.use_query_cache">true</property>
+        <property name="com.oracle.coherence.hibernate.cache.cache_config_file_path">test-hibernate-second-level-cache-config.xml</property>
 
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">true</property>
 
         <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">update</property>
-
-        <property name="hibernate.cache.region.factory_class">com.oracle.coherence.hibernate.cache.CoherenceRegionFactory</property>
-        <property name="hibernate.cache.use_second_level_cache">true</property>
-        <property name="hibernate.cache.use_query_cache">true</property>
 
         <mapping resource="org/hibernate/tutorial/domain/Event.hbm.xml"/>
         <mapping resource="org/hibernate/tutorial/domain/Person.hbm.xml"/>

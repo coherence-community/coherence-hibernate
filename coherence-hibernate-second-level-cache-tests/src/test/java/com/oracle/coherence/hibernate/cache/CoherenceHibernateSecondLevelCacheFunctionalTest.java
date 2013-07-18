@@ -62,7 +62,7 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
     /**
      * The path of the Coherence cache configuration file used in the test fixture.
      */
-    private static String CACHE_CONFIG_FILE_PATH = CoherenceRegionFactory.DEFAULT_CACHE_CONFIG_FILE_PATH;
+    private static String CACHE_CONFIG_FILE_PATH = "test-hibernate-second-level-cache-config.xml";
 
     /**
      * The Coherence WKA host used in the test fixture.
@@ -317,7 +317,7 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
     throws MalformedObjectNameException
     {
         ClusterMember dcs = cluster.iterator().next();
-        ObjectName objectName = new ObjectName("Coherence:type=Cache,service=HibernateSecondLevelCache,name=org.hibernate.tutorial.domain.Person,nodeId=1,tier=back");
+        ObjectName objectName = new ObjectName("Coherence:type=Cache,service=TestHibernateSecondLevelCache,name=org.hibernate.tutorial.domain.Person,nodeId=1,tier=back");
 
         Long personId = createAndStorePerson();
         assertEquals("Expect no cache insertion creating new Person", 0, getPersonCache().size());
