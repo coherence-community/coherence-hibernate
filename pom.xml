@@ -44,7 +44,7 @@
     <modules>
         <module>coherence-hibernate-cache-store</module>
         <module>coherence-hibernate-second-level-cache</module>
-        <module>coherence-hibernate-second-level-cache-test</module>
+        <module>coherence-hibernate-second-level-cache-tests</module>
     </modules>
 
     <scm>

@@ -5,6 +5,7 @@ import com.oracle.tools.runtime.coherence.ClusterBuilder;
 import com.oracle.tools.runtime.coherence.ClusterMember;
 import com.oracle.tools.runtime.coherence.ClusterMemberSchema;
 import com.oracle.tools.runtime.console.FileWriterApplicationConsole;
+import com.oracle.tools.runtime.java.JavaApplication;
 import com.oracle.tools.runtime.java.NativeJavaApplicationBuilder;
 import com.oracle.tools.runtime.java.SimpleJavaApplication;
 import com.oracle.tools.runtime.java.SimpleJavaApplicationSchema;
@@ -456,6 +457,7 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
      */
     private static void joinCluster()
     {
+        System.setProperty(JavaApplication.JAVA_NET_PREFER_IPV4_STACK, "true");
         System.setProperty(ClusterMemberSchema.PROPERTY_WELL_KNOWN_ADDRESS, WKA_HOST);
         System.setProperty(ClusterMemberSchema.PROPERTY_WELL_KNOWN_ADDRESS_PORT, WKA_PORT);
         System.setProperty(ClusterMemberSchema.PROPERTY_CACHECONFIG, CACHE_CONFIG_FILE_PATH);

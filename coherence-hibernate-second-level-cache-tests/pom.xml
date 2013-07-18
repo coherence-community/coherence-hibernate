@@ -19,7 +19,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>coherence-hibernate-second-level-cache-test</artifactId>
+    <artifactId>coherence-hibernate-second-level-cache-tests</artifactId>
 
     <build>
         <!-- we dont want the version to be part of the generated war file name -->
