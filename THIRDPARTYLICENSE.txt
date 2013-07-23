@@ -1,0 +1,8 @@
+Coherence Hibernate Integration is used with Oracle Coherence, and Hibernate from the JBoss Community.
+
+Therefore users of Coherence Hibernate Integration should use Coherence and Hibernate in accordance with the
+respective licenses for those products, which can be viewed at the following links:
+
+Oracle Coherence - http://www.oracle.com/technetwork/licenses/standard-license-152015.html
+
+Hibernate - http://www.hibernate.org/license
