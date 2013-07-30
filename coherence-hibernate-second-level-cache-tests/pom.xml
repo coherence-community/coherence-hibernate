@@ -101,21 +101,21 @@
         <dependency>
             <groupId>com.oracle.tools</groupId>
             <artifactId>oracle-tools-core</artifactId>
-            <version>0.0.9-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.oracle.tools</groupId>
             <artifactId>oracle-tools-runtime</artifactId>
-            <version>0.0.9-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.oracle.tools</groupId>
             <artifactId>oracle-tools-coherence</artifactId>
-            <version>0.0.9-SNAPSHOT</version>
+            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
 

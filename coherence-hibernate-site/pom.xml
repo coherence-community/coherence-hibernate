@@ -65,7 +65,7 @@
                 <configuration>
                     <message>${project.version} Site</message>
                     <path>${project.version}</path>
-                    <merge>true</merge>
+                    <merge>false</merge>
                     <repositoryName>coherence-hibernate-integration</repositoryName>
                     <repositoryOwner>coherence-community</repositoryOwner>
                 </configuration>
@@ -74,7 +74,7 @@
                         <goals>
                             <goal>site</goal>
                         </goals>
-                        <phase>site-deploy</phase>
+                        <phase>site</phase>
                     </execution>
                 </executions>
             </plugin>

@@ -131,7 +131,6 @@
     </dependencyManagement>
 
     <build>
-        <!--
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -141,7 +140,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-        -->
 
         <plugins>
             <plugin>
@@ -224,7 +222,6 @@
                 </executions>
             </plugin>
 
-            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
@@ -245,7 +242,6 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
-            -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
