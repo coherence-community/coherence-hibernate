@@ -102,7 +102,7 @@
         <maven.surefire.plugin.version>2.13</maven.surefire.plugin.version>
 
         <!-- dependency versions (alphabetically) -->
-        <coherence.version>3.7.1.9</coherence.version>
+        <coherence.version>12.1.2-0-0</coherence.version>
         <hibernate.version>4.2.0.Final</hibernate.version>
         <junit.version>4.11</junit.version>
     </properties>
