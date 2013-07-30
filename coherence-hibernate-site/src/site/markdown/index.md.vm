@@ -1,0 +1,37 @@
+Oracle Coherence Hibernate Integration
+===================================
+
+**Version: ${project.version} built on ${timestamp}**
+
+The Oracle Coherence Hibernate Integration project ...
+
+Dependency Configuration
+------------------------
+
+To include this library as a Maven dependency, include the following
+in your ``pom.xml``:
+
+    <dependency>
+        <groupId>com.oracle.coherence.hibernate</groupId>
+        <artifactId>coherence-hibernate-integration</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+Usage
+-----
+
+Instructions on configuration can be found under the [usage](usage.html) section.
+
+Building the Source
+-------------------
+
+See the [source code](source-code.html) and [building](building.html) sections
+for instructions on obtaining and compiling the source.
+
+Contributions
+-------------
+
+ If you are interested in making contributions to the Oracle Coherence Hibernate Integration project,·
+ including defect fixes, documentation, new classes/interfaces/methods/packages·
+ or tests, you should read the section on·
+ [Contributing to the Oracle Coherence Hibernate Integration](contributions.html).·

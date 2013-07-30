@@ -138,7 +138,7 @@ implements RegionFactory
     // ---- interface java.lang.Object
 
     /**
-     * {@inheritDoc}}
+     * {@inheritDoc}
      */
     @Override
     public String toString()

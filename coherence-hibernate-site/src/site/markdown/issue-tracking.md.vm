@@ -1,0 +1,15 @@
+Issue Tracking
+--------------
+
+The [Issue Tracking](http://java.net/jira/browse/COHHIB) system for the Oracle
+Coherence Hibernate Integration project is hosted by [java.net](http://java.net).
+It can be found here: [http://java.net/jira/browse/COHHIB](http://java.net/jira/browse/COHHIB).
+
+Public read-only access to the system is available for project Observers.  To
+become an observer, simply **join** the [cohhib.java.net](http://cohhib.java.net/)
+project.  All you need is a **free** [java.net](http://java.net) account.  All
+Observers automatically receive project and issue updates.
+
+To raise, update and close issues with the [Issue Tracking](http://java.net/jira/browse/COHHIB)
+system you will need to be a [Contributor](contributions.html) with a [java.net](http://java.net)
+account.

@@ -70,6 +70,7 @@
         <module>coherence-hibernate-cache-store</module>
         <module>coherence-hibernate-second-level-cache</module>
         <module>coherence-hibernate-second-level-cache-tests</module>
+        <module>coherence-hibernate-site</module>
     </modules>
 
     <scm>
@@ -87,18 +88,21 @@
 
         <!-- plugin dependency versions (alphabetically) -->
         <doxia.module.markdown.version>1.0</doxia.module.markdown.version>
+        <github.site.maven.plugin.version>0.8</github.site.maven.plugin.version>
         <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
         <maven.deploy.plugin.version>2.7</maven.deploy.plugin.version>
         <maven.enforcer.plugin.version>1.0.1</maven.enforcer.plugin.version>
         <maven.gpg.plugin.version>1.4</maven.gpg.plugin.version>
         <maven.install.plugin.version>2.4</maven.install.plugin.version>
+        <maven.jar.plugin.version>2.4</maven.jar.plugin.version>
         <maven.javadoc.plugin.version>2.9</maven.javadoc.plugin.version>
         <maven.release.plugin.version>2.2.1</maven.release.plugin.version>
+        <maven.site.plugin.version>3.2</maven.site.plugin.version>
         <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
         <maven.surefire.plugin.version>2.13</maven.surefire.plugin.version>
 
         <!-- dependency versions (alphabetically) -->
-        <coherence.version>3.7.1.7</coherence.version>
+        <coherence.version>3.7.1.9</coherence.version>
         <hibernate.version>4.2.0.Final</hibernate.version>
         <junit.version>4.11</junit.version>
     </properties>
