@@ -65,7 +65,7 @@
                 
             
                   <li id="publishDate">Last Published: 2013-07-30</li>
-                  <li class="divider">|</li> <li id="projectVersion">Version: 1.0.0</li>
+                  <li class="divider">|</li> <li id="projectVersion">Version: 1.0.0-SNAPSHOT</li>
                       
                 
             
@@ -102,12 +102,10 @@
         Source Code</a>
             </li>
                   
-      <li>
+      <li class="active">
     
-                          <a href="building.html" title="Building">
-          <i class="none"></i>
-        Building</a>
-            </li>
+            <a href="#"><i class="none"></i>Building</a>
+          </li>
                   
       <li>
     
@@ -116,10 +114,12 @@
         Getting Help</a>
             </li>
                   
-      <li class="active">
+      <li>
     
-            <a href="#"><i class="none"></i>Issue Tracking</a>
-          </li>
+                          <a href="issue-tracking.html" title="Issue Tracking">
+          <i class="none"></i>
+        Issue Tracking</a>
+            </li>
                   
       <li>
     
@@ -154,20 +154,59 @@
                 
         <div id="bodyColumn"  class="span9" >
                                   
-            <h2>Issue Tracking</h2>
+            <h2>Building</h2>
 
-<p>The <a href="http://java.net/jira/browse/COHHIB">Issue Tracking</a> system for the Oracle
-Coherence Hibernate Integration project is hosted by <a href="http://java.net">java.net</a>.
-It can be found here: <a href="http://java.net/jira/browse/COHHIB">http://java.net/jira/browse/COHHIB</a>.</p>
+<p>To build the Oracle Coherence Hibernate Integration project you need to have the
+following software installed:</p>
 
-<p>Public read-only access to the system is available for project Observers.  To
-become an observer, simply <strong>join</strong> the <a href="http://cohhib.java.net/">cohhib.java.net</a>
-project.  All you need is a <strong>free</strong> <a href="http://java.net">java.net</a> account.  All
-Observers automatically receive project and issue updates.</p>
+<ol>
+<li><p>Java SE Development Kit 6, 7 or 8.</p>
 
-<p>To raise, update and close issues with the <a href="http://java.net/jira/browse/COHHIB">Issue Tracking</a>
-system you will need to be a <a href="contributions.html">Contributor</a> with a <a href="http://java.net">java.net</a>
-account.</p>
+<p>Available from: <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SE Downloads</a></p></li>
+<li><p><a href="http://maven.apache.org/">Apache Maven</a> Version 3.0.4 (not 3.0.3)</p>
+
+<p>Available here: <a href="http://maven.apache.org/download.cgi">Apache Maven Downloads</a></p></li>
+<li><p>The <a href="source-code.html">source code</a>.</p></li>
+</ol>
+
+<p>Once you have these installed building the entire source tree is as simple as
+executing the following shell command (from the root of the source directory):</p>
+
+<pre><code>$ mvn clean install
+</code></pre>
+
+<p>However the fact that the Oracle Coherence Hibernate Integration depends on a commercial
+product, namely <a href="http://www.oracle.com/technology/products/coherence/index.html">Oracle Coherence</a>
+which is not available in a public Maven Repository, probably means that your
+first build is likely to fail because of a missing dependency on <code>coherence.jar</code>.</p>
+
+<p>Should this problem occur you will need to manually install a suitable 
+<code>coherence.jar</code> into your local repository or your organization's repository 
+manager.</p>
+
+<p>To install the standard <code>coherence.jar</code> into your local Apache Maven repository,
+simply change to <code>$COHERENCE_HOME/lib</code> directory and run the following command:</p>
+
+<pre><code>$ mvn install:install-file  \
+      -DgroupId=com.oracle.coherence  \
+      -DartifactId=coherence  \
+      -Dversion=3.7.1.9  \
+      -Dfile=coherence.jar  \
+      -Dpackaging=jar \
+      -DgeneratePom=true
+</code></pre>
+
+<blockquote>
+  <p>  The <code>groupId</code>, <code>artifactId</code> and <code>version</code> are critically important.  They must
+    be as indicated above otherwise the Oracle Coherence Hibernate Integration  project won't build.</p>
+</blockquote>
+
+<p>Of course the above assumes that you are installing the Coherence 3.7.1.9 <code>jar</code>
+file. If you want to install one of the more recent releases, change the version 
+number in the command above accordingly.</p>
+
+<p>Once the <code>coherence.jar</code> is properly installed into your Apache Maven repository,
+you should be able to build the Oracle Coherence Hibernate Integration project.</p>
 
                   </div>
             </div>
@@ -185,7 +224,7 @@ account.</p>
                                                                   <?xml version="1.0" encoding="UTF-8"?>
 <div class="copyright">Copyright © 2008-2013 Oracle Corporation. All rights reserved.</div>
                                                           <?xml version="1.0" encoding="UTF-8"?>
-<div class="version">Version 1.0.0: 2013-07-30 13:29</div>
+<div class="version">Version 1.0.0-SNAPSHOT: 2013-07-30 21:24</div>
                   
         
                 </div>
