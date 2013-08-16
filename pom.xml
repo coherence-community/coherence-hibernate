@@ -102,8 +102,8 @@
         <maven.surefire.plugin.version>2.13</maven.surefire.plugin.version>
 
         <!-- dependency versions (alphabetically) -->
-        <coherence.version>12.1.2-0-0</coherence.version>
-        <hibernate.version>4.2.0.Final</hibernate.version>
+        <coherence.version>[3.4.2,12.1.3)</coherence.version>
+        <hibernate.version>[3.3.1.GA,)</hibernate.version>
         <junit.version>4.11</junit.version>
     </properties>
 
@@ -264,5 +264,38 @@
         </plugins>
 
     </build>
+
+    <profiles>
+        <profile>
+            <id>coherence_version_3.7.1.7</id>
+            <properties>
+                <coherence.version>3.7.1.7</coherence.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>coherence_version_3.7.1.9</id>
+            <properties>
+                <coherence.version>3.7.1.9</coherence.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>coherence_version_12.1.2-0-0</id>
+            <properties>
+                <coherence.version>12.1.2-0-0</coherence.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>hibernate_version_4.2.0.Final</id>
+            <properties>
+                <hibernate.version>4.2.0.Final</hibernate.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>hibernate_version_4.2.4.Final</id>
+            <properties>
+                <hibernate.version>4.2.4.Final</hibernate.version>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

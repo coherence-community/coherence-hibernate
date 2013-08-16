@@ -1,37 +1,29 @@
-Oracle Coherence Hibernate Integration
-===================================
+Coherence Hibernate Integration
+===============================
 
 **Version: ${project.version} built on ${timestamp}**
 
-The Oracle Coherence Hibernate Integration project ...
-
-Dependency Configuration
-------------------------
-
-To include this library as a Maven dependency, include the following
-in your ``pom.xml``:
-
-    <dependency>
-        <groupId>com.oracle.coherence.hibernate</groupId>
-        <artifactId>coherence-hibernate-integration</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </dependency>
+The Coherence Hibernate Integration project encompasses the code of integration points between Hibernate and Oracle
+Coherence, currently consisting of a Coherence-based implementation of the Hibernate second-level cache SPI, and a
+Hibernate-based implementation of the Coherence CacheStore SPI. The CacheStore implementation is pre-existing and merely
+moved from the Coherence product codebase, while the second-level cache implementation represents new development
+targeted to the redesigned SPI released in Hibernate 3.3.
 
 Usage
 -----
 
-Instructions on configuration can be found under the [usage](usage.html) section.
+Instructions on how to configure and use the integration points between Hibernate and Oracle Coherence, including
+coverage of Maven dependency configuration, can be found under the [usage](usage.html) section.
 
 Building the Source
 -------------------
 
-See the [source code](source-code.html) and [building](building.html) sections
-for instructions on obtaining and compiling the source.
+See the [source code](source-code.html) and [building](building.html) sections for instructions on obtaining and
+compiling the source.
 
 Contributions
 -------------
 
- If you are interested in making contributions to the Oracle Coherence Hibernate Integration project,·
- including defect fixes, documentation, new classes/interfaces/methods/packages·
- or tests, you should read the section on·
- [Contributing to the Oracle Coherence Hibernate Integration](contributions.html).·
+If you are interested in making contributions to the Oracle Coherence Hibernate Integration project, including defect
+fixes, documentation, new classes/interfaces/methods/packages or tests, you should read the section on
+[Contributing to the Oracle Coherence Hibernate Integration](contributions.html).

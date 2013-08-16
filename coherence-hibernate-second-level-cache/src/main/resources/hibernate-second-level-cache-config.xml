@@ -146,6 +146,8 @@
             <service-name>HibernateSecondLevelCache</service-name>
             <!-- default to no thread pool; users should increase if ServiceMBean.TaskBacklog grows -->
             <thread-count>0</thread-count>
+            <!-- set local-storage to false for a cache client JVM, or pass -Dtangosol.coherence.distributed.localstorage=false -->
+            <local-storage>true</local-storage>
             <!-- little value in backup copies since we're caching a database; cache server failure equals cold cache -->
             <backup-count>0</backup-count>
             <backing-map-scheme>
