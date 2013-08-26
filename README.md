@@ -1,7 +1,7 @@
 Welcome to Coherence Hibernate Integration
 ==========================================
 
-[Coherence Hibernate Integration](http://coherence-community.github.com/coherence-hibernate-integration/1.0.0-SNAPSHOT/)
+[Coherence Hibernate Integration](http://coherence-community.github.com/coherence-hibernate-integration/${project.version}/)
 implements integration points between Oracle Coherence and the Hibernate
 object/relational mapping framework from JBoss.org.  Two primary integration
 points are covered currently: using Coherence as a second-level cache in
@@ -11,8 +11,8 @@ Official information about this project including the definition, licensing,
 contributors, maintainers, issue tracking, releases, source code and contact
 information is available at: [http://java.net/projects/cohhib](http://java.net/projects/cohhib).
 
-Detailed project documentation for the latest release (1.0.0-SNAPSHOT) is available
-here: [http://coherence-community.github.io/coherence-hibernate-integration/1.0.0-SNAPSHOT/](http://coherence-community.github.io/coherence-hibernate-integration/1.0.0-SNAPSHOT/)
+Detailed project documentation for the latest release (${project.version}) is available
+here: [http://coherence-community.github.io/coherence-hibernate-integration/${project.version}/](http://coherence-community.github.io/coherence-hibernate-integration/1.0.0-SNAPSHOT/)
 
 > **NOTE**
 >
