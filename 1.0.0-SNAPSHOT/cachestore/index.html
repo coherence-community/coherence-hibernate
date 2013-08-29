@@ -10,12 +10,12 @@
     <meta name="Date-Revision-yyyymmdd" content="20130829" />
     <meta http-equiv="Content-Language" content="en" />
     <title>Oracle Coherence Hibernate Integration - </title>
-    <link rel="stylesheet" href="./css/apache-maven-fluido-1.3.0.min.css" />
-    <link rel="stylesheet" href="./css/site.css" />
-    <link rel="stylesheet" href="./css/print.css" media="print" />
+    <link rel="stylesheet" href="../css/apache-maven-fluido-1.3.0.min.css" />
+    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/print.css" media="print" />
 
       
-    <script type="text/javascript" src="./js/apache-maven-fluido-1.3.0.min.js"></script>
+    <script type="text/javascript" src="../js/apache-maven-fluido-1.3.0.min.js"></script>
 
                           
         
@@ -84,35 +84,35 @@
                                 
       <li>
     
-                          <a href="index.html" title="Welcome">
+                          <a href="../index.html" title="Welcome">
           <i class="none"></i>
         Welcome</a>
             </li>
                   
       <li>
     
-                          <a href="history.html" title="Change History">
+                          <a href="../history.html" title="Change History">
           <i class="none"></i>
         Change History</a>
             </li>
                   
       <li>
     
-                          <a href="upgrading.html" title="Upgrading">
+                          <a href="../upgrading.html" title="Upgrading">
           <i class="none"></i>
         Upgrading</a>
             </li>
                   
       <li>
     
-                          <a href="examples.html" title="Examples">
+                          <a href="../examples.html" title="Examples">
           <i class="none"></i>
         Examples</a>
             </li>
                   
       <li>
     
-                          <a href="forums.html" title="Getting Help">
+                          <a href="../forums.html" title="Getting Help">
           <i class="none"></i>
         Getting Help</a>
             </li>
@@ -120,40 +120,42 @@
                                 
       <li>
     
-                          <a href="license.html" title="License">
+                          <a href="../license.html" title="License">
           <i class="none"></i>
         License</a>
             </li>
                   
       <li>
     
-                          <a href="release-numbers.html" title="Release Numbers">
+                          <a href="../release-numbers.html" title="Release Numbers">
           <i class="none"></i>
         Release Numbers</a>
             </li>
                   
       <li>
     
-                          <a href="source-code.html" title="Source Code">
+                          <a href="../source-code.html" title="Source Code">
           <i class="none"></i>
         Source Code</a>
             </li>
                   
-      <li class="active">
+      <li>
     
-            <a href="#"><i class="none"></i>Build Instructions</a>
-          </li>
+                          <a href="../building.html" title="Build Instructions">
+          <i class="none"></i>
+        Build Instructions</a>
+            </li>
                   
       <li>
     
-                          <a href="issue-tracking.html" title="Issue Tracking">
+                          <a href="../issue-tracking.html" title="Issue Tracking">
           <i class="none"></i>
         Issue Tracking</a>
             </li>
                   
       <li>
     
-                          <a href="contributions.html" title="Contributions">
+                          <a href="../contributions.html" title="Contributions">
           <i class="none"></i>
         Contributions</a>
             </li>
@@ -161,17 +163,15 @@
                                 
       <li>
     
-                          <a href="secondlevelcache/index.html" title="Coherence Hibernate Second-Level Cache">
+                          <a href="../secondlevelcache/index.html" title="Coherence Hibernate Second-Level Cache">
           <i class="none"></i>
         Coherence Hibernate Second-Level Cache</a>
             </li>
                   
-      <li>
+      <li class="active">
     
-                          <a href="cachestore/index.html" title="Coherence Hibernate CacheStore">
-          <i class="none"></i>
-        Coherence Hibernate CacheStore</a>
-            </li>
+            <a href="#"><i class="none"></i>Coherence Hibernate CacheStore</a>
+          </li>
             </ul>
                 
             
@@ -183,7 +183,7 @@
                             <div class="clear"></div>
                             <div class="clear"></div>
                              <a href="http://maven.apache.org/" title="Built by Maven" class="poweredBy">
-        <img class="builtBy" alt="Built by Maven" src="./images/logos/maven-feather.png" />
+        <img class="builtBy" alt="Built by Maven" src="../images/logos/maven-feather.png" />
       </a>
                   </div>
           </div>
@@ -192,57 +192,32 @@
                 
         <div id="bodyColumn"  class="span9" >
                                   
-            <h2>Building</h2>
+            <h1>Coherence Hibernate CacheStore</h1>
 
-<p>To build the Oracle Coherence Hibernate Integration project you need to have the following software installed:</p>
+<p>This page describes how you can use Hibernate as the implementation of a Coherence CacheStore.</p>
 
-<ol>
-<li><p>Java SE Development Kit 6, 7 or 8.</p>
+<h3>Installing the Coherence Hibernate CacheStore</h3>
 
-<p>Available from: <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SE Downloads</a></p></li>
-<li><p><a href="http://maven.apache.org/">Apache Maven</a> Version 3.0.4 (not 3.0.3)</p>
+<p>Installing the Coherence Hibernate second-level cache implementation amounts to obtaining a distribution of
+<code>coherence-hibernate-cache-store1.0.0-SNAPSHOT.jar</code> and making it available to JVM ClassLoaders.  The easiest way to do
+so is to build and execute your Hibernate application with Maven, and add the following dependency to your application’s
+<code>pom.xml</code>:</p>
 
-<p>Available here: <a href="http://maven.apache.org/download.cgi">Apache Maven Downloads</a></p></li>
-<li><p>The <a href="source-code.html">source code</a>.</p></li>
-</ol>
-
-<p>Once you have these installed building the entire source tree is as simple as executing the following shell command
-(from the root of the source directory):</p>
-
-<pre><code>$ mvn clean install
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.oracle.coherence.hibernate&lt;/groupId&gt;
+    &lt;artifactId&gt;coherence-hibernate-cache-store&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
 </code></pre>
 
-<p>However the fact that the Oracle Coherence Hibernate Integration depends on a commercial product, namely
-<a href="http://www.oracle.com/technology/products/coherence/index.html">Oracle Coherence</a> which is not available in a public
-Maven Repository, probably means that your first build is likely to fail because of a missing dependency on
-<code>coherence.jar</code>.</p>
+<p>Alternatively, you can download <code>coherence-hibernate-cache-store1.0.0-SNAPSHOT.jar</code> from a Maven repository (e.g.
+<a href="https://maven.java.net">https://maven.java.net</a>) and use it in JVM classpaths.  Or you can <a href="building.html">build</a> the Coherence Hibernate
+CacheStore implementation from sources.</p>
 
-<p>Should this problem occur you will need to manually install a suitable <code>coherence.jar</code> into your local repository or
-your organization's repository manager.</p>
-
-<p>With Coherence 12.1.2 and later, there is a Maven plugin for sync'ing jar files in a Coherence installation to your
-Maven repository, as documented here: <a href="http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537">http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537</a>.</p>
-
-<p>For Coherence versions older than 12.1.2, to install <code>coherence.jar</code> into your local Apache Maven repository, simply
-change to the <code>$COHERENCE_HOME/lib</code> directory and run the following command:</p>
-
-<pre><code>$ mvn install:install-file  \
-      -DgroupId=com.oracle.coherence  \
-      -DartifactId=coherence  \
-      -Dversion=3.7.1.9  \
-      -Dfile=coherence.jar  \
-      -Dpackaging=jar \
-      -DgeneratePom=true
-</code></pre>
-
-<p>The <code>groupId</code>, <code>artifactId</code> and <code>version</code> are critically important.  They must be as indicated above otherwise the
-Oracle Coherence Hibernate Integration project won't build.</p>
-
-<p>Of course the above assumes that you are installing the Coherence 3.7.1.9 <code>jar</code> file. If you want to install a different
-release, change the version number in the command above accordingly.</p>
-
-<p>Once a <code>coherence.jar</code> is properly installed into your Maven repository by one of the above methods, you should be able
-to build the Oracle Coherence Hibernate Integration project.</p>
+<p>Note that the Coherence Hibernate CacheStore implementation depends at runtime on an installation of Oracle
+Coherence, and an installation of Hibernate.  These dependencies are most easily managed using Maven.  You can install
+Coherence artifacts into your Maven repository as documented here:
+<a href="http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537">http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537</a>.</p>
 
                   </div>
             </div>
@@ -260,7 +235,7 @@ to build the Oracle Coherence Hibernate Integration project.</p>
                                                                   <?xml version="1.0" encoding="UTF-8"?>
 <div class="copyright">Copyright © 2008-2013 Oracle Corporation. All rights reserved.</div>
                                                           <?xml version="1.0" encoding="UTF-8"?>
-<div class="version">Version 1.0.0-SNAPSHOT: 2013-08-29 14:48</div>
+<div class="version">Version 1.0.0-SNAPSHOT: 2013-08-29 15:00</div>
                   
         
                 </div>

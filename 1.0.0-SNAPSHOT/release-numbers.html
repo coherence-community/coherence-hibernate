@@ -125,12 +125,10 @@
         License</a>
             </li>
                   
-      <li>
+      <li class="active">
     
-                          <a href="release-numbers.html" title="Release Numbers">
-          <i class="none"></i>
-        Release Numbers</a>
-            </li>
+            <a href="#"><i class="none"></i>Release Numbers</a>
+          </li>
                   
       <li>
     
@@ -139,10 +137,12 @@
         Source Code</a>
             </li>
                   
-      <li class="active">
+      <li>
     
-            <a href="#"><i class="none"></i>Build Instructions</a>
-          </li>
+                          <a href="building.html" title="Build Instructions">
+          <i class="none"></i>
+        Build Instructions</a>
+            </li>
                   
       <li>
     
@@ -192,57 +192,18 @@
                 
         <div id="bodyColumn"  class="span9" >
                                   
-            <h2>Building</h2>
+            <h2>Release Numbers</h2>
 
-<p>To build the Oracle Coherence Hibernate Integration project you need to have the following software installed:</p>
+<p>Release numbers for the Oracle Coherence Hibernate Integration project follow the
+<a href="http://semver.org">Semantic Versioning 2.0.0 standard</a>.</p>
 
-<ol>
-<li><p>Java SE Development Kit 6, 7 or 8.</p>
+<p>There is no implied relationship between a major version of the Oracle Coherence Hibernate Integration project and
+a major version of Oracle Coherence (or of Hibernate).  The major versions of the Oracle Coherence Hibernate Integration
+project do not advance in lock step with the major versions of Oracle Coherence or Hibernate; they are independent.</p>
 
-<p>Available from: <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SE Downloads</a></p></li>
-<li><p><a href="http://maven.apache.org/">Apache Maven</a> Version 3.0.4 (not 3.0.3)</p>
-
-<p>Available here: <a href="http://maven.apache.org/download.cgi">Apache Maven Downloads</a></p></li>
-<li><p>The <a href="source-code.html">source code</a>.</p></li>
-</ol>
-
-<p>Once you have these installed building the entire source tree is as simple as executing the following shell command
-(from the root of the source directory):</p>
-
-<pre><code>$ mvn clean install
-</code></pre>
-
-<p>However the fact that the Oracle Coherence Hibernate Integration depends on a commercial product, namely
-<a href="http://www.oracle.com/technology/products/coherence/index.html">Oracle Coherence</a> which is not available in a public
-Maven Repository, probably means that your first build is likely to fail because of a missing dependency on
-<code>coherence.jar</code>.</p>
-
-<p>Should this problem occur you will need to manually install a suitable <code>coherence.jar</code> into your local repository or
-your organization's repository manager.</p>
-
-<p>With Coherence 12.1.2 and later, there is a Maven plugin for sync'ing jar files in a Coherence installation to your
-Maven repository, as documented here: <a href="http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537">http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537</a>.</p>
-
-<p>For Coherence versions older than 12.1.2, to install <code>coherence.jar</code> into your local Apache Maven repository, simply
-change to the <code>$COHERENCE_HOME/lib</code> directory and run the following command:</p>
-
-<pre><code>$ mvn install:install-file  \
-      -DgroupId=com.oracle.coherence  \
-      -DartifactId=coherence  \
-      -Dversion=3.7.1.9  \
-      -Dfile=coherence.jar  \
-      -Dpackaging=jar \
-      -DgeneratePom=true
-</code></pre>
-
-<p>The <code>groupId</code>, <code>artifactId</code> and <code>version</code> are critically important.  They must be as indicated above otherwise the
-Oracle Coherence Hibernate Integration project won't build.</p>
-
-<p>Of course the above assumes that you are installing the Coherence 3.7.1.9 <code>jar</code> file. If you want to install a different
-release, change the version number in the command above accordingly.</p>
-
-<p>Once a <code>coherence.jar</code> is properly installed into your Maven repository by one of the above methods, you should be able
-to build the Oracle Coherence Hibernate Integration project.</p>
+<p>The top-level Maven <code>pom.xml</code> file for the project is the authority on compatibility between a version of the Oracle
+Coherence Hibernate Integration project, and the versions of Hibernate and Oracle Coherence with which it is compatible.
+The versions of the dependencies it declares are tested and compatible with the project version.</p>
 
                   </div>
             </div>

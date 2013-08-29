@@ -96,12 +96,10 @@
         Change History</a>
             </li>
                   
-      <li>
+      <li class="active">
     
-                          <a href="upgrading.html" title="Upgrading">
-          <i class="none"></i>
-        Upgrading</a>
-            </li>
+            <a href="#"><i class="none"></i>Upgrading</a>
+          </li>
                   
       <li>
     
@@ -139,10 +137,12 @@
         Source Code</a>
             </li>
                   
-      <li class="active">
+      <li>
     
-            <a href="#"><i class="none"></i>Build Instructions</a>
-          </li>
+                          <a href="building.html" title="Build Instructions">
+          <i class="none"></i>
+        Build Instructions</a>
+            </li>
                   
       <li>
     
@@ -192,57 +192,31 @@
                 
         <div id="bodyColumn"  class="span9" >
                                   
-            <h2>Building</h2>
+            <h2>Upgrading from Previous Releases</h2>
 
-<p>To build the Oracle Coherence Hibernate Integration project you need to have the following software installed:</p>
+<h4>Upgrading from Hibernate integration in Oracle Coherence</h4>
 
-<ol>
-<li><p>Java SE Development Kit 6, 7 or 8.</p>
+<p>The procedure for upgrading to Oracle Coherence Hibernate Integration 1.0.0 in the Coherence Community,
+from Hibernate integration features in Oracle Coherence versions 3.x and 12.1.2, varies by integration point.</p>
 
-<p>Available from: <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SE Downloads</a></p></li>
-<li><p><a href="http://maven.apache.org/">Apache Maven</a> Version 3.0.4 (not 3.0.3)</p>
+<p>If you want to adopt to the new Coherence-based Hibernate second-level cache SPI implementation, which is targeted
+to the redesigned SPI released in Hibernate 3.3, then you need to do the following:</p>
 
-<p>Available here: <a href="http://maven.apache.org/download.cgi">Apache Maven Downloads</a></p></li>
-<li><p>The <a href="source-code.html">source code</a>.</p></li>
-</ol>
+<ul>
+<li>Follow the <a href="secondlevelcache/index.html">usage instructions</a> documented for the Coherence Hibernate Second-Level
+Cache module.</li>
+<li>In your application code, un-configure the old (i.e., pre-3.3) Hibernate second-level cache SPI
+implementation, i.e. you no longer need to set the Hibernate configuration property
+<code>hibernate.cache.provider_class</code>.</li>
+</ul>
 
-<p>Once you have these installed building the entire source tree is as simple as executing the following shell command
-(from the root of the source directory):</p>
-
-<pre><code>$ mvn clean install
-</code></pre>
-
-<p>However the fact that the Oracle Coherence Hibernate Integration depends on a commercial product, namely
-<a href="http://www.oracle.com/technology/products/coherence/index.html">Oracle Coherence</a> which is not available in a public
-Maven Repository, probably means that your first build is likely to fail because of a missing dependency on
-<code>coherence.jar</code>.</p>
-
-<p>Should this problem occur you will need to manually install a suitable <code>coherence.jar</code> into your local repository or
-your organization's repository manager.</p>
-
-<p>With Coherence 12.1.2 and later, there is a Maven plugin for sync'ing jar files in a Coherence installation to your
-Maven repository, as documented here: <a href="http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537">http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537</a>.</p>
-
-<p>For Coherence versions older than 12.1.2, to install <code>coherence.jar</code> into your local Apache Maven repository, simply
-change to the <code>$COHERENCE_HOME/lib</code> directory and run the following command:</p>
-
-<pre><code>$ mvn install:install-file  \
-      -DgroupId=com.oracle.coherence  \
-      -DartifactId=coherence  \
-      -Dversion=3.7.1.9  \
-      -Dfile=coherence.jar  \
-      -Dpackaging=jar \
-      -DgeneratePom=true
-</code></pre>
-
-<p>The <code>groupId</code>, <code>artifactId</code> and <code>version</code> are critically important.  They must be as indicated above otherwise the
-Oracle Coherence Hibernate Integration project won't build.</p>
-
-<p>Of course the above assumes that you are installing the Coherence 3.7.1.9 <code>jar</code> file. If you want to install a different
-release, change the version number in the command above accordingly.</p>
-
-<p>Once a <code>coherence.jar</code> is properly installed into your Maven repository by one of the above methods, you should be able
-to build the Oracle Coherence Hibernate Integration project.</p>
+<p>If you want to adopt the <code>HibernateCacheStore</code> from the Oracle Coherence Hibernate Integration project in the Coherence
+Community, which was merely moved from the Oracle Coherence product, then you need to follow the
+<a href="cachestore/index.html">usage instructions</a> documented for the Coherence Hibernate CacheStore.  Note this implies
+changes to the Coherence cache configuration files used by your application, as the java package name of the
+<code>HibernateCacheStore</code> has changed from <code>com.tangosol.coherence.hibernate</code> to <code>com.oracle.coherence.hibernate.cachestore</code>
+in moving from the Oracle Coherence product to the Oracle Coherence Hibernate Integration project in the Coherence
+Community.</p>
 
                   </div>
             </div>
