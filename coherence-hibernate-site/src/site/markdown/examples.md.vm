@@ -1,0 +1,12 @@
+Examples
+--------
+
+For examples of the usage of the Coherence / Hibernate integration points implemented by the modules of the
+Oracle Coherence Hibernate Integration project, please consult the functional tests included within the
+[source code](source-code.html) of the project.
+
+The functional tests for a given integration point are contained in a separate [Apache Maven](http://maven.apache.org/)
+module, having the same name as the integration point's module, with `"-tests"` appended.
+
+In order to run the tests, you must [build and install](building.html) the Oracle Coherence Hibernate Integration
+project locally.

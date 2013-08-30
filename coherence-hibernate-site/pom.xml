@@ -10,10 +10,10 @@
 
     <artifactId>coherence-hibernate-site</artifactId>
 
-    <name>Coherence Hibernate Integration Site</name>
+    <name>Oracle Coherence Hibernate Integration Site</name>
 
     <description>
-        The Coherence Hibernate Integration Project Site.
+        The Oracle Coherence Hibernate Integration Project Site.
     </description>
 
     <properties>
@@ -74,7 +74,7 @@
                         <goals>
                             <goal>site</goal>
                         </goals>
-                        <phase>site-deploy</phase>
+                        <phase>site</phase>
                     </execution>
                 </executions>
             </plugin>

@@ -1,7 +1,7 @@
 Source Code
 -----------
 
-The Source Code for the Oracle Coherence Hibernate Integration is hosted by [github.com](https://github.com).
+The source code for the Oracle Coherence Hibernate Integration is hosted by [github.com](https://github.com).
 
 It is located here:
 [https://github.com/coherence-community/coherence-hibernate-integration](https://github.com/coherence-community/coherence-hibernate-integration)
@@ -10,8 +10,11 @@ Alternatively if you're not using or want to avoid setting up [git](http://git-s
 containing of the latest development branch from here:
 [https://github.com/coherence-community/coherence-hibernate-integration/archive/master.zip](https://github.com/coherence-community/coherence-hibernate-integration/archive/master.zip)
 
-The branching model adopted for development and releases is as outlined by Vincent Driessen in
-[A successful Git branching model](http://nvie.com/posts/a-successful-git-branching-model)
+The branching and tagging model adopted for development and releases is as documented in Stephen Berczuk's [Software
+Configuration Management Patterns book](http://www.scmpatterns.com).  Since the SCM requirements for the project are
+simple initially, Release Lines and Active Development Lines will only be created when conditions warrant.  Otherwise
+Task-Level Commits are made to the **master** branch, releases are made from (and tagged on) the **master** branch, and
+Integration Builds pull from the **master** branch.
 
 <h4>Important:</h4>
 

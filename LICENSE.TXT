@@ -1,15 +1,15 @@
-COHERENCE HIBERNATE INTEGRATION LICENSE
+ORACLE COHERENCE HIBERNATE INTEGRATION LICENSE
 
-Oracle licenses Coherence Hibernate Integration under the Common Development
+Oracle licenses Oracle Coherence Hibernate Integration under the Common Development
 and Distribution License v 1.0 ("CDDL").
 
-Your use of Coherence Hibernate Integration is governed by the condition that
+Your use of Oracle Coherence Hibernate Integration is governed by the condition that
 you accept all of the terms of the CDDL. Read the terms carefully. If you are
 not willing to be bound by these terms, do not download or use Coherence
 Hibernate Integration.
 
 Third party and other Oracle technology that may be necessary for use with or
-to use Coherence Hibernate Integration is specified in THIRDPARTYLICENSE.txt.
+to use Oracle Coherence Hibernate Integration is specified in THIRDPARTYLICENSE.txt.
 Such third party technology is licensed to you under the terms of the third
 party technology license agreement specified and not under the CDDL.
 

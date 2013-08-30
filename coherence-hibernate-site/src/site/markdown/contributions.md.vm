@@ -3,14 +3,14 @@ Contributing to the Oracle Coherence Hibernate Integration Project
 
 <h4>Overview</h4>
 
-Developing code and documentation for the Coherence Hibernate Integration project is a serious matter,
+Developing code and documentation for the Oracle Coherence Hibernate Integration project is a serious matter,
 as members of the Coherence Community may adopt the implementations provided by the project for use in
 production scenarios.  Consequently every effort has to be made to ensure that project's modules are
 well-tested and stable, including against the range of dependency versions declared in project poms.
 
 <h4>Becoming a Contributor</h4>
 
-Contributing to the Coherence Hibernate Integration project can be done in various ways, each
+Contributing to the Oracle Coherence Hibernate Integration project can be done in various ways, each
 of which is valuable to the Coherence Community as a whole.  Contributions may 
 include helping out by answering questions on the forums, creating issue reports in
 the project's issue tracker, proposing or submitting defect resolutions (fixes),
@@ -25,7 +25,7 @@ and sign the [Oracle Contributors Agreement](http://oss.oracle.com/oca.pdf).
 To do so, simply print out the form, fill in the necessary details, scan it
 in and return via email to: oracle-ca_us [at] oracle [dot] com. 
 
-**Note 1:** For the "Project Name:" please write "Coherence Hibernate Integration".
+**Note 1:** For the "Project Name:" please write "Oracle Coherence Hibernate Integration".
 
 **Note 2:** This is the same agreement used for making contributions to GlassFish and Java 
 itself.  If you already have executed this agreement then you're ready to 
@@ -37,7 +37,7 @@ Should you have any questions regarding this agreement, you should consult the
 <h4>Roles and Responsibilities</h4>
 
 As mentioned above, there are quite a few ways to participate on projects that
-are part of the Coherence Hibernate Integration project, and not all of them involve
+are part of the Oracle Coherence Hibernate Integration project, and not all of them involve
 contributing source code!  Simply using the software, participating on mailing 
 lists or forums, filing bug reports or enhancement requests are an incredibly 
 valuable form of participation.
@@ -57,7 +57,7 @@ category of people. Without users, there is no reason for the project.
 
 **Contributors:**
 
-Contributors are individuals who contribute to the Coherence Hibernate Integration project,
+Contributors are individuals who contribute to the Oracle Coherence Hibernate Integration project,
 but do not have write access to the source tree. Contributions can be in the form of 
 source code patches, new code, or bug reports, but could also include web site 
 content like documentation improvements, FAQs, or screenshots.

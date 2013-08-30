@@ -1,0 +1,13 @@
+Release Numbers
+---------------
+
+Release numbers for the Oracle Coherence Hibernate Integration project follow the
+[Semantic Versioning 2.0.0 standard](http://semver.org).
+
+There is no implied relationship between a major version of the Oracle Coherence Hibernate Integration project and
+a major version of Oracle Coherence (or of Hibernate).  The major versions of the Oracle Coherence Hibernate Integration
+project do not advance in lock step with the major versions of Oracle Coherence or Hibernate; they are independent.
+
+The top-level Maven `pom.xml` file for the project is the authority on compatibility between a version of the Oracle
+Coherence Hibernate Integration project, and the versions of Hibernate and Oracle Coherence with which it is compatible.
+The versions of the dependencies it declares are tested and compatible with the project version.

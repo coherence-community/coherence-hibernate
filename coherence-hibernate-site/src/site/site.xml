@@ -68,15 +68,26 @@
             </script>
         </head>
 
-        <menu>
+        <menu name="Oracle Coherence Hibernate Integration">
             <item name="Welcome" href="index.html"/>
-            <item name="Usage" href="usage.html"/>
-            <item name="Source Code" href="source-code.html"/>
-            <item name="Building" href="building.html"/>
+            <item name="Change History" href="history.html"/>
+            <item name="Upgrading" href="upgrading.html"/>
+            <item name="Examples" href="examples.html"/>
             <item name="Getting Help" href="forums.html"/>
-            <item name="Issue Tracking" href="issue-tracking.html"/>
+        </menu>
+
+        <menu name="Development">
             <item name="License" href="license.html"/>
+            <item name="Release Numbers" href="release-numbers.html"/>
+            <item name="Source Code" href="source-code.html"/>
+            <item name="Build Instructions" href="building.html"/>
+            <item name="Issue Tracking" href="issue-tracking.html"/>
             <item name="Contributions" href="contributions.html"/>
+        </menu>
+
+        <menu name="Modules">
+            <item name="Coherence Hibernate Second-Level Cache" href="secondlevelcache/index.html"/>
+            <item name="Coherence Hibernate CacheStore" href="cachestore/index.html"/>
         </menu>
 
         <footer>

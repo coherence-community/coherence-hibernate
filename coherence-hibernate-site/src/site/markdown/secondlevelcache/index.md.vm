@@ -1,11 +1,7 @@
-Coherence Hibernate Integration Usage
-=====================================
+Coherence Hibernate Second-Level Cache
+======================================
 
-
-Using Coherence as the Hibernate Second-Level Cache
----------------------------------------------------
-
-This section describes how you can use Oracle Coherence as a second-level cache in Hibernate, an object-relational
+This page describes how you can use Oracle Coherence as a second-level cache in Hibernate, an object-relational
 mapping library for Java applications.  Since version 2.1 (released December 11th 2003) Hibernate has incorporated
 second-level caching, by allowing an implementation of a Service Provider Interface (SPI) to be configured.  In
 Hibernate version 3.3 (released September 11th 2008) the second-level cache SPI was significantly redesigned.
@@ -242,9 +238,3 @@ Both client and server JVMs will need the same Coherence operational configurati
 <http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_config.htm#COHDG5002>) specifying necessary cluster
 communication parameters.  Coherence provides default operational configuration, but it is a best practice to override
 communication parameters and cluster name to make them unique for each separate application environment.
-
-Using the HibernateCacheStore
------------------------------
-
-Coming soon.
-

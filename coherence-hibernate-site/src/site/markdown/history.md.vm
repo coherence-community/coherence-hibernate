@@ -1,0 +1,31 @@
+Change History
+--------------
+
+The following sections outline Oracle Coherence Hibernate Integration changes in
+reverse chronological order.
+
+<h3>Version ${project.version} @ ${timestamp} </h3>
+
+<h4>Source and Documentation Contributors</h4>
+
+*   Randy Stafford
+
+<h4>Global and Cross-Module Changes</h4>
+
+*   Initial release.
+
+<h4>coherence-hibernate-cache-store</h4>
+
+*   Initial release.
+
+<h4>coherence-hibernate-second-level-cache</h4>
+
+*   Initial release.
+
+<h4>coherence-hibernate-second-level-cache-tests</h4>
+
+*   Initial release.
+
+<h4>coherence-hibernate-site</h4>
+
+*   Initial release.

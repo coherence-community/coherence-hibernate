@@ -1,7 +1,7 @@
-Welcome to Coherence Hibernate Integration
-==========================================
+Welcome to Oracle Coherence Hibernate Integration
+=================================================
 
-[Coherence Hibernate Integration](http://coherence-community.github.com/coherence-hibernate-integration/${project.version}/)
+[Oracle Coherence Hibernate Integration](http://coherence-community.github.com/coherence-hibernate-integration/${project.version}/)
 implements integration points between Oracle Coherence and the Hibernate
 object/relational mapping framework from JBoss.org.  Two primary integration
 points are covered currently: using Coherence as a second-level cache in

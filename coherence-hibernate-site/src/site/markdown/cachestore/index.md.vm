@@ -1,0 +1,26 @@
+Coherence Hibernate CacheStore
+==============================
+
+This page describes how you can use Hibernate as the implementation of a Coherence CacheStore.
+
+<h3>Installing the Coherence Hibernate CacheStore</h3>
+
+Installing the Coherence Hibernate second-level cache implementation amounts to obtaining a distribution of
+`coherence-hibernate-cache-store-${project.version}.jar` and making it available to JVM ClassLoaders.  The easiest way to do
+so is to build and execute your Hibernate application with Maven, and add the following dependency to your application’s
+`pom.xml`:
+
+    <dependency>
+        <groupId>com.oracle.coherence.hibernate</groupId>
+        <artifactId>coherence-hibernate-cache-store</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+Alternatively, you can download `coherence-hibernate-cache-store-${project.version}.jar` from a Maven repository (e.g.
+<https://maven.java.net>) and use it in JVM classpaths.  Or you can [build](building.html) the Coherence Hibernate
+CacheStore implementation from sources.
+
+Note that the Coherence Hibernate CacheStore implementation depends at runtime on an installation of Oracle
+Coherence, and an installation of Hibernate.  These dependencies are most easily managed using Maven.  You can install
+Coherence artifacts into your Maven repository as documented here:
+<http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537>.

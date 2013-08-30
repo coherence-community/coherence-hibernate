@@ -1,0 +1,24 @@
+Upgrading from Previous Releases
+--------------------------------
+
+<h4>Upgrading from Hibernate integration in Oracle Coherence</h4>
+
+The procedure for upgrading to Oracle Coherence Hibernate Integration 1.0.0 in the Coherence Community,
+from Hibernate integration features in Oracle Coherence versions 3.x and 12.1.2, varies by integration point.
+
+If you want to adopt to the new Coherence-based Hibernate second-level cache SPI implementation, which is targeted
+to the redesigned SPI released in Hibernate 3.3, then you need to do the following:
+
+* Follow the [usage instructions](secondlevelcache/index.html) documented for the Coherence Hibernate Second-Level
+Cache module.
+* In your application code, un-configure the old (i.e., pre-3.3) Hibernate second-level cache SPI
+implementation, i.e. you no longer need to set the Hibernate configuration property
+`hibernate.cache.provider_class`.
+
+If you want to adopt the `HibernateCacheStore` from the Oracle Coherence Hibernate Integration project in the Coherence
+Community, which was merely moved from the Oracle Coherence product, then you need to follow the
+[usage instructions](cachestore/index.html) documented for the Coherence Hibernate CacheStore.  Note this implies
+changes to the Coherence cache configuration files used by your application, as the java package name of the
+`HibernateCacheStore` has changed from `com.tangosol.coherence.hibernate` to `com.oracle.coherence.hibernate.cachestore`
+in moving from the Oracle Coherence product to the Oracle Coherence Hibernate Integration project in the Coherence
+Community.
