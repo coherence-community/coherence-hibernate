@@ -68,6 +68,7 @@
 
     <modules>
         <module>coherence-hibernate-cache-store</module>
+        <module>coherence-hibernate-cache-store-tests</module>
         <module>coherence-hibernate-second-level-cache</module>
         <module>coherence-hibernate-second-level-cache-tests</module>
         <module>coherence-hibernate-site</module>

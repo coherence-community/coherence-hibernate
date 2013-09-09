@@ -113,7 +113,7 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
     private static SimpleJavaApplication hsqldbProcess;
 
 
-    // ---- Setuo / teardown
+    // ---- Setup / teardown
 
     /**
      * Set up resources in the test fixture that survive test method execution.

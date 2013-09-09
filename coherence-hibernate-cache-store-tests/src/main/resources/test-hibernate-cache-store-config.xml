@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<!--
+	File: test-hibernate-second-level-cache-config.xml
+
+ 	DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+	The contents of this file are subject to the terms and conditions of
+	the Common Development and Distribution License 1.0 (the "License").
+
+	You may not use this file except in compliance with the License.
+
+	You can obtain a copy of the License by consulting the LICENSE.txt file
+	distributed with this file, or by consulting https://oss.oracle.com/licenses/CDDL
+
+	See the License for the specific language governing permissions
+	and limitations under the License.
+
+	When distributing the software, include this License Header Notice in each
+	file and include the License file LICENSE.txt.
+
+	MODIFICATIONS:
+	If applicable, add the following below the License Header, with the fields
+	enclosed by brackets [] replaced by your own identifying information:
+	"Portions Copyright [year] [name of copyright owner]"
+ -->
+
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+              xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd">
+
+    <caching-scheme-mapping>
+        <cache-mapping>
+            <cache-name>org.hibernate.tutorial.domain.*</cache-name>
+            <scheme-name>hibernate-cache-store-scheme</scheme-name>
+        </cache-mapping>
+    </caching-scheme-mapping>
+
+    <caching-schemes>
+        <distributed-scheme>
+            <scheme-name>hibernate-cache-store-scheme</scheme-name>
+            <backing-map-scheme>
+                <read-write-backing-map-scheme>
+                    <internal-cache-scheme>
+                        <local-scheme/>
+                    </internal-cache-scheme>
+                    <cachestore-scheme>
+                        <class-scheme>
+                            <class-name>com.oracle.coherence.hibernate.cachestore.HibernateCacheStore</class-name>
+                            <init-params>
+                                <init-param>
+                                    <param-type>java.lang.String</param-type>
+                                    <param-value>{cache-name}</param-value>
+                                </init-param>
+                            </init-params>
+                        </class-scheme>
+                    </cachestore-scheme>
+                </read-write-backing-map-scheme>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </distributed-scheme>
+    </caching-schemes>
+</cache-config>
