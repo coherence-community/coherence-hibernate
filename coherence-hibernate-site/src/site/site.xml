@@ -86,8 +86,8 @@
         </menu>
 
         <menu name="Modules">
-            <item name="Coherence Hibernate Second-Level Cache" href="secondlevelcache/index.html"/>
             <item name="Coherence Hibernate CacheStore" href="cachestore/index.html"/>
+            <item name="Coherence Hibernate Second-Level Cache" href="secondlevelcache/index.html"/>
         </menu>
 
         <footer>

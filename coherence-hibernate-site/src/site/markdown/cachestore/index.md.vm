@@ -1,7 +1,12 @@
 Coherence Hibernate CacheStore
 ==============================
 
-This page describes how you can use Hibernate as the implementation of a Coherence CacheStore.
+This page describes how you can use Hibernate as the implementation of a Coherence `CacheStore`.
+
+Using Hibernate as the implementation of a Coherence `CacheStore` may be a good fit for Java applications that use
+Coherence APIs for data access and management, whose cache entries are objects or graphs appropriate for mapping
+to relational tables via Hibernate, and that have simple transactional requirements (e.g. transactions affecting a
+single cache entry at a time).
 
 <h3>Installing the Coherence Hibernate CacheStore</h3>
 
@@ -24,3 +29,255 @@ Note that the Coherence Hibernate CacheStore implementation depends at runtime o
 Coherence, and an installation of Hibernate.  These dependencies are most easily managed using Maven.  You can install
 Coherence artifacts into your Maven repository as documented here:
 <http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_install.htm#A7113537>.
+
+<h3>Hibernate Configuration Requirements</h3>
+
+Hibernate entities written and read via the `HibernateCacheStore` module must use the `assigned` ID generator
+in Hibernate, and also have a defined ID property.
+
+Disable the `hibernate.hbm2ddl.auto` property in the `hibernate.cfg.xml` file used by the `HibernateCacheStore` module
+to avoid excessive schema updates and possible deadlocks when starting a Coherence cluster with multiple storage members.
+
+<h3>Configuring a HibernateCacheStore Constructor</h3>
+
+The following examples illustrate how to configure a simple `HibernateCacheStore` constructor, which accepts only an
+entity name. This configures Hibernate by using the default configuration path, which looks for a `hibernate.cfg.xml`
+file in the class path. You can also include a resource name or file specification for the `hibernate.cfg.xml` file as
+the second `<init-param>` (set the `<param-type>` element to `java.lang.String` for a resource name and `java.io.File`
+for a file specification). See the Javadoc for `HibernateCacheStore` for more information.
+
+The following example illustrates a simple `coherence-cache-config.xml` file used to define a NamedCache cache object
+named `TableA` that caches instances of a Hibernate entity (`com.company.TableA`). To define more entity caches, add
+additional `<cache-mapping>` elements.
+
+    <?xml version="1.0"?>
+    <cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+                  xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd">
+      <caching-scheme-mapping>
+        <cache-mapping>
+          <cache-name>TableA</cache-name>
+          <scheme-name>distributed-hibernate</scheme-name>
+          <init-params>
+            <init-param>
+              <param-name>entityname</param-name>
+              <param-value>com.company.TableA</param-value>
+            </init-param>
+          </init-params>
+        </cache-mapping>
+      </caching-scheme-mapping>
+
+      <caching-schemes>
+        <distributed-scheme>
+          <scheme-name>distributed-hibernate</scheme-name>
+          <backing-map-scheme>
+            <read-write-backing-map-scheme>
+              <internal-cache-scheme>
+                <local-scheme></local-scheme>
+              </internal-cache-scheme>
+
+              <cachestore-scheme>
+                <class-scheme>
+                  <class-name>
+                  com.tangosol.coherence.hibernate.HibernateCacheStore
+                  </class-name>
+                  <init-params>
+                    <init-param>
+                      <param-type>java.lang.String</param-type>
+                      <param-value>{entityname}</param-value>
+                    </init-param>
+                  </init-params>
+                </class-scheme>
+              </cachestore-scheme>
+            </read-write-backing-map-scheme>
+          </backing-map-scheme>
+          <autostart>true</autostart>
+        </distributed-scheme>
+      </caching-schemes>
+    </cache-config>
+
+The next example illustrates that you can also use the predefined `{cache-name}` macro to eliminate the need for the
+`<init-params>` portion of the cache mapping.
+
+    <?xml version="1.0"?>
+    <cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+                  xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd">
+      <caching-scheme-mapping>
+        <cache-mapping>
+          <cache-name>TableA</cache-name>
+          <scheme-name>distributed-hibernate</scheme-name>
+        </cache-mapping>
+      </caching-scheme-mapping>
+
+      <caching-schemes>
+        <distributed-scheme>
+          <scheme-name>distributed-hibernate</scheme-name>
+          <backing-map-scheme>
+            <read-write-backing-map-scheme>
+              <internal-cache-scheme>
+                <local-scheme></local-scheme>
+              </internal-cache-scheme>
+
+              <cachestore-scheme>
+                <class-scheme>
+                  <class-name>
+                  com.tangosol.coherence.hibernate.HibernateCacheStore
+                  </class-name>
+                  <init-params>
+                    <init-param>
+                      <param-type>java.lang.String</param-type>
+                      <param-value>com.company.{cache-name}</param-value>
+                    </init-param>
+                  </init-params>
+                </class-scheme>
+              </cachestore-scheme>
+            </read-write-backing-map-scheme>
+          </backing-map-scheme>
+          <autostart>true</autostart>
+        </distributed-scheme>
+      </caching-schemes>
+    </cache-config>
+
+The final example illustrates that, if naming conventions allow, the mapping can be completely generalized to enable a
+cache mapping for any qualified class name (entity name).
+
+    <?xml version="1.0"?>
+    <cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+                  xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd">
+      <caching-scheme-mapping>
+        <cache-mapping>
+          <cache-name>com.company.*</cache-name>
+          <scheme-name>distributed-hibernate</scheme-name>
+        </cache-mapping>
+      </caching-scheme-mapping>
+
+      <caching-schemes>
+        <distributed-scheme>
+          <scheme-name>distributed-hibernate</scheme-name>
+          <backing-map-scheme>
+            <read-write-backing-map-scheme>
+              <internal-cache-scheme>
+                <local-scheme></local-scheme>
+              </internal-cache-scheme>
+
+              <cachestore-scheme>
+                <class-scheme>
+                  <class-name>
+                  com.tangosol.coherence.hibernate.HibernateCacheStore
+                  </class-name>
+                  <init-params>
+                    <init-param>
+                      <param-type>java.lang.String</param-type>
+                      <param-value>{cache-name}</param-value>
+                    </init-param>
+                  </init-params>
+                </class-scheme>
+              </cachestore-scheme>
+            </read-write-backing-map-scheme>
+          </backing-map-scheme>
+          <autostart>true</autostart>
+        </distributed-scheme>
+      </caching-schemes>
+    </cache-config>
+
+<h3>Creating a Custom Hibernate-Based CacheStore</h3>
+
+While the provided `HibernateCacheStore` module provides a solution for most entity-based caches, there may be cases where
+an application-specific, Hibernate-based `CacheStore` module is necessary. For example, for providing parameterized queries,
+or including or post-processing query results.
+
+Care must be taken in this scenario to avoid causing re-entrant calls into Coherence cache services, which could be
+possible (depending on service names) if Hibernate is also configured to use the Coherence-based second-level cache
+implementation.  Therefore, all methods in a custom Hibernate-based `CacheLoader` or `CacheStore` implementation should
+be careful to call the Hibernate `Session.setCacheMode(CacheMode.IGNORE)` method to disable cache access. Better yet,
+the Hibernate configuration used by the custom Hibernate-based `CacheStore` should disable second-level caching.
+
+In some cases, you may want to extend the provided `HibernateCacheStore` with application-specific functionality.
+The most obvious reason for this is to take advantage of a preexisting, programmatically configured `SessionFactory`
+instance.  But note that it is possible to inject a pre-configured `SessionFactory` instance into the provided
+`HibernateCacheStore` via Spring integration.
+
+<h3>JDBC Isolation Level</h3>
+
+In cases where all access to a database is through Coherence, cache store modules naturally enforce ANSI-style repeatable
+read isolation as read operations, and write operations are executed serially on a per-key basis (by using the Partitioned
+Cache Service). Increasing database isolation above the repeatable read level does not yield increased isolation because
+cache store operations might span multiple partitioned cache nodes (and thus multiple database transactions). Using
+database isolation levels below the repeatable read level does not result in unexpected anomalies, and might reduce
+processing load on the database server.
+
+<h3>Fault-Tolerance for Hibernate Cache Store Operations</h3>
+
+For single-cache-entry updates, cache store operations are fully fault-tolerant in that the cache and database are
+guaranteed to be consistent during any server failure (including failures during partial updates). While the mechanisms
+for fault-tolerance vary, this is true for both write-through and write-behind caches.
+
+Coherence does not support two-phase cache store operations across multiple cache store instances. In other words, if
+two cache entries are updated, triggering calls to cache store modules sitting on separate servers, it is possible for
+one database update to succeed and for the other to fail. In this case, you might want to use a cache-aside architecture
+(updating the cache and database as two separate components of a single transaction) with the application server
+transaction manager. In many cases, it is possible to design the database schema to prevent logical commit failures
+(but obviously not server failures). Write-behind caching avoids this issue because put operations are not affected by
+database behavior (and the underlying issues have been addressed earlier in the design process).
+
+<h3>Using Fully Cached Data Sets</h3>
+
+There are two scenarios where using fully cached data sets would be advantageous. One is when you are performing
+distributed queries on the cache; the other is when you want to provide continued application processing despite a
+database failure.
+
+Distributed queries offer the potential for lower latency, higher throughput, and less database server load, as opposed
+to executing queries on the database server. For set-oriented queries, the data set must be entirely cached to produce
+correct query results. More precisely, for a query issued against the cache to produce correct results, the query must
+not depend on any uncached data.
+
+Distributed queries enable you to create hybrid caches. For example, it is possible to combine two uses of NamedCache:
+a fully cached size-limited data set for querying (for example, the data for the most recent week), and a partially
+cached historical data set used for singleton read operations. This approach avoids data duplication and minimizes
+memory usage.
+
+While fully cached data sets are usually bulk-loaded during application startup (or on a periodic basis), cache store
+integration can be used to ensure that both cache and database are kept fully synchronized.
+
+Another reason for using fully cached data sets is to provide the ability to continue application processing even if the
+underlying database fails. Using write-behind caching extends this mode of operation to support full read-write
+applications. With write-behind, the cache becomes (in effect) the temporary system of record. Should the database fail,
+updates are queued in Coherence until the connection is restored. At this point, all cache changes are sent to the database.
+
+<h3>API for HibernateCacheStore and HibernateCacheLoader</h3>
+
+The Oracle Coherence Hibernate Integration project includes a default entity-based `CacheStore` implementation,
+`HibernateCacheStore`, and a corresponding `CacheLoader` implementation, `HibernateCacheLoader`, in the
+`com.oracle.coherence.hibernate.cachestore` package.
+
+The following table describes the different constructors for the `HibernateCacheStore` and `HibernateCacheLoader`
+classes. For more detailed technical information, see the Javadoc for these classes.
+
+<table border='1' cellpadding='5' cellspacing='20'>
+  <tr>
+    <th align='left' width='55%'>Constructor</th>
+    <th align='left' width='45%'>Description</th>
+  </tr>
+  <tr>
+    <td valign='top'>HibernateCacheLoader() and HibernateCacheStore()</td>
+    <td valign='top'>These constructors are the default constructors for creating a new instance of a cache loader or cache store. They do not create a Hibernate SessionFactory object. To inject a Hibernate SessionFactory object after you use these constructors, call the setSessionFactory() method.</td>
+  </tr>
+  <tr>
+    <td valign='top'>HibernateCacheLoader(java.lang.String entityName) and HibernateCacheStore(java.lang.String entityName)</td>
+    <td valign='top'>These constructors create a Hibernate SessionFactory object using the default Hibernate configuration (hibernate.cfg.xml) in the classpath.</td>
+  </tr>
+  <tr>
+    <td valign='top'>HibernateCacheStore(java.lang.String entityName, java.lang.String sResource) and HibernateCacheStore(java.lang.String entityName, java.lang.String sResource)</td>
+    <td valign='top'>These constructors create a Hibernate SessionFactory object based on the configuration file provided (sResource).</td>
+  </tr>
+  <tr>
+    <td valign='top'>HibernateCacheLoader(java.lang.String entityName, java.io.File configurationFile) and HibernateCacheStore(java.lang.String entityName, java.io.File configurationFile)</td>
+    <td valign='top'>These constructors create a Hibernate SessionFactory object based on the configuration file provided (configurationFile).</td>
+  </tr>
+  <tr>
+    <td valign='top'>HibernateCacheStore(java.lang.String entityName, org.hibernate.SessionFactory sFactory) and HibernateCacheStore(java.lang.String entityName, org.hibernate.SessionFactory sFactory)</td>
+    <td valign='top'>These constructors accept an entity name name and a Hibernate SessionFactory.</td>
+  </tr>
+</table>

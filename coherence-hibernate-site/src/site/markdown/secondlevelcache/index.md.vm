@@ -135,7 +135,7 @@ by a period.
 string and parameters, and cache values are collections of identifiers of entities satisfying the query.  By default
 Hibernate uses one `QueryResultsRegion` with the name "`org.hibernate.cache.internal.StandardQueryCache`".  Hibernate
 users can instantiate `QueryResultsRegions` by calling `org.hibernate.Query.setCacheRegion()` passing custom cache names
-(by convention these names should begin with `query.`).
+(by convention these names should begin with "`query.`").
 * `TimestampsRegions` cache timestamps at which database tables were last written by Hibernate.  These timestamps are
 used by Hibernate during query processing to determine whether cached query results can be used (if a query involves a
 certain table, and that table was written more recently than when the result set for that query was last cached, then
