@@ -10,7 +10,7 @@ single cache entry at a time).
 
 <h3>Installing the Coherence Hibernate CacheStore</h3>
 
-Installing the Coherence Hibernate second-level cache implementation amounts to obtaining a distribution of
+Installing the Coherence Hibernate CacheStore implementation amounts to obtaining a distribution of
 `coherence-hibernate-cache-store-${project.version}.jar` and making it available to JVM ClassLoaders.  The easiest way to do
 so is to build and execute your Hibernate application with Maven, and add the following dependency to your application’s
 `pom.xml`:
