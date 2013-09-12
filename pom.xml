@@ -37,7 +37,7 @@
 
     <groupId>com.oracle.coherence.hibernate</groupId>
     <artifactId>coherence-hibernate-integration</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>coherence-hibernate-integration</name>
