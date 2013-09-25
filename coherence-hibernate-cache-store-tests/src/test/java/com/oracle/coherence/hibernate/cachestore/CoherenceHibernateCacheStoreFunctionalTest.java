@@ -1,5 +1,5 @@
 /*
- * File: CoherenceHibernateSecondLevelCacheFunctionalTest.java
+ * File: CoherenceHibernateCacheStoreFunctionalTest.java
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
