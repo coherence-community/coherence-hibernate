@@ -12,7 +12,7 @@ contributors, maintainers, issue tracking, releases, source code and contact
 information is available at: [http://java.net/projects/cohhib](http://java.net/projects/cohhib).
 
 Detailed project documentation for the latest release (1.0.0) is available
-here: [http://coherence-community.github.io/coherence-hibernate-integration/1.0.0/](http://coherence-community.github.io/coherence-hibernate-integration/1.0.0-SNAPSHOT/)
+here: [http://coherence-community.github.io/coherence-hibernate-integration/1.0.0/](http://coherence-community.github.io/coherence-hibernate-integration/1.0.0/)
 
 > **NOTE**
 >
