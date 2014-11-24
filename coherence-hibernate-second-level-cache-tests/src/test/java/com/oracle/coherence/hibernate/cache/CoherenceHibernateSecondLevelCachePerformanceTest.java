@@ -69,7 +69,7 @@ import static org.junit.Assert.*;
  *
  * @author Randy Stafford
  */
-@RunWith(JUnit4.class)
+//@RunWith(JUnit4.class)
 public class CoherenceHibernateSecondLevelCachePerformanceTest
 {
 
@@ -115,7 +115,7 @@ public class CoherenceHibernateSecondLevelCachePerformanceTest
     /**
      * Measures the latency of Session.get() without second-level caching.
      */
-    @Test
+    //@Test
     public void measureGetLatencyWithoutCaching()
     throws InterruptedException, IOException
     {
@@ -148,7 +148,7 @@ public class CoherenceHibernateSecondLevelCachePerformanceTest
     /**
      * Measures the latency of Session.get() with Coherence second-level caching.
      */
-    @Test
+    //@Test
     public void measureGetLatencyWithCoherenceCaching()
     throws InterruptedException, IOException
     {
@@ -190,7 +190,7 @@ public class CoherenceHibernateSecondLevelCachePerformanceTest
     /**
      * Measures the latency of Session.get() with Coherence near caching.
      */
-    @Test
+    //@Test
     public void measureGetLatencyWithNearCaching()
             throws InterruptedException, IOException
     {
@@ -233,7 +233,7 @@ public class CoherenceHibernateSecondLevelCachePerformanceTest
     /**
      * Measures the latency of a query without second-level caching.
      */
-    @Test
+    //@Test
     public void measureQueryLatencyWithoutCaching()
             throws InterruptedException, IOException
     {
@@ -268,7 +268,7 @@ public class CoherenceHibernateSecondLevelCachePerformanceTest
     /**
      * Measures the latency of a query with Coherence second-level caching.
      */
-    @Test
+    //@Test
     public void measureQueryLatencyWithCoherenceCaching()
             throws InterruptedException, IOException
     {
