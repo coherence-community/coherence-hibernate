@@ -374,7 +374,7 @@ public class CoherenceHibernateSecondLevelCachePerformanceTest
         dcsSchema.setCacheConfigURI(cacheConfigFilePath);
         dcsSchema.setJMXManagementMode(ClusterMemberSchema.JMXManagementMode.ALL);
         dcsSchema.setErrorStreamRedirected(true);
-        FileWriterApplicationConsole dcsConsole = new FileWriterApplicationConsole("dcs.log");
+        FileWriterApplicationConsole dcsConsole = new FileWriterApplicationConsole("target/dcs.log");
         NativeJavaApplicationBuilder<ClusterMember, ClusterMemberSchema> dcsBuilder;
         dcsBuilder = new NativeJavaApplicationBuilder<>();
         ClusterBuilder clusterBuilder = new ClusterBuilder();
@@ -396,7 +396,7 @@ public class CoherenceHibernateSecondLevelCachePerformanceTest
         hsqldbSchema.addArgument("-database.0");
         hsqldbSchema.addArgument("file:target/data/tutorial");
         hsqldbSchema.setErrorStreamRedirected(true);
-        FileWriterApplicationConsole hsqldbConsole = new FileWriterApplicationConsole("hsqldb.log");
+        FileWriterApplicationConsole hsqldbConsole = new FileWriterApplicationConsole("target/hsqldb.log");
         hsqldbProcess = hsqldbBuilder.realize(hsqldbSchema, "hsqldb", hsqldbConsole);
     }
 

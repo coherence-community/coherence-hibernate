@@ -39,7 +39,6 @@ import com.tangosol.net.NamedCache;
 import com.tangosol.util.filter.AlwaysFilter;
 import com.tangosol.util.processor.ConditionalRemove;
 import org.hibernate.Session;
-import org.hibernate.tutorial.domain.Event;
 import org.hibernate.tutorial.domain.Person;
 import org.hibernate.tutorial.util.HibernateUtil;
 import org.junit.After;
@@ -49,24 +48,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.sql.*;
+import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * A CoherenceHibernateCacheStoreFunctionalTest is a functional test of the Hibernate-based implementation
@@ -407,7 +394,7 @@ public class CoherenceHibernateCacheStoreFunctionalTest
         dcsSchema.setCacheConfigURI(CACHE_CONFIG_FILE_PATH);
         dcsSchema.setJMXManagementMode(ClusterMemberSchema.JMXManagementMode.ALL);
         dcsSchema.setErrorStreamRedirected(true);
-        FileWriterApplicationConsole dcsConsole = new FileWriterApplicationConsole("dcs.log");
+        FileWriterApplicationConsole dcsConsole = new FileWriterApplicationConsole("target/dcs.log");
         NativeJavaApplicationBuilder<ClusterMember, ClusterMemberSchema> dcsBuilder;
         dcsBuilder = new NativeJavaApplicationBuilder<>();
         ClusterBuilder clusterBuilder = new ClusterBuilder();
@@ -429,7 +416,7 @@ public class CoherenceHibernateCacheStoreFunctionalTest
         hsqldbSchema.addArgument("-database.0");
         hsqldbSchema.addArgument("file:target/data/tutorial");
         hsqldbSchema.setErrorStreamRedirected(true);
-        FileWriterApplicationConsole hsqldbConsole = new FileWriterApplicationConsole("hsqldb.log");
+        FileWriterApplicationConsole hsqldbConsole = new FileWriterApplicationConsole("target/hsqldb.log");
         hsqldbProcess = hsqldbBuilder.realize(hsqldbSchema, "hsqldb", hsqldbConsole);
     }
 
