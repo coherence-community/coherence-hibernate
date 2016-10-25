@@ -65,10 +65,16 @@
     </developers>
 
     <modules>
+        <module>coherence-hibernate3-cache-store</module>
+        <module>coherence-hibernate3-cache-store-tests</module>        
+        <module>coherence-hibernate3-second-level-cache</module>
+        <module>coherence-hibernate3-second-level-cache-tests</module>
+
         <module>coherence-hibernate-cache-store</module>
         <module>coherence-hibernate-cache-store-tests</module>
         <module>coherence-hibernate-second-level-cache</module>
         <module>coherence-hibernate-second-level-cache-tests</module>
+
         <module>coherence-hibernate-site</module>
     </modules>
 
@@ -103,7 +109,7 @@
         <!-- dependency versions (alphabetically) -->
         <!--<coherence.version>[3.4.2,)</coherence.version>-->
         <coherence.version>12.2.1-1-0</coherence.version>
-        <!--<hibernate.version>[3.3.1.GA,)</hibernate.version>-->
+        <hibernate3.version>3.6.10.Final</hibernate3.version>
         <hibernate.version>4.2.4.Final</hibernate.version>
         <junit.version>4.11</junit.version>
     </properties>
