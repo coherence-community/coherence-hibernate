@@ -46,7 +46,7 @@ import java.util.Map;
 
 /**
  * Data-driven CacheLoader implementation for Hibernate tables
- * <p/>
+ * <p>
  * These methods all follow the pattern of:
  * <ol>
  *   <li>open session</li>
@@ -214,7 +214,7 @@ public class HibernateCacheLoader
 
     /**
      * Initializer (must be called post-constructor)
-     * <p/>
+     * <p>
      * We do this specifically so that derived classes can safely create
      * override methods that depend on a fully constructed object state.
      * Will only be called once per instance and prior to the main body

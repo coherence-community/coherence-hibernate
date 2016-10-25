@@ -117,7 +117,7 @@ public class HibernateCacheStore
 
     /**
      * Store a Hibernate entity given an id (key) and entity (value)
-     * <p/>
+     * <p>
      * The entity must have an identifier attribute, and it must be either
      * null (undefined) or equal to the cache key.
      *
