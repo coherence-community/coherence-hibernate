@@ -31,6 +31,7 @@ import com.tangosol.net.NamedCache;
 import com.tangosol.util.Base;
 import com.tangosol.util.ConcurrentMap;
 import com.tangosol.util.InvocableMap;
+import com.tangosol.util.InvocableMapHelper;
 import com.tangosol.util.extractor.IdentityExtractor;
 import com.tangosol.util.filter.AlwaysFilter;
 import com.tangosol.util.processor.ConditionalPut;
@@ -205,7 +206,7 @@ implements Region
     public void lockCache()
     {
         // will only work as imagined with caches of replicated topology
-        getNamedCache().lock(ConcurrentMap.LOCK_ALL);
+        InvocableMapHelper.lockAll(getNamedCache(), getNamedCache().keySet(), 0);
     }
 
     /**
@@ -214,7 +215,7 @@ implements Region
     public void unlockCache()
     {
         // will only work as imagined with caches of replicated topology
-        getNamedCache().unlock(ConcurrentMap.LOCK_ALL);
+        InvocableMapHelper.unlockAll(getNamedCache(), getNamedCache().keySet());
     }
 
     /**
