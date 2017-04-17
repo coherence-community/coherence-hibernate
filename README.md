@@ -1,5 +1,5 @@
-Welcome to Oracle Coherence Hibernate Integration
-=================================================
+Welcome to Oracle Coherence Hibernate Project
+=============================================
 
 The Oracle Coherence Hibernate project implements integration points between Oracle Coherence and the Hibernate
 object/relational mapping framework from JBoss.org.  
