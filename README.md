@@ -8,7 +8,7 @@ Two primary integration points are covered currently: using Coherence as a secon
 Hibernate; and using Hibernate as a Coherence CacheStore implementation.
 
 Detailed project documentation for the latest release (1.0.0) is available
-here: [http://coherence-community.github.io/coherence-hibernate-integration/1.0.0/](http://coherence-community.github.io/coherence-hibernate-integration/1.0.0/)
+here: [http://coherence-community.github.io/coherence-hibernate/1.0.0/](http://coherence-community.github.io/coherence-hibernate/1.0.0/)
 
 > **NOTE**
 >
