@@ -12,6 +12,4 @@ here: [http://coherence-community.github.io/coherence-hibernate/1.0.0/](http://c
 
 > **NOTE**
 >
-> The [Apache Maven](http://maven.apache.org)-based releases for this project are published to: [maven.java.net](https://maven.java.net).
->
-> Snapshots of this project are routinely published to the [maven.java.net](https://maven.java.net) snapshot repository defined here: [https://maven.java.net/content/repositories/snapshots/](https://maven.java.net/content/repositories/snapshots/)
+> The [Apache Maven](http://maven.apache.org)-based snapshots and releases for this project are published to Maven Central.
