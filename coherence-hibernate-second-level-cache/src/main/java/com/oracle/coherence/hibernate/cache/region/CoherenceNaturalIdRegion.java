@@ -30,12 +30,12 @@ import com.oracle.coherence.hibernate.cache.access.NaturalIdNonstrictReadWriteCo
 import com.oracle.coherence.hibernate.cache.access.NaturalIdReadWriteCoherenceRegionAccessStrategy;
 import com.oracle.coherence.hibernate.cache.access.NaturalIdReadOnlyCoherenceRegionAccessStrategy;
 import com.tangosol.net.NamedCache;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.CacheDataDescription;
 import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.AccessType;
 import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
-import org.hibernate.cfg.Settings;
 
 import java.util.Properties;
 
@@ -56,13 +56,13 @@ implements NaturalIdRegion
      * Complete constructor.
      *
      * @param namedCache the NamedCache implementing this CoherenceNaturalIdRegion
-     * @param settings the Hibernate settings object
+     * @param options Hibernate SessionFactoryOptions
      * @param properties configuration properties for this CoherenceNaturalIdRegion
      * @param metadata the description of the data in this CoherenceNaturalIdRegion
      */
-    public CoherenceNaturalIdRegion(NamedCache namedCache, Settings settings, Properties properties, CacheDataDescription metadata)
+    public CoherenceNaturalIdRegion(NamedCache namedCache, SessionFactoryOptions options, Properties properties, CacheDataDescription metadata)
     {
-        super(namedCache, settings, properties, metadata);
+        super(namedCache, options, properties, metadata);
     }
 
 
@@ -78,11 +78,11 @@ implements NaturalIdRegion
         switch (accessType)
         {
             case NONSTRICT_READ_WRITE :
-                return new NaturalIdNonstrictReadWriteCoherenceRegionAccessStrategy(this, getSettings());
+                return new NaturalIdNonstrictReadWriteCoherenceRegionAccessStrategy(this, getSessionFactoryOptions());
             case READ_ONLY :
-                return new NaturalIdReadOnlyCoherenceRegionAccessStrategy(this, getSettings());
+                return new NaturalIdReadOnlyCoherenceRegionAccessStrategy(this, getSessionFactoryOptions());
             case READ_WRITE :
-                return new NaturalIdReadWriteCoherenceRegionAccessStrategy(this, getSettings());
+                return new NaturalIdReadWriteCoherenceRegionAccessStrategy(this, getSessionFactoryOptions());
             case TRANSACTIONAL :
                 throw new CacheException(CoherenceRegionAccessStrategy.TRANSACTIONAL_STRATEGY_NOT_SUPPORTED_MESSAGE);
             default :

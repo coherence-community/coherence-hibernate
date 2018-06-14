@@ -39,8 +39,8 @@ extends AbstractCoherenceRegionTest
         CoherenceTimestampsRegion coherenceTimestampsRegion = getCoherenceTimestampsRegion();
         Object key = "testPutGet";
         Object objectPut = "testObject";
-        coherenceTimestampsRegion.put(key, objectPut);
-        Object objectGot = coherenceTimestampsRegion.get(key);
+        coherenceTimestampsRegion.put(null, key, objectPut);
+        Object objectGot = coherenceTimestampsRegion.get(null, key);
         assertEquals("Expect got same object as put", objectPut, objectGot);
     }
 

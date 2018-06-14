@@ -29,6 +29,7 @@ import com.oracle.coherence.hibernate.cache.region.CoherenceRegion;
 import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -41,6 +42,7 @@ import static org.junit.Assert.*;
 public class EntityReadOnlyCoherenceRegionAccessStrategyTest
 extends AbstractCoherenceRegionAccessStrategyTest
 {
+    private SharedSessionContractImplementor implementor;
 
 
     // ---- Subclass responsibility
@@ -90,7 +92,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object value = "testInsert";
         Object version = null;
 
-        boolean cacheWasModified = accessStrategy.insert(key, value, version);
+        boolean cacheWasModified = accessStrategy.insert(implementor, key, value, version);
         assertFalse("Expect no cache modification from read-only access strategy insert", cacheWasModified);
     }
 
@@ -106,10 +108,10 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object value = "testAfterInsert";
         Object version = null;
 
-        boolean cacheWasModified = accessStrategy.afterInsert(key, value, version);
+        boolean cacheWasModified = accessStrategy.afterInsert(implementor, key, value, version);
         assertTrue("Expect cache modification from read-only access strategy afterInsert", cacheWasModified);
         assertTrue("Expect cache to contain key after afterInsert", accessStrategy.getRegion().contains(key));
-        assertEquals("Expect to get same value put", value, accessStrategy.get(key, System.currentTimeMillis()));
+        assertEquals("Expect to get same value put", value, accessStrategy.get(implementor, key, System.currentTimeMillis()));
     }
 
     /**
@@ -127,7 +129,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
             Object currentVersion = null;
             Object previousVersion = null;
 
-            accessStrategy.update(key, value, currentVersion, previousVersion);
+            accessStrategy.update(implementor, key, value, currentVersion, previousVersion);
             fail("Expect CacheException updating read-only access strategy");
         }
         catch (UnsupportedOperationException ex)
@@ -152,7 +154,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
             Object previousVersion = null;
             SoftLock softLock = null;
 
-            accessStrategy.afterUpdate(key, value, currentVersion, previousVersion, softLock);
+            accessStrategy.afterUpdate(implementor, key, value, currentVersion, previousVersion, softLock);
             fail("Expect CacheException updating read-only access strategy");
         }
         catch (UnsupportedOperationException ex)

@@ -26,11 +26,15 @@
 package com.oracle.coherence.hibernate.cache.access;
 
 import com.oracle.coherence.hibernate.cache.region.CoherenceEntityRegion;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cfg.Settings;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 
 /**
  * An EntityReadWriteCoherenceRegionAccessStrategy is a Coherence-based read-write region access strategy
@@ -50,11 +54,11 @@ implements EntityRegionAccessStrategy
      * Complete constructor.
      *
      * @param coherenceEntityRegion the CoherenceEntityRegion for this EntityReadWriteCoherenceRegionAccessStrategy
-     * @param settings the Hibernate settings object
+     * @param options Hibernate SessionFactoryOptions
      */
-    public EntityReadWriteCoherenceRegionAccessStrategy(CoherenceEntityRegion coherenceEntityRegion, Settings settings)
+    public EntityReadWriteCoherenceRegionAccessStrategy(CoherenceEntityRegion coherenceEntityRegion, SessionFactoryOptions options)
     {
-        super(coherenceEntityRegion, settings);
+        super(coherenceEntityRegion, options);
     }
 
 
@@ -74,7 +78,7 @@ implements EntityRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean insert(Object key, Object value, Object version) throws CacheException
+    public boolean insert(SharedSessionContractImplementor implementor, Object key, Object value, Object version) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
@@ -88,21 +92,21 @@ implements EntityRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterInsert(Object key, Object value, Object version) throws CacheException
+    public boolean afterInsert(SharedSessionContractImplementor implementor, Object key, Object value, Object version) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
         //In implementation we only insert the entry if there was no entry already present at the argument key
         debugf("%s.afterInsert(%s, %s, %s)", this, key, value, version);
-        return afterInsert(key, newCacheValue(value, version));
+        return afterInsert(implementor, key, newCacheValue(value, version));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
+    public boolean update(SharedSessionContractImplementor implementor, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence lockItem() -> update() -> afterUpdate() when updating an entity.
@@ -116,7 +120,7 @@ implements EntityRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
+    public boolean afterUpdate(SharedSessionContractImplementor implementor, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence lockItem() -> update() -> afterUpdate() when updating an entity.
@@ -124,8 +128,17 @@ implements EntityRegionAccessStrategy
         //as appropriate for the kind of strategy (nonstrict-read-write vs. read-write).
         //In the read-write strategy we only update the cache value if it is present and was not multiply locked.
         debugf("%s.afterUpdate(%s, %s, %s)", this, key, value, currentVersion, previousVersion, lock);
-        return afterUpdate(key, newCacheValue(value, currentVersion), lock);
+        return afterUpdate(implementor, key, newCacheValue(value, currentVersion), lock);
     }
 
+    @Override
+    public Object generateCacheKey(Object o, EntityPersister entityPersister, SessionFactoryImplementor sessionFactoryImplementor, String s) {
+        return o;
+    }
+
+    @Override
+    public Object getCacheKeyId(Object o) {
+        return o;
+    }
 
 }

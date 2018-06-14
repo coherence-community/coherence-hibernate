@@ -26,11 +26,13 @@
 package com.oracle.coherence.hibernate.cache.access;
 
 import com.oracle.coherence.hibernate.cache.region.CoherenceNaturalIdRegion;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
-import org.hibernate.cfg.Settings;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 
 /**
  * A NaturalIdReadWriteCoherenceRegionAccessStrategy is a Coherence-based read-write region access strategy
@@ -50,11 +52,11 @@ implements NaturalIdRegionAccessStrategy
      * Complete constructor.
      *
      * @param coherenceNaturalIdRegion the CoherenceNaturalIdRegion for this NaturalIdReadWriteCoherenceRegionAccessStrategy
-     * @param settings the Hibernate settings object
+     * @param options Hibernate SessionFactoryOptions
      */
-    public NaturalIdReadWriteCoherenceRegionAccessStrategy(CoherenceNaturalIdRegion coherenceNaturalIdRegion, Settings settings)
+    public NaturalIdReadWriteCoherenceRegionAccessStrategy(CoherenceNaturalIdRegion coherenceNaturalIdRegion, SessionFactoryOptions options)
     {
-        super(coherenceNaturalIdRegion, settings);
+        super(coherenceNaturalIdRegion, options);
     }
 
 
@@ -74,7 +76,7 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean insert(Object key, Object value) throws CacheException
+    public boolean insert(SharedSessionContractImplementor implementor, Object key, Object value) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting a natural ID.
@@ -88,21 +90,21 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterInsert(Object key, Object value) throws CacheException
+    public boolean afterInsert(SharedSessionContractImplementor implementor, Object key, Object value) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting a natural ID.
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
         //In implementation we only insert the entry if there was no entry already present at the argument key
         debugf("%s.afterInsert(%s, %s)", this, key, value);
-        return afterInsert(key, newCacheValue(value, null));
+        return afterInsert(implementor, key, newCacheValue(value, null));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean update(Object key, Object value) throws CacheException
+    public boolean update(SharedSessionContractImplementor implementor, Object key, Object value) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence lockItem() -> remove() -> update() -> afterUpdate() when updating a natural ID.
@@ -116,7 +118,7 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterUpdate(Object key, Object value, SoftLock lock) throws CacheException
+    public boolean afterUpdate(SharedSessionContractImplementor implementor, Object key, Object value, SoftLock lock) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence lockItem() -> remove() -> update() -> afterUpdate() when updating a natural ID.
@@ -124,8 +126,16 @@ implements NaturalIdRegionAccessStrategy
         //as appropriate for the kind of strategy (nonstrict-read-write vs. read-write).
         //In the read-write strategy we only update the cache value if it is present and was not multiply locked.
         debugf("%s.afterUpdate(%s, %s, %s)", this, key, value, lock);
-        return afterUpdate(key, newCacheValue(value, null), lock);
+        return afterUpdate(implementor, key, newCacheValue(value, null), lock);
     }
 
+    @Override
+    public Object generateCacheKey(Object[] objects, EntityPersister entityPersister, SharedSessionContractImplementor sharedSessionContractImplementor) {
+        return objects;
+    }
 
+    @Override
+    public Object[] getNaturalIdValues(Object o) {
+        return (Object[])o;
+    }
 }

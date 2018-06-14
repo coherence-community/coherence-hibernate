@@ -27,6 +27,7 @@ package com.oracle.coherence.hibernate.cache.region;
 
 import com.tangosol.net.NamedCache;
 import org.hibernate.cache.spi.GeneralDataRegion;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 import java.util.Properties;
 
@@ -61,7 +62,7 @@ implements GeneralDataRegion
      * {@inheritDoc}
      */
     @Override
-    public Object get(Object key)
+    public Object get(SharedSessionContractImplementor implementor, Object key)
     {
         Value cacheValue = super.getValue(key);
         return (cacheValue == null) ? null : cacheValue.getValue();
@@ -71,7 +72,7 @@ implements GeneralDataRegion
      * {@inheritDoc}
      */
     @Override
-    public void put(Object key, Object value)
+    public void put(SharedSessionContractImplementor implementor, Object key, Object value)
     {
         super.putValue(key, new Value(value, null, nextTimestamp()));
     }

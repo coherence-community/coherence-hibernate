@@ -26,11 +26,13 @@
 package com.oracle.coherence.hibernate.cache.access;
 
 import com.oracle.coherence.hibernate.cache.region.CoherenceNaturalIdRegion;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
-import org.hibernate.cfg.Settings;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 
 /**
  * A NaturalIdNonstrictReadWriteCoherenceRegionAccessStrategy is a CoherenceRegionAccessStrategy
@@ -43,18 +45,17 @@ extends CoherenceRegionAccessStrategy<CoherenceNaturalIdRegion>
 implements NaturalIdRegionAccessStrategy
 {
 
-
-    // ---- Constructors
+// ---- Constructors
 
     /**
      * Complete constructor.
      *
      * @param coherenceNaturalIdRegion the CoherenceNaturalIdRegion for this NaturalIdNonstrictReadWriteCoherenceRegionAccessStrategy
-     * @param settings the Hibernate settings object
+     * @param options Hibernate SessionFactoryOptions
      */
-    public NaturalIdNonstrictReadWriteCoherenceRegionAccessStrategy(CoherenceNaturalIdRegion coherenceNaturalIdRegion, Settings settings)
+    public NaturalIdNonstrictReadWriteCoherenceRegionAccessStrategy(CoherenceNaturalIdRegion coherenceNaturalIdRegion, SessionFactoryOptions options)
     {
-        super(coherenceNaturalIdRegion, settings);
+        super(coherenceNaturalIdRegion, options);
     }
 
 
@@ -74,7 +75,7 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean insert(Object key, Object value) throws CacheException
+    public boolean insert(SharedSessionContractImplementor implementor, Object key, Object value) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting a natural ID.
@@ -88,7 +89,7 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterInsert(Object key, Object value) throws CacheException
+    public boolean afterInsert(SharedSessionContractImplementor implementor, Object key, Object value) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting a natural ID.
@@ -103,7 +104,7 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean update(Object key, Object value) throws CacheException
+    public boolean update(SharedSessionContractImplementor implementor, Object key, Object value) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence lockItem() -> remove() -> update() -> afterUpdate() when updating a natural ID.
@@ -117,7 +118,7 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterUpdate(Object key, Object value, SoftLock lock) throws CacheException
+    public boolean afterUpdate(SharedSessionContractImplementor implementor, Object key, Object value, SoftLock lock) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence lockItem() -> remove() -> update() -> afterUpdate() when updating a natural ID.
@@ -125,10 +126,20 @@ implements NaturalIdRegionAccessStrategy
         //as appropriate for the kind of strategy (nonstrict-read-write vs. read-write).
         //In the nonstrict-read-write strategy we remove the cache entry to force subsequent putFromLoad.
         debugf("%s.afterUpdate(%s, %s, %s)", this, key, value, lock);
-        remove(key);
-        unlockItem(key, lock);
+        remove(implementor, key);
+        unlockItem(implementor, key, lock);
         return false;
     }
 
+
+    @Override
+    public Object generateCacheKey(Object[] objects, EntityPersister entityPersister, SharedSessionContractImplementor sharedSessionContractImplementor) {
+        return objects;
+    }
+
+    @Override
+    public Object[] getNaturalIdValues(Object o) {
+        return (Object[])o;
+    }
 
 }

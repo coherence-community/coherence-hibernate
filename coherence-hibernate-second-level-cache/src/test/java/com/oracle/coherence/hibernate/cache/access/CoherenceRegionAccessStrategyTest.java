@@ -26,6 +26,7 @@
 package com.oracle.coherence.hibernate.cache.access;
 
 import com.oracle.coherence.hibernate.cache.region.CoherenceRegion;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -39,6 +40,7 @@ import static org.junit.Assert.*;
 public class CoherenceRegionAccessStrategyTest
 extends AbstractCoherenceRegionAccessStrategyTest
 {
+    private SessionImplementor sessionImplementor;
 
 
     // ---- Subclass responsibility
@@ -90,7 +92,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         boolean objectWasPut = putFromLoad(key, value, false);
         assertTrue("Expect object to be put", objectWasPut);
 
-        Object objectGot = getCoherenceRegionAccessStrategy().get(key, getCoherenceRegion().nextTimestamp());
+        Object objectGot = getCoherenceRegionAccessStrategy().get(sessionImplementor, key, getCoherenceRegion().nextTimestamp());
         assertEquals("Expect to get same object put", value, objectGot);
     }
 
@@ -107,7 +109,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         boolean objectWasPut = putFromLoad(key, value, true);
         assertTrue("Expect object to be put", objectWasPut);
 
-        Object objectGot = getCoherenceRegionAccessStrategy().get(key, getCoherenceRegion().nextTimestamp());
+        Object objectGot = getCoherenceRegionAccessStrategy().get(sessionImplementor, key, getCoherenceRegion().nextTimestamp());
         assertEquals("Expect to get same object put", value, objectGot);
     }
 
@@ -125,7 +127,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         boolean objectWasPut = putFromLoad(key, value, true);
         assertFalse("Expect object not to be put", objectWasPut);
 
-        Object objectGot = getCoherenceRegionAccessStrategy().get(key, getCoherenceRegion().nextTimestamp());
+        Object objectGot = getCoherenceRegionAccessStrategy().get(sessionImplementor, key, getCoherenceRegion().nextTimestamp());
         assertEquals("Expect to get same object put", value, objectGot);
     }
 
@@ -175,14 +177,14 @@ extends AbstractCoherenceRegionAccessStrategyTest
         boolean containsKey = strategy.getCoherenceRegion().contains(key);
         assertFalse("Empty region shouldn't contain key", containsKey);
 
-        getCoherenceRegionAccessStrategy().remove(key);
+        getCoherenceRegionAccessStrategy().remove(sessionImplementor, key);
         assertTrue("No Excepton should be thrown from removing an absent key", true);
 
         putFromLoad(key, value, false);
         containsKey = strategy.getCoherenceRegion().contains(key);
         assertTrue("Expect region contain key after put", containsKey);
 
-        getCoherenceRegionAccessStrategy().remove(key);
+        getCoherenceRegionAccessStrategy().remove(sessionImplementor, key);
         containsKey = strategy.getCoherenceRegion().contains(key);
         assertFalse("Expect region doesn't contain key after remove", containsKey);
     }
@@ -283,7 +285,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         //which is hard to instantiate or mock.  But the four-argument variant just funnels to the five-argument one anyway
         long txTimestamp = getCoherenceRegion().nextTimestamp();
         Object version = null;
-        return getCoherenceRegionAccessStrategy().putFromLoad(key, value, txTimestamp, version, minimalPutsInEffect);
+        return getCoherenceRegionAccessStrategy().putFromLoad(sessionImplementor, key, value, txTimestamp, version, minimalPutsInEffect);
     }
 
 

@@ -33,6 +33,7 @@ import com.oracle.coherence.hibernate.cache.region.CoherenceTimestampsRegion;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.ConfigurableCacheFactory;
 import com.tangosol.net.NamedCache;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.CacheDataDescription;
 import org.hibernate.cache.spi.CollectionRegion;
@@ -42,7 +43,6 @@ import org.hibernate.cache.spi.QueryResultsRegion;
 import org.hibernate.cache.spi.RegionFactory;
 import org.hibernate.cache.spi.TimestampsRegion;
 import org.hibernate.cache.spi.access.AccessType;
-import org.hibernate.cfg.Settings;
 
 import java.util.Properties;
 
@@ -109,7 +109,7 @@ implements RegionFactory
     /**
      * The Hibernate settings object; may contain user-supplied "minimal puts" setting.
      */
-    private Settings settings;
+    private SessionFactoryOptions sessionFactoryOptions;
 
 
     // ---- Accessing
@@ -146,7 +146,7 @@ implements RegionFactory
         StringBuilder stringBuilder = new StringBuilder(getClass().getName());
         stringBuilder.append("(");
         stringBuilder.append("cacheFactory=").append(cacheFactory);
-        stringBuilder.append(", settings=").append(settings);
+        stringBuilder.append(", sessionFactoryOptions=").append(sessionFactoryOptions);
         stringBuilder.append(")");
         return stringBuilder.toString();
     }
@@ -173,9 +173,9 @@ implements RegionFactory
      * {@inheritDoc}
      */
     @Override
-    public void start(Settings settings, Properties properties) throws CacheException
+    public void start(SessionFactoryOptions options, Properties properties) throws CacheException
     {
-        this.settings = settings;
+        this.sessionFactoryOptions = options;
 
         CacheFactory.ensureCluster();
 
@@ -197,7 +197,7 @@ implements RegionFactory
         debugMessageSeverityLevel = Integer.getInteger(DEBUG_MESSAGE_SEVERITY_LEVEL_PROPERTY_NAME, DEFAULT_DEBUG_MESSAGE_SEVERITY_LEVEL);
         dumpStackOnDebugMessage = Boolean.getBoolean(DUMP_STACK_ON_DEBUG_MESSAGE_PROPERTY_NAME);
 
-        debugf("%s.start(%s, %s)", this, settings, properties);
+        debugf("%s.start(%s, %s)", this, options, properties);
     }
 
     /**
@@ -260,7 +260,7 @@ implements RegionFactory
     public EntityRegion buildEntityRegion(String regionName, Properties properties, CacheDataDescription metadata)
     throws CacheException
     {
-        return new CoherenceEntityRegion(ensureNamedCache(regionName), settings, properties, metadata);
+        return new CoherenceEntityRegion(ensureNamedCache(regionName), sessionFactoryOptions, properties, metadata);
     }
 
     /**
@@ -270,7 +270,7 @@ implements RegionFactory
     public NaturalIdRegion buildNaturalIdRegion(String regionName, Properties properties, CacheDataDescription metadata)
     throws CacheException
     {
-        return new CoherenceNaturalIdRegion(ensureNamedCache(regionName), settings, properties, metadata);
+        return new CoherenceNaturalIdRegion(ensureNamedCache(regionName), sessionFactoryOptions, properties, metadata);
     }
 
     /**
@@ -280,7 +280,7 @@ implements RegionFactory
     public CollectionRegion buildCollectionRegion(String regionName, Properties properties, CacheDataDescription metadata)
     throws CacheException
     {
-        return new CoherenceCollectionRegion(ensureNamedCache(regionName), settings, properties, metadata);
+        return new CoherenceCollectionRegion(ensureNamedCache(regionName), sessionFactoryOptions, properties, metadata);
     }
 
     /**

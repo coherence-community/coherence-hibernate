@@ -166,7 +166,7 @@ extends AbstractCoherenceRegionFactoryTest
 
         String regionName = "testBuild" + coherenceRegionSubclass.getSimpleName();
         Properties properties = new Properties();
-        CacheDataDescription cacheDataDescription = new CacheDataDescriptionImpl(true, false, null);
+        CacheDataDescription cacheDataDescription = new CacheDataDescriptionImpl(true, false, null, null);
         Region region = null;
         switch (coherenceRegionSubclass.getSimpleName())
         {

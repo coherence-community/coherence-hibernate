@@ -26,9 +26,12 @@
 package com.oracle.coherence.hibernate.cache.access;
 
 import com.oracle.coherence.hibernate.cache.region.CoherenceCollectionRegion;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.spi.CollectionRegion;
 import org.hibernate.cache.spi.access.CollectionRegionAccessStrategy;
 import org.hibernate.cfg.Settings;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.persister.collection.CollectionPersister;
 
 /**
  * A CollectionReadOnlyCoherenceRegionAccessStrategy is CoherenceRegionAccessStrategy
@@ -48,11 +51,11 @@ implements CollectionRegionAccessStrategy
      * Complete constructor.
      *
      * @param coherenceCollectionRegion the CoherenceCollectionRegion for this CollectionReadOnlyCoherenceRegionAccessStrategy
-     * @param settings the Hibernate settings object
+     * @param options Hibernate SessionFactoryOptions
      */
-    public CollectionReadOnlyCoherenceRegionAccessStrategy(CoherenceCollectionRegion coherenceCollectionRegion, Settings settings)
+    public CollectionReadOnlyCoherenceRegionAccessStrategy(CoherenceCollectionRegion coherenceCollectionRegion, SessionFactoryOptions options)
     {
-        super(coherenceCollectionRegion, settings);
+        super(coherenceCollectionRegion, options);
     }
 
 
@@ -68,5 +71,14 @@ implements CollectionRegionAccessStrategy
         return getCoherenceRegion();
     }
 
+    @Override
+    public Object generateCacheKey(Object o, CollectionPersister collectionPersister, SessionFactoryImplementor sessionFactoryImplementor, String s) {
+        return o;
+    }
+
+    @Override
+    public Object getCacheKeyId(Object o) {
+        return o;
+    }
 
 }

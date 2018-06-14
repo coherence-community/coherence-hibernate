@@ -38,7 +38,7 @@
     <parent>
         <artifactId>coherence-hibernate-integration</artifactId>
         <groupId>com.oracle.coherence.hibernate</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>com.oracle.coherence.hibernate</groupId>
             <artifactId>coherence-hibernate-second-level-cache</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -29,6 +29,7 @@ import com.oracle.coherence.hibernate.cache.region.CoherenceRegion;
 import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -42,6 +43,7 @@ import static org.junit.Assert.assertFalse;
 public class EntityReadWriteCoherenceRegionAccessStrategyTest
 extends AbstractCoherenceRegionAccessStrategyTest
 {
+    private SharedSessionContractImplementor implementor;
 
 
     // ---- Subclass responsibility
@@ -91,7 +93,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object value = "testInsert";
         Object version = null;
 
-        boolean cacheWasModified = accessStrategy.insert(key, value, version);
+        boolean cacheWasModified = accessStrategy.insert(implementor, key, value, version);
         assertFalse("Expect no cache modification from read-write access strategy insert", cacheWasModified);
     }
 
@@ -109,7 +111,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
 
         assertFalse("Expect cache to not contain entry initially", accessStrategy.getRegion().contains(key));
 
-        boolean cacheWasModified = accessStrategy.afterInsert(key, value, version);
+        boolean cacheWasModified = accessStrategy.afterInsert(implementor, key, value, version);
         assertTrue("Expect successful insertion if entry was absent", cacheWasModified);
     }
 
@@ -127,9 +129,9 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object version = null;
         boolean minimalPutsInEffect = false;
 
-        accessStrategy.putFromLoad(key, value, txTimestamp, version, minimalPutsInEffect);
+        accessStrategy.putFromLoad(implementor, key, value, txTimestamp, version, minimalPutsInEffect);
 
-        boolean cacheWasModified = accessStrategy.afterInsert(key, value, version);
+        boolean cacheWasModified = accessStrategy.afterInsert(implementor, key, value, version);
         assertFalse("Expect no insertion if entry was present", cacheWasModified);
     }
 
@@ -146,7 +148,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object currentVersion = null;
         Object previousVersion = null;
 
-        boolean cacheWasModified = accessStrategy.update(key, value, currentVersion, previousVersion);
+        boolean cacheWasModified = accessStrategy.update(implementor, key, value, currentVersion, previousVersion);
         assertFalse("Expect no cache modification from read-write access strategy update", cacheWasModified);
     }
 
@@ -166,7 +168,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
 
         assertFalse("Expect empty cache", accessStrategy.getRegion().contains(key));
 
-        boolean cacheWasModified = accessStrategy.afterUpdate(key, value, currentVersion, previousVersion, softLock);
+        boolean cacheWasModified = accessStrategy.afterUpdate(implementor, key, value, currentVersion, previousVersion, softLock);
         assertFalse("Expect no cache modification when entry absent", cacheWasModified);
     }
 
@@ -185,13 +187,13 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object version = null;
         boolean minimalPutsInEffect=false;
 
-        accessStrategy.putFromLoad(key, value, txTimestamp, version, minimalPutsInEffect);
-        SoftLock softLock = accessStrategy.lockItem(key, version);
+        accessStrategy.putFromLoad(implementor, key, value, txTimestamp, version, minimalPutsInEffect);
+        SoftLock softLock = accessStrategy.lockItem(implementor, key, version);
 
         Object currentVersion = null;
         Object previousVersion = null;
 
-        boolean cacheWasModified = accessStrategy.afterUpdate(key, value, currentVersion, previousVersion, softLock);
+        boolean cacheWasModified = accessStrategy.afterUpdate(implementor, key, value, currentVersion, previousVersion, softLock);
         assertTrue("Expect cache update when entry present and not concurrently locked", cacheWasModified);
         assertFalse("Expect value to be unlocked after update", accessStrategy.getCoherenceRegion().getValue(key).isSoftLocked());
     }
@@ -211,14 +213,14 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object version = null;
         boolean minimalPutsInEffect=false;
 
-        accessStrategy.putFromLoad(key, value, txTimestamp, version, minimalPutsInEffect);
-        SoftLock softLock = accessStrategy.lockItem(key, version);
-        accessStrategy.lockItem(key, version);
+        accessStrategy.putFromLoad(implementor, key, value, txTimestamp, version, minimalPutsInEffect);
+        SoftLock softLock = accessStrategy.lockItem(implementor, key, version);
+        accessStrategy.lockItem(implementor, key, version);
 
         Object currentVersion = null;
         Object previousVersion = null;
 
-        boolean cacheWasModified = accessStrategy.afterUpdate(key, value, currentVersion, previousVersion, softLock);
+        boolean cacheWasModified = accessStrategy.afterUpdate(implementor, key, value, currentVersion, previousVersion, softLock);
         assertFalse("Expect no cache update when entry present and concurrently locked", cacheWasModified);
         assertTrue("Expect value to still be locked after update", accessStrategy.getCoherenceRegion().getValue(key).isSoftLocked());
     }

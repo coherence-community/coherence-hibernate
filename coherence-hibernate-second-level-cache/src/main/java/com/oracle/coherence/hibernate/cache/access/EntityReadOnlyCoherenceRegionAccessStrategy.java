@@ -26,11 +26,14 @@
 package com.oracle.coherence.hibernate.cache.access;
 
 import com.oracle.coherence.hibernate.cache.region.CoherenceEntityRegion;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
-import org.hibernate.cfg.Settings;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 
 /**
  * An EntityReadOnlyCoherenceRegionAccessStrategy is an CoherenceRegionAccessStrategy
@@ -42,6 +45,15 @@ public class EntityReadOnlyCoherenceRegionAccessStrategy
 extends CoherenceRegionAccessStrategy<CoherenceEntityRegion>
 implements EntityRegionAccessStrategy
 {
+    @Override
+    public Object generateCacheKey(Object o, EntityPersister entityPersister, SessionFactoryImplementor sessionFactoryImplementor, String s) {
+        return o;
+    }
+
+    @Override
+    public Object getCacheKeyId(Object o) {
+        return o;
+    }
 
 
     // ---- Constructors
@@ -50,11 +62,11 @@ implements EntityRegionAccessStrategy
      * Complete constructor.
      *
      * @param coherenceEntityRegion the CoherenceEntityRegion for this EntityReadOnlyCoherenceRegionAccessStrategy
-     * @param settings the Hibernate settings object
+     * @param options Hibernate SessionFactoryOptions
      */
-    public EntityReadOnlyCoherenceRegionAccessStrategy(CoherenceEntityRegion coherenceEntityRegion, Settings settings)
+    public EntityReadOnlyCoherenceRegionAccessStrategy(CoherenceEntityRegion coherenceEntityRegion, SessionFactoryOptions options)
     {
-        super(coherenceEntityRegion, settings);
+        super(coherenceEntityRegion, options);
     }
 
 
@@ -73,7 +85,7 @@ implements EntityRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean insert(Object key, Object value, Object version) throws CacheException
+    public boolean insert(SharedSessionContractImplementor implementor, Object key, Object value, Object version) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
@@ -87,7 +99,7 @@ implements EntityRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterInsert(Object key, Object value, Object version) throws CacheException
+    public boolean afterInsert(SharedSessionContractImplementor implementor, Object key, Object value, Object version) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
@@ -101,7 +113,7 @@ implements EntityRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
+    public boolean update(SharedSessionContractImplementor implementor, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
     {
         //read-only cache entries should not be updated
         debugf("%s.update(%s, %s, %s, %s)", this, key, value, currentVersion, previousVersion);
@@ -112,7 +124,7 @@ implements EntityRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
+    public boolean afterUpdate(SharedSessionContractImplementor implementor, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
     {
         //read-only cache entries should not be updated
         debugf("%s.afterUpdate(%s, %s, %s, %s, %s)", this, key, value, currentVersion, previousVersion, lock);

@@ -29,6 +29,7 @@ import com.oracle.coherence.hibernate.cache.region.CoherenceRegion;
 import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -42,6 +43,7 @@ import static org.junit.Assert.*;
 public class NaturalIdNonstrictReadWriteCoherenceRegionAccessStrategyTest
 extends AbstractCoherenceRegionAccessStrategyTest
 {
+    private SharedSessionContractImplementor implementor;
 
 
     // ---- Subclass responsibility
@@ -90,7 +92,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object key = "testInsert";
         Object value = "testInsert";
 
-        boolean cacheWasModified = accessStrategy.insert(key, value);
+        boolean cacheWasModified = accessStrategy.insert(implementor, key, value);
         assertFalse("Expect no cache modification from nonstrict read-write access strategy insert", cacheWasModified);
     }
 
@@ -105,7 +107,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object key = "testAfterInsert";
         Object value = "testAfterInsert";
 
-        boolean cacheWasModified = accessStrategy.afterInsert(key, value);
+        boolean cacheWasModified = accessStrategy.afterInsert(implementor, key, value);
         assertFalse("Expect no cache modification from nonstrict read-write access strategy afterInsert", cacheWasModified);
     }
 
@@ -120,7 +122,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object key = "testUpdate";
         Object value = "testUpdate";
 
-        boolean cacheWasModified = accessStrategy.insert(key, value);
+        boolean cacheWasModified = accessStrategy.insert(implementor, key, value);
         assertFalse("Expect no cache modification from nonstrict read-write access strategy update", cacheWasModified);
     }
 
@@ -136,7 +138,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
         Object value = "testAfterUpdate";
         SoftLock softLock = null;
 
-        boolean cacheWasModified = accessStrategy.afterUpdate(key, value, softLock);
+        boolean cacheWasModified = accessStrategy.afterUpdate(implementor, key, value, softLock);
         assertFalse("Expect no cache modification from nonstrict read-write access strategy afterUpdate", cacheWasModified);
         assertFalse("Expect cache not to contain key after afterUpdate", accessStrategy.getRegion().contains(key));
     }

@@ -37,7 +37,7 @@
 
     <groupId>com.oracle.coherence.hibernate</groupId>
     <artifactId>coherence-hibernate-integration</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>coherence-hibernate-integration</name>
@@ -104,7 +104,8 @@
         <!--<coherence.version>[3.4.2,)</coherence.version>-->
         <coherence.version>12.2.1-1-0</coherence.version>
         <!--<hibernate.version>[3.3.1.GA,)</hibernate.version>-->
-        <hibernate.version>4.2.4.Final</hibernate.version>
+        <!--<hibernate.version>4.2.4.Final</hibernate.version>-->
+        <hibernate.version>5.2.12.Final</hibernate.version>
         <junit.version>4.11</junit.version>
     </properties>
 
@@ -307,6 +308,12 @@
             <id>hibernate_version_4.2.4.Final</id>
             <properties>
                 <hibernate.version>4.2.4.Final</hibernate.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>hibernate_version_5.2.12.Final</id>
+            <properties>
+                <hibernate.version>5.2.12.Final</hibernate.version>
             </properties>
         </profile>
     </profiles>

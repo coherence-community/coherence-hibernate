@@ -29,9 +29,10 @@ import com.oracle.coherence.hibernate.cache.region.CoherenceRegion;
 import com.oracle.coherence.hibernate.cache.region.CoherenceTransactionalDataRegion;
 import com.tangosol.util.InvocableMap;
 import com.tangosol.util.processor.AbstractProcessor;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.access.SoftLock;
-import org.hibernate.cfg.Settings;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -53,11 +54,11 @@ extends CoherenceRegionAccessStrategy<T>
      * Complete constructor.
      *
      * @param coherenceRegion the CoherenceRegion for this ReadWriteCoherenceRegionAccessStrategy
-     * @param settings the Hibernate settings object
+     * @param options Hibernate SessionFactoryOptions
      */
-    public ReadWriteCoherenceRegionAccessStrategy(T coherenceRegion, Settings settings)
+    public ReadWriteCoherenceRegionAccessStrategy(T coherenceRegion, SessionFactoryOptions options)
     {
-        super(coherenceRegion, settings);
+        super(coherenceRegion, options);
     }
 
 
@@ -67,7 +68,7 @@ extends CoherenceRegionAccessStrategy<T>
      * {@inheritDoc}
      */
     @Override
-    public Object get(Object key, long txTimestamp) throws CacheException
+    public Object get(SharedSessionContractImplementor implementor, Object key, long txTimestamp) throws CacheException
     {
         debugf("%s.get(%s, %s)", this, key, txTimestamp);
         return getCoherenceRegion().invoke(key, new GetProcessor());
@@ -77,7 +78,7 @@ extends CoherenceRegionAccessStrategy<T>
      * {@inheritDoc}
      */
     @Override
-    public org.hibernate.cache.spi.access.SoftLock lockItem(Object key, Object version) throws CacheException
+    public org.hibernate.cache.spi.access.SoftLock lockItem(SharedSessionContractImplementor implementor, Object key, Object version) throws CacheException
     {
         debugf("%s.lockItem(%s, %s)", this, key, version);
         CoherenceRegion.Value valueIfAbsent = newCacheValue(null, version);
@@ -91,7 +92,7 @@ extends CoherenceRegionAccessStrategy<T>
      * {@inheritDoc}
      */
     @Override
-    public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride)
+    public boolean putFromLoad(SharedSessionContractImplementor implementor, Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride)
     throws CacheException
     {
         debugf("%s.putFromLoad(%s, %s, %s, %s, %s)", this, key, value, txTimestamp, version, minimalPutOverride);
@@ -105,7 +106,7 @@ extends CoherenceRegionAccessStrategy<T>
      * {@inheritDoc}
      */
     @Override
-    public void unlockItem(Object key, org.hibernate.cache.spi.access.SoftLock lock) throws CacheException
+    public void unlockItem(SharedSessionContractImplementor implementor, Object key, org.hibernate.cache.spi.access.SoftLock lock) throws CacheException
     {
         debugf("%s.unlockItem(%s, %s)", this, key, lock);
         SoftUnlockItemProcessor processor = new SoftUnlockItemProcessor(lock, getCoherenceRegion().nextTimestamp());
@@ -122,12 +123,13 @@ extends CoherenceRegionAccessStrategy<T>
      *
      * The only difference in implementation is that the cache value in a NaturalIdRegion will have a null version object.
      *
+     * @param implementor Hibernate SharedSessionContractImplementor
      * @param key the key at which to insert a value
      * @param value the value to insert
      *
      * @return a boolean indicating whether cache contents were modified
      */
-    protected boolean afterInsert(Object key, CoherenceRegion.Value value)
+    protected boolean afterInsert(SharedSessionContractImplementor implementor, Object key, CoherenceRegion.Value value)
     {
         AfterInsertProcessor afterInsertProcessor = new AfterInsertProcessor(value);
         return (Boolean) getCoherenceRegion().invoke(key, afterInsertProcessor);
@@ -140,13 +142,14 @@ extends CoherenceRegionAccessStrategy<T>
      *
      * The only difference in implementation is that the cache value in a NaturalIdRegion will have a null version object.
      *
+     * @param implementor Hibernate SharedSessionContractImplementor
      * @param key the key at which to insert a value
      * @param value the value to insert
      * @param softLock the softLock acquired in an earlier lockItem call with the argument key
      *
      * @return a boolean indicating whether cache contents were modified
      */
-    protected boolean afterUpdate(Object key, CoherenceRegion.Value value, SoftLock softLock)
+    protected boolean afterUpdate(SharedSessionContractImplementor implementor, Object key, CoherenceRegion.Value value, SoftLock softLock)
     {
         long timeOfSoftLockRelease = getCoherenceRegion().nextTimestamp();
         AfterUpdateProcessor afterUpdateProcessor = new AfterUpdateProcessor(value, softLock, timeOfSoftLockRelease);

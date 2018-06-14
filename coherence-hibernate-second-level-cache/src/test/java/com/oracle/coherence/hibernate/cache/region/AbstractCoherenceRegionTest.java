@@ -47,7 +47,7 @@ extends AbstractCoherenceRegionFactoryTest
             boolean mutable = true;
             boolean versioned = false;
             Comparator comparator = null;
-            cacheDataDescription = new CacheDataDescriptionImpl(mutable, versioned, comparator);
+            cacheDataDescription = new CacheDataDescriptionImpl(mutable, versioned, comparator, null);
         }
         return cacheDataDescription;
     }

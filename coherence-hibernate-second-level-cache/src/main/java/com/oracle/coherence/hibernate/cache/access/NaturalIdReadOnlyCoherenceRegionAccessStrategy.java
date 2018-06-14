@@ -26,11 +26,13 @@
 package com.oracle.coherence.hibernate.cache.access;
 
 import com.oracle.coherence.hibernate.cache.region.CoherenceNaturalIdRegion;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
-import org.hibernate.cfg.Settings;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 
 /**
  * A NaturalIdReadOnlyCoherenceRegionAccessStrategy is a CoherenceRegionAccessStrategy
@@ -50,11 +52,11 @@ implements NaturalIdRegionAccessStrategy
      * Complete constructor.
      *
      * @param coherenceNaturalIdRegion the CoherenceNaturalIdRegion for this NaturalIdReadOnlyCoherenceRegionAccessStrategy
-     * @param settings the Hibernate settings object
+     * @param options Hibernate SessionFactoryOptions
      */
-    public NaturalIdReadOnlyCoherenceRegionAccessStrategy(CoherenceNaturalIdRegion coherenceNaturalIdRegion, Settings settings)
+    public NaturalIdReadOnlyCoherenceRegionAccessStrategy(CoherenceNaturalIdRegion coherenceNaturalIdRegion, SessionFactoryOptions options)
     {
-        super(coherenceNaturalIdRegion, settings);
+        super(coherenceNaturalIdRegion, options);
     }
 
 
@@ -74,7 +76,7 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean insert(Object key, Object value) throws CacheException
+    public boolean insert(SharedSessionContractImplementor implementor, Object key, Object value) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
@@ -88,7 +90,7 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterInsert(Object key, Object value) throws CacheException
+    public boolean afterInsert(SharedSessionContractImplementor implementor, Object key, Object value) throws CacheException
     {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
@@ -102,7 +104,7 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean update(Object key, Object value) throws CacheException
+    public boolean update(SharedSessionContractImplementor implementor, Object key, Object value) throws CacheException
     {
         //read-only cache entries should not be updated
         debugf("%s.update(%s, %s)", this, key, value);
@@ -113,12 +115,20 @@ implements NaturalIdRegionAccessStrategy
      * {@inheritDoc}
      */
     @Override
-    public boolean afterUpdate(Object key, Object value, SoftLock lock) throws CacheException
+    public boolean afterUpdate(SharedSessionContractImplementor implementor, Object key, Object value, SoftLock lock) throws CacheException
     {
         //read-only cache entries should not be updated
         debugf("%s.afterUpdate(%s, %s, %s)", this, key, value, lock);
         throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);
     }
 
+    @Override
+    public Object generateCacheKey(Object[] objects, EntityPersister entityPersister, SharedSessionContractImplementor sharedSessionContractImplementor) {
+        return objects;
+    }
 
+    @Override
+    public Object[] getNaturalIdValues(Object o) {
+        return (Object[])o;
+    }
 }
