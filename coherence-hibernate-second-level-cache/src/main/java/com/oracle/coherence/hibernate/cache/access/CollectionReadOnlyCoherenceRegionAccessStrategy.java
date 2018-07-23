@@ -27,6 +27,7 @@ package com.oracle.coherence.hibernate.cache.access;
 
 import com.oracle.coherence.hibernate.cache.region.CoherenceCollectionRegion;
 import org.hibernate.boot.spi.SessionFactoryOptions;
+import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.hibernate.cache.spi.CollectionRegion;
 import org.hibernate.cache.spi.access.CollectionRegionAccessStrategy;
 import org.hibernate.cfg.Settings;
@@ -72,13 +73,13 @@ implements CollectionRegionAccessStrategy
     }
 
     @Override
-    public Object generateCacheKey(Object o, CollectionPersister collectionPersister, SessionFactoryImplementor sessionFactoryImplementor, String s) {
-        return o;
+    public Object generateCacheKey(Object id, CollectionPersister persister, SessionFactoryImplementor factory, String tenantIdentifier) {
+        return DefaultCacheKeysFactory.staticCreateCollectionKey( id, persister, factory, tenantIdentifier );
     }
 
     @Override
-    public Object getCacheKeyId(Object o) {
-        return o;
+    public Object getCacheKeyId(Object cacheKey) {
+        return DefaultCacheKeysFactory.staticGetCollectionId(cacheKey);
     }
 
 }

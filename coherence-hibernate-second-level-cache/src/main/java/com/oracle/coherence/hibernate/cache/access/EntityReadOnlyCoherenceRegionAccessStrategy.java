@@ -28,6 +28,7 @@ package com.oracle.coherence.hibernate.cache.access;
 import com.oracle.coherence.hibernate.cache.region.CoherenceEntityRegion;
 import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
+import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
@@ -45,16 +46,6 @@ public class EntityReadOnlyCoherenceRegionAccessStrategy
 extends CoherenceRegionAccessStrategy<CoherenceEntityRegion>
 implements EntityRegionAccessStrategy
 {
-    @Override
-    public Object generateCacheKey(Object o, EntityPersister entityPersister, SessionFactoryImplementor sessionFactoryImplementor, String s) {
-        return o;
-    }
-
-    @Override
-    public Object getCacheKeyId(Object o) {
-        return o;
-    }
-
 
     // ---- Constructors
 
@@ -131,5 +122,13 @@ implements EntityRegionAccessStrategy
         throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);
     }
 
+    @Override
+    public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor factory, String tenantIdentifier) {
+        return DefaultCacheKeysFactory.staticCreateEntityKey( id, persister, factory, tenantIdentifier );
+    }
 
+    @Override
+    public Object getCacheKeyId(Object cacheKey) {
+        return DefaultCacheKeysFactory.staticGetEntityId(cacheKey);
+    }
 }
