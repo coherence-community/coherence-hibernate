@@ -250,8 +250,10 @@ implements Region
     @Override
     public void destroy() throws CacheException
     {
-        debugf("%s.destroy()", this);
-        getNamedCache().release();
+        if (!getNamedCache().isReleased()) {
+            debugf("%s.destroy()", this);
+            getNamedCache().release();
+        }
     }
 
     /**
