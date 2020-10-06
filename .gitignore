@@ -4,3 +4,8 @@
 **/.idea/
 
 **/target/
+.classpath
+.project
+.settings
+dcs.log
+hsqldb.log
