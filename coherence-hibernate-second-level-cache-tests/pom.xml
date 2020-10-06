@@ -38,15 +38,14 @@
     <parent>
         <artifactId>coherence-hibernate-integration</artifactId>
         <groupId>com.oracle.coherence.hibernate</groupId>
-        <version>1.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>coherence-hibernate-second-level-cache-tests</artifactId>
 
     <build>
         <!-- we dont want the version to be part of the generated war file name -->
-        <finalName>${artifactId}</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -63,6 +62,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+            <version>${hibernate4.version}</version>
         </dependency>
 
         <!-- Because this is a web app, we also have a dependency on the servlet api. -->
@@ -96,8 +96,7 @@
 
         <dependency>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <artifactId>coherence-hibernate-second-level-cache</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <artifactId>coherence-hibernate-cache-4</artifactId>
         </dependency>
 
         <dependency>

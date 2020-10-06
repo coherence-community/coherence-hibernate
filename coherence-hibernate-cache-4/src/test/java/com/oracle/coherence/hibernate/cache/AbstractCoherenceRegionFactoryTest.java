@@ -53,11 +53,6 @@ public abstract class AbstractCoherenceRegionFactoryTest
      */
     private Properties properties;
 
-    /**
-     * The Hibernate Settings used to start the CoherenceRegionFactory.
-     */
-    private Settings settings;
-
 
     // ---- Accessing
 

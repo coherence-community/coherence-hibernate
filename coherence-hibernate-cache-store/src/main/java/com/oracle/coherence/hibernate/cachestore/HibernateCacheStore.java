@@ -54,7 +54,7 @@ public class HibernateCacheStore
 
     /**
      * Default constructor.  If using this constructor, it is expected that
-     * the <tt>entityName</tt> and <tt>sessionFactory</tt> attributes will
+     * the {@code entityName} and {@code sessionFactory} attributes will
      * be set prior to usage.
      */
     public HibernateCacheStore()
@@ -101,7 +101,7 @@ public class HibernateCacheStore
 
     /**
      * Constructor which accepts an entityName and a Hibernate
-     * <tt>SessionFactory</tt>.  This allows for external configuration
+     * {@code SessionFactory}.  This allows for external configuration
      * of the SessionFactory (for instance using Spring.)
      *
      * @param sEntityName       Hibernate entity (i.e. the HQL table name)
@@ -117,7 +117,7 @@ public class HibernateCacheStore
 
     /**
      * Store a Hibernate entity given an id (key) and entity (value)
-     * <p/>
+     * <p>
      * The entity must have an identifier attribute, and it must be either
      * null (undefined) or equal to the cache key.
      *

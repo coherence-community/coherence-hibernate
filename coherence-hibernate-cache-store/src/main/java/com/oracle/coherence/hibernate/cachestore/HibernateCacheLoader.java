@@ -46,7 +46,7 @@ import java.util.Map;
 
 /**
  * Data-driven CacheLoader implementation for Hibernate tables
- * <p/>
+ * <p>
  * These methods all follow the pattern of:
  * <ol>
  *   <li>open session</li>
@@ -68,7 +68,7 @@ public class HibernateCacheLoader
 
     /**
      * Default constructor.  If using this constructor, it is expected that
-     * the <tt>entityName</tt> and <tt>sessionFactory</tt> attributes will
+     * the {@code entityName} and {@code sessionFactory} attributes will
      * be set prior to usage.
      */
     public HibernateCacheLoader()
@@ -138,7 +138,7 @@ public class HibernateCacheLoader
 
     /**
      * Constructor which accepts an entityName and a Hibernate
-     * <tt>SessionFactory</tt>.  This allows for external configuration
+     * {@code SessionFactory}.  This allows for external configuration
      * of the SessionFactory (for instance using Spring.)
      *
      * @param sEntityName       Hibernate entity (i.e. the HQL table name)
@@ -214,7 +214,7 @@ public class HibernateCacheLoader
 
     /**
      * Initializer (must be called post-constructor)
-     * <p/>
+     * <p>
      * We do this specifically so that derived classes can safely create
      * override methods that depend on a fully constructed object state.
      * Will only be called once per instance and prior to the main body

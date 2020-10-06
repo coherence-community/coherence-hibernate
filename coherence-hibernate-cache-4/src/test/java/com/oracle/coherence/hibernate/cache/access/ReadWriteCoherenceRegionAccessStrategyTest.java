@@ -188,6 +188,12 @@ extends AbstractCoherenceRegionAccessStrategyTest
         CoherenceRegion.Value.SoftLock softLock = (CoherenceRegion.Value.SoftLock) accessStrategy.lockItem(key, version);
         accessStrategy.unlockItem(key, softLock);
 
+        try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         boolean objectWasCached = putFromLoad(key, valuePut, false);
         assertTrue("Expect successful putFromLoad when entry present and not minimal puts and locks released", objectWasCached);
 
