@@ -43,15 +43,23 @@
     </description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.oracle.coherence.ce</groupId>
-            <artifactId>coherence</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate52.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle.coherence.hibernate</groupId>
+            <artifactId>coherence-hibernate-cache-commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle.coherence.hibernate</groupId>
+            <artifactId>coherence-hibernate-cache-commons</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

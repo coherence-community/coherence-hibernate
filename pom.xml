@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-	File: pom.xml
+  File: pom.xml
 
- 	DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
-	The contents of this file are subject to the terms and conditions of
-	the Common Development and Distribution License 1.0 (the "License").
+  The contents of this file are subject to the terms and conditions of
+  the Common Development and Distribution License 1.0 (the "License").
 
-	You may not use this file except in compliance with the License.
+  You may not use this file except in compliance with the License.
 
-	You can obtain a copy of the License by consulting the LICENSE.txt file
-	distributed with this file, or by consulting https://oss.oracle.com/licenses/CDDL
+  You can obtain a copy of the License by consulting the LICENSE.txt file
+  distributed with this file, or by consulting https://oss.oracle.com/licenses/CDDL
 
-	See the License for the specific language governing permissions
-	and limitations under the License.
+  See the License for the specific language governing permissions
+  and limitations under the License.
 
-	When distributing the software, include this License Header Notice in each
-	file and include the License file LICENSE.txt.
+  When distributing the software, include this License Header Notice in each
+  file and include the License file LICENSE.txt.
 
-	MODIFICATIONS:
-	If applicable, add the following below the License Header, with the fields
-	enclosed by brackets [] replaced by your own identifying information:
-	"Portions Copyright [year] [name of copyright owner]"
+  MODIFICATIONS:
+  If applicable, add the following below the License Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyright [year] [name of copyright owner]"
  -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -44,7 +44,7 @@
     <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>coherence-hibernate-integration</name>
+    <name>Coherence Hibernate Integration</name>
     <description>
         The Coherence / Hibernate integration project encompasses the code of integration points
         between Hibernate and Oracle Coherence, currently consisting of a Coherence-based
@@ -66,6 +66,10 @@
             <name>Randy Stafford</name>
             <organization>Oracle Corporation</organization>
         </developer>
+        <developer>
+            <name>Gunnar Hillert</name>
+            <organization>Oracle Corporation</organization>
+        </developer>
     </developers>
 
     <modules>
@@ -75,7 +79,6 @@
         <module>coherence-hibernate-cache-4</module>
         <module>coherence-hibernate-cache-5</module>
         <module>coherence-hibernate-cache-52</module>
-        <module>coherence-hibernate-second-level-cache-tests</module>
         <module>coherence-hibernate-site</module>
     </modules>
 
@@ -112,7 +115,7 @@
         <!--<coherence.version>[3.4.2,)</coherence.version>-->
         <coherence.version>20.06.1</coherence.version>
         <!--<hibernate.version>[3.3.1.GA,)</hibernate.version>-->
-        <hibernate4.version>4.2.4.Final</hibernate4.version>
+        <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
         <hibernate52.version>5.2.17.Final</hibernate52.version>
         <hibernate53.version>5.3.18.Final</hibernate53.version>
@@ -124,6 +127,12 @@
             <dependency>
                 <groupId>com.oracle.coherence.hibernate</groupId>
                 <artifactId>coherence-hibernate-cache-store</artifactId>
+                <version>2.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.oracle.coherence.hibernate</groupId>
+                <artifactId>coherence-hibernate-cache-5</artifactId>
                 <version>2.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>

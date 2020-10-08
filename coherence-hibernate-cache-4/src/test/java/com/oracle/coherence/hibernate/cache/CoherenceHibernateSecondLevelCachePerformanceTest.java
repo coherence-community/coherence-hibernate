@@ -315,7 +315,8 @@ public class CoherenceHibernateSecondLevelCachePerformanceTest
      */
     private Long createAndStorePerson()
     {
-        return new EventManager().createAndStorePerson("Randy", "Stafford", 50);
+    	return null;
+        //return new EventManager().createAndStorePerson("Randy", "Stafford", 50);
     }
 
     /**

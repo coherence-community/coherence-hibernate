@@ -37,7 +37,7 @@
 
     <artifactId>coherence-hibernate-cache-store</artifactId>
 
-    <name>coherence-hibernate-cache-store</name>
+    <name>Coherence Hibernate Cache Store</name>
     <description>
         A Hibernate-based implementation of the Coherence CacheStore SPI.
     </description>

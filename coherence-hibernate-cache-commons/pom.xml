@@ -37,7 +37,7 @@
 
     <artifactId>coherence-hibernate-cache-commons</artifactId>
 
-    <name>Coherence Hibernate Second Level Cache 5.2.x</name>
+    <name>Coherence Hibernate Second Level Cache Commons</name>
     <description>
         A Coherence-based implementation of the second-level cache SPI introduced in Hibernate 3.3.
     </description>
@@ -47,13 +47,12 @@
             <groupId>com.oracle.coherence.ce</groupId>
             <artifactId>coherence</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${hibernate52.version}</version>
+            <version>${hibernate4.version}</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

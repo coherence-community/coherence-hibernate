@@ -43,10 +43,6 @@
     </description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.oracle.coherence.ce</groupId>
-            <artifactId>coherence</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -64,6 +60,30 @@
             <artifactId>coherence-hibernate-cache-commons</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.2.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.tools</groupId>
+            <artifactId>oracle-tools-coherence</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-testing</artifactId>
+            <version>${hibernate4.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+        </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

@@ -32,8 +32,6 @@ import com.oracle.tools.runtime.coherence.ClusterMemberSchema;
 import com.oracle.tools.runtime.console.FileWriterApplicationConsole;
 import com.oracle.tools.runtime.java.JavaApplication;
 import com.oracle.tools.runtime.java.NativeJavaApplicationBuilder;
-import com.oracle.tools.runtime.java.SimpleJavaApplication;
-import com.oracle.tools.runtime.java.SimpleJavaApplicationSchema;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.NamedCache;
 import org.hibernate.Session;
@@ -41,6 +39,7 @@ import org.hibernate.tutorial.EventManager;
 import org.hibernate.tutorial.domain.Event;
 import org.hibernate.tutorial.domain.Person;
 import org.hibernate.tutorial.util.HibernateUtil;
+import org.hsqldb.Server;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -108,9 +107,9 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
     private static Cluster cluster;
 
     /**
-     * The hsqldb process in the test fixture.
+     * The HSQLDB Server
      */
-    private static SimpleJavaApplication hsqldbProcess;
+    private static Server hsqlServer;
 
 
     // ---- Setup / teardown
@@ -145,7 +144,7 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
     {
         leaveCluster();
         cluster.destroy();
-        hsqldbProcess.destroy();
+        hsqlServer.stop();
     }
 
     /**
@@ -528,14 +527,12 @@ public class CoherenceHibernateSecondLevelCacheFunctionalTest
     private static void startDatabase()
     throws IOException
     {
-        NativeJavaApplicationBuilder<SimpleJavaApplication, SimpleJavaApplicationSchema> hsqldbBuilder;
-        hsqldbBuilder = new NativeJavaApplicationBuilder<>();
-        SimpleJavaApplicationSchema hsqldbSchema = new SimpleJavaApplicationSchema("org.hsqldb.Server");
-        hsqldbSchema.addArgument("-database.0");
-        hsqldbSchema.addArgument("file:target/data/tutorial");
-        hsqldbSchema.setErrorStreamRedirected(true);
-        FileWriterApplicationConsole hsqldbConsole = new FileWriterApplicationConsole("hsqldb.log");
-        hsqldbProcess = hsqldbBuilder.realize(hsqldbSchema, "hsqldb", hsqldbConsole);
+        hsqlServer = new Server();
+        hsqlServer.setLogWriter(null);
+        hsqlServer.setSilent(true);
+        hsqlServer.setDatabaseName(0, "");
+        hsqlServer.setDatabasePath(0, "mem:test");
+        hsqlServer.start();
     }
 
 }

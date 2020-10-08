@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
-	File: hibernate-second-level-cache-config.xml
+	File: near-hibernate-second-level-cache-config.xml
 
  	DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
@@ -53,7 +53,7 @@
                 </init-param>
                 <init-param>
                     <param-name>back-tier-high-units</param-name>
-                    <param-value>100</param-value><!-- 100 megabytes of content per storage member -->
+                    <param-value>10</param-value><!-- 100 megabytes of content per storage member -->
                 </init-param>
             </init-params>
         </cache-mapping>
@@ -64,7 +64,7 @@
             <init-params>
                 <init-param>
                     <param-name>front-tier-high-units</param-name>
-                    <param-value>10</param-value><!-- number of entries, not bytes of content, per cache per client -->
+                    <param-value>100</param-value><!-- number of entries, not bytes of content, per cache per client -->
                 </init-param>
                 <init-param>
                     <param-name>back-tier-high-units</param-name>
@@ -113,7 +113,7 @@
         -->
         <cache-mapping>
             <cache-name>*</cache-name>
-            <scheme-name>hibernate-second-level-cache-distributed-scheme</scheme-name>
+            <scheme-name>hibernate-second-level-cache-near-scheme</scheme-name>
             <init-params>
                 <init-param>
                     <param-name>back-tier-size-limit</param-name>
@@ -143,11 +143,9 @@
 
         <distributed-scheme>
             <scheme-name>hibernate-second-level-cache-distributed-scheme</scheme-name>
-            <service-name>HibernateSecondLevelCache</service-name>
+            <service-name>TestHibernateSecondLevelCache</service-name>
             <!-- default to no thread pool; users should increase if ServiceMBean.TaskBacklog grows -->
             <thread-count>0</thread-count>
-            <!-- set local-storage to false for a cache client JVM, or pass -Dtangosol.coherence.distributed.localstorage=false -->
-            <local-storage>true</local-storage>
             <!-- little value in backup copies since we're caching a database; cache server failure equals cold cache -->
             <backup-count>0</backup-count>
             <backing-map-scheme>
