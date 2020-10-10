@@ -1,7 +1,7 @@
 Welcome to Oracle Coherence Hibernate Project
 =============================================
 
-[![Build Status](https://github.com/ghillert/coherence-hibernate/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/{owner}/{repo}/actions)
+[![Build Status](https://github.com/ghillert/coherence-hibernate/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/ghillert/coherence-hibernate/actions)
 
 The Oracle Coherence Hibernate project implements integration points between Oracle Coherence and the Hibernate
 object/relational mapping framework from JBoss.org.  
