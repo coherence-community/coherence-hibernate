@@ -6,6 +6,27 @@ reverse chronological order.
 
 <h3>Version ${project.version} @ ${timestamp} </h3>
 
+<h4>Global and Cross-Module Changes</h4>
+
+* Updating of dependencies.
+* Merge functional tests into the respective versions
+
+<h4>coherence-hibernate-cache-store</h4>
+
+* Update dependencies
+
+<h4>coherence-hibernate-second-level-cache</h4>
+
+* Add support for Hibernate `4.3.x`, `5.0.x`, `5.1.x`, `5.2.x`
+* Add additional modules for the various Hibernate version
+
+<h4>coherence-hibernate-site</h4>
+
+* Polishing and updating for `2.0.0`
+* Update site code
+
+<h3>Version 1.0.0 @ 2013-09-12 15:30</h3>
+
 <h4>Source and Documentation Contributors</h4>
 
 *   Randy Stafford

@@ -1,12 +1,11 @@
-Getting Help - Using the Forums
--------------------------------
+Getting Help - Slack + Stackoverflow
+------------------------------------
 
-The Message Forum for the Oracle Coherence Hibernate Integration project is the best place to start
-asking questions, should you need to.   This forum is hosted on java.net and
-is typically monitored by the project community.
+In case you have questions or if you run into issue using the Oracle Coherence
+Hibernate Integration project, please feel free to reach to us either via:
 
-It can be found here: [https://java.net/projects/cohhib/forums/message-forum](https://java.net/projects/cohhib/forums/message-forum)
+* [Stackoverflow](https://stackoverflow.com/tags/coherence) or
+* [Slack](https://join.slack.com/t/oraclecoherence/shared_invite/zt-9ufv220y-Leudk0o5ntgNV0xraa8DNw).
 
-To post in the message forum you will need to "join" the Oracle Coherence Hibernate Integration project on java.net,
-which will require you to have an account on java.net.  To read the message forum, no special memberships or
-accounts are required.
+Both support channels are monitored by the project community.
+

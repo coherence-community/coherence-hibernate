@@ -14,8 +14,3 @@
  * limitations under the License.
  */
 
-jQuery( document ).ready( function()
-{
-    // fix GitHub banner
-    $('body a img').css('position', 'fixed');
-});

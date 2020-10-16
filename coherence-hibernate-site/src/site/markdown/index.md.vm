@@ -1,21 +1,17 @@
 <h1><img src="images/cohhib.png" alt="Oracle Coherence Hibernate Integration" height="42" width="42" align="top"/> Oracle Coherence Hibernate Integration</h1>
 
-**Version: ${project.version} built on ${timestamp}**
-
 <h4>Overview</h4>
 
-The Oracle Coherence Hibernate Integration project encompasses the code of integration points between Hibernate and
-Oracle Coherence.  Separate [Apache Maven](http://maven.apache.org/) modules are used to isolate the code of each
-distinct integration point.
+The [Oracle Coherence Hibernate Integration project](https://github.com/coherence-community/coherence-hibernate)
+encompasses the code of integration points between [Hibernate](http://hibernate.org/)
+and [Oracle Coherence](https://coherence.community/). Separate [Apache Maven](http://maven.apache.org/)
+modules are used to isolate the code of each distinct integration point.
 
 Currently the set of integration points consists of the following:
 
-<ol>
-<li>A Hibernate-based implementation of the Coherence CacheStore SPI. This CacheStore implementation is pre-existing
-and merely moved from the Coherence product codebase.</li>
-<li>A Coherence-based implementation of the Hibernate second-level cache SPI.  This implementation represents new
-development targeted to the redesigned SPI released in Hiberate 3.3.</li>
-</ol>
+* A Hibernate-based implementation of the Coherence CacheStore SPI. This CacheStore implementation is pre-existing
+  and merely moved from the Coherence product code base.</li>
+* A Coherence-based implementation of the Hibernate second-level cache SPI</li>
 
 Complete source code together with documentation is provided to aid in adoption, use and understanding.
 
@@ -30,7 +26,29 @@ Provides a Hibernate-based implementation of Coherence CacheStore SPI.
 
 [**Coherence Hibernate Second-Level Cache:**](secondlevelcache/index.html)
 
-Provides a Coherence-based implementation of the Hibernate 3.3 second-level cache SPI.
+Provides a Coherence-based implementation of the Hibernate second-level cache SPI.
+As the Hibnerate SPI has changed across the various version of the Hibernate we,
+provide dedicate modules (and therefore dedicated release artifacts) for those Hibernate
+versions:
+
+<table border='1' cellpadding='5' cellspacing='20' style="width: 100%">
+  <tr>
+    <th width='55%'>Module Name</th>
+    <th width='45%'>Supported Hibernate Versions</th>
+  </tr>
+  <tr>
+    <td>coherence-hibernate-cache-4</td>
+    <td><code>4.3.x</code></td>
+  </tr>
+  <tr>
+    <td>coherence-hibernate-cache-5</td>
+    <td><code>5.0.x</code> and <code>5.1.x</code></td>
+  </tr>
+  <tr>
+    <td>coherence-hibernate-cache-52</td>
+    <td><code>5.2.x</code></td>
+  </tr>
+</table>
 
 <h4>Contributions</h4>
 

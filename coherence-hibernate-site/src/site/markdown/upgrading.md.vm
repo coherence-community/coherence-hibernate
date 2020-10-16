@@ -3,8 +3,8 @@ Upgrading from Previous Releases
 
 <h4>Upgrading from Hibernate integration in Oracle Coherence</h4>
 
-The procedure for upgrading to Oracle Coherence Hibernate Integration 1.0.0 in the Coherence Community,
-from Hibernate integration features in Oracle Coherence versions 3.x and 12.1.2, varies by integration point.
+The procedure for upgrading to Oracle Coherence Hibernate Integration `2.0.0` is
+dependent on the Hibernate version you are using. Please use the
 
 If you want to adopt to the new Coherence-based Hibernate second-level cache SPI implementation, which is targeted
 to the redesigned SPI released in Hibernate 3.3, then you need to do the following:

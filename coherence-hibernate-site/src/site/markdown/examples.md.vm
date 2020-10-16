@@ -5,8 +5,8 @@ For examples of the usage of the Coherence / Hibernate integration points implem
 Oracle Coherence Hibernate Integration project, please consult the functional tests included within the
 [source code](source-code.html) of the project.
 
-The functional tests for a given integration point are contained in a separate [Apache Maven](http://maven.apache.org/)
-module, having the same name as the integration point's module, with `"-tests"` appended.
+The functional tests for a given integration point are contained in each of the modules
+pertaining to a specific Hibernate version name `CoherenceHibernateSecondLevelCacheFunctionalTest.java`.
 
 In order to run the tests, you must [build and install](building.html) the Oracle Coherence Hibernate Integration
 project locally.
