@@ -2,22 +2,24 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>coherence-hibernate-integration</artifactId>
+        <artifactId>coherence-hibernate-parent</artifactId>
         <groupId>com.oracle.coherence.hibernate</groupId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>coherence-hibernate-site</artifactId>
 
-    <name>Oracle Coherence Hibernate Integration Site</name>
+    <name>Coherence Hibernate Site</name>
 
     <description>
-        The Oracle Coherence Hibernate Integration Project Site.
+        The Coherence Hibernate Site.
     </description>
 
     <properties>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
+
+        <site-project-title>Coherence Hibernate</site-project-title>
     </properties>
 
     <build>
@@ -45,7 +47,7 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${maven.site.plugin.version}</version>
                 <configuration>
-                    <skipDeploy>false</skipDeploy>
+                    <skipDeploy>true</skipDeploy>
                     <generateReports>false</generateReports>
                 </configuration>
                 <dependencies>
@@ -55,6 +57,14 @@
                         <version>${doxia.module.markdown.version}</version>
                     </dependency>
                 </dependencies>
+                <executions>
+                    <execution>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
@@ -62,18 +72,19 @@
                 <artifactId>site-maven-plugin</artifactId>
                 <version>${github.site.maven.plugin.version}</version>
                 <configuration>
+                    <server>github</server>
                     <message>${project.version} Site</message>
                     <path>${project.version}</path>
-                    <merge>false</merge>
-                    <repositoryName>coherence-hibernate-integration</repositoryName>
+                    <merge>true</merge>
+                    <repositoryName>coherence-hibernate</repositoryName>
                     <repositoryOwner>coherence-community</repositoryOwner>
                 </configuration>
                 <executions>
                     <execution>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>site</goal>
                         </goals>
-                        <phase>site-deploy</phase>
                     </execution>
                 </executions>
             </plugin>
