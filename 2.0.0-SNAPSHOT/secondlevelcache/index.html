@@ -211,30 +211,30 @@ Hibernate, to use caching on a case-by-case basis.  To configure mapped classes 
 second-level caching, add <code>&lt;cache&gt;</code> elements to the class’s mapping file as in the following example, or use the
 equivalent Hibernate annotations.</p>
 
-<p>```
-    <hibernate-mapping package="org.hibernate.tutorial.domain">
-        <class name="Person" table="PERSON">
-            <cache usage="read-write" />
-            <id name="id" column="PERSON_ID">
-                <generator class="native"/>
-            </id>
-            <property name="age"/>
-            <property name="firstname"/>
-            <property name="lastname"/>
-            <set name="events" table="PERSON_EVENT">
-                <cache usage="read-write" />
-                <key column="PERSON_ID"/>
-                <many-to-many column="EVENT_ID" class="Event"/>
-            </set>
-            <set name="emailAddresses" table="PERSON_EMAIL_ADDR">
-                <cache usage="read-write" />
-                <key column="PERSON_ID"/>
-                <element type="string" column="EMAIL_ADDR"/>
-            </set>
-        </class>
-    </hibernate-mapping>
-```
-The possible values for the usage attribute of the cache element are as follows:</p>
+<pre><code>&lt;hibernate-mapping package="org.hibernate.tutorial.domain"&gt;
+    &lt;class name="Person" table="PERSON"&gt;
+        &lt;cache usage="read-write" /&gt;
+        &lt;id name="id" column="PERSON_ID"&gt;
+            &lt;generator class="native"/&gt;
+        &lt;/id&gt;
+        &lt;property name="age"/&gt;
+        &lt;property name="firstname"/&gt;
+        &lt;property name="lastname"/&gt;
+        &lt;set name="events" table="PERSON_EVENT"&gt;
+            &lt;cache usage="read-write" /&gt;
+            &lt;key column="PERSON_ID"/&gt;
+            &lt;many-to-many column="EVENT_ID" class="Event"/&gt;
+        &lt;/set&gt;
+        &lt;set name="emailAddresses" table="PERSON_EMAIL_ADDR"&gt;
+            &lt;cache usage="read-write" /&gt;
+            &lt;key column="PERSON_ID"/&gt;
+            &lt;element type="string" column="EMAIL_ADDR"/&gt;
+        &lt;/set&gt;
+    &lt;/class&gt;
+&lt;/hibernate-mapping&gt;
+</code></pre>
+
+<p>The possible values for the usage attribute of the cache element are as follows:</p>
 
 <pre><code>&lt;cache usage="transactional | read-write | nonstrict-read-write | read-only"&gt;
 </code></pre>
@@ -385,7 +385,7 @@ communication parameters and cluster name to make them unique for each separate 
       <div class="container-fluid">
         <div class="row-fluid">
 Copyright &#169; 2008-2020 <a href="https://www.oracle.com/">Oracle Corporation</a>. All rights reserved.
-            Version 2.0.0-SNAPSHOT: 2020-10-24 08:05</div>
+            Version 2.0.0-SNAPSHOT: 2020-10-24 09:41</div>
         </div>
       </div>
     </footer>
