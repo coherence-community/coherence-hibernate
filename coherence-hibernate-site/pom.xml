@@ -59,7 +59,7 @@
                 </dependencies>
                 <executions>
                     <execution>
-                        <phase>deploy</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>site</goal>
                         </goals>

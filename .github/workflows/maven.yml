@@ -5,7 +5,7 @@ name: CI Coherence Hibernate
 
 on:
   push:
-    branches: [ module-refactoring ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -22,3 +22,6 @@ jobs:
         java-version: '1.8'
     - name: Build with Maven
       run: mvn clean package
+    - name: Update Website
+      run: mvn -pl coherence-hibernate-site deploy
+

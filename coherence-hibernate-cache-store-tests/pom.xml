@@ -72,15 +72,6 @@
             <artifactId>hibernate-core</artifactId>
         </dependency>
 
-        <!-- Because this is a web app, we also have a dependency on the servlet api. -->
-        <!--
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        -->
-
         <!-- Hibernate uses slf4j for logging, for our purposes here use the simple backend -->
         <dependency>
             <groupId>org.slf4j</groupId>

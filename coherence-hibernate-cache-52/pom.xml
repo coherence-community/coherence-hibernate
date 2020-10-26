@@ -43,31 +43,25 @@
     </description>
 
     <dependencies>
-
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate52.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <artifactId>coherence-hibernate-cache-commons</artifactId>
+            <artifactId>coherence-hibernate-cache-core</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <artifactId>coherence-hibernate-cache-commons</artifactId>
+            <artifactId>coherence-hibernate-cache-core</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
-
 </project>
