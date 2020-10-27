@@ -2,18 +2,14 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: CI Coherence Hibernate
-
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
 jobs:
   build:
-
     runs-on: macos-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
@@ -24,8 +20,8 @@ jobs:
         server-password: MAVEN_GITHUB
         server-username: ""
     - name: Build with Maven
-      run: mvn clean package -DskipTests
+      run: mvn clean package
     - name: Update Website
-      run: mvn -e -X -pl coherence-hibernate-site deploy
+      run: mvn -pl coherence-hibernate-site deploy
       env:
         MAVEN_GITHUB: ${{ secrets.MAVEN_GITHUB }}
