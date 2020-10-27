@@ -20,8 +20,12 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '1.8'
+        server-id: github
+        server-password: MAVEN_GITHUB
+        server-username: ""
     - name: Build with Maven
-      run: mvn clean package
+      run: mvn clean package -DskipTests
     - name: Update Website
-      run: mvn -pl coherence-hibernate-site deploy
-
+      run: mvn -e -X -pl coherence-hibernate-site deploy
+      env:
+        MAVEN_GITHUB: ${{ secrets.MAVEN_GITHUB }}
