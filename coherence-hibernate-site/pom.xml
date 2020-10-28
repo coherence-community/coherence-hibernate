@@ -77,7 +77,7 @@
                 <artifactId>site-maven-plugin</artifactId>
                 <version>${github.site.maven.plugin.version}</version>
                 <configuration>
-                    <server>github</server>
+                    <server>github-pages</server>
                     <message>${project.version} Site</message>
                     <path>${project.version}</path>
                     <merge>true</merge>
