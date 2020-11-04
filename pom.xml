@@ -261,6 +261,7 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>LICENSE.TXT</include>
+                                        <include>THIRD_PARTY_LICENSES.txt</include>
                                     </includes>
                                 </resource>
                             </resources>
