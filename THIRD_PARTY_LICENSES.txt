@@ -520,9 +520,9 @@ necessary.  Here is a sample; alter the names:
 
 That's all there is to it!
 
-==========================================================================
+=========================
 Fourth Party Dependencies
-==========================================================================
+=========================
 
 "Hibernate Commons Annotations" (org.hibernate.common:hibernate-commons-annotations)
 Copyright 2001-2015 Red Hat, Inc. All Rights Reserved.
