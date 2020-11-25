@@ -41,6 +41,10 @@
         </plugins>
     </build>
 
+    <properties>
+        <coherence.hibernate.root>${basedir}/..</coherence.hibernate.root>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.oracle.coherence.ce</groupId>

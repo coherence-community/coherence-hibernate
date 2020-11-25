@@ -23,7 +23,16 @@
         A Coherence-based implementation of the second-level cache SPI introduced in Hibernate 3.3.
     </description>
 
+    <properties>
+        <coherence.hibernate.root>${basedir}/..</coherence.hibernate.root>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>com.oracle.coherence.ce</groupId>
+            <artifactId>coherence</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>

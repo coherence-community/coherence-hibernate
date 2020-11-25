@@ -20,8 +20,8 @@ public class Person {
     private String firstname;
     private String lastname;
 
-    private Set events = new HashSet();
-    private Set emailAddresses = new HashSet();
+    private Set<Event> events = new HashSet<>();
+    private Set<String> emailAddresses = new HashSet<>();
 
     public Person() {}
 
@@ -32,7 +32,7 @@ public class Person {
         return id;
     }
 
-    private void setId(Long id)
+    public void setId(Long id)
     {
         this.id = id;
     }
@@ -67,11 +67,11 @@ public class Person {
         this.lastname = lastname;
     }
 
-    public Set getEvents() {
+    public Set<Event> getEvents() {
         return events;
     }
 
-    protected void setEvents(Set events) {
+    protected void setEvents(Set<Event> events) {
         this.events = events;
     }
 
@@ -85,11 +85,11 @@ public class Person {
         event.getParticipants().remove(this);
     }
 
-    public Set getEmailAddresses() {
+    public Set<String> getEmailAddresses() {
         return emailAddresses;
     }
 
-    public void setEmailAddresses(Set emailAddresses) {
+    public void setEmailAddresses(Set<String> emailAddresses) {
         this.emailAddresses = emailAddresses;
     }
 

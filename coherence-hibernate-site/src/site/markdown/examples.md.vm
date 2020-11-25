@@ -10,3 +10,5 @@ pertaining to a specific Hibernate version name `CoherenceHibernateSecondLevelCa
 
 In order to run the tests, you must [build and install](building.html) the Oracle Coherence Hibernate Integration
 project locally.
+
+Please also check-out the Coherence Hibernate Demo at https://github.com/ghillert/coherence-hibernate-demo

@@ -21,7 +21,7 @@ public class Event {
 
     private Date date;
 
-    private Set participants = new HashSet();
+    private Set<Person> participants = new HashSet<>();
 
     public Event() {}
 
@@ -29,7 +29,7 @@ public class Event {
         return id;
     }
 
-    private void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -49,11 +49,11 @@ public class Event {
         this.title = title;
     }
 
-    public Set getParticipants() {
+    public Set<Person> getParticipants() {
         return participants;
     }
 
-    protected void setParticipants(Set participants) {
+    protected void setParticipants(Set<Person> participants) {
         this.participants = participants;
     }
 

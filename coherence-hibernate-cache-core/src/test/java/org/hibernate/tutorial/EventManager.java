@@ -27,7 +27,7 @@ public class EventManager {
             mgr.createAndStoreEvent("My Event", new Date());
         }
         else if (args[0].equals("list")) {
-            List events = mgr.listEvents();
+            List<Event> events = mgr.listEvents();
             for (int i = 0; i < events.size(); i++) {
                 Event theEvent = (Event) events.get(i);
                 System.out.println(
@@ -64,22 +64,24 @@ public class EventManager {
         return theEvent.getId();
     }
 
-    public List listEvents() {
+    @SuppressWarnings("unchecked")
+	public List<Event> listEvents() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Query query = session.createQuery("from Event");
         query.setCacheable(true);
-        List result = query.list();
+        List<Event> result = query.list();
         session.getTransaction().commit();
         return result;
     }
 
-    public List listPersons() {
+    @SuppressWarnings("unchecked")
+	public List<Person> listPersons() {
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Query query = session.createQuery("from Person");
         query.setCacheable(true);
-        List result = query.list();
+        List<Person> result = query.list();
         session.getTransaction().commit();
         return result;
     }

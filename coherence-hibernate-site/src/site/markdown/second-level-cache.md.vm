@@ -1,8 +1,8 @@
 Coherence Hibernate Second-Level Cache
 ======================================
 
-This page describes how you can use Oracle Coherence as a second-level cache in
-[Hibernate ORM](http://hibernate.org/orm/), an object-relational mapping library
+This page describes how you can use [Oracle Coherence](https://coherence.community/)
+as a second-level cache in [Hibernate ORM](http://hibernate.org/orm/), an object-relational mapping library
 for Java applications. Since version `2.1` (released December 11th 2003) Hibernate
 has incorporated second-level caching, by allowing an implementation of a Service
 Provider Interface (SPI) to be configured. In Hibernate version 3.3 (released
@@ -10,7 +10,7 @@ September 11th 2008) the second-level cache SPI was significantly redesigned. Ov
 the next couple of versions the SPI was further refined leading to breaking changes.
 
 Therefore, we provide dedicated releases of the Hibernate Second-Level Cache implementations
-for Oracle Coherence deoending on the Hibernate versions. The following versions
+for Oracle Coherence depending on the Hibernate versions. The following versions
 are support:
 
 <table border='1' cellpadding='5' cellspacing='20' style="width: 100%">
@@ -41,24 +41,30 @@ use the Coherence Hibernate second-level cache implementation. For more informat
 on Hibernate second-level caching, see the [relevant chapter](https://docs.jboss.org/hibernate/orm/5.2/userguide/html_single/Hibernate_User_Guide.html#caching)
 in the Hibernate Core Reference Manual at <http://www.hibernate.org/docs>.
 
-Using Coherence as a Hibernate second-level cache implementation may be a good fit for Java applications that use
-Hibernate for data access and management, and that run in a cluster of application servers accessing the same database.
+Using Coherence as a Hibernate second-level cache implementation may be a good fit
+for Java applications that use Hibernate for data access and management, and that
+run in a cluster of application servers accessing the same database.
 
+> **NOTE**: Before you use the Coherence Hibernate Cache support, please also consider
+> other caching strategies. Ultimately, you should make a decision that is most applicable
+> to the needs of your application.
 
 <h3>Installing the Coherence Hibernate Second-Level Cache</h3>
 
-Installing the Coherence Hibernate second-level cache implementation amounts to obtaining a distribution of
-`coherence-hibernate-cache-${project.version}.jar` and making it available to JVM ClassLoaders.
+Installing the Coherence Hibernate second-level cache implementation amounts to
+obtaining a distribution of `coherence-hibernate-cache-xx-${project.version}.jar`
+for the respective Hibernate version of your application.
+
 The easiest way to do so is to build and execute your Hibernate application with Maven,
 and add the following dependency to your application’s `pom.xml`:
 
     <dependency>
         <groupId>com.oracle.coherence.hibernate</groupId>
-        <artifactId>coherence-hibernate-second-level-cache</artifactId>
+        <artifactId>coherence-hibernate-cache-xx</artifactId>
         <version>${project.version}</version>
     </dependency>
 
-Alternatively, you can download `coherence-hibernate-cache-${project.version}.jar`
+Alternatively, you can download `coherence-hibernate-cache-xx-${project.version}.jar`
 from a Maven repository (e.g. <https://repo1.maven.org/maven2/>) and use it in JVM
 classpaths. Or you can [build](building.html) the Coherence Hibernate second-level
 cache implementation from sources.
@@ -96,9 +102,10 @@ For example, include the following property setting in `hibernate.cfg.xml`:
         com.oracle.coherence.hibernate.cache.CoherenceRegionFactory
     </property>
 
-In addition to setting the `hibernate.cache.region.factory_class` property, you must also configure Hibernate to use
-second-level caching, and query caching if desired, by setting the appropriate Hibernate configuration properties to
-true, as follows:
+In addition to setting the `hibernate.cache.region.factory_class` property, you
+must also configure Hibernate to use second-level caching, and query caching if
+desired, by setting the appropriate Hibernate configuration properties to
+`true`, as follows:
 
     <property name="hibernate.cache.use_second_level_cache">true</property>
     <property name="hibernate.cache.use_query_cache">true</property>
@@ -227,7 +234,7 @@ The Coherence Hibernate second-level cache implementation does not support the t
 <h3>Configuring Coherence Caches for Hibernate Second-Level Caching</h3>
 
 By default, the Coherence Hibernate second-level cache implementation uses a cache configuration file named
-`hibernate-second-level-cache-config.xml` at the root level in `coherence-hibernate-second-level-cache-${project.version}.jar`.
+`hibernate-second-level-cache-config.xml` at the root level in `coherence-hibernate-cache-xx-${project.version}.jar`.
 This configuration file defines cache mappings for Hibernate second-level caches.  You can specify an alternative cache
 configuration file for Hibernate second-level caches using the Hibernate or Java property
 `com.oracle.coherence.hibernate.cache.cache_config_file_path`, whose value should be the path to a file or ClassLoader
@@ -254,11 +261,12 @@ considered if the underlying database can be written by clients other than the H
 Both the clients of the Coherence Hibernate second-level caches – e.g. application server JVMs running Hibernate-based
 applications – and the Coherence cache server JVMs actually holding the cache contents  - need to have a common set of
 jar file artifacts available to their ClassLoaders.  Specifically, both need
-`coherence-hibernate-second-level-cache-${project.version}.jar` and its dependencies Coherence and Hibernate (and their dependencies).
+`coherence-hibernate-cache-xx-${project.version}.jar` and its dependencies Coherence and Hibernate (and their dependencies).
 
 The Coherence cache server JVMs need the Hibernate core jar file to deserialize `CacheEntry` classes
 (`org.hibernate.cache.spi.entry.*`) since the Coherence Hibernate second-level cache implementation uses Coherence
-`EntryProcessors` to optimize concurrency control.  However the cache server JVMs do not need the Hibernate
+[EntryProcessors](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-applications/processing-data-cache.html)
+to optimize concurrency control.  However the cache server JVMs do not need the Hibernate
 application’s jar files containing entity classes etc.
 
 The client / application server JVMs do of course need the Hibernate application’s jar files containing entity classes

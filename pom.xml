@@ -72,7 +72,7 @@
         <maven.minimum.version>3.6.0</maven.minimum.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skip-sign-artifacts>true</skip-sign-artifacts>
-
+        <coherence.hibernate.root>${basedir}</coherence.hibernate.root>
         <!-- plugin dependency versions (alphabetically) -->
         <doxia.module.markdown.version>1.0</doxia.module.markdown.version>
         <github.site.maven.plugin.version>0.12</github.site.maven.plugin.version>
@@ -84,6 +84,7 @@
         <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
         <maven.javadoc.plugin.version>3.2.0</maven.javadoc.plugin.version>
         <maven.release.plugin.version>2.5</maven.release.plugin.version>
+        <maven.resources.plugin.version>3.2.0</maven.resources.plugin.version>
         <maven.site.plugin.version>3.9.1</maven.site.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
@@ -174,6 +175,11 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>${maven.deploy.plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven.resources.plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -226,22 +232,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.commonjava.maven.plugins</groupId>
-                <artifactId>directory-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-top-parent-basedir</id>
-                        <goals>
-                            <goal>highest-basedir</goal>
-                        </goals>
-                        <phase>validate</phase>
-                        <configuration>
-                            <property>top.parent.basedir</property>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
@@ -256,7 +246,7 @@
                             <resources>
                                 <resource>
                                     <!--suppress UnresolvedMavenProperty -->
-                                    <directory>${top.parent.basedir}</directory>
+                                    <directory>${coherence.hibernate.root}</directory>
                                     <targetPath>META-INF/</targetPath>
                                     <filtering>true</filtering>
                                     <includes>
@@ -311,7 +301,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven.deploy.plugin.version}</version>
             </plugin>
 
             <plugin>

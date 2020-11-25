@@ -8,6 +8,8 @@ reverse chronological order.
 
 <h4>Global and Cross-Module Changes</h4>
 
+* Change licensing from the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL)
+  to The Universal Permissive License (UPL)
 * Updating of dependencies.
 * Merge functional tests into the respective versions
 
@@ -18,7 +20,7 @@ reverse chronological order.
 <h4>coherence-hibernate-second-level-cache</h4>
 
 * Add support for Hibernate `4.3.x`, `5.0.x`, `5.1.x`, `5.2.x`
-* Add additional modules for the various Hibernate version
+* Add additional modules for the various Hibernate versions
 
 <h4>coherence-hibernate-site</h4>
 
