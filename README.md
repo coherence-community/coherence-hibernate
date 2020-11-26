@@ -1,7 +1,7 @@
 Welcome to the Oracle Coherence Hibernate Project
 =============================================
 
-[![Build Status](https://github.com/coherence-community/coherence-hibernate/workflows/CI%20Coherence%20Hibernate/badge.svg)](https://github.com/coherence-community/coherence-hibernate/actions) [![License](http://img.shields.io/badge/license-UPL%201.0-blue.svg)](https://oss.oracle.com/licenses/upl/)
+[![Build Status](https://github.com/coherence-community/coherence-hibernate/workflows/CI%20Coherence%20Hibernate/badge.svg)](https://github.com/coherence-community/coherence-hibernate/actions) [![License](http://img.shields.io/badge/license-UPL%201.0-blue.svg)](https://oss.oracle.com/licenses/upl/) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/coherence-community/coherence-hibernate)
 
 The Oracle Coherence Hibernate project implements integration points between Oracle Coherence/[Coherence CE](https://coherence.community) and the [Hibernate Object/Relational Mapping (ORM)](https://hibernate.org/orm/) framework.
 
