@@ -49,6 +49,55 @@ run in a cluster of application servers accessing the same database.
 > other caching strategies. Ultimately, you should make a decision that is most applicable
 > to the needs of your application.
 
+<h3>Configuration and Serialization Requirements</h3>
+
+<h4>Serialization</h4>
+
+Familiarize yourself with the Coherence Documentation, especially the chapter on
+[Performing Basic Cache Operations](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-applications/performing-basic-cache-operations.html#GUID-F9BCA574-ABFC-4F0D-94EA-949E5B7621E7)
+as it also details the **Requirements for Cached Objects**:
+
+Cache keys and values must be serializable (for example, `java.io.Serializable`
+or Coherence [Portable Object Format](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-applications/using-portable-object-format.html#GUID-F331E5AB-0B3B-4313-A2E3-AA95A40AD913)
+(POF) serialization). Furthermore, cache keys must provide an implementation of
+
+- `hashCode()` and
+- `equals()`
+
+Those methods must return consistent results across cluster nodes. This implies
+that the implementation of `hashCode()` and `equals()` must be based solely on the
+object's serializable state (that is, the object's non-transient fields). Most
+built-in Java types, such as `String`, `Integer` and `Date`, meet this requirement.
+Some cache implementations (specifically the partitioned cache) use the serialized
+form of the key objects for equality testing, which means that keys for which
+`equals()` returns `true` must serialize identically. Most built-in Java types meet
+this requirement as well.
+
+<h4>Configuring Clients and Servers for Hibernate Second-Level Caching</h4>
+
+Both the clients of the Coherence Hibernate second-level caches – e.g. application server JVMs running Hibernate-based
+applications – and the Coherence cache server JVMs actually holding the cache contents  - need to have a common set of
+jar file artifacts available to their ClassLoaders.  Specifically, both need
+`coherence-hibernate-cache-xx-${project.version}.jar` and its dependencies Coherence and Hibernate (and their dependencies).
+
+The Coherence cache server JVMs need the Hibernate core jar file to deserialize `CacheEntry` classes
+(`org.hibernate.cache.spi.entry.*`) since the Coherence Hibernate second-level cache implementation uses Coherence
+[EntryProcessors](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-applications/processing-data-cache.html)
+to optimize concurrency control.  However the cache server JVMs do not need the Hibernate
+application’s jar files containing entity classes etc.
+
+The client / application server JVMs do of course need the Hibernate application’s jar files containing entity classes
+etc.  And they should be configured to be “storage-disabled”, i.e. to not store contents of distributed caches.  See
+comments in the default hibernate-second-level-cache-config.xml for details on how to accomplish that configuration – it
+amounts to starting clients and servers with slightly different cache configuration files, or passing
+`–Dtangosol.coherence.distributed.localstorage=false` to client JVMs.
+
+Both client and server JVMs will need the same Coherence operational configuration
+(see the chapter on [Understanding Configuration](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-applications/understanding-configuration.html#GUID-360B798E-2120-44A9-8B09-1FDD9AB40EB5)
+in the reference documentation) specifying necessary cluster communication parameters.
+Coherence provides default operational configuration, but it is a best practice to override
+communication parameters and cluster name to make them unique for each separate application environment.
+
 <h3>Installing the Coherence Hibernate Second-Level Cache</h3>
 
 Installing the Coherence Hibernate second-level cache implementation amounts to
@@ -254,28 +303,3 @@ Hibernate-based `CacheStores` are used.  Furthermore, second-level caches should
 the possibility of heap exhaustion.  Query caches in particular should be size-limited because the Hibernate API does
 not provide any means of controlling the query cache other than a complete eviction.  Finally, expiration should be
 considered if the underlying database can be written by clients other than the Hibernate application.
-
-
-<h3>Configuring Clients and Servers for Hibernate Second-Level Caching</h3>
-
-Both the clients of the Coherence Hibernate second-level caches – e.g. application server JVMs running Hibernate-based
-applications – and the Coherence cache server JVMs actually holding the cache contents  - need to have a common set of
-jar file artifacts available to their ClassLoaders.  Specifically, both need
-`coherence-hibernate-cache-xx-${project.version}.jar` and its dependencies Coherence and Hibernate (and their dependencies).
-
-The Coherence cache server JVMs need the Hibernate core jar file to deserialize `CacheEntry` classes
-(`org.hibernate.cache.spi.entry.*`) since the Coherence Hibernate second-level cache implementation uses Coherence
-[EntryProcessors](https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-applications/processing-data-cache.html)
-to optimize concurrency control.  However the cache server JVMs do not need the Hibernate
-application’s jar files containing entity classes etc.
-
-The client / application server JVMs do of course need the Hibernate application’s jar files containing entity classes
-etc.  And they should be configured to be “storage-disabled”, i.e. to not store contents of distributed caches.  See
-comments in the default hibernate-second-level-cache-config.xml for details on how to accomplish that configuration – it
-amounts to starting clients and servers with slightly different cache configuration files, or passing
-`–Dtangosol.coherence.distributed.localstorage=false` to client JVMs.
-
-Both client and server JVMs will need the same Coherence operational configuration (see
-<http://docs.oracle.com/middleware/1212/coherence/COHDG/gs_config.htm#COHDG5002>) specifying necessary cluster
-communication parameters.  Coherence provides default operational configuration, but it is a best practice to override
-communication parameters and cluster name to make them unique for each separate application environment.
