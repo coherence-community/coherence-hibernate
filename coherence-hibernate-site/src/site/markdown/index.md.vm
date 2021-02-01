@@ -20,11 +20,11 @@ Complete source code together with documentation is provided to aid in adoption,
 The following [Apache Maven](http://maven.apache.org/) modules are defined by the Oracle Coherence Hibernate
 Integration project.
 
-[**Coherence Hibernate CacheStore:**](cachestore/index.html)
+[**Coherence Hibernate CacheStore:**](cache-store.html)
 
 Provides a Hibernate-based implementation of Coherence CacheStore SPI.
 
-[**Coherence Hibernate Second-Level Cache:**](secondlevelcache/index.html)
+[**Coherence Hibernate Second-Level Cache:**](second-level-cache.html)
 
 Provides a Coherence-based implementation of the Hibernate second-level cache SPI.
 As the Hibnerate SPI has changed across the various version of the Hibernate we,
