@@ -79,7 +79,7 @@ additional `<cache-mapping>` elements.
               <cachestore-scheme>
                 <class-scheme>
                   <class-name>
-                  com.tangosol.coherence.hibernate.HibernateCacheStore
+                  com.oracle.coherence.hibernate.cachestore.HibernateCacheStore
                   </class-name>
                   <init-params>
                     <init-param>
@@ -122,7 +122,7 @@ The next example illustrates that you can also use the predefined `{cache-name}`
               <cachestore-scheme>
                 <class-scheme>
                   <class-name>
-                  com.tangosol.coherence.hibernate.HibernateCacheStore
+                  com.oracle.coherence.hibernate.cachestore.HibernateCacheStore
                   </class-name>
                   <init-params>
                     <init-param>
@@ -165,7 +165,7 @@ cache mapping for any qualified class name (entity name).
               <cachestore-scheme>
                 <class-scheme>
                   <class-name>
-                  com.tangosol.coherence.hibernate.HibernateCacheStore
+                  com.oracle.coherence.hibernate.cachestore.HibernateCacheStore
                   </class-name>
                   <init-params>
                     <init-param>
