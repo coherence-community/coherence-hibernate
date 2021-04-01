@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -15,9 +15,12 @@ import com.tangosol.net.CacheFactory;
 import com.tangosol.net.ConfigurableCacheFactory;
 import com.tangosol.net.NamedCache;
 
+import org.hibernate.boot.registry.selector.spi.StrategySelector;
 import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
+import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.hibernate.cache.spi.CacheDataDescription;
+import org.hibernate.cache.spi.CacheKeysFactory;
 import org.hibernate.cache.spi.CollectionRegion;
 import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.NaturalIdRegion;
@@ -25,6 +28,7 @@ import org.hibernate.cache.spi.QueryResultsRegion;
 import org.hibernate.cache.spi.RegionFactory;
 import org.hibernate.cache.spi.TimestampsRegion;
 import org.hibernate.cache.spi.access.AccessType;
+import org.hibernate.cfg.Environment;
 
 import java.util.Properties;
 
@@ -94,6 +98,18 @@ implements RegionFactory
      */
     private SessionFactoryOptions sessionFactoryOptions;
 
+    /**
+     * The Hibernate {@link CacheKeysFactory} to use. Hibernate ships with 2 {@link CacheKeysFactory}
+     * implementations:
+     *
+     * <ul>
+     *   <li>{{@link org.hibernate.cache.internal.DefaultCacheKeysFactory}}
+     *   <li>{@link org.hibernate.cache.internal.SimpleCacheKeysFactory}
+     * </ul>
+     *
+     * If none is specified, then the {@link org.hibernate.cache.internal.DefaultCacheKeysFactory} is used.
+     */
+    private CacheKeysFactory cacheKeysFactory;
 
     // ---- Accessing
 
@@ -158,7 +174,18 @@ implements RegionFactory
     @Override
     public void start(SessionFactoryOptions options, Properties properties) throws CacheException
     {
-    	this.sessionFactoryOptions = options;
+        this.sessionFactoryOptions = options;
+
+        if (this.sessionFactoryOptions != null)
+        {
+            StrategySelector selector = this.sessionFactoryOptions.getServiceRegistry().getService(StrategySelector.class);
+            this.cacheKeysFactory = selector.resolveDefaultableStrategy(CacheKeysFactory.class,
+                    properties.get(Environment.CACHE_KEYS_FACTORY), new DefaultCacheKeysFactory());
+        }
+        else
+        {
+            this.cacheKeysFactory = new DefaultCacheKeysFactory();
+        }
 
         CacheFactory.ensureCluster();
 
@@ -243,7 +270,7 @@ implements RegionFactory
     public EntityRegion buildEntityRegion(String regionName, Properties properties, CacheDataDescription metadata)
     throws CacheException
     {
-        return new CoherenceEntityRegion(ensureNamedCache(regionName), sessionFactoryOptions, properties, metadata);
+        return new CoherenceEntityRegion(ensureNamedCache(regionName), sessionFactoryOptions, properties, metadata, cacheKeysFactory);
     }
 
     /**
@@ -253,7 +280,7 @@ implements RegionFactory
     public NaturalIdRegion buildNaturalIdRegion(String regionName, Properties properties, CacheDataDescription metadata)
     throws CacheException
     {
-        return new CoherenceNaturalIdRegion(ensureNamedCache(regionName), sessionFactoryOptions, properties, metadata);
+        return new CoherenceNaturalIdRegion(ensureNamedCache(regionName), sessionFactoryOptions, properties, metadata, cacheKeysFactory);
     }
 
     /**
@@ -263,7 +290,7 @@ implements RegionFactory
     public CollectionRegion buildCollectionRegion(String regionName, Properties properties, CacheDataDescription metadata)
     throws CacheException
     {
-        return new CoherenceCollectionRegion(ensureNamedCache(regionName), sessionFactoryOptions, properties, metadata);
+        return new CoherenceCollectionRegion(ensureNamedCache(regionName), sessionFactoryOptions, properties, metadata, cacheKeysFactory);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -9,7 +9,6 @@ package com.oracle.coherence.hibernate.cache.access;
 import com.oracle.coherence.hibernate.cache.region.CoherenceCollectionRegion;
 
 import org.hibernate.boot.spi.SessionFactoryOptions;
-import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.hibernate.cache.spi.CollectionRegion;
 import org.hibernate.cache.spi.access.CollectionRegionAccessStrategy;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -57,13 +56,13 @@ implements CollectionRegionAccessStrategy
     @Override
     public Object generateCacheKey(Object id, CollectionPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier)
     {
-        return DefaultCacheKeysFactory.staticCreateCollectionKey( id, persister, sessionFactoryImplementor, tenantIdentifier );
+        return this.getCoherenceRegion().getCacheKeysFactory().createCollectionKey(id, persister, sessionFactoryImplementor, tenantIdentifier);
     }
 
     @Override
     public Object getCacheKeyId(Object cacheKey)
     {
-        return DefaultCacheKeysFactory.staticGetCollectionId(cacheKey);
+        return this.getCoherenceRegion().getCacheKeysFactory().getCollectionId(cacheKey);
     }
 
 }
