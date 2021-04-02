@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -10,7 +10,6 @@ import com.oracle.coherence.hibernate.cache.region.CoherenceNaturalIdRegion;
 
 import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
@@ -116,12 +115,12 @@ implements NaturalIdRegionAccessStrategy
     @Override
     public Object generateCacheKey(Object[] naturalIdValues, EntityPersister persister, SharedSessionContractImplementor session)
     {
-        return DefaultCacheKeysFactory.staticCreateNaturalIdKey(naturalIdValues, persister, session);
+        return this.getCoherenceRegion().getCacheKeysFactory().createNaturalIdKey(naturalIdValues, persister, session);
     }
 
     @Override
     public Object[] getNaturalIdValues(Object cacheKey)
     {
-        return DefaultCacheKeysFactory.staticGetNaturalIdValues( cacheKey );
+        return this.getCoherenceRegion().getCacheKeysFactory().getNaturalIdValues(cacheKey);
     }
 }

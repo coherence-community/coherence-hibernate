@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -10,7 +10,6 @@ import com.oracle.coherence.hibernate.cache.region.CoherenceEntityRegion;
 
 import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
@@ -109,13 +108,13 @@ implements EntityRegionAccessStrategy
     @Override
     public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier)
     {
-        return DefaultCacheKeysFactory.staticCreateEntityKey( id, persister, sessionFactoryImplementor, tenantIdentifier );
+        return this.getCoherenceRegion().getCacheKeysFactory().createEntityKey(id, persister, sessionFactoryImplementor, tenantIdentifier);
     }
 
     @Override
     public Object getCacheKeyId(Object cacheKey)
     {
-        return DefaultCacheKeysFactory.staticGetEntityId(cacheKey);
+        return this.getCoherenceRegion().getCacheKeysFactory().getEntityId(cacheKey);
     }
 
 }

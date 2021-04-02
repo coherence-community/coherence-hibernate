@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -15,6 +15,7 @@ import com.tangosol.net.NamedCache;
 import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.CacheDataDescription;
+import org.hibernate.cache.spi.CacheKeysFactory;
 import org.hibernate.cache.spi.CollectionRegion;
 import org.hibernate.cache.spi.access.AccessType;
 import org.hibernate.cache.spi.access.CollectionRegionAccessStrategy;
@@ -32,6 +33,7 @@ extends CoherenceTransactionalDataRegion
 implements CollectionRegion
 {
 
+    private final CacheKeysFactory cacheKeysFactory;
 
     // ---- Constructors
 
@@ -42,12 +44,19 @@ implements CollectionRegion
      * @param sessionFactoryOptions the Hibernate SessionFactoryOptions
      * @param properties configuration properties for this CoherenceCollectionRegion
      * @param metadata the description of the data in this CoherenceCollectionRegion
+     * @param cacheKeysFactory the cacheKeysFactory to use
      */
-    public CoherenceCollectionRegion(NamedCache namedCache, SessionFactoryOptions sessionFactoryOptions, Properties properties, CacheDataDescription metadata)
+    public CoherenceCollectionRegion(NamedCache namedCache, SessionFactoryOptions sessionFactoryOptions, Properties properties,
+                                     CacheDataDescription metadata, CacheKeysFactory cacheKeysFactory)
     {
         super(namedCache, sessionFactoryOptions, properties, metadata);
+        this.cacheKeysFactory = cacheKeysFactory;
     }
 
+    public CacheKeysFactory getCacheKeysFactory()
+    {
+        return cacheKeysFactory;
+    }
 
     // ---- interface org.hibernate.cache.spi.CollectionRegion
 
