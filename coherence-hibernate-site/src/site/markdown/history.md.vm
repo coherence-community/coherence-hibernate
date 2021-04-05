@@ -8,6 +8,18 @@ reverse chronological order.
 
 <h4>Global and Cross-Module Changes</h4>
 
+<h4>coherence-hibernate-cache-store</h4>
+
+<h4>coherence-hibernate-second-level-cache</h4>
+
+* Add support for configurable CacheKeysFactories in Hibernate `5.2.x`
+
+<h4>coherence-hibernate-site</h4>
+
+<h3>Version 2.0.0 @ 2020-11-25 15:30</h3>
+
+<h4>Global and Cross-Module Changes</h4>
+
 * Change licensing from the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL)
   to The Universal Permissive License (UPL)
 * Updating of dependencies.

@@ -73,6 +73,22 @@ form of the key objects for equality testing, which means that keys for which
 `equals()` returns `true` must serialize identically. Most built-in Java types meet
 this requirement as well.
 
+<h4>Cache Keys</h4>
+
+By default, Coherence Hibernate uses the `DefaultCacheKeysFactory`. When using Hibernate `5.2` or later,
+you can customize the used `CacheKeysFactory` using the Hibernate property:
+
+- `hibernate.cache.keys_factory`
+
+You can specify the following values:
+
+- `default`, which wraps identitifers in the tuple (`DefaultCacheKeysFactory`)
+- `simple`, uses identifiers as keys without any wrapping (`SimpleCacheKeysFactory`)
+- fully qualified class name that implements `org.hibernate.cache.spi.CacheKeysFactory`
+
+> **NOTE**: Hibernate versions before `5.3.0` have issues with composite keys, when using the `DefaultCacheKeysFactory`.
+> If you need to use composite keys, please consider using the `SimpleCacheKeysFactory` instead.
+
 <h4>Configuring Clients and Servers for Hibernate Second-Level Caching</h4>
 
 Both the clients of the Coherence Hibernate second-level caches – e.g. application server JVMs running Hibernate-based
