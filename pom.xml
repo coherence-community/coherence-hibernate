@@ -75,7 +75,7 @@
         <skip-sign-artifacts>true</skip-sign-artifacts>
         <coherence.hibernate.root>${basedir}</coherence.hibernate.root>
         <!-- plugin dependency versions (alphabetically) -->
-        <dependency-check-maven.version>6.0.4</dependency-check-maven.version>
+        <dependency-check-maven.version>6.1.6</dependency-check-maven.version>
         <doxia.module.markdown.version>1.0</doxia.module.markdown.version>
         <github.site.maven.plugin.version>0.12</github.site.maven.plugin.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
