@@ -93,13 +93,16 @@
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
 
         <!-- dependency versions (alphabetically) -->
-        <coherence.version>20.06.1</coherence.version>
+        <assertj.version>3.11.1</assertj.version>
+        <coherence.version>21.06.2</coherence.version>
         <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
         <hibernate52.version>5.2.17.Final</hibernate52.version>
-        <hibernate53.version>5.3.20.Final</hibernate53.version>
+        <hibernate53.version>5.3.23.Final</hibernate53.version>
         <hsqldb.version>2.2.9</hsqldb.version>
-        <junit.version>4.13.1</junit.version>
+        <hsqldb.version>2.2.9</hsqldb.version>
+        <junit.version>4.13.2</junit.version>
+        <mockito.version>4.0.0</mockito.version>
     </properties>
 
     <distributionManagement>
