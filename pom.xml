@@ -11,7 +11,7 @@
 
     <groupId>com.oracle.coherence.hibernate</groupId>
     <artifactId>coherence-hibernate-parent</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Coherence Hibernate Project</name>
@@ -64,6 +64,7 @@
         <module>coherence-hibernate-cache-4</module>
         <module>coherence-hibernate-cache-5</module>
         <module>coherence-hibernate-cache-52</module>
+        <module>coherence-hibernate-cache-53</module>
         <module>coherence-hibernate-site</module>
     </modules>
 
@@ -96,7 +97,7 @@
         <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
         <hibernate52.version>5.2.17.Final</hibernate52.version>
-        <hibernate53.version>5.3.18.Final</hibernate53.version>
+        <hibernate53.version>5.3.20.Final</hibernate53.version>
         <hsqldb.version>2.2.9</hsqldb.version>
         <junit.version>4.13.1</junit.version>
     </properties>
@@ -117,34 +118,34 @@
             <dependency>
                 <groupId>com.oracle.coherence.hibernate</groupId>
                 <artifactId>coherence-hibernate-cache-store</artifactId>
-                <version>2.0.1-SNAPSHOT</version>
+                <version>2.1.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.oracle.coherence.hibernate</groupId>
                 <artifactId>coherence-hibernate-cache-5</artifactId>
-                <version>2.0.1-SNAPSHOT</version>
+                <version>2.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.oracle.coherence.hibernate</groupId>
                 <artifactId>coherence-hibernate-cache-52</artifactId>
-                <version>2.0.1-SNAPSHOT</version>
+                <version>2.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.oracle.coherence.hibernate</groupId>
                 <artifactId>coherence-hibernate-cache-core</artifactId>
-                <version>2.0.1-SNAPSHOT</version>
+                <version>2.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.oracle.coherence.hibernate</groupId>
                 <artifactId>coherence-hibernate-cache-core</artifactId>
-                <version>2.0.1-SNAPSHOT</version>
+                <version>2.1.0-SNAPSHOT</version>
                 <type>test-jar</type>
             </dependency>
             <dependency>
                 <groupId>com.oracle.coherence.hibernate</groupId>
                 <artifactId>coherence-hibernate-cache-4</artifactId>
-                <version>2.0.1-SNAPSHOT</version>
+                <version>2.1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.oracle.coherence.ce</groupId>
