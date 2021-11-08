@@ -345,6 +345,24 @@
 
     <profiles>
         <profile>
+            <id>hibernate54</id>
+            <properties>
+                <hibernate53.version>5.4.32.Final</hibernate53.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>hibernate55</id>
+            <properties>
+                <hibernate53.version>5.5.8.Final</hibernate53.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>hibernate56</id>
+            <properties>
+                <hibernate53.version>5.6.0.Final</hibernate53.version>
+            </properties>
+        </profile>
+        <profile>
             <id>coherence_version_12.1.2-0-0</id>
             <properties>
                 <coherence.version>12.1.2-0-0</coherence.version>
