@@ -18,9 +18,9 @@
 
     <artifactId>coherence-hibernate-cache-53</artifactId>
 
-    <name>Coherence Hibernate Second Level Cache 5.3.x</name>
+    <name>Coherence Hibernate Second Level Cache 5.3.x - 5.6.x</name>
     <description>
-        A Coherence-based implementation of the second-level cache SPI introduced in Hibernate 3.3.
+        A Coherence-based implementation of the second-level cache SPI for Hibernate 5.3.x, 5.4.x, 5.5.x and 5.6.x.
     </description>
 
     <properties>

@@ -98,7 +98,7 @@
         <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
         <hibernate52.version>5.2.17.Final</hibernate52.version>
-        <hibernate53.version>5.3.23.Final</hibernate53.version>
+        <hibernate53.version>5.6.0.Final</hibernate53.version>
         <hsqldb.version>2.2.9</hsqldb.version>
         <hsqldb.version>2.2.9</hsqldb.version>
         <junit.version>4.13.2</junit.version>
@@ -345,6 +345,12 @@
 
     <profiles>
         <profile>
+            <id>hibernate53</id>
+            <properties>
+                <hibernate53.version>5.3.23.Final</hibernate53.version>
+            </properties>
+        </profile>
+        <profile>
             <id>hibernate54</id>
             <properties>
                 <hibernate53.version>5.4.32.Final</hibernate53.version>
@@ -354,12 +360,6 @@
             <id>hibernate55</id>
             <properties>
                 <hibernate53.version>5.5.8.Final</hibernate53.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>hibernate56</id>
-            <properties>
-                <hibernate53.version>5.6.0.Final</hibernate53.version>
             </properties>
         </profile>
         <profile>

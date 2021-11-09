@@ -17,12 +17,12 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '8'
+    - name: Build - Hibernate 5.3.x
+      run: mvn clean install -B -Powasp -Phibernate53
     - name: Build - Hibernate 5.4.x
       run: mvn clean install -B -Powasp -Phibernate54
     - name: Build - Hibernate 5.5.x
       run: mvn clean install -B -Powasp -Phibernate55
-    - name: Build - Hibernate 5.6.x
-      run: mvn clean install -B -Powasp -Phibernate56
     - name: Build + deploy with Maven (Website + Snapshots)
       run: mvn clean deploy -B -Powasp --settings .mvn/settings.xml
       env:
