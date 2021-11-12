@@ -1,0 +1,31 @@
+///////////////////////////////////////////////////////////////////////////////
+    Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+
+    Licensed under the Universal Permissive License v 1.0 as shown at
+    https://oss.oracle.com/licenses/upl.
+///////////////////////////////////////////////////////////////////////////////
+
+= Source Code
+:description: Oracle Coherence Hibernate Website
+:keywords: coherence, hibernate, java, documentation
+
+// DO NOT remove this header - it might look like a duplicate of the header above, but
+// both they serve a purpose, and the docs will look wrong if it is removed.
+
+== Source Code
+
+The Source Code for Coherence Hibernate is hosted on https://github.com[github.com].
+
+It is located here:
+https://github.com/coherence-community/coherence-hibernate
+
+Alternatively, if you're not using or want to avoid setting up http://git-scm.com[git], you
+can download a zip containing the latest development branch from here:
+
+https://github.com/coherence-community/coherence-hibernate/archive/master.zip
+
+[IMPORTANT]
+====
+*Pull Requests* are welcome! Just make sure to become an official
+https://github.com/coherence-community/coherence-hibernate/blob/master/CONTRIBUTING.md[contributor].
+====

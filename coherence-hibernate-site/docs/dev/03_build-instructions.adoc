@@ -1,0 +1,30 @@
+///////////////////////////////////////////////////////////////////////////////
+    Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+
+    Licensed under the Universal Permissive License v 1.0 as shown at
+    https://oss.oracle.com/licenses/upl.
+///////////////////////////////////////////////////////////////////////////////
+
+= Building
+:description: Oracle Coherence Hibernate Website
+:keywords: coherence, hibernate, java, documentation
+
+// DO NOT remove this header - it might look like a duplicate of the header above, but
+// both they serve a purpose, and the docs will look wrong if it is removed.
+
+To build the Coherence Hibernate project you need to have the following software installed:
+
+- http://www.oracle.com/technetwork/java/javase/downloads/index.html[Java SE Development Kit 11].
+- http://maven.apache.org/[Apache Maven]
+
+Once you have these installed building the entire source tree is as simple as executing the following shell command
+(from the root of the source directory):
+
+[source,bash]
+----
+./mvnw clean package
+----
+
+For detailed instructions, please see the main
+https://github.com/coherence-community/coherence-hibernate/blob/master/README.adoc[README] of the Coherence Hibernate
+source code repository.

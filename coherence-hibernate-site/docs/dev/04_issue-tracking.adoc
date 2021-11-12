@@ -1,0 +1,19 @@
+///////////////////////////////////////////////////////////////////////////////
+    Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+
+    Licensed under the Universal Permissive License v 1.0 as shown at
+    https://oss.oracle.com/licenses/upl.
+///////////////////////////////////////////////////////////////////////////////
+
+= Issue Tracking
+
+:description: Oracle Coherence Hibernate Website
+:keywords: coherence, hibernate, java, documentation
+
+// DO NOT remove this header - it might look like a duplicate of the header above, but
+// both they serve a purpose, and the docs will look wrong if it is removed.
+
+== Issue Tracking
+
+The https://github.com/coherence-community/coherence-hibernate/issues[Issue Tracking] system for the Coherence Hibernate
+project is hosted on https://github.com/[github.com].  It can be found here: https://github.com/coherence-community/coherence-hibernate/issues.

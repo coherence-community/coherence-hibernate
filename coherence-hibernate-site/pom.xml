@@ -16,20 +16,28 @@
     </parent>
 
     <artifactId>coherence-hibernate-site</artifactId>
-
-    <name>Coherence Hibernate Site</name>
-
+    <name>Coherence Hibernate Website</name>
+    <packaging>site</packaging>
     <description>
-        The Coherence Hibernate Site.
+        Coherence Hibernate Website
     </description>
 
     <properties>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
+        <coherence.hibernate.root>${basedir}/..</coherence.hibernate.root>
+        <helidon.sitegen.version>2.0.0-RC1</helidon.sitegen.version>
+        <asciidoctor.diagram.version>2.0.2</asciidoctor.diagram.version>
+        <doxia.version>1.6</doxia.version>
 
-        <site-project-title>Coherence Hibernate</site-project-title>
+        <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
     </properties>
-
+    <distributionManagement>
+        <site>
+            <id>github-pages</id>
+            <url>scm:git:https://github.com/coherence-community/coherence-hibernate.git</url>
+        </site>
+    </distributionManagement>
     <build>
         <plugins>
             <plugin>
@@ -41,11 +49,11 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven.deploy.plugin.version}</version>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus.staging.maven.plugin.version}</version>
                 <configuration>
-                    <skip>true</skip>
+                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
                 </configuration>
             </plugin>
             <plugin>
@@ -57,50 +65,125 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>${maven.site.plugin.version}</version>
+                <groupId>io.helidon.build-tools</groupId>
+                <artifactId>sitegen-maven-plugin</artifactId>
+                <version>${helidon.sitegen.version}</version>
+                <extensions>true</extensions>
                 <configuration>
-                    <skipDeploy>true</skipDeploy>
-                    <generateReports>false</generateReports>
+                    <siteConfigFile>${basedir}/sitegen.yaml</siteConfigFile>
+                    <siteSourceDirectory>${basedir}/docs</siteSourceDirectory>
                 </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>org.kohsuke</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>${doxia.module.markdown.version}</version>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-diagram</artifactId>
+                        <version>${asciidoctor.diagram.version}</version>
                     </dependency>
                 </dependencies>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>${github.site.maven.plugin.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${maven.site.plugin.version}</version>
+                <inherited>false</inherited>
                 <configuration>
-                    <server>github-pages</server>
-                    <message>${project.version} Site</message>
-                    <path>${project.version}</path>
-                    <merge>true</merge>
-                    <repositoryName>coherence-hibernate</repositoryName>
-                    <repositoryOwner>coherence-community</repositoryOwner>
+                    <skipDeploy>true</skipDeploy>
+                    <skip>false</skip>
+                    <siteDirectory>docs</siteDirectory>
+                    <stagingDirectory>${project.build.directory}/staging</stagingDirectory>
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>deploy</phase>
+                        <id>site</id>
                         <goals>
-                            <goal>site</goal>
+                            <goal>stage</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.helidon.build-tools</groupId>
+                        <artifactId>sitegen-maven-plugin</artifactId>
+                        <version>${helidon.sitegen.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-diagram</artifactId>
+                        <version>${asciidoctor.diagram.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.doxia</groupId>
+                        <artifactId>doxia-site-renderer</artifactId>
+                        <version>${doxia.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.doxia</groupId>
+                        <artifactId>doxia-core</artifactId>
+                        <version>${doxia.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <executable>python</executable>
+                    <workingDirectory>${project.build.directory}/site</workingDirectory>
+                    <arguments>
+                        <argument>-m</argument>
+                        <argument>SimpleHTTPServer</argument>
+                        <argument>8080</argument>
+                    </arguments>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>deploy-website</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-publish-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <serverId>github-pages</serverId>
+                            <checkinComment>${project.version} Site</checkinComment>
+                            <subDirectory>${project.version}</subDirectory>
+                            <scmBranch>gh-pages</scmBranch>
+                            <content>${project.build.directory}/staging</content>
+                            <pubScmUrl>${project.distributionManagement.site.url}</pubScmUrl>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>site</id>
+                                <goals>
+                                    <goal>publish-scm</goal>
+                                </goals>
+                                <phase>deploy</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
