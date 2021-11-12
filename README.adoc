@@ -1,4 +1,5 @@
-:release-version: 2.1.0-SNAPSHOT
+:release-version: 2.0.0
+:snapshot-version: 2.1.0-SNAPSHOT
 :website: https://hibernate.coherence.community/
 
 = Welcome to the Oracle Coherence Hibernate Project
@@ -18,7 +19,7 @@ Two primary integration points are covered currently:
 * using Coherence as a https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#caching[second-level cache] in Hibernate
 * using Hibernate as a Coherence CacheStore implementation
 
-Due to Hibernate Cache API changes, Coherence Hibernate `{release-version}` provides dedicated Maven modules targeting those Hibernate versions:
+Due to Hibernate Cache API changes, Coherence Hibernate `{snapshot-version}` provides dedicated Maven modules targeting those Hibernate versions:
 
 * `coherence-hibernate-cache-4` supports Hibernate `4.3.x`
 * `coherence-hibernate-cache-5` supports Hibernate `5.0.x` and `5.1.x`
@@ -32,8 +33,8 @@ as well as extensive JavaDoc for the Coherence Hibernate source code.
 
 [width="75%"]
 |=======
-|*{milestone}* | {website}{milestone}[Website] | {website}{milestone}/refdocs/api/index.html[API Doc.]
-|*{milestone}* | {website}{milestone}[Website] | {website}{milestone}/refdocs/api/index.html[API Doc.]
+|*{snapshot-version}* | {website}{snapshot-version}[Website] | {website}{snapshot-version}/refdocs/api/index.html[API Doc.]
+|*{release-version}* | {website}{release-version}[Website] | {website}{release-version}/refdocs/api/index.html[API Doc.]
 |=======
 
 NOTE: The http://maven.apache.org[Apache Maven]-based snapshots and releases for this project are published to
