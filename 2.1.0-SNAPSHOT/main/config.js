@@ -196,7 +196,7 @@ function createNav(){
         {
             title: 'Javadocs',
             action: 'code',
-            href: 'refdocs/api/index.html',
+            href: 'api/index.html',
             target: '_blank'
         },
         { divider: true },
@@ -217,6 +217,12 @@ function createNav(){
             title: 'Coherence Spring',
             action: 'fa-globe',
             href: 'https://spring.coherence.community/',
+            target: '_blank'
+        },
+        {
+            title: 'Micronaut Coherence',
+            action: 'fa-globe',
+            href: 'https://github.com/micronaut-projects/micronaut-coherence/',
             target: '_blank'
         },
         {
