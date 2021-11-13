@@ -31,7 +31,7 @@ Complete source code together with documentation is provided via the GitHub repo
 
 [CARD]
 .Hibernate Cache
-[icon=power_settings_new,link=about/02_hibernate-cache.adoc]
+[icon=cached,link=about/02_hibernate-cache.adoc]
 --
 Hibernate Second Level Cache SPI
 --
@@ -59,7 +59,7 @@ Sample Applications.
 
 [CARD]
 .Javadocs
-[icon=code,link=refdocs/api/index.html,link-type=url]
+[icon=code,link=api/index.html,link-type=url]
 --
 Browse the Coherence Hibernate JavaDocs.
 --

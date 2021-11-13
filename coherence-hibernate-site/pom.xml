@@ -76,7 +76,7 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <source>8</source>
-                            <outputDirectory>${project.build.directory}/site/apidocs</outputDirectory>
+                            <outputDirectory>${project.build.directory}/site/api</outputDirectory>
                             <includeDependencySources>true</includeDependencySources>
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>${project.groupId}:*</dependencySourceInclude>

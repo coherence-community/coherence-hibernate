@@ -74,7 +74,7 @@ backend:
               glyph:
                 type: "icon"
                 value: "code"
-              href: "refdocs/api/index.html"
+              href: "api/index.html"
         - title: "Additional Resources"
           items:
             - title: "Slack"
@@ -92,6 +92,11 @@ backend:
                 type: "icon"
                 value: "fa-globe"
               href: "https://spring.coherence.community/"
+            - title: "Micronaut Coherence"
+              glyph:
+                type: "icon"
+                value: "fa-globe"
+              href: "https://github.com/micronaut-projects/micronaut-coherence/"
             - title: "GitHub"
               glyph:
                 type: "icon"
