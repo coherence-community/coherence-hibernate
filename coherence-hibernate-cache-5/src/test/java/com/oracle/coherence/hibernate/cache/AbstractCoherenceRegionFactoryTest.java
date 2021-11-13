@@ -6,8 +6,10 @@
  */
 package com.oracle.coherence.hibernate.cache;
 
+import com.tangosol.net.CacheFactory;
 import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 
 import java.util.Properties;
@@ -101,5 +103,10 @@ public abstract class AbstractCoherenceRegionFactoryTest
         coherenceRegionFactory = null;
     }
 
+    @AfterClass
+    public static void shutDownCoherence()
+    {
+        CacheFactory.shutdown();
+    }
 
 }
