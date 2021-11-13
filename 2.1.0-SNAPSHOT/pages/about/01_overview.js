@@ -33,7 +33,7 @@ modules:</p>
 </router-link>
 <v-layout align-center justify-center class="">
 <v-avatar size="150px">
-<v-icon class="xxx-large">power_settings_new</v-icon>
+<v-icon class="xxx-large">cached</v-icon>
 </v-avatar>
 </v-layout>
 <div class="px-3">
