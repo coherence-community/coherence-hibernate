@@ -54,8 +54,8 @@
         <connection>scm:git:https://github.com/coherence-community/coherence-hibernate.git</connection>
         <developerConnection>scm:git:https://github.com/coherence-community/coherence-hibernate.git</developerConnection>
         <url>https://github.com/coherence-community/coherence-hibernate</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <modules>
         <module>coherence-hibernate-cache-store</module>

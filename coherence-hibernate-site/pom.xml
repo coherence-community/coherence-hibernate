@@ -17,7 +17,7 @@
 
     <artifactId>coherence-hibernate-site</artifactId>
     <name>Coherence Hibernate Website</name>
-    <packaging>site</packaging>
+
     <description>
         Coherence Hibernate Website
     </description>
@@ -38,8 +38,61 @@
             <url>scm:git:https://github.com/coherence-community/coherence-hibernate.git</url>
         </site>
     </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <artifactId>coherence-hibernate-cache-core</artifactId>
+            <groupId>com.oracle.coherence.hibernate</groupId>
+            <version>2.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>coherence-hibernate-cache-53</artifactId>
+            <groupId>com.oracle.coherence.hibernate</groupId>
+            <version>2.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate53.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.coherence.ce</groupId>
+            <artifactId>coherence</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <source>8</source>
+                            <outputDirectory>${project.build.directory}/site/apidocs</outputDirectory>
+                            <includeDependencySources>true</includeDependencySources>
+                            <dependencySourceIncludes>
+                                <dependencySourceInclude>${project.groupId}:*</dependencySourceInclude>
+                            </dependencySourceIncludes>
+                            <sourceFileExcludes>com/oracle/coherence/hibernate/docs/**/*.java</sourceFileExcludes>
+                            <attach>false</attach>
+                            <quiet>true</quiet>
+                            <links>
+                                <link>https://docs.oracle.com/javase/8/docs/api/</link>
+                                <link>https://docs.oracle.com/javaee/7/api/</link>
+                            </links>
+                            <additionalJOption>--no-module-directories</additionalJOption>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
@@ -69,6 +122,15 @@
                 <artifactId>sitegen-maven-plugin</artifactId>
                 <version>${helidon.sitegen.version}</version>
                 <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>generate-site</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
                 <configuration>
                     <siteConfigFile>${basedir}/sitegen.yaml</siteConfigFile>
                     <siteSourceDirectory>${basedir}/docs</siteSourceDirectory>

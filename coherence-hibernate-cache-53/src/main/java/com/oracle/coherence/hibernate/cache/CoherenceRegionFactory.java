@@ -221,7 +221,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     /**
      * {@inheritDoc}
      *
-     * @see https://stackoverflow.com/a/12389310/835934
+     * see also https://stackoverflow.com/a/12389310/835934
      */
     @Override
     public boolean isMinimalPutsEnabledByDefault()

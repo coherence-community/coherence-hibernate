@@ -78,8 +78,9 @@ implements Region, ExtendedStatisticsSupport
     /**
      * Complete constructor.
      *
-     * @param namedCache the NamedCache implementing this CoherenceRegion
-     * @param properties configuration properties for this CoherenceRegion
+     * @param regionFactory the region factory
+     * @param namedCache the Coherence NamedCache
+     * @param properties the properties
      */
     public CoherenceRegion(RegionFactory regionFactory, NamedCache namedCache, Map<String, Object> properties)
     {

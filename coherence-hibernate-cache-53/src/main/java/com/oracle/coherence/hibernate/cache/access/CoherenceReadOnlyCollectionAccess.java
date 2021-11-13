@@ -33,8 +33,9 @@ implements CollectionDataAccess
     /**
      * Complete constructor.
      *
-     * @param coherenceCollectionRegion the CoherenceCollectionRegion for this CoherenceReadOnlyCollectionAccess
-     * @param sessionFactoryOptions the Hibernate SessionFactoryOptions object
+     * @param domainDataRegion the domain data region
+     * @param domainDataStorageAccess the domain data storage access
+     * @param versionComparator the version comparator
      */
     public CoherenceReadOnlyCollectionAccess(DomainDataRegion domainDataRegion,
             DomainDataStorageAccess domainDataStorageAccess, Comparator<?> versionComparator)

@@ -74,8 +74,9 @@ abstract class AbstractCoherenceEntityDataAccess
     /**
      * Complete constructor.
      *
-     * @param coherenceRegion the CoherenceRegion for which this is a AbstractCoherenceEntityDataAccess
-     * @param sessionFactoryOptions the Hibernate SessionFactoryOptions
+     * @param domainDataRegion
+     * @param storageAccess
+     * @param versionComparator
      */
     public AbstractCoherenceEntityDataAccess(DomainDataRegion domainDataRegion, DomainDataStorageAccess storageAccess, Comparator<?> versionComparator)
     {

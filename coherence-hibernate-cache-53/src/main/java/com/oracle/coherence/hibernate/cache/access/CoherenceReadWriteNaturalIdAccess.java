@@ -33,8 +33,8 @@ implements NaturalIdDataAccess
     /**
      * Complete constructor.
      *
-     * @param coherenceNaturalIdRegion the CoherenceNaturalIdRegion for this CoherenceReadWriteNaturalIdAccess
-     * @param sessionFactoryOptions the Hibernate SessionFactoryOptions object
+     * @param domainDataRegion the domain data region
+     * @param domainDataStorageAccess the domain data storage access
      */
     public CoherenceReadWriteNaturalIdAccess(DomainDataRegion domainDataRegion,
             DomainDataStorageAccess domainDataStorageAccess)

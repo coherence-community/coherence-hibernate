@@ -37,8 +37,8 @@ implements EntityDataAccess
     /**
      * Complete constructor.
      *
-     * @param coherenceEntityRegion the CoherenceEntityRegion for this CoherenceReadOnlyEntityAccess
-     * @param sessionFactoryOptions the Hibernate SessionFactoryOptions object
+     * @param domainDataRegion the domain data region
+     * @param versionComparator the version comparator
      */
     public CoherenceReadOnlyEntityAccess(DomainDataRegion domainDataRegion,
             DomainDataStorageAccess domainDataStorageAccess, Comparator<?> versionComparator)
