@@ -1,0 +1,4 @@
+com.oracle.coherence.hibernate.cache
+com.oracle.coherence.hibernate.cache.access
+com.oracle.coherence.hibernate.cache.access.processor
+com.oracle.coherence.hibernate.cache.region
