@@ -40,4 +40,11 @@
         <cve>CVE-2020-25638</cve>
     </suppress>
 
+    <suppress>
+        <notes><![CDATA[
+      file name: opentracing-grpc-0.2.3.jar
+      ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.opentracing\.contrib/opentracing\-grpc@.*$</packageUrl>
+        <cpe>cpe:/a:grpc:grpc</cpe>
+    </suppress>
 </suppressions>
