@@ -9,6 +9,9 @@ package com.oracle.coherence.hibernate.cache.access;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 
+/**
+ * @author Gunnar Hillert
+ */
 public interface CoherenceStorageAccess extends DomainDataStorageAccess {
 
     void afterUpdate(Object key, Object newValue, Object newVersion);

@@ -1,0 +1,4 @@
+spring:
+  jpa:
+    properties:
+      com.oracle.coherence.hibernate.cache.cache_config_file_path: remote-hibernate-second-level-cache-config.xml

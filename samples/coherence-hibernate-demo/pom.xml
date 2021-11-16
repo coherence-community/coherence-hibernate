@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.5.6</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>com.oracle.coherence.hibernate</groupId>
+	<artifactId>coherence-hibernate-demo-parent</artifactId>
+	<version>2.1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Samples - Coherence Hibernate Demo</name>
+	<description>Demo project for Coherence Hibernate</description>
+
+	<properties>
+		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
+		<java.version>8</java.version>
+		<hibernate.version>5.6.0.Final</hibernate.version>
+		<coherence-hibernate-cache-53.version>2.1.0-SNAPSHOT</coherence-hibernate-cache-53.version>
+		<coherence.version>21.06.2</coherence.version>
+		<hibernate-micrometer.version>5.6.1.Final</hibernate-micrometer.version>
+	</properties>
+
+	<licenses>
+		<license>
+			<name>The Universal Permissive License (UPL), Version 1.0</name>
+			<url>http://oss.oracle.com/licenses/upl</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Gunnar Hillert</name>
+			<organization>Oracle Corporation</organization>
+		</developer>
+	</developers>
+
+	<modules>
+		<module>coherence-hibernate-demo-core</module>
+		<module>coherence-hibernate-demo-server</module>
+		<module>coherence-hibernate-demo-app</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.oracle.coherence.hibernate</groupId>
+				<artifactId>coherence-hibernate-demo-core</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.oracle.coherence.hibernate</groupId>
+				<artifactId>coherence-hibernate-cache-53</artifactId>
+				<version>${coherence-hibernate-cache-53.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.oracle.coherence.ce</groupId>
+				<artifactId>coherence</artifactId>
+				<version>${coherence.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Maven Central</name>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>sonatype</id>
+			<name>Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>

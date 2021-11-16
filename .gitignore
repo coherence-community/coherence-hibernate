@@ -9,3 +9,4 @@
 .settings
 dcs.log
 hsqldb.log
+.DS_Store

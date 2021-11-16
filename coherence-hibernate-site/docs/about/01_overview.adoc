@@ -38,7 +38,7 @@ Hibernate Second Level Cache SPI
 
 [CARD]
 .CacheStore
-[icon=arrow_circle_up,link=about/02_hibernate-cache-store.adoc]
+[icon=arrow_circle_up,link=about/03_hibernate-cache-store.adoc]
 --
 Hibernate as the implementation of a Coherence CacheStore
 --

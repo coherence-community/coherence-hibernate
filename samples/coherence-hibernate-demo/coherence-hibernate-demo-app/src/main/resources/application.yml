@@ -1,0 +1,26 @@
+debug: false
+spring:
+  jackson:
+    serialization:
+      indent-output: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.show_sql: true
+      hibernate.use_sql_comments: false
+      hibernate.format_sql: true
+      hibernate.generate_statistics: true
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.region.factory_class: com.oracle.coherence.hibernate.cache.CoherenceRegionFactory
+      hibernate.cache.use_query_cache: true
+      com.oracle.coherence.hibernate.cache.cache_config_file_path: hibernate-second-level-cache-config.xml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics
+logging:
+  level:
+    com.oracle.coherence: info
