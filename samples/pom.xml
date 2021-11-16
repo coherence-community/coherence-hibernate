@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2021, Oracle and/or its affiliates.
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.oracle.coherence.hibernate</groupId>
+		<artifactId>coherence-hibernate-parent</artifactId>
+		<version>2.1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>samples</artifactId>
+	<packaging>pom</packaging>
+
+	<name>Coherence Hibernate Samples</name>
+	<description>Contains Samples and Demos</description>
+
+	<properties>
+		<coherence.hibernate.root>${basedir}/..</coherence.hibernate.root>
+	</properties>
+
+	<modules>
+		<module>coherence-hibernate-demo</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>${maven.install.plugin.version}</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>${nexus.staging.maven.plugin.version}</version>
+				<configuration>
+					<skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
