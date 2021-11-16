@@ -78,7 +78,7 @@
         {
             "location": "/dev/06_history",
             "text": " Global and Cross-Module Changes coherence-hibernate-cache-store coherence-hibernate-second-level-cache Add support for configurable CacheKeysFactories in Hibernate 5.2.x coherence-hibernate-site ",
-            "title": "Version 2.1.0-SNAPSHOT @ 2021-11-16 05:34"
+            "title": "Version 2.1.0-SNAPSHOT @ 2021-11-16 23:52"
         },
         {
             "location": "/dev/06_history",
@@ -147,7 +147,7 @@
         },
         {
             "location": "/dev/06_history",
-            "text": " The following sections outline Oracle Coherence Hibernate Integration changes in reverse chronological order. Version 2.1.0-SNAPSHOT @ 2021-11-16 05:34 Global and Cross-Module Changes coherence-hibernate-cache-store coherence-hibernate-second-level-cache Add support for configurable CacheKeysFactories in Hibernate 5.2.x coherence-hibernate-site Version 2.0.0 @ 2020-11-25 15:30 Global and Cross-Module Changes Change licensing from the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) to The Universal Permissive License (UPL) Updating of dependencies. Merge functional tests into the respective versions coherence-hibernate-cache-store Update dependencies coherence-hibernate-second-level-cache Add support for Hibernate 4.3.x , 5.0.x , 5.1.x , 5.2.x Add additional modules for the various Hibernate versions coherence-hibernate-site Polishing and updating for 2.0.0 Update site code Version 1.0.0 @ 2013-09-12 15:30 Source and Documentation Contributors Randy Stafford Global and Cross-Module Changes Initial release. coherence-hibernate-cache-store Initial release. coherence-hibernate-cache-store-tests Initial release. coherence-hibernate-second-level-cache Initial release. coherence-hibernate-second-level-cache-tests Initial release. coherence-hibernate-site Initial release. ",
+            "text": " The following sections outline Oracle Coherence Hibernate Integration changes in reverse chronological order. Version 2.1.0-SNAPSHOT @ 2021-11-16 23:52 Global and Cross-Module Changes coherence-hibernate-cache-store coherence-hibernate-second-level-cache Add support for configurable CacheKeysFactories in Hibernate 5.2.x coherence-hibernate-site Version 2.0.0 @ 2020-11-25 15:30 Global and Cross-Module Changes Change licensing from the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) to The Universal Permissive License (UPL) Updating of dependencies. Merge functional tests into the respective versions coherence-hibernate-cache-store Update dependencies coherence-hibernate-second-level-cache Add support for Hibernate 4.3.x , 5.0.x , 5.1.x , 5.2.x Add additional modules for the various Hibernate versions coherence-hibernate-site Polishing and updating for 2.0.0 Update site code Version 1.0.0 @ 2013-09-12 15:30 Source and Documentation Contributors Randy Stafford Global and Cross-Module Changes Initial release. coherence-hibernate-cache-store Initial release. coherence-hibernate-cache-store-tests Initial release. coherence-hibernate-second-level-cache Initial release. coherence-hibernate-second-level-cache-tests Initial release. coherence-hibernate-site Initial release. ",
             "title": "Change History"
         },
         {
@@ -157,12 +157,12 @@
         },
         {
             "location": "/dev/05_contributions",
-            "text": " The details of how to contribute to Coherence Hibernate are detailed in CONTRIBUTING.md in the Coherence Hibernate GitHub repository. ",
+            "text": " The details of how to contribute to Coherence Hibernate are detailed in CONTRIBUTING.adoc in the Coherence Hibernate GitHub repository. ",
             "title": "Becoming a Contributor"
         },
         {
             "location": "/dev/05_contributions",
-            "text": " The following sections outline the requirements for making contributions to the Coherence Hibernate project. Overview We would love your contributions to the Coherence Hibernate project! Becoming a Contributor The details of how to contribute to Coherence Hibernate are detailed in CONTRIBUTING.md in the Coherence Hibernate GitHub repository. ",
+            "text": " The following sections outline the requirements for making contributions to the Coherence Hibernate project. Overview We would love your contributions to the Coherence Hibernate project! Becoming a Contributor The details of how to contribute to Coherence Hibernate are detailed in CONTRIBUTING.adoc in the Coherence Hibernate GitHub repository. ",
             "title": "Contributing"
         },
         {

@@ -50,7 +50,7 @@ modules:</p>
 </v-flex>
 <v-flex xs12 sm4 lg3>
 <v-card>
-<router-link to="#about/02_hibernate-cache-store.adoc" @click.native="this.scrollFix('#about/02_hibernate-cache-store.adoc')"><div class="card__link-hover"/>
+<router-link to="/about/03_hibernate-cache-store"><div class="card__link-hover"/>
 </router-link>
 <v-layout align-center justify-center class="">
 <v-avatar size="150px">
