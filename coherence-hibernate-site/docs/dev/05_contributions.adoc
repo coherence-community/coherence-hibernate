@@ -24,6 +24,6 @@ We would love your contributions to the Coherence Hibernate project!
 === Becoming a Contributor
 
 The details of how to contribute to Coherence Hibernate are detailed in
-https://github.com/coherence-community/coherence-hibernate/blob/master/CONTRIBUTING.md[CONTRIBUTING.md]
+https://github.com/coherence-community/coherence-hibernate/blob/master/CONTRIBUTING.adoc[CONTRIBUTING.adoc]
 in the Coherence Hibernate GitHub repository.
 

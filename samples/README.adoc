@@ -3,4 +3,4 @@
 This module of Coherence Hibernate contains sample applications. Currently, the following
 example is available:
 
-* link:coherence-hibernate-demo/README.md[coherence-hibernate-demo]
+* link:coherence-hibernate-demo/README.adoc[coherence-hibernate-demo]
