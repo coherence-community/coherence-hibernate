@@ -69,7 +69,7 @@ curl --request POST 'http://localhost:8080/api/people/2/add-to-event/1'
 curl --request POST 'http://localhost:8080/api/people/3/add-to-event/1'
 ----
 
-If you query for the event at `+http://localhost:8080/api/events/1+` you will be able to retrieve your event. For the
+If you query for the event at `http://localhost:8080/api/events/1` you will be able to retrieve your event. For the
 first time you will see an SQL query being executed but subsequent queries will retrieve
 the result from the second level cache.
 
