@@ -163,7 +163,7 @@ communication parameters and cluster name to make them unique for each separate 
 <h3 id="_installing_the_coherence_hibernate_second_level_cache">Installing the Coherence Hibernate Second-Level Cache</h3>
 <div class="section">
 <p>Installing the Coherence Hibernate second-level cache implementation amounts to
-obtaining a distribution of <code>coherence-hibernate-cache-xx-{release-version}.jar</code>
+obtaining a distribution of <code>coherence-hibernate-cache-xx-{project-version}.jar</code>
 for the respective Hibernate version of your application.</p>
 
 <p>The easiest way to do so is to build and execute your Hibernate application with Maven,
