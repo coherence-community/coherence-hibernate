@@ -13,7 +13,7 @@ single cache entry at a time).</p>
 <h3 id="_installing_the_coherence_hibernate_cachestore">Installing the Coherence Hibernate CacheStore</h3>
 <div class="section">
 <p>Installing the Coherence Hibernate CacheStore implementation amounts to obtaining a distribution of
-<code>coherence-hibernate-cache-store-${project.version}.jar</code> and making it available to JVM ClassLoaders.  The easiest way to do
+<code>coherence-hibernate-cache-store-2.1.0-SNAPSHOT.jar</code> and making it available to JVM ClassLoaders.  The easiest way to do
 so is to build and execute your Hibernate application with Maven, and add the following dependency to your application&#8217;s
 <code>pom.xml</code>:</p>
 
@@ -26,7 +26,7 @@ lang="xml"
     &lt;version&gt;2.1.0-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</markup>
 
-<p>Alternatively, you can download <code>coherence-hibernate-cache-store-$2.1.0-SNAPSHOT.jar</code> from a Maven repository (e.g.
+<p>Alternatively, you can download <code>coherence-hibernate-cache-store-2.1.0-SNAPSHOT.jar</code> from a Maven repository (e.g.
 <a id="" title="" target="_blank" href="https://maven.java.net">https://maven.java.net</a>) and use it in JVM classpaths.  Or you can <a id="" title="" target="_blank" href="../dev/03_build-instructions.adoc">build</a> the Coherence Hibernate
 CacheStore implementation from sources.</p>
 
