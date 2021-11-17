@@ -6,17 +6,21 @@
 reverse chronological order.</p>
 
 
-<h3 id="_version_2_1_0_snapshot_2021_11_17_2307">Version 2.1.0-SNAPSHOT @ 2021-11-17 23:07</h3>
+<h3 id="_version_2_1_0_m1_nov_2021">Version 2.1.0.M1 (Nov 2021)</h3>
 <div class="section">
 
 <h4 id="_global_and_cross_module_changes">Global and Cross-Module Changes</h4>
 <div class="section">
+<ul class="ulist">
+<li>
+<p>Add sample application</p>
 
-</div>
+</li>
+<li>
+<p>Require <code>Java 11</code> to build the project. When solely using, Java 8 is still supported</p>
 
-<h4 id="_coherence_hibernate_cache_store">coherence-hibernate-cache-store</h4>
-<div class="section">
-
+</li>
+</ul>
 </div>
 
 <h4 id="_coherence_hibernate_second_level_cache">coherence-hibernate-second-level-cache</h4>
@@ -26,12 +30,25 @@ reverse chronological order.</p>
 <p>Add support for configurable CacheKeysFactories in Hibernate <code>5.2.x</code></p>
 
 </li>
+<li>
+<p>Add support for Hibernate <code>5.3.x</code>, <code>5.4.x</code>, <code>5.5.x</code>, <code>5.6.x</code></p>
+
+</li>
 </ul>
 </div>
 
 <h4 id="_coherence_hibernate_site">coherence-hibernate-site</h4>
 <div class="section">
+<ul class="ulist">
+<li>
+<p>Migrate to new website format</p>
 
+</li>
+<li>
+<p>Publish JavaDoc</p>
+
+</li>
+</ul>
 </div>
 </div>
 
@@ -57,7 +74,7 @@ to The Universal Permissive License (UPL)</p>
 </ul>
 </div>
 
-<h4 id="_coherence_hibernate_cache_store_2">coherence-hibernate-cache-store</h4>
+<h4 id="_coherence_hibernate_cache_store">coherence-hibernate-cache-store</h4>
 <div class="section">
 <ul class="ulist">
 <li>
@@ -119,7 +136,7 @@ to The Universal Permissive License (UPL)</p>
 </ul>
 </div>
 
-<h4 id="_coherence_hibernate_cache_store_3">coherence-hibernate-cache-store</h4>
+<h4 id="_coherence_hibernate_cache_store_2">coherence-hibernate-cache-store</h4>
 <div class="section">
 <ul class="ulist">
 <li>
