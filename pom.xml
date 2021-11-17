@@ -80,22 +80,23 @@
         <coherence.hibernate.root>${basedir}</coherence.hibernate.root>
         <!-- plugin dependency versions (alphabetically) -->
         <dependency-check-maven.version>6.1.6</dependency-check-maven.version>
-        <doxia.module.markdown.version>1.0</doxia.module.markdown.version>
-        <exec.maven.plugin.version>3.0.0</exec.maven.plugin.version>
-        <github.site.maven.plugin.version>0.12</github.site.maven.plugin.version>
-        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
-        <maven.deploy.plugin.version>2.8.2</maven.deploy.plugin.version>
-        <maven.enforcer.plugin.version>1.3.1</maven.enforcer.plugin.version>
-        <maven.gpg.plugin.version>1.6</maven.gpg.plugin.version>
-        <maven.install.plugin.version>2.5.2</maven.install.plugin.version>
-        <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
-        <maven.javadoc.plugin.version>3.3.1</maven.javadoc.plugin.version>
-        <maven.release.plugin.version>2.5</maven.release.plugin.version>
-        <maven.resources.plugin.version>3.2.0</maven.resources.plugin.version>
-        <maven.site.plugin.version>3.9.1</maven.site.plugin.version>
-        <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
-        <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
-        <nexus.staging.maven.plugin.version>1.6.8</nexus.staging.maven.plugin.version>
+        <doxia-module-markdown.version>1.0</doxia-module-markdown.version>
+        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
+        <flatten-maven-plugin.version>1.2.2</flatten-maven-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+        <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <versions-maven-plugin>2.8.1</versions-maven-plugin>
 
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.11.1</assertj.version>
@@ -122,27 +123,11 @@
     </distributionManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>${maven.deploy.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>${maven.resources.plugin.version}</version>
-                </plugin>
-            </plugins>
-
-        </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven.enforcer.plugin.version}</version>
+                <version>${maven-enforcer-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-plugin-versions</id>
@@ -166,29 +151,31 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.plugin.version}</version>
+                <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <argLine>-Xms800m -Xmx800m</argLine>
                     <includes>
                         <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
                     </includes>
                     <useSystemClassLoader>true</useSystemClassLoader>
                     <useManifestOnlyJar>false</useManifestOnlyJar>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>copy-license</id>
@@ -218,7 +205,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven.source.plugin.version}</version>
+                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -233,8 +220,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven.javadoc.plugin.version}</version>
+                <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
+                    <source>${java.version}</source>
                     <failOnError>false</failOnError>
                 </configuration>
                 <executions>
@@ -243,6 +231,7 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <inherited>true</inherited>
                     </execution>
                 </executions>
             </plugin>
@@ -250,22 +239,73 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>${maven.install.plugin.version}</version>
+                <version>${maven-install-plugin.version}</version>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven-deploy-plugin.version}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${nexus-staging-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>sonatype</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                    <skipLocalStaging>true</skipLocalStaging>
+                    <stagingProgressTimeoutMinutes>20</stagingProgressTimeoutMinutes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+                <inherited>true</inherited>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>oss</flattenMode>
+                            <pomElements>
+                                <parent>expand</parent>
+                                <distributionManagement>remove</distributionManagement>
+                                <repositories>remove</repositories>
+                                <profiles>remove</profiles>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>${maven.release.plugin.version}</version>
+                <version>${maven-release-plugin.version}</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -282,7 +322,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven.gpg.plugin.version}</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <configuration>
                             <skip>${skip-sign-artifacts}</skip>
                         </configuration>
@@ -293,6 +333,12 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -318,18 +364,6 @@
             </properties>
         </profile>
         <profile>
-            <id>coherence_version_12.1.2-0-0</id>
-            <properties>
-                <coherence.version>12.1.2-0-0</coherence.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>coherence_version_12.2.1-1-0</id>
-            <properties>
-                <coherence.version>12.2.1-1-0</coherence.version>
-            </properties>
-        </profile>
-        <profile>
             <id>owasp</id>
             <build>
                 <plugins>
@@ -351,6 +385,44 @@
                             <execution>
                                 <goals>
                                 <goal>aggregate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>staging</id>
+            <repositories>
+                <repository>
+                    <id>sonatype-staging</id>
+                    <url>https://oss.sonatype.org/content/groups/staging/</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>versions</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>versions-maven-plugin</artifactId>
+                        <version>${versions-maven-plugin}</version>
+                        <configuration>
+                            <rulesUri>file:///${session.executionRootDirectory}/src/main/config/versions-maven-plugin-rules.xml</rulesUri>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>display-property-updates</goal>
                                 </goals>
                             </execution>
                         </executions>

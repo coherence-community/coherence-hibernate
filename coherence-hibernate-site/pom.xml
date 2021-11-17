@@ -27,8 +27,8 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <coherence.hibernate.root>${basedir}/..</coherence.hibernate.root>
         <helidon.sitegen.version>2.0.0-RC1</helidon.sitegen.version>
-        <asciidoctor.diagram.version>2.0.2</asciidoctor.diagram.version>
-        <doxia.version>1.6</doxia.version>
+        <asciidoctor-diagram.version>2.2.1</asciidoctor-diagram.version>
+        <doxia.version>1.10</doxia.version>
 
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
     </properties>
@@ -71,6 +71,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -93,6 +94,9 @@
                                 <link>https://docs.oracle.com/javaee/7/api/</link>
                             </links>
                             <additionalJOption>--no-module-directories</additionalJOption>
+                            <bottom>
+                                Copyright © 2013, 2021, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0.
+                            </bottom>
                         </configuration>
                     </execution>
                 </executions>
@@ -100,7 +104,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>${maven.install.plugin.version}</version>
+                <version>${maven-install-plugin.version}</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -108,7 +112,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>${nexus.staging.maven.plugin.version}</version>
+                <version>${nexus-staging-maven-plugin.version}</version>
                 <configuration>
                     <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
                 </configuration>
@@ -116,7 +120,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven.jar.plugin.version}</version>
+                <version>${maven-jar-plugin.version}</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -143,7 +147,7 @@
                     <dependency>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctorj-diagram</artifactId>
-                        <version>${asciidoctor.diagram.version}</version>
+                        <version>${asciidoctor-diagram.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -155,7 +159,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>${maven.site.plugin.version}</version>
+                <version>${maven-site-plugin.version}</version>
                 <inherited>false</inherited>
                 <configuration>
                     <skipDeploy>true</skipDeploy>
@@ -181,7 +185,7 @@
                     <dependency>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctorj-diagram</artifactId>
-                        <version>${asciidoctor.diagram.version}</version>
+                        <version>${asciidoctor-diagram.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
@@ -198,7 +202,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>${exec.maven.plugin.version}</version>
+                <version>${exec-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>

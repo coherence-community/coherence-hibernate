@@ -1,6 +1,8 @@
 :release-version: 2.0.0
+:hibernate-docs: https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single/Hibernate_User_Guide.html
 :snapshot-version: 2.1.0-SNAPSHOT
 :website: https://hibernate.coherence.community/
+
 
 = Welcome to the Oracle Coherence Hibernate Project
 
@@ -11,12 +13,12 @@ image:https://img.shields.io/badge/Coherence-Join%20Slack-red[Chat with us on sl
 image:https://img.shields.io/stackexchange/stackoverflow/t/oracle-coherence?label=%20StackOverflow%20%7C%20oracle-coherence[Stack Exchange questions,link=https://stackoverflow.com/questions/tagged/oracle-coherence]
 image:https://img.shields.io/twitter/follow/OracleCoherence?style=social[Twitter Follow,link=https://twitter.com/OracleCoherence]
 
-The Oracle Coherence Hibernate project implements integration points between Oracle Coherence/https://coherence.community[Coherence CE]
+The Oracle Coherence Hibernate project implements integration points between Oracle Coherence/link:https://coherence.community[Coherence CE]
 and the https://hibernate.org/orm/[Hibernate Object/Relational Mapping (ORM)] framework.
 
 Two primary integration points are covered currently:
 
-* using Coherence as a https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#caching[second-level cache] in Hibernate
+* using Coherence as a {hibernate-docs}#caching[second-level cache] in Hibernate
 * using Hibernate as a Coherence CacheStore implementation
 
 Due to Hibernate Cache API changes, Coherence Hibernate `{snapshot-version}` provides dedicated Maven modules targeting those Hibernate versions:
@@ -38,12 +40,9 @@ as well as extensive JavaDoc for the Coherence Hibernate source code.
 |=======
 
 NOTE: The http://maven.apache.org[Apache Maven]-based snapshots and releases for this project are published to
-http://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
+https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 
-== Quick Start
-
-In order to get started quickly, please check out the {website}[Coherence Hibernate website], specifically the
-https://hibernate.coherence.community/{snapshot-version}/refdocs/reference/htmlsingle/index.html#quickstart[Quickstart section].
+== Samples
 
 The reference documentation will also refer to various demo and sample applications. Those are part of this
 repository, and you can find those in the https://github.com/coherence-community/coherence-hibernate/tree/master/samples[samples] module.
@@ -107,7 +106,7 @@ you may have to provide additional command line arguments:
 
 [source,bash]
 ----
-./mvnw com.github.github:site-maven-plugin:site -pl coherence-hibernate-site
+./mvnw deploy -pl coherence-hibernate-site
 ----
 
 == Getting Support

@@ -10,3 +10,4 @@
 dcs.log
 hsqldb.log
 .DS_Store
+.flattened-pom.xml
