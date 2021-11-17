@@ -19,7 +19,7 @@ single cache entry at a time).
 === Installing the Coherence Hibernate CacheStore
 
 Installing the Coherence Hibernate CacheStore implementation amounts to obtaining a distribution of
-`coherence-hibernate-cache-store-${project.version}.jar` and making it available to JVM ClassLoaders.  The easiest way to do
+`coherence-hibernate-cache-store-{version-coherence-hibernate}.jar` and making it available to JVM ClassLoaders.  The easiest way to do
 so is to build and execute your Hibernate application with Maven, and add the following dependency to your application's
 `pom.xml`:
 
@@ -32,8 +32,8 @@ so is to build and execute your Hibernate application with Maven, and add the fo
  </dependency>
 ----
 
-Alternatively, you can download `coherence-hibernate-cache-store-${version-coherence-hibernate}.jar` from a Maven repository (e.g.
-https://maven.java.net) and use it in JVM classpaths.  Or you can link:../dev/03_build-instructions.adoc[build] the Coherence Hibernate
+Alternatively, you can download `coherence-hibernate-cache-store-{version-coherence-hibernate}.jar` from a Maven repository
+(e.g. https://repo1.maven.org/maven2/) and use it in JVM classpaths. Or you can link:../dev/03_build-instructions.adoc[build] the Coherence Hibernate
 CacheStore implementation from sources.
 
 Note that the Coherence Hibernate CacheStore implementation depends at runtime on Oracle

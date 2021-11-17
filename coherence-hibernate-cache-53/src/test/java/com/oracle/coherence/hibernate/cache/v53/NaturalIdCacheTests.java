@@ -59,7 +59,7 @@ public class NaturalIdCacheTests extends BaseCoreFunctionalTestCase {
 		cfg.setProperty(Environment.USE_SECOND_LEVEL_CACHE, "true");
 		cfg.setProperty(Environment.USE_QUERY_CACHE, "true");
 		cfg.setProperty(Environment.CACHE_REGION_FACTORY, CoherenceRegionFactory.class.getName());
-		cfg.setProperty("com.oracle.coherence.hibernate.cache.v53.v53.cache_config_file_path", "tests-hibernate-second-level-cache-config.xml");
+		cfg.setProperty("com.oracle.coherence.hibernate.cache.cache_config_file_path", "tests-hibernate-second-level-cache-config.xml");
 
 	}
 

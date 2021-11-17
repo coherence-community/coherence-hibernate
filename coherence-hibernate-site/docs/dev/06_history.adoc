@@ -17,17 +17,22 @@
 The following sections outline Oracle Coherence Hibernate Integration changes in
 reverse chronological order.
 
-=== Version {version-coherence-hibernate} @ {timestamp}
+=== Version 2.1.0-M1 (Nov 2021)
 
 ==== Global and Cross-Module Changes
 
-==== coherence-hibernate-cache-store
+* Add sample application
+* Require `Java 11` to build the project. When solely using, Java 8 is still supported
 
 ==== coherence-hibernate-second-level-cache
 
 * Add support for configurable CacheKeysFactories in Hibernate `5.2.x`
+* Add support for Hibernate `5.3.x`, `5.4.x`, `5.5.x`, `5.6.x`
 
 ==== coherence-hibernate-site
+
+* Migrate to new website format
+* Publish JavaDoc
 
 === Version 2.0.0 @ 2020-11-25 15:30
 

@@ -19,12 +19,12 @@ encompasses the code of integration points between http://hibernate.org/[Hiberna
 and https://coherence.community/[Oracle Coherence]. Currently, the set of integration points consists of the following
 modules:
 
-* A Hibernate-based implementation of the Coherence CacheStore SPI
-* A Coherence-based implementation of the Hibernate second-level cache SPI
+* A Hibernate-based implementation of the *Coherence CacheStore SPI*
+* A Coherence-based implementation of the *Hibernate second-level cache SPI*
 
 Complete source code together with documentation is provided via the GitHub repository at {github-repository}.
 
-== Get Started
+== Documentation
 
 [PILLARS]
 ====
@@ -50,17 +50,12 @@ Hibernate as the implementation of a Coherence CacheStore
 Sample Applications.
 --
 
-====
-
-== Reference Documentation
-
-[PILLARS]
-====
-
 [CARD]
 .Javadocs
 [icon=code,link=api/index.html,link-type=url]
 --
 Browse the Coherence Hibernate JavaDocs.
 --
+
 ====
+
