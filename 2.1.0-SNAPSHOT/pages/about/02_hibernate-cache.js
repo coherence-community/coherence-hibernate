@@ -137,7 +137,7 @@ If you need to use composite keys, please consider using the <code>SimpleCacheKe
 <p>Both the clients of the Coherence Hibernate second-level caches&#8201;&#8212;&#8201;e.g. application server JVMs running Hibernate-based
 applications&#8201;&#8212;&#8201;and the Coherence cache server JVMs actually holding the cache contents  - need to have a common set of
 jar file artifacts available to their ClassLoaders.  Specifically, both need
-<code>coherence-hibernate-cache-xx-${project.version}.jar</code> and its dependencies Coherence and Hibernate (and their dependencies).</p>
+<code>coherence-hibernate-cache-xx-2.1.0-SNAPSHOT.jar</code> and its dependencies Coherence and Hibernate (and their dependencies).</p>
 
 <p>The Coherence cache server JVMs need the Hibernate core jar file to deserialize <code>CacheEntry</code> classes
 (<code>org.hibernate.cache.spi.entry.*</code>) since the Coherence Hibernate second-level cache implementation uses Coherence
@@ -163,7 +163,7 @@ communication parameters and cluster name to make them unique for each separate 
 <h3 id="_installing_the_coherence_hibernate_second_level_cache">Installing the Coherence Hibernate Second-Level Cache</h3>
 <div class="section">
 <p>Installing the Coherence Hibernate second-level cache implementation amounts to
-obtaining a distribution of <code>coherence-hibernate-cache-xx-{project-version}.jar</code>
+obtaining a distribution of <code>coherence-hibernate-cache-xx-2.1.0-SNAPSHOT.jar</code>
 for the respective Hibernate version of your application.</p>
 
 <p>The easiest way to do so is to build and execute your Hibernate application with Maven,
@@ -178,7 +178,7 @@ lang="xml"
     &lt;version&gt;2.1.0-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</markup>
 
-<p>Alternatively, you can download <code>coherence-hibernate-cache-xx-{release-version}.jar</code>
+<p>Alternatively, you can download <code>coherence-hibernate-cache-xx-2.1.0-SNAPSHOT.jar</code>
 from a Maven repository (e.g. <a id="" title="" target="_blank" href="https://repo1.maven.org/maven2/">https://repo1.maven.org/maven2/</a>) and use it in JVM
 classpaths. Or you can <a id="" title="" target="_blank" href="../dev/03_build-instructions.adoc">build</a> the Coherence Hibernate second-level
 cache implementation from sources.</p>
@@ -408,7 +408,7 @@ equivalent annotation.</p>
 <h3 id="_configuring_coherence_caches_for_hibernate_second_level_caching">Configuring Coherence Caches for Hibernate Second-Level Caching</h3>
 <div class="section">
 <p>By default, the Coherence Hibernate second-level cache implementation uses a cache configuration file named
-<code>hibernate-second-level-cache-config.xml</code> at the root level in <code>coherence-hibernate-cache-xx-${project.version}.jar</code>.
+<code>hibernate-second-level-cache-config.xml</code> at the root level in <code>coherence-hibernate-cache-xx-2.1.0-SNAPSHOT.jar</code>.
 This configuration file defines cache mappings for Hibernate second-level caches.  You can specify an alternative cache
 configuration file for Hibernate second-level caches using the Hibernate or Java property
 <code>com.oracle.coherence.hibernate.cache.v53.cache_config_file_path</code>, whose value should be the path to a file or ClassLoader
