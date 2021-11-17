@@ -78,7 +78,7 @@
         {
             "location": "/dev/06_history",
             "text": " Global and Cross-Module Changes coherence-hibernate-cache-store coherence-hibernate-second-level-cache Add support for configurable CacheKeysFactories in Hibernate 5.2.x coherence-hibernate-site ",
-            "title": "Version 2.1.0-SNAPSHOT @ 2021-11-17 22:55"
+            "title": "Version 2.1.0-SNAPSHOT @ 2021-11-17 23:00"
         },
         {
             "location": "/dev/06_history",
@@ -147,7 +147,7 @@
         },
         {
             "location": "/dev/06_history",
-            "text": " The following sections outline Oracle Coherence Hibernate Integration changes in reverse chronological order. Version 2.1.0-SNAPSHOT @ 2021-11-17 22:55 Global and Cross-Module Changes coherence-hibernate-cache-store coherence-hibernate-second-level-cache Add support for configurable CacheKeysFactories in Hibernate 5.2.x coherence-hibernate-site Version 2.0.0 @ 2020-11-25 15:30 Global and Cross-Module Changes Change licensing from the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) to The Universal Permissive License (UPL) Updating of dependencies. Merge functional tests into the respective versions coherence-hibernate-cache-store Update dependencies coherence-hibernate-second-level-cache Add support for Hibernate 4.3.x , 5.0.x , 5.1.x , 5.2.x Add additional modules for the various Hibernate versions coherence-hibernate-site Polishing and updating for 2.0.0 Update site code Version 1.0.0 @ 2013-09-12 15:30 Source and Documentation Contributors Randy Stafford Global and Cross-Module Changes Initial release. coherence-hibernate-cache-store Initial release. coherence-hibernate-cache-store-tests Initial release. coherence-hibernate-second-level-cache Initial release. coherence-hibernate-second-level-cache-tests Initial release. coherence-hibernate-site Initial release. ",
+            "text": " The following sections outline Oracle Coherence Hibernate Integration changes in reverse chronological order. Version 2.1.0-SNAPSHOT @ 2021-11-17 23:00 Global and Cross-Module Changes coherence-hibernate-cache-store coherence-hibernate-second-level-cache Add support for configurable CacheKeysFactories in Hibernate 5.2.x coherence-hibernate-site Version 2.0.0 @ 2020-11-25 15:30 Global and Cross-Module Changes Change licensing from the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) to The Universal Permissive License (UPL) Updating of dependencies. Merge functional tests into the respective versions coherence-hibernate-cache-store Update dependencies coherence-hibernate-second-level-cache Add support for Hibernate 4.3.x , 5.0.x , 5.1.x , 5.2.x Add additional modules for the various Hibernate versions coherence-hibernate-site Polishing and updating for 2.0.0 Update site code Version 1.0.0 @ 2013-09-12 15:30 Source and Documentation Contributors Randy Stafford Global and Cross-Module Changes Initial release. coherence-hibernate-cache-store Initial release. coherence-hibernate-cache-store-tests Initial release. coherence-hibernate-second-level-cache Initial release. coherence-hibernate-second-level-cache-tests Initial release. coherence-hibernate-site Initial release. ",
             "title": "Change History"
         },
         {
