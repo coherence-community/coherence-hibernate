@@ -1,4 +1,5 @@
-com.oracle.coherence.hibernate.cache
-com.oracle.coherence.hibernate.cache.access
-com.oracle.coherence.hibernate.cache.access.processor
-com.oracle.coherence.hibernate.cache.region
+com.oracle.coherence.hibernate.cache.v53
+com.oracle.coherence.hibernate.cache.v53.access
+com.oracle.coherence.hibernate.cache.v53.access.processor
+com.oracle.coherence.hibernate.cache.v53.region
+com.oracle.coherence.hibernate.cachestore

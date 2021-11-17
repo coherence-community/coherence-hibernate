@@ -222,14 +222,14 @@ caches are usable only by Hibernate. For more information, see the chapter on
 of the the Hibernate Core Reference Manual at <a id="" title="" target="_blank" href="http://www.hibernate.org/docs">http://www.hibernate.org/docs</a>.</p>
 
 <p>To configure Coherence as the Hibernate second-level cache, set the <code>hibernate.cache.region.factory_class</code>
-property in Hibernate configuration to <code>com.oracle.coherence.hibernate.cache.CoherenceRegionFactory</code>.
+property in Hibernate configuration to <code>com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory</code>.
 For example, include the following property setting in <code>hibernate.cfg.xml</code>:</p>
 
 <markup
 lang="xml"
 
 >&lt;property name="hibernate.cache.region.factory_class"&gt;
-    com.oracle.coherence.hibernate.cache.CoherenceRegionFactory
+    com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory
 &lt;/property&gt;</markup>
 
 <p>In addition to setting the <code>hibernate.cache.region.factory_class</code> property, you
@@ -411,7 +411,7 @@ equivalent annotation.</p>
 <code>hibernate-second-level-cache-config.xml</code> at the root level in <code>coherence-hibernate-cache-xx-${project.version}.jar</code>.
 This configuration file defines cache mappings for Hibernate second-level caches.  You can specify an alternative cache
 configuration file for Hibernate second-level caches using the Hibernate or Java property
-<code>com.oracle.coherence.hibernate.cache.cache_config_file_path</code>, whose value should be the path to a file or ClassLoader
+<code>com.oracle.coherence.hibernate.cache.v53.cache_config_file_path</code>, whose value should be the path to a file or ClassLoader
 resource, or a <code>file://</code> URL.</p>
 
 <p>In fact it is recommended and expected that you specify an alternative cache configuration file customized for the
