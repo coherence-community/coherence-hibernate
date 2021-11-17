@@ -168,13 +168,13 @@ https://docs.jboss.org/hibernate/orm/5.2/userguide/html_single/Hibernate_User_Gu
 of the the Hibernate Core Reference Manual at http://www.hibernate.org/docs.
 
 To configure Coherence as the Hibernate second-level cache, set the `hibernate.cache.region.factory_class`
-property in Hibernate configuration to `com.oracle.coherence.hibernate.cache.CoherenceRegionFactory`.
+property in Hibernate configuration to `com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory`.
 For example, include the following property setting in `hibernate.cfg.xml`:
 
 [source,xml,indent=0,subs="verbatim,quotes,attributes"]
 ----
  <property name="hibernate.cache.region.factory_class">
-     com.oracle.coherence.hibernate.cache.CoherenceRegionFactory
+     com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory
  </property>
 ----
 
@@ -316,7 +316,7 @@ By default, the Coherence Hibernate second-level cache implementation uses a cac
 `hibernate-second-level-cache-config.xml` at the root level in `coherence-hibernate-cache-xx-${project.version}.jar`.
 This configuration file defines cache mappings for Hibernate second-level caches.  You can specify an alternative cache
 configuration file for Hibernate second-level caches using the Hibernate or Java property
-`com.oracle.coherence.hibernate.cache.cache_config_file_path`, whose value should be the path to a file or ClassLoader
+`com.oracle.coherence.hibernate.cache.v53.cache_config_file_path`, whose value should be the path to a file or ClassLoader
 resource, or a `file://` URL.
 
 In fact it is recommended and expected that you specify an alternative cache configuration file customized for the

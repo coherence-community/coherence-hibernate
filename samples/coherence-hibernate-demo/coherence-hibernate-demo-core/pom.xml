@@ -30,6 +30,7 @@
 		<dependency>
 			<groupId>com.oracle.coherence.ce</groupId>
 			<artifactId>coherence</artifactId>
+			<version>${coherence.version}</version>
 		</dependency>
 	</dependencies>
 

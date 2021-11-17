@@ -31,16 +31,19 @@
         <dependency>
             <groupId>com.oracle.coherence.ce</groupId>
             <artifactId>coherence</artifactId>
+            <version>${coherence.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+            <version>${hibernate53.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
