@@ -9,11 +9,11 @@ modules:</p>
 
 <ul class="ulist">
 <li>
-<p>A Hibernate-based implementation of the Coherence CacheStore SPI</p>
+<p>A Hibernate-based implementation of the <strong>Coherence CacheStore SPI</strong></p>
 
 </li>
 <li>
-<p>A Coherence-based implementation of the Hibernate second-level cache SPI</p>
+<p>A Coherence-based implementation of the <strong>Hibernate second-level cache SPI</strong></p>
 
 </li>
 </ul>
