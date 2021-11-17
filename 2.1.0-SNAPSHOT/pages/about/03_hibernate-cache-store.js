@@ -26,8 +26,8 @@ lang="xml"
     &lt;version&gt;2.1.0-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</markup>
 
-<p>Alternatively, you can download <code>coherence-hibernate-cache-store-2.1.0-SNAPSHOT.jar</code> from a Maven repository (e.g.
-<a id="" title="" target="_blank" href="https://maven.java.net">https://maven.java.net</a>) and use it in JVM classpaths.  Or you can <a id="" title="" target="_blank" href="../dev/03_build-instructions.adoc">build</a> the Coherence Hibernate
+<p>Alternatively, you can download <code>coherence-hibernate-cache-store-2.1.0-SNAPSHOT.jar</code> from a Maven repository
+(e.g. <a id="" title="" target="_blank" href="https://repo1.maven.org/maven2/">https://repo1.maven.org/maven2/</a>) and use it in JVM classpaths. Or you can <a id="" title="" target="_blank" href="../dev/03_build-instructions.adoc">build</a> the Coherence Hibernate
 CacheStore implementation from sources.</p>
 
 <p>Note that the Coherence Hibernate CacheStore implementation depends at runtime on Oracle
