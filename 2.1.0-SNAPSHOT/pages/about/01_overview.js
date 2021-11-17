@@ -21,7 +21,7 @@ modules:</p>
 
 </div>
 
-<h2 id="_get_started">Get Started</h2>
+<h2 id="_documentation">Documentation</h2>
 <div class="section">
 <v-layout row wrap class="mb-5">
 <v-flex xs12>
@@ -90,18 +90,6 @@ modules:</p>
 </v-card-text>
 </v-card>
 </v-flex>
-</v-layout>
-</v-container>
-</v-flex>
-</v-layout>
-</div>
-
-<h2 id="_reference_documentation">Reference Documentation</h2>
-<div class="section">
-<v-layout row wrap class="mb-5">
-<v-flex xs12>
-<v-container fluid grid-list-md class="pa-0">
-<v-layout row wrap class="pillars">
 <v-flex xs12 sm4 lg3>
 <v-card>
 <a id="" title="" target="_blank" href="api/index.html"><div class="card__link-hover"/>
