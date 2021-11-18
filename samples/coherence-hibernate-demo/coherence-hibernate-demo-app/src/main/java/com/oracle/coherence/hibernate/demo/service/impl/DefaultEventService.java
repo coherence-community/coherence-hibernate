@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
- * http://oss.oracle.com/licenses/upl.
+ * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.demo.service.impl;
 
@@ -27,6 +27,8 @@ import com.oracle.coherence.hibernate.demo.service.EventService;
 @Service
 public class DefaultEventService implements EventService {
 
+	private static final String EVENT_NOT_FOUND_MESSAGE = "Unable to find event with id '%s'.";
+
 	@Autowired
 	private EventRepository eventRepository;
 
@@ -47,7 +49,8 @@ public class DefaultEventService implements EventService {
 
 	@Override
 	public Event getEvent(Long id) {
-		return this.eventRepository.findById(id).get();
+		return this.eventRepository.findById(id).orElseThrow(() ->
+			new EventNotFoundException(String.format(EVENT_NOT_FOUND_MESSAGE, id)));
 	}
 
 }

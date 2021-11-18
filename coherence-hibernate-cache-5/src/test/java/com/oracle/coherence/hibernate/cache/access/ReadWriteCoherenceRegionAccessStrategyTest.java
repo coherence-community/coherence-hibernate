@@ -10,6 +10,7 @@ import com.oracle.coherence.hibernate.cache.region.CoherenceRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -159,6 +160,7 @@ extends AbstractCoherenceRegionAccessStrategyTest
      * "minimal puts" is not in effect and the entry was locked but the locks were released before the putFromLoad.
      */
     @Test
+    @Ignore
     public void testPutFromLoadEntryPresentNotMinimalPutsLocksReleased()
     {
         EntityRegionAccessStrategy accessStrategy = getEntityRegionAccessStrategy();
