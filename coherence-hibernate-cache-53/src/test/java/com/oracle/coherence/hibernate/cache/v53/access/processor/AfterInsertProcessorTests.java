@@ -6,9 +6,11 @@
  */
 package com.oracle.coherence.hibernate.cache.v53.access.processor;
 
-import com.oracle.coherence.hibernate.cache.v53.access.processor.AfterInsertProcessor;
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
-import com.tangosol.net.*;
+import com.tangosol.net.CacheFactory;
+import com.tangosol.net.Coherence;
+import com.tangosol.net.NamedCache;
+import com.tangosol.net.Session;
 import org.junit.AfterClass;
 import org.junit.Test;
 

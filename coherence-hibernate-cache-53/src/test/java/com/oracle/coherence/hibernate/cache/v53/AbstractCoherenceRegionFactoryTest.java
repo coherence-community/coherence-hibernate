@@ -16,8 +16,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
 
-import com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

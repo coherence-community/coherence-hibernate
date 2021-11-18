@@ -6,7 +6,6 @@
  */
 package com.oracle.coherence.hibernate.cache.v53;
 
-import com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory;
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegionImpl;
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
 import com.oracle.coherence.hibernate.cache.v53.support.Foo;
@@ -48,13 +47,8 @@ public class ReadWriteCacheTests extends BaseCoreFunctionalTestCase {
 	@Override
 	protected void configure(Configuration cfg) {
 		super.configure(cfg);
-		cfg.setProperty(Environment.DRIVER, org.hsqldb.jdbc.JDBCDriver.class.getName());
-		cfg.setProperty(Environment.URL, "jdbc:hsqldb:mem:db1");
-		cfg.setProperty(Environment.USER, "sa");
-		cfg.setProperty(Environment.PASS, "");
 		cfg.setProperty(Environment.CACHE_REGION_PREFIX, "");
 		cfg.setProperty(Environment.GENERATE_STATISTICS, "true");
-
 		cfg.setProperty(Environment.USE_SECOND_LEVEL_CACHE, "true");
 		cfg.setProperty(Environment.USE_QUERY_CACHE, "true");
 		cfg.setProperty(Environment.CACHE_REGION_FACTORY, CoherenceRegionFactory.class.getName());

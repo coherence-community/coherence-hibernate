@@ -6,7 +6,6 @@
  */
 package com.oracle.coherence.hibernate.cache.v53;
 
-import com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory;
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccess;
 import com.tangosol.net.CacheFactory;
 

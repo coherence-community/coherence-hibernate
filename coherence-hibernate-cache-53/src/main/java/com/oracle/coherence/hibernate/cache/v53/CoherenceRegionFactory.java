@@ -45,7 +45,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     /**
      * The prefix of the names of all properties specific to this SPI implementation.
      */
-    public static final String PROPERTY_NAME_PREFIX = "com.oracle.coherence.hibernate.cache";
+    public static final String PROPERTY_NAME_PREFIX = "com.oracle.coherence.hibernate.cache.";
 
     /**
      * The name of the property specifying the path to the Coherence cache configuration file.
