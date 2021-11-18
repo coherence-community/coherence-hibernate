@@ -73,7 +73,7 @@
         {
             "location": "/dev/06_history",
             "text": " Global and Cross-Module Changes Add sample application Require Java 11 to build the project. When solely using, Java 8 is still supported coherence-hibernate-second-level-cache Add support for configurable CacheKeysFactories in Hibernate 5.2.x Add support for Hibernate 5.3.x , 5.4.x , 5.5.x , 5.6.x coherence-hibernate-site Migrate to new website format Publish JavaDoc ",
-            "title": "Version 2.1.0.M1 (Nov 2021)"
+            "title": "Version 2.1.0-M1 (Nov 2021)"
         },
         {
             "location": "/dev/06_history",
@@ -142,7 +142,7 @@
         },
         {
             "location": "/dev/06_history",
-            "text": " The following sections outline Oracle Coherence Hibernate Integration changes in reverse chronological order. Version 2.1.0.M1 (Nov 2021) Global and Cross-Module Changes Add sample application Require Java 11 to build the project. When solely using, Java 8 is still supported coherence-hibernate-second-level-cache Add support for configurable CacheKeysFactories in Hibernate 5.2.x Add support for Hibernate 5.3.x , 5.4.x , 5.5.x , 5.6.x coherence-hibernate-site Migrate to new website format Publish JavaDoc Version 2.0.0 @ 2020-11-25 15:30 Global and Cross-Module Changes Change licensing from the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) to The Universal Permissive License (UPL) Updating of dependencies. Merge functional tests into the respective versions coherence-hibernate-cache-store Update dependencies coherence-hibernate-second-level-cache Add support for Hibernate 4.3.x , 5.0.x , 5.1.x , 5.2.x Add additional modules for the various Hibernate versions coherence-hibernate-site Polishing and updating for 2.0.0 Update site code Version 1.0.0 @ 2013-09-12 15:30 Source and Documentation Contributors Randy Stafford Global and Cross-Module Changes Initial release. coherence-hibernate-cache-store Initial release. coherence-hibernate-cache-store-tests Initial release. coherence-hibernate-second-level-cache Initial release. coherence-hibernate-second-level-cache-tests Initial release. coherence-hibernate-site Initial release. ",
+            "text": " The following sections outline Oracle Coherence Hibernate Integration changes in reverse chronological order. Version 2.1.0-M1 (Nov 2021) Global and Cross-Module Changes Add sample application Require Java 11 to build the project. When solely using, Java 8 is still supported coherence-hibernate-second-level-cache Add support for configurable CacheKeysFactories in Hibernate 5.2.x Add support for Hibernate 5.3.x , 5.4.x , 5.5.x , 5.6.x coherence-hibernate-site Migrate to new website format Publish JavaDoc Version 2.0.0 @ 2020-11-25 15:30 Global and Cross-Module Changes Change licensing from the COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) to The Universal Permissive License (UPL) Updating of dependencies. Merge functional tests into the respective versions coherence-hibernate-cache-store Update dependencies coherence-hibernate-second-level-cache Add support for Hibernate 4.3.x , 5.0.x , 5.1.x , 5.2.x Add additional modules for the various Hibernate versions coherence-hibernate-site Polishing and updating for 2.0.0 Update site code Version 1.0.0 @ 2013-09-12 15:30 Source and Documentation Contributors Randy Stafford Global and Cross-Module Changes Initial release. coherence-hibernate-cache-store Initial release. coherence-hibernate-cache-store-tests Initial release. coherence-hibernate-second-level-cache Initial release. coherence-hibernate-second-level-cache-tests Initial release. coherence-hibernate-site Initial release. ",
             "title": "Change History"
         },
         {
@@ -237,7 +237,7 @@
         },
         {
             "location": "/dev/07_getting-help",
-            "text": " Coherence Hibernate&#8217;s source code, including tests and examples, is hosted on GitHub. The source code repository is a great place to start looking for implementation tips. The source code is located at: https://github.com/coherence-community/coherence-hibernate-integration ",
+            "text": " Coherence Hibernate&#8217;s source code, including tests and examples, is hosted on GitHub. The source code repository is a great place to start looking for implementation tips. The source code is located at: https://github.com/coherence-community/coherence-hibernate ",
             "title": "Source Code, Tests and Examples"
         },
         {
@@ -252,7 +252,7 @@
         },
         {
             "location": "/dev/07_getting-help",
-            "text": " There are many avenues to receive help when using the Coherence Hibernate project. Here are a few options. Slack The Coherence Slack channel is the best place to start asking questions - should you need to. Join Slack here . Source Code, Tests and Examples Coherence Hibernate&#8217;s source code, including tests and examples, is hosted on GitHub. The source code repository is a great place to start looking for implementation tips. The source code is located at: https://github.com/coherence-community/coherence-hibernate-integration Issue Tracking System If you find an issue with the Coherence Hibernate project or have an idea for a new feature the best place to start is with the Issue Tracking System. All issues, both current and past are publicly viewable. The Issue Tracking System can be found here: https://github.com/coherence-community/coherence-hibernate/issues Oracle Support Alternatively Oracle Coherence customers can file Support Requests (SR) against the Coherence Product, clearly specifying that requests are for a Coherence Community project. ",
+            "text": " There are many avenues to receive help when using the Coherence Hibernate project. Here are a few options. Slack The Coherence Slack channel is the best place to start asking questions - should you need to. Join Slack here . Source Code, Tests and Examples Coherence Hibernate&#8217;s source code, including tests and examples, is hosted on GitHub. The source code repository is a great place to start looking for implementation tips. The source code is located at: https://github.com/coherence-community/coherence-hibernate Issue Tracking System If you find an issue with the Coherence Hibernate project or have an idea for a new feature the best place to start is with the Issue Tracking System. All issues, both current and past are publicly viewable. The Issue Tracking System can be found here: https://github.com/coherence-community/coherence-hibernate/issues Oracle Support Alternatively Oracle Coherence customers can file Support Requests (SR) against the Coherence Product, clearly specifying that requests are for a Coherence Community project. ",
             "title": "Getting Help"
         }
  ]

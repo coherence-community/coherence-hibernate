@@ -17,7 +17,7 @@ Here are a few options.</p>
 <div class="section">
 <p>Coherence Hibernate&#8217;s source code, including tests and examples, is hosted on GitHub. The source code repository is a great
 place to start looking for implementation tips. The source code is located at:
-<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate">https://github.com/coherence-community/coherence-hibernate-integration</a></p>
+<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate">https://github.com/coherence-community/coherence-hibernate</a></p>
 
 </div>
 

@@ -6,7 +6,7 @@
 reverse chronological order.</p>
 
 
-<h3 id="_version_2_1_0_m1_nov_2021">Version 2.1.0.M1 (Nov 2021)</h3>
+<h3 id="_version_2_1_0_m1_nov_2021">Version 2.1.0-M1 (Nov 2021)</h3>
 <div class="section">
 
 <h4 id="_global_and_cross_module_changes">Global and Cross-Module Changes</h4>
