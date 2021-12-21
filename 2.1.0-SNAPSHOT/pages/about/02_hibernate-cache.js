@@ -430,5 +430,58 @@ not provide any means of controlling the query cache other than a complete evict
 considered if the underlying database can be written by clients other than the Hibernate application.</p>
 
 </div>
+
+<h3 id="_additional_configuration_options">Additional Configuration Options</h3>
+<div class="section">
+
+<h4 id="_coherence_specific_properties">Coherence-specific properties</h4>
+<div class="section">
+<p>When providing Hibernate properties, you can also specify any
+<a id="" title="" target="_blank" href="https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-applications/system-property-overrides.html#GUID-32230D28-4976-4147-A887-0A0120FF5C7E">Coherence system property overrides</a>
+using the following property structure:</p>
+
+<markup
+lang="properties"
+
+>com.oracle.coherence.hibernate.cache.coherence_properties.*=my property value</markup>
+
+<div class="admonition important">
+<p class="admonition-inline">Specifying Coherence-specific properties is available for the Hibernate Cache 53 module only!</p>
+</div>
+<p>For instance, in order to redirect the logging output of Coherence (Only Coherence!) to its own log file,
+and setting the log level to maximum, you could specify:</p>
+
+<markup
+lang="properties"
+
+>com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log=/path/to/coherence.log
+com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log.level: 9</markup>
+
+</div>
+
+<h4 id="_logging">Logging</h4>
+<div class="section">
+<p>Without specifying any custom logging properties, Coherence Hibernate will set the logger of Coherence to
+<code>slf4j</code>. Therefore, Coherence Hibernate will integrate seamlessly into your application.</p>
+
+<p>Accordingly, Coherence Hibernate is configured using a custom implementation of Coherence' <code>SystemPropertyResolver</code>.</p>
+
+<div class="admonition note">
+<p class="admonition-textlabel">Note</p>
+<p ><p>Properties defined via
+<a id="" title="" target="_blank" href="https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-applications/operational-configuration-elements.html#GUID-6DEB2F17-F6CA-4476-8EF7-2B175191929F">Operational Override Files</a>
+take precedence. For example, if your application provides a custom <code>tangosol-coherence-override.xml</code> file,
+such as the following, then providing a respective Coherence Hibernate property will not have any effect.</p>
+</p>
+</div>
+<markup
+lang="xml"
+
+>&lt;logging-config&gt;
+    &lt;destination&gt;slf4j&lt;/destination&gt;
+&lt;/logging-config&gt;</markup>
+
+</div>
+</div>
 </div>
 </doc-view>
