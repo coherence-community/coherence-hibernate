@@ -7,7 +7,7 @@
 package com.oracle.coherence.hibernate.cache.v53.region;
 
 import com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory;
-import com.tangosol.net.CacheFactory;
+import com.oracle.coherence.hibernate.cache.v53.configuration.support.Assert;
 import com.tangosol.net.NamedCache;
 import com.tangosol.util.Base;
 import com.tangosol.util.InvocableMap;
@@ -21,6 +21,8 @@ import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.ExtendedStatisticsSupport;
 import org.hibernate.cache.spi.Region;
 import org.hibernate.cache.spi.RegionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -40,6 +42,8 @@ import java.util.Map;
 public class CoherenceRegion
 implements Region, ExtendedStatisticsSupport
 {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceRegion.class);
 
     // ---- Constants
 
@@ -84,7 +88,13 @@ implements Region, ExtendedStatisticsSupport
      */
     public CoherenceRegion(RegionFactory regionFactory, NamedCache namedCache, Map<String, Object> properties)
     {
-        debugf("%s(%s, properties)", getClass().getName(), namedCache);
+        Assert.notNull(regionFactory, "regionFactory must not be null.");
+        Assert.notNull(namedCache, "namedCache must not be null.");
+
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("Constructing CoherenceRegion for NamedCache '{}'.", namedCache.getCacheName());
+        }
         lockLeaseDuration = (int) getDurationProperty(
                 properties,
                 LOCK_LEASE_DURATION_PROPERTY_NAME,
@@ -93,7 +103,6 @@ implements Region, ExtendedStatisticsSupport
         this.namedCache = namedCache;
         this.regionFactory = regionFactory;
     }
-
 
     // ---- Accessors
 
@@ -224,7 +233,10 @@ implements Region, ExtendedStatisticsSupport
     @Override
     public String getName()
     {
-        debugf("%s.getName()", this);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("getName()");
+        }
         return getNamedCache().getCacheName();
     }
 
@@ -235,7 +247,10 @@ implements Region, ExtendedStatisticsSupport
     public void destroy() throws CacheException
     {
         if (!getNamedCache().isReleased()) {
-            debugf("%s.destroy()", this);
+            if (LOGGER.isDebugEnabled())
+            {
+                LOGGER.debug("destroy()");
+            }
             getNamedCache().release();
         }
     }
@@ -246,7 +261,10 @@ implements Region, ExtendedStatisticsSupport
     //@Override
     public boolean contains(Object key)
     {
-        debugf("%s.contains(%s)", this, key);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("contains({})", key);
+        }
         return getNamedCache().invoke(key, new ExtractorProcessor(IdentityExtractor.INSTANCE)) != null;
     }
 
@@ -256,7 +274,10 @@ implements Region, ExtendedStatisticsSupport
     @Override
     public long getSizeInMemory()
     {
-        debugf("%s.getSizeInMemory()", this);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("getSizeInMemory()");
+        }
         return -1;
     }
 
@@ -266,7 +287,10 @@ implements Region, ExtendedStatisticsSupport
     @Override
     public long getElementCountInMemory()
     {
-        debugf("%s.getElementCountInMemory()", this);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("getElementCountInMemory()");
+        }
         return getNamedCache().size();
     }
 
@@ -276,7 +300,10 @@ implements Region, ExtendedStatisticsSupport
     @Override
     public long getElementCountOnDisk()
     {
-        debugf("%s.getElementCountOnDisk()", this);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("getElementCountOnDisk()");
+        }
         return -1;
     }
 
@@ -288,7 +315,10 @@ implements Region, ExtendedStatisticsSupport
     //@Override
     public long nextTimestamp()
     {
-        debugf("%s.nextTimestamp()", this);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("nextTimestamp()");
+        }
         return getRegionFactory().nextTimestamp();
     }
 
@@ -298,10 +328,12 @@ implements Region, ExtendedStatisticsSupport
      *
      * @return an int lock lease duration
      */
-    //@Override
     public int getTimeout()
     {
-        debugf("%s.getTimeout()", this);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("getTimeout()");
+        }
         // Note that this must be the same time units as getTimestamp
         return lockLeaseDuration;
     }
@@ -332,32 +364,24 @@ implements Region, ExtendedStatisticsSupport
         }
         catch (Exception e)
         {
-            CacheFactory.log("Error parsing duration property " + propertyName + "; provided value was " +
-                              propertyValue + "; using default of " + defaultValue + " milliseconds.", 2);
+            if (LOGGER.isErrorEnabled())
+            {
+                LOGGER.error("Error parsing duration property {}; provided value was " +
+                         "{}; using default of {} milliseconds.", propertyName, propertyValue, defaultValue);
+            }
             duration = defaultValue;
         }
 
         if (duration > maxValue)
         {
-            CacheFactory.log("Capping " + propertyName + " at " + maxValue + " milliseconds.");
+            if (LOGGER.isDebugEnabled())
+            {
+                LOGGER.debug("Capping {} at {} milliseconds.", propertyName, maxValue);
+            }
             duration = maxValue;
         }
 
         return duration;
-    }
-
-
-    // ---- Internal: logging support
-
-    /**
-     * Log the argument message with formatted arguments at debug severity
-     *
-     * @param message the message to log
-     * @param arguments the arguments to the format specifiers in message
-     */
-    protected void debugf(String message, Object ... arguments)
-    {
-        CoherenceRegionFactory.debugf(message, arguments);
     }
 
     @Override

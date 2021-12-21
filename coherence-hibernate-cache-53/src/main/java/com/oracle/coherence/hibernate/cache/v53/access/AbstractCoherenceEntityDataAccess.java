@@ -14,10 +14,11 @@ import org.hibernate.cache.spi.support.AbstractDomainDataRegion;
 import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
-import com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory;
 import com.oracle.coherence.hibernate.cache.v53.access.processor.PutFromLoadProcessor;
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.UUID;
@@ -33,6 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
 abstract class AbstractCoherenceEntityDataAccess
 {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCoherenceEntityDataAccess.class);
 
     // ---- Constants
 
@@ -80,7 +82,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public AbstractCoherenceEntityDataAccess(DomainDataRegion domainDataRegion, DomainDataStorageAccess storageAccess, Comparator<?> versionComparator)
     {
-        debugf("%s", getClass().getName());
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("Constructing AbstractCoherenceEntityDataAccess.");
+        }
         this.domainDataRegion = domainDataRegion;
         this.storageAccess = storageAccess;
         this.versionComparator = versionComparator;
@@ -161,7 +166,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public Object get(SharedSessionContractImplementor session, Object key) throws CacheException
     {
-        debugf("%s.getValue(%s)", this, key);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("getValue({})", key);
+        }
         CoherenceRegionValue cacheValue = (CoherenceRegionValue) getCoherenceRegion().getValue(key);
         return (cacheValue == null)? null : cacheValue.getValue();
     }
@@ -172,7 +180,10 @@ abstract class AbstractCoherenceEntityDataAccess
     public boolean putFromLoad(SharedSessionContractImplementor session, Object key, Object value, Object version)
     throws CacheException
     {
-        debugf("%s.putFromLoad(%s, %s, %s)", this, key, value, version);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("putFromLoad({}, {}, {})", key, value, version);
+        }
         return putFromLoad(session, key, value, version, this.getCoherenceRegion().getRegionFactory().isMinimalPutsEnabledByDefault()); //TODO
     }
 
@@ -182,7 +193,10 @@ abstract class AbstractCoherenceEntityDataAccess
     public boolean putFromLoad(SharedSessionContractImplementor session, Object key, Object value, Object version, boolean minimalPutOverride)
     throws CacheException
     {
-        debugf("%s.putFromLoad(%s, %s, %s, %s)", this, key, value, version, minimalPutOverride);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("putFromLoad({}, {}, {}, {})", key, value, version, minimalPutOverride);
+        }
         CoherenceRegionValue newCacheValue = newCacheValue(value, version);
         PutFromLoadProcessor processor = new PutFromLoadProcessor(minimalPutOverride, newCacheValue);
         return (Boolean) getCoherenceRegion().invoke(key, processor);
@@ -194,7 +208,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public SoftLock lockItem(SharedSessionContractImplementor session, Object key, Object version) throws CacheException
     {
-        debugf("%s.lockItem(%s, %s)", this, key, version);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("lockItem({}, {})", key, version);
+        }
         //for the majority of access strategies lockItem is a no-op
         return null;
     }
@@ -204,7 +221,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public SoftLock lockRegion() throws CacheException
     {
-        debugf("%s.lockRegion()", this);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("lockRegion()");
+        }
         getCoherenceRegion().lockCache();
         return null;
     }
@@ -214,7 +234,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public void unlockItem(SharedSessionContractImplementor session, Object key, SoftLock lock) throws CacheException
     {
-        debugf("%s.lockItem(%s, %s)", this, key, lock);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("lockItem({}, {})", key, lock);
+        }
         //for the majority of access strategies unlockItem is a no-op
     }
 
@@ -223,7 +246,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public void unlockRegion(SoftLock lock) throws CacheException
     {
-        debugf("%s.unlockRegion(%s)", this, lock);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("unlockRegion({})", lock);
+        }
         getCoherenceRegion().unlockCache();
     }
 
@@ -232,7 +258,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public void remove(SharedSessionContractImplementor session, Object key) throws CacheException
     {
-        debugf("%s.remove(%s)", this, key);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("remove({})", key);
+        }
         evict(key);
     }
 
@@ -241,7 +270,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public void removeAll(SharedSessionContractImplementor session) throws CacheException
     {
-        debugf("%s.removeAll()", this);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("removeAll()");
+        }
         evictAll();
     }
 
@@ -250,7 +282,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public void evict(Object key) throws CacheException
     {
-        debugf("%s.evict(%s)", this, key);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("evict({})", key);
+        }
         getCoherenceRegion().evict(key);
     }
 
@@ -259,7 +294,10 @@ abstract class AbstractCoherenceEntityDataAccess
      */
     public void evictAll() throws CacheException
     {
-        debugf("%s.evictAll()", this);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("evictAll()");
+        }
         getCoherenceRegion().evictAll();
     }
 
@@ -277,19 +315,6 @@ abstract class AbstractCoherenceEntityDataAccess
     protected CoherenceRegionValue newCacheValue(Object value, Object version)
     {
         return new CoherenceRegionValue(value, version, getCoherenceRegion().nextTimestamp());
-    }
-
-    // ---- Internal: logging support
-
-    /**
-     * Log the argument message with formatted arguments at debug severity
-     *
-     * @param message the message to log
-     * @param arguments the arguments to the format specifiers in message
-     */
-    protected void debugf(String message, Object ... arguments)
-    {
-        CoherenceRegionFactory.debugf(message, arguments);
     }
 
     public boolean contains(Object key) {

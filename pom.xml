@@ -103,12 +103,14 @@
         <coherence.version>21.06.2</coherence.version>
         <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
-        <hibernate52.version>5.2.17.Final</hibernate52.version>
-        <hibernate53.version>5.6.0.Final</hibernate53.version>
+        <hibernate52.version>5.2.18.Final</hibernate52.version>
+        <hibernate53.version>5.6.3.Final</hibernate53.version>
         <hsqldb.version>2.2.9</hsqldb.version>
         <hsqldb.version>2.2.9</hsqldb.version>
         <junit.version>4.13.2</junit.version>
+        <logback.version>1.2.9</logback.version>
         <mockito.version>4.0.0</mockito.version>
+        <slf4j.version>1.7.32</slf4j.version>
     </properties>
 
     <distributionManagement>

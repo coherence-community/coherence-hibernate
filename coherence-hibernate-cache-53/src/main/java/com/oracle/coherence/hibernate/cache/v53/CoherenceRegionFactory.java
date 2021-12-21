@@ -8,6 +8,7 @@ package com.oracle.coherence.hibernate.cache.v53;
 
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegionImpl;
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
+import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateSystemPropertyResolver;
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.ConfigurableCacheFactory;
@@ -26,6 +27,8 @@ import org.hibernate.cache.spi.support.RegionFactoryTemplate;
 import org.hibernate.cache.spi.support.StorageAccess;
 import org.hibernate.cfg.Environment;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -37,6 +40,8 @@ import java.util.Map;
  */
 public class CoherenceRegionFactory extends RegionFactoryTemplate
 {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceRegionFactory.class);
 
     // ---- Constants
 
@@ -53,14 +58,12 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     public static final String CACHE_CONFIG_FILE_PATH_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "cache_config_file_path";
 
     /**
-     * The name of the property specifying the severity level at which debug messages should be logged.
+     * The name of the property specifying the Coherence-specific logger. This will set the logger of the Coherence
+     * sub-system.
      */
-    public static final String DEBUG_MESSAGE_SEVERITY_LEVEL_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "debug_message_severity_level";
+    public static final String COHERENCE_LOGGER_PROPERTY_NAME = "coherence.log";
 
-    /**
-     * The severity level at which debug messages should be logged by default.
-     */
-    public static final int DEFAULT_DEBUG_MESSAGE_SEVERITY_LEVEL = 7;
+    public static final String DEFAULT_COHERENCE_LOGGER = "slf4j";
 
     /**
      * The name of the property specifying whether to dump stack on debug messages.
@@ -72,18 +75,9 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
      */
     protected static final String DEFAULT_CACHE_CONFIG_FILE_PATH = "hibernate-second-level-cache-config.xml";
 
+    protected CoherenceHibernateSystemPropertyResolver systemPropertyResolver;
 
     // ---- Fields
-
-    /**
-     * The severity level at which debug messages should be logged.
-     */
-    private static int debugMessageSeverityLevel = DEFAULT_DEBUG_MESSAGE_SEVERITY_LEVEL;
-
-    /**
-     * A flag indicating whether to dump stack on debug messages.
-     */
-    private static boolean dumpStackOnDebugMessage = false;
 
     /**
      * The ConfigurableCacheFactory used by this CoherenceRegionFactory.
@@ -152,23 +146,6 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
         return stringBuilder.toString();
     }
 
-
-    // ---- API: logging support
-
-    /**
-     * Log the argument message with formatted arguments at debug severity.
-     *
-     * @param message the message to log
-     * @param arguments the arguments to the format specifiers in message
-     */
-    public static void debugf(String message, Object ... arguments)
-    {
-        CacheFactory.log(String.format(message, arguments), debugMessageSeverityLevel);
-        if (dumpStackOnDebugMessage) Thread.dumpStack();
-    }
-
-
-
     // ---- interface org.hibernate.cache.spi.RegionFactory
 
     @SuppressWarnings("rawtypes")
@@ -176,6 +153,11 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     protected void prepareForUse(SessionFactoryOptions settings, Map configValues)
     {
         this.sessionFactoryOptions = settings;
+        this.systemPropertyResolver = new CoherenceHibernateSystemPropertyResolver(configValues); //TODO
+
+        if (this.systemPropertyResolver.getProperty(COHERENCE_LOGGER_PROPERTY_NAME) == null) {
+            this.systemPropertyResolver.addCoherenceProperty(COHERENCE_LOGGER_PROPERTY_NAME, DEFAULT_COHERENCE_LOGGER);
+        }
 
         if (this.sessionFactoryOptions != null)
         {
@@ -200,16 +182,15 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
                     DEFAULT_CACHE_CONFIG_FILE_PATH);
         }
 
-        ConfigurableCacheFactory factory = CacheFactory.getCacheFactoryBuilder().getConfigurableCacheFactory(
+        final ConfigurableCacheFactory factory = CacheFactory.getCacheFactoryBuilder().getConfigurableCacheFactory(
                 cacheConfigFilePath,
                 getClass().getClassLoader());
         setConfigurableCacheFactory(factory);
 
-        debugMessageSeverityLevel = Integer.getInteger(DEBUG_MESSAGE_SEVERITY_LEVEL_PROPERTY_NAME, DEFAULT_DEBUG_MESSAGE_SEVERITY_LEVEL);
-        dumpStackOnDebugMessage = Boolean.getBoolean(DUMP_STACK_ON_DEBUG_MESSAGE_PROPERTY_NAME);
-
-        debugf("%s.start(%s, %s)", this, settings, configValues);
-
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("start({}, {})", settings, configValues);
+        }
     }
 
     @Override
