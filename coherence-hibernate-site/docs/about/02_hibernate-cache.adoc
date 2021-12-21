@@ -333,3 +333,49 @@ Hibernate-based `CacheStores` are used.  Furthermore, second-level caches should
 the possibility of heap exhaustion.  Query caches in particular should be size-limited because the Hibernate API does
 not provide any means of controlling the query cache other than a complete eviction.  Finally, expiration should be
 considered if the underlying database can be written by clients other than the Hibernate application.
+
+=== Additional Configuration Options
+
+==== Coherence-specific properties
+
+When providing Hibernate properties, you can also specify any
+{coherence-docs}develop-applications/system-property-overrides.html#GUID-32230D28-4976-4147-A887-0A0120FF5C7E[Coherence system property overrides]
+using the following property structure:
+
+[source,properties,indent=0,subs="verbatim,quotes,attributes"]
+----
+com.oracle.coherence.hibernate.cache.coherence_properties.*=my property value
+----
+
+IMPORTANT: Specifying Coherence-specific properties is available for the Hibernate Cache 53 module only!
+
+For instance, in order to redirect the logging output of Coherence (Only Coherence!) to its own log file,
+and setting the log level to maximum, you could specify:
+
+[source,properties,indent=0,subs="verbatim,quotes,attributes"]
+----
+com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log=/path/to/coherence.log
+com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log.level: 9
+----
+
+==== Logging
+
+Without specifying any custom logging properties, Coherence Hibernate will set the logger of Coherence to
+`slf4j`. Therefore, Coherence Hibernate will integrate seamlessly into your application.
+
+Accordingly, Coherence Hibernate is configured using a custom implementation of Coherence' `SystemPropertyResolver`.
+
+[NOTE]
+====
+Properties defined via
+{coherence-docs}develop-applications/operational-configuration-elements.html#GUID-6DEB2F17-F6CA-4476-8EF7-2B175191929F[Operational Override Files]
+take precedence. For example, if your application provides a custom `tangosol-coherence-override.xml` file,
+such as the following, then providing a respective Coherence Hibernate property will not have any effect.
+====
+
+[source,xml,indent=0,subs="verbatim,quotes,attributes"]
+----
+<logging-config>
+    <destination>slf4j</destination>
+</logging-config>
+----

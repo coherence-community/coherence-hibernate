@@ -18,6 +18,8 @@ import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.persister.entity.EntityPersister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An CoherenceReadOnlyEntityAccess is an AbstractCoherenceEntityDataAccess
@@ -31,6 +33,7 @@ extends AbstractCoherenceEntityDataAccess
 implements EntityDataAccess
 {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceReadOnlyEntityAccess.class);
 
     // ---- Constructors
 
@@ -59,7 +62,10 @@ implements EntityDataAccess
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Synchronous" (i.e. transactional) access strategies should insert the cache entry here, but
         //"asynchrononous" (i.e. non-transactional) strategies should insert it in afterInsert instead.
-        debugf("%s.insert(%s, %s, %s)", this, key, value, version);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("insert({}, {}, {})", key, value, version);
+        }
         return false;
     }
 
@@ -72,7 +78,10 @@ implements EntityDataAccess
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
-        debugf("%s.afterInsert(%s, %s, %s)", getClass().getName(), key, value, version);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("afterInsert({}, {}, {})", key, value, version);
+        }
         getCoherenceRegion().putValue(key, newCacheValue(value, version));
         return true;
     }
@@ -84,7 +93,10 @@ implements EntityDataAccess
     public boolean update(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
     {
         //read-only cache entries should not be updated
-        debugf("%s.update(%s, %s, %s, %s)", this, key, value, currentVersion, previousVersion);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("update({}, {}, {}, {})", key, value, currentVersion, previousVersion);
+        }
         throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);
     }
 
@@ -95,7 +107,10 @@ implements EntityDataAccess
     public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
     {
         //read-only cache entries should not be updated
-        debugf("%s.afterUpdate(%s, %s, %s, %s, %s)", this, key, value, currentVersion, previousVersion, lock);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("afterUpdate({}, {}, {}, {}, {})", key, value, currentVersion, previousVersion, lock);
+        }
         throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);
     }
 

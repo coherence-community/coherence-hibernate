@@ -18,6 +18,7 @@ engine:
       version-coherence: "${coherence.version}"
       timestamp: "${timestamp}"
       github-repository: "https://github.com/coherence-community/coherence-hibernate"
+      coherence-docs: "https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/"
 assets:
   - target: "/"
     includes:

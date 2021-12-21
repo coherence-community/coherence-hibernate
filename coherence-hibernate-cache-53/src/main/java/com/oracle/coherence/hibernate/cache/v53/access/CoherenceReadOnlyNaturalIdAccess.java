@@ -14,6 +14,8 @@ import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.persister.entity.EntityPersister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A CoherenceReadOnlyNaturalIdAccess is a CoherenceRegionAccessStrategy
@@ -27,6 +29,7 @@ extends AbstractCoherenceEntityDataAccess
 implements NaturalIdDataAccess
 {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceReadOnlyNaturalIdAccess.class);
 
     // ---- Constructors
 
@@ -55,7 +58,10 @@ implements NaturalIdDataAccess
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Synchronous" (i.e. transactional) access strategies should insert the cache entry here, but
         //"asynchrononous" (i.e. non-transactional) strategies should insert it in afterInsert instead.
-        debugf("%s.insert(%s, %s)", this, key, value);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("insert({}, {})", key, value);
+        }
         return false;
     }
 
@@ -68,7 +74,10 @@ implements NaturalIdDataAccess
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
-        debugf("%s.afterInsert(%s, %s)", getClass().getName(), key, value);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("afterInsert({}, {})", key, value);
+        }
         getCoherenceRegion().putValue(key, newCacheValue(value, null));
         return true;
     }
@@ -80,7 +89,10 @@ implements NaturalIdDataAccess
     public boolean update(SharedSessionContractImplementor session, Object key, Object value) throws CacheException
     {
         //read-only cache entries should not be updated
-        debugf("%s.update(%s, %s)", this, key, value);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("update({}, {})", key, value);
+        }
         throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);
     }
 
@@ -91,7 +103,10 @@ implements NaturalIdDataAccess
     public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, SoftLock lock) throws CacheException
     {
         //read-only cache entries should not be updated
-        debugf("%s.afterUpdate(%s, %s, %s)", this, key, value, lock);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("afterUpdate({}, {}, {})", key, value, lock);
+        }
         throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);
     }
 

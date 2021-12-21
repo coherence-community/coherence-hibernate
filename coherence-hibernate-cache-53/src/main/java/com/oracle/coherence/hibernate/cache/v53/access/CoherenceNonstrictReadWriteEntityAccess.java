@@ -18,6 +18,8 @@ import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.persister.entity.EntityPersister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A CoherenceNonstrictReadWriteEntityAccess is an AbstractCoherenceEntityDataAccess
@@ -30,6 +32,8 @@ public class CoherenceNonstrictReadWriteEntityAccess
 extends AbstractCoherenceEntityDataAccess
 implements EntityDataAccess
 {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceNonstrictReadWriteEntityAccess.class);
 
 
     // ---- Constructors
@@ -60,7 +64,10 @@ implements EntityDataAccess
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Synchronous" (i.e. transactional) access strategies should insert the cache entry here, but
         //"asynchrononous" (i.e. non-transactional) strategies should insert it in afterInsert instead.
-        debugf("%s.insert(%s, %s, %s)", this, key, value, version);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("insert({}, {}, {})", key, value, version);
+        }
         return false;
     }
 
@@ -75,7 +82,10 @@ implements EntityDataAccess
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
         //But in nonstrict-read-write cache concurrency strategies, don't put newly inserted entities, to force
         //subsequent putFromLoad.
-        debugf("%s.afterInsert(%s, %s, %s)", this, key, value, version);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("afterInsert({}, {}, {})", key, value, version);
+        }
         return false;
     }
 
@@ -89,7 +99,10 @@ implements EntityDataAccess
         //Hibernate will make the call sequence lockItem() -> update() -> afterUpdate() when updating an entity.
         //"Synchronous" (i.e. transactional) access strategies should update the cache entry here, but
         //"asynchrononous" (i.e. non-transactional) strategies should update it in afterUpdate instead.
-        debugf("%s.update(%s, %s, %s, %s)", this, key, value, currentVersion, previousVersion);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("update({}, {}, {}, {})", key, value, currentVersion, previousVersion);
+        }
         return false;
     }
 
@@ -106,7 +119,10 @@ implements EntityDataAccess
         //"Asynchrononous" (i.e. non-transactional) strategies should invalidate or update the cache entry here and release the lock,
         //as appropriate for the kind of strategy (nonstrict-read-write vs. read-write).
         //In the nonstrict-read-write strategy we remove the cache entry to force subsequent putFromLoad.
-        debugf("%s.afterUpdate(%s, %s, %s, %s, %s)", this, key, value, currentVersion, previousVersion, lock);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("afterUpdate({}, {}, {}, {}, {})", key, value, currentVersion, previousVersion, lock);
+        }
         remove(session, key);
         unlockItem(session, key, lock);
         return false;

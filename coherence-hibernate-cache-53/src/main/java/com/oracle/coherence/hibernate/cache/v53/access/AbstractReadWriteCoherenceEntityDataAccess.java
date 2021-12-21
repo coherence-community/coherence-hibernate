@@ -19,6 +19,8 @@ import com.oracle.coherence.hibernate.cache.v53.access.processor.ReadWritePutFro
 import com.oracle.coherence.hibernate.cache.v53.access.processor.SoftLockItemProcessor;
 import com.oracle.coherence.hibernate.cache.v53.access.processor.SoftUnlockItemProcessor;
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 
@@ -33,14 +35,16 @@ abstract class AbstractReadWriteCoherenceEntityDataAccess
 extends AbstractCoherenceEntityDataAccess
 {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractReadWriteCoherenceEntityDataAccess.class);
 
     // ---- Constructors
 
     /**
      * Complete constructor.
      *
-     * @param coherenceRegion the CoherenceRegion for this AbstractReadWriteCoherenceEntityDataAccess
-     * @param sessionFactoryOptions the Hibernate SessionFactoryOptions object
+     * @param domainDataRegion the CoherenceRegion for this AbstractReadWriteCoherenceEntityDataAccess
+     * @param domainDataStorageAccess the Hibernate SessionFactoryOptions object
+     * @param versionComparator
      */
     public AbstractReadWriteCoherenceEntityDataAccess(DomainDataRegion domainDataRegion,
             DomainDataStorageAccess domainDataStorageAccess, Comparator<?> versionComparator)
@@ -57,7 +61,10 @@ extends AbstractCoherenceEntityDataAccess
     @Override
     public Object get(SharedSessionContractImplementor session, Object key) throws CacheException
     {
-        debugf("%s.get(%s)", this, key);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("get({})", key);
+        }
         return getCoherenceRegion().invoke(key, new GetProcessor());
     }
 
@@ -67,7 +74,10 @@ extends AbstractCoherenceEntityDataAccess
     @Override
     public org.hibernate.cache.spi.access.SoftLock lockItem(SharedSessionContractImplementor session, Object key, Object version) throws CacheException
     {
-        debugf("%s.lockItem(%s, %s)", this, key, version);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("lockItem({}, {})", key, version);
+        }
         CoherenceRegionValue valueIfAbsent = newCacheValue(null, version);
         CoherenceRegionValue.SoftLock newSoftLock = newSoftLock();
         SoftLockItemProcessor processor = new SoftLockItemProcessor(valueIfAbsent, newSoftLock);
@@ -82,7 +92,10 @@ extends AbstractCoherenceEntityDataAccess
     public boolean putFromLoad(SharedSessionContractImplementor session, Object key, Object value, Object version, boolean minimalPutOverride)
     throws CacheException
     {
-        debugf("%s.putFromLoad(%s, %s, %s, %s)", this, key, value, version, minimalPutOverride);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("putFromLoad({}, {}, {}, {})", key, value, version, minimalPutOverride);
+        }
         CoherenceRegionValue newCacheValue = newCacheValue(value, version);
         ReadWritePutFromLoadProcessor processor = new ReadWritePutFromLoadProcessor(minimalPutOverride, this.getCoherenceRegion().nextTimestamp(), newCacheValue, super.getVersionComparator());
         return (Boolean) getCoherenceRegion().invoke(key, processor);
@@ -94,7 +107,10 @@ extends AbstractCoherenceEntityDataAccess
     @Override
     public void unlockItem(SharedSessionContractImplementor session, Object key, org.hibernate.cache.spi.access.SoftLock lock) throws CacheException
     {
-        debugf("%s.unlockItem(%s, %s)", this, key, lock);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("unlockItem({}, {})", key, lock);
+        }
         SoftUnlockItemProcessor processor = new SoftUnlockItemProcessor(lock, getCoherenceRegion().nextTimestamp());
         getCoherenceRegion().invoke(key, processor);
     }

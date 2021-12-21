@@ -14,6 +14,8 @@ import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.persister.entity.EntityPersister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A CoherenceReadWriteNaturalIdAccess is a Coherence-based read-write region access strategy
@@ -27,6 +29,7 @@ extends AbstractReadWriteCoherenceEntityDataAccess
 implements NaturalIdDataAccess
 {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceReadWriteNaturalIdAccess.class);
 
     // ---- Constructors
 
@@ -65,7 +68,10 @@ implements NaturalIdDataAccess
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting a natural ID.
         //"Synchronous" (i.e. transactional) access strategies should insert the cache entry here, but
         //"asynchrononous" (i.e. non-transactional) strategies should insert it in afterInsert instead.
-        debugf("%s.insert(%s, %s)", this, key, value);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("insert - key: {}, value: {}",key, value);
+        }
         return false;
     }
 
@@ -79,7 +85,10 @@ implements NaturalIdDataAccess
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting a natural ID.
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
         //In implementation we only insert the entry if there was no entry already present at the argument key
-        debugf("%s.afterInsert(%s, %s)", this, key, value);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("afterInsert({}, {})", key, value);
+        }
         return afterInsert(key, newCacheValue(value, null));
     }
 
@@ -93,7 +102,10 @@ implements NaturalIdDataAccess
         //Hibernate will make the call sequence lockItem() -> remove() -> update() -> afterUpdate() when updating a natural ID.
         //"Synchronous" (i.e. transactional) access strategies should update the cache entry here, but
         //"asynchrononous" (i.e. non-transactional) strategies should update it in afterUpdate instead.
-        debugf("%s.update(%s, %s, %s, %s)", this, key, value);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("update({}, {})",key, value);
+        }
         return false;
     }
 
@@ -108,7 +120,10 @@ implements NaturalIdDataAccess
         //"Asynchrononous" (i.e. non-transactional) strategies should invalidate or update the cache entry here and release the lock,
         //as appropriate for the kind of strategy (nonstrict-read-write vs. read-write).
         //In the read-write strategy we only update the cache value if it is present and was not multiply locked.
-        debugf("%s.afterUpdate(%s, %s, %s)", this, key, value, lock);
+        if (LOGGER.isDebugEnabled())
+        {
+            LOGGER.debug("afterUpdate({}, {}, {})", key, value, lock);
+        }
         return afterUpdate(key, newCacheValue(value, null), lock);
     }
 
