@@ -18,10 +18,10 @@
 
 	<properties>
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
-		<hibernate.version>5.6.0.Final</hibernate.version>
-		<coherence.version>21.06.2</coherence.version>
+		<hibernate.version>5.6.3.Final</hibernate.version>
+		<coherence.version>21.12</coherence.version>
 		<hibernate-micrometer.version>5.6.1.Final</hibernate-micrometer.version>
-		<spring-boot.version>2.5.6</spring-boot.version>
+		<spring-boot.version>2.5.7</spring-boot.version>
 	</properties>
 
 	<modules>
