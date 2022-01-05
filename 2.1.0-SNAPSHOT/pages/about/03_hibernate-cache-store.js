@@ -4,7 +4,7 @@
 <div class="section">
 <p>This page describes how you can use Hibernate as the implementation of a Coherence <code>CacheStore</code>.</p>
 
-<p>Using Hibernate as the implementation of a Coherence <code>CacheStore</code> may be a good fit for Java applications that use
+<p>Using <a id="" title="" target="_blank" href="https://hibernate.org/orm/">Hibernate</a> as the implementation of a Coherence <code>CacheStore</code> may be a good fit for Java applications that use
 Coherence APIs for data access and management, whose cache entries are objects or graphs appropriate for mapping
 to relational tables via Hibernate, and that have simple transactional requirements (e.g. transactions affecting a
 single cache entry at a time).</p>
@@ -27,17 +27,23 @@ lang="xml"
 &lt;/dependency&gt;</markup>
 
 <p>Alternatively, you can download <code>coherence-hibernate-cache-store-2.1.0-SNAPSHOT.jar</code> from a Maven repository
-(e.g. <a id="" title="" target="_blank" href="https://repo1.maven.org/maven2/">https://repo1.maven.org/maven2/</a>) and use it in JVM classpaths. Or you can <a id="" title="" target="_blank" href="../dev/03_build-instructions.adoc">build</a> the Coherence Hibernate
-CacheStore implementation from sources.</p>
+(e.g. <a id="" title="" target="_blank" href="https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/coherence-hibernate-cache-store/">https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/coherence-hibernate-cache-store/</a>) and use the respective
+jars manually in your application&#8217;s JVM classpath.</p>
 
-<p>Note that the Coherence Hibernate CacheStore implementation depends at runtime on Oracle
-Coherence, and Hibernate. These dependencies are most easily managed using Maven.</p>
-
+<div class="admonition tip">
+<p class="admonition-inline">If you prefer building the project from source, please check out the
+<a id="" title="" target="_blank" href="../dev/03_build-instructions.adoc">build instructions</a>.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-inline">The Coherence Hibernate CacheStore implementation depends at runtime on Oracle
+Coherence and Hibernate. These dependencies are most easily managed using Maven (Or Gradle), but you must explicitly
+declare those dependencies as do not transitively include them.</p>
+</div>
 </div>
 
 <h3 id="_hibernate_configuration_requirements">Hibernate Configuration Requirements</h3>
 <div class="section">
-<p>Hibernate entities written and read via the <code>HibernateCacheStore</code> module must use the <code>assigned</code> ID generator
+<p>Hibernate entities written and read via the Hibernate CacheStore module must use the <code>assigned</code> ID generator
 in Hibernate, and also have a defined ID property.</p>
 
 <p>Disable the <code>hibernate.hbm2ddl.auto</code> property in the <code>hibernate.cfg.xml</code> file used by the <code>HibernateCacheStore</code> module
@@ -85,7 +91,6 @@ lang="xml"
           &lt;internal-cache-scheme&gt;
             &lt;local-scheme&gt;&lt;/local-scheme&gt;
           &lt;/internal-cache-scheme&gt;
-
           &lt;cachestore-scheme&gt;
             &lt;class-scheme&gt;
               &lt;class-name&gt;
@@ -215,7 +220,7 @@ the Hibernate configuration used by the custom Hibernate-based <code>CacheStore<
 
 <p>In some cases, you may want to extend the provided <code>HibernateCacheStore</code> with application-specific functionality.
 The most obvious reason for this is to take advantage of a preexisting, programmatically configured <code>SessionFactory</code>
-instance.  But note that it is possible to inject a pre-configured <code>SessionFactory</code> instance into the provided
+instance. But note that it is possible to inject a pre-configured <code>SessionFactory</code> instance into the provided
 <code>HibernateCacheStore</code> via Spring integration.</p>
 
 </div>
@@ -280,7 +285,7 @@ updates are queued in Coherence until the connection is restored. At this point,
 <code>com.oracle.coherence.hibernate.cachestore</code> package.</p>
 
 <p>The following table describes the different constructors for the <code>HibernateCacheStore</code> and <code>HibernateCacheLoader</code>
-classes. For more detailed technical information, see the Javadoc for these classes:</p>
+classes. For more detailed technical information, see the <a id="" title="" target="_blank" href="https://hibernate.coherence.community/2.1.0-SNAPSHOT/api/com/oracle/coherence/hibernate/cachestore/package-summary.html">Javadoc</a> for these classes:</p>
 
 
 <div class="table__overflow elevation-1  ">
