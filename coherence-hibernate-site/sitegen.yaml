@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2021, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2013, 2022, Oracle and/or its affiliates. All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at
 # https://oss.oracle.com/licenses/upl.
 
@@ -12,13 +12,16 @@ engine:
       highlightjs-theme: "idea"
       plantumlconfig: "_plantuml-config.txt"
       coherence-maven-group-id: "${coherence.group.id}"
-      javadoc-root: "https://coherence.community/${revision}/api/java/"
-      version-coherence-maven: "${revision}"
+      javadoc-root: "https://hibernate.coherence.community/${project.version}/api/"
+      version-coherence-maven: "${project.version}"
       version-coherence-hibernate: "${project.version}"
       version-coherence: "${coherence.version}"
+      version-hibernate: "${hibernate53.version}"
       timestamp: "${timestamp}"
       github-repository: "https://github.com/coherence-community/coherence-hibernate"
       coherence-docs: "https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/"
+      hibernate-website: "https://hibernate.org/orm/"
+      hibernate-docs: "https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single"
 assets:
   - target: "/"
     includes:
