@@ -1,12 +1,11 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.cache.v53.configuration.support;
 
-import com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory;
 import com.tangosol.coherence.config.EnvironmentVariableResolver;
 import com.tangosol.coherence.config.SystemPropertyResolver;
 import org.slf4j.Logger;
@@ -29,20 +28,11 @@ public class CoherenceHibernateSystemPropertyResolver
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceHibernateSystemPropertyResolver.class);
 
-	/**
-	 * By default empty, indicating that no Coherence property prefix is applied.
-	 */
-	public static final String DEFAULT_PROPERTY_PREFIX = CoherenceRegionFactory.PROPERTY_NAME_PREFIX + "coherence_properties.";
 
 	/**
 	 * The Coherence properties to be resolved.
 	 */
-	private static volatile Map<String, Object> coherenceProperties = new ConcurrentHashMap(0);
-
-	/**
-	 * An optional prefix. By default, not used.
-	 */
-	private static String propertyPrefix = DEFAULT_PROPERTY_PREFIX;
+	private static volatile Map<String, Object> coherenceProperties = new ConcurrentHashMap<>(0);
 
 	/**
 	 * This constructor is required so that Coherence can discover
@@ -69,22 +59,10 @@ public class CoherenceHibernateSystemPropertyResolver
 		}
 	}
 
-	/**
-	 * This constructor will be called by Spring to instantiate the
-	 * singleton bean and set the {@link #coherenceProperties}.
-	 * @param coherenceProperties the Coherence properties
-	 * @param propertyPrefix must not be null. Empty String means no prefix is being used.
-	 */
-	public CoherenceHibernateSystemPropertyResolver(Map<String, Object> coherenceProperties, String propertyPrefix) {
-		this(coherenceProperties);
-		Assert.notNull(propertyPrefix, "propertyPrefix must not be null or empty.");
-		CoherenceHibernateSystemPropertyResolver.propertyPrefix = propertyPrefix;
-	}
-
 	@Override
 	public String getProperty(String coherenceProperty) {
 		if (CoherenceHibernateSystemPropertyResolver.coherenceProperties != null) {
-			final Object property = CoherenceHibernateSystemPropertyResolver.coherenceProperties.get(propertyPrefix + coherenceProperty);
+			final Object property = CoherenceHibernateSystemPropertyResolver.coherenceProperties.get(coherenceProperty);
 			if (property != null) {
 				if (property instanceof String) {
 					return (String) property;
@@ -101,7 +79,7 @@ public class CoherenceHibernateSystemPropertyResolver
 	@Override
 	public String getEnv(String coherenceProperty) {
 		if (CoherenceHibernateSystemPropertyResolver.coherenceProperties != null) {
-			final Object property = CoherenceHibernateSystemPropertyResolver.coherenceProperties.get(propertyPrefix + coherenceProperty);
+			final Object property = CoherenceHibernateSystemPropertyResolver.coherenceProperties.get(coherenceProperty);
 			if (property instanceof String) {
 				return (String) property;
 			}
@@ -115,8 +93,8 @@ public class CoherenceHibernateSystemPropertyResolver
 
 	public synchronized void addCoherenceProperty(String key, String value) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Adding Coherence Property - key: {}, value: {}.", propertyPrefix + key, value);
+			LOGGER.debug("Adding Coherence Property - key: {}, value: {}.", key, value);
 		}
-		CoherenceHibernateSystemPropertyResolver.coherenceProperties.put(propertyPrefix + key, value);
+		CoherenceHibernateSystemPropertyResolver.coherenceProperties.put(key, value);
 	}
 }

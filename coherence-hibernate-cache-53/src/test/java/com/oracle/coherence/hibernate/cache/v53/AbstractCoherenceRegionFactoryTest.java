@@ -12,8 +12,6 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.selector.spi.StrategySelector;
 import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.internal.DefaultCacheKeysFactory;
-import org.junit.After;
-import org.junit.Before;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.mock;
@@ -57,11 +55,11 @@ public abstract class AbstractCoherenceRegionFactoryTest
      */
     protected CoherenceRegionFactory getCoherenceRegionFactory()
     {
-        if (coherenceRegionFactory == null)
+        if (this.coherenceRegionFactory == null)
         {
-            coherenceRegionFactory = new CoherenceRegionFactory();
+            this.coherenceRegionFactory = new CoherenceRegionFactory();
         }
-        return coherenceRegionFactory;
+        return this.coherenceRegionFactory;
     }
 
     /**
@@ -101,7 +99,7 @@ public abstract class AbstractCoherenceRegionFactoryTest
     /**
      * Set up the test fixture.
      */
-    @Before
+//    @BeforeEach
     public void setUpAbstractCoherenceRegionFactoryTest()
     {
         //use a started CoherenceRegionFactory in the test, as a convenience
@@ -112,7 +110,7 @@ public abstract class AbstractCoherenceRegionFactoryTest
     /**
      * Tear down the test fixture.
      */
-    @After
+//    @AfterEach
     public void tearDownAbstractCoherenceRegionFactoryTest()
     {
         if (coherenceRegionFactory == null)

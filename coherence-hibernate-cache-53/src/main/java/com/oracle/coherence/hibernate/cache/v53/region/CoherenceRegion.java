@@ -6,8 +6,8 @@
  */
 package com.oracle.coherence.hibernate.cache.v53.region;
 
-import com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory;
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.Assert;
+import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateProperties;
 import com.tangosol.net.NamedCache;
 import com.tangosol.util.Base;
 import com.tangosol.util.InvocableMap;
@@ -50,7 +50,7 @@ implements Region, ExtendedStatisticsSupport
     /**
      * The prefix of the names of all properties specific to this SPI implementation.
      */
-    private static final String PROPERTY_NAME_PREFIX = CoherenceRegionFactory.PROPERTY_NAME_PREFIX;
+    private static final String PROPERTY_NAME_PREFIX = CoherenceHibernateProperties.PROPERTY_NAME_PREFIX;
 
     /**
     * The name of the  property specifying the lock lease duration.
