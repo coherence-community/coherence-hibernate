@@ -9,7 +9,8 @@ on:
     branches: [ master ]
 jobs:
   build:
-    runs-on: macos-latest
+    if: github.repository_owner == 'coherence-community'
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.4.0
     - name: Set up JDK 11

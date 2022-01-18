@@ -82,10 +82,10 @@
         <dependency-check-maven.version>6.5.2</dependency-check-maven.version>
         <doxia-module-markdown.version>1.0</doxia-module-markdown.version>
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-        <flatten-maven-plugin.version>1.2.2</flatten-maven-plugin.version>
+        <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
