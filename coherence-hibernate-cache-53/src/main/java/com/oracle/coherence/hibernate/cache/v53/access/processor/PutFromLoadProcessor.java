@@ -7,7 +7,6 @@
 package com.oracle.coherence.hibernate.cache.v53.access.processor;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
 import com.tangosol.util.InvocableMap;

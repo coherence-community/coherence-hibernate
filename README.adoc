@@ -128,4 +128,4 @@ link:CONTRIBUTING.adoc[contributor guidelines] for details.
 
 == License
 
-Coherence Hibernate is Open Source software released under link:LICENSE.txt[The Universal Permissive License] (UPL), Version 1.0.
+Coherence Hibernate is Open Source software released under link:LICENSE.TXT[The Universal Permissive License] (UPL), Version 1.0.

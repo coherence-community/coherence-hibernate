@@ -14,16 +14,20 @@ import org.hibernate.boot.registry.BootstrapServiceRegistry;
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cache.cfg.internal.DomainDataRegionConfigImpl;
+import org.hibernate.cache.cfg.spi.DomainDataRegionConfig;
+import org.hibernate.cache.spi.Region;
+import org.hibernate.cache.spi.TimestampsRegion;
 import org.hibernate.cache.spi.access.AccessType;
 import org.hibernate.cache.spi.support.TimestampsRegionTemplate;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.junit.AfterClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A CoherenceRegionFactoryTest is a test of CoherenceRegionFactory behavior.
@@ -31,14 +35,11 @@ import static org.junit.Assert.*;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-@RunWith(JUnit4.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CoherenceRegionFactoryTest
 extends AbstractCoherenceRegionFactoryTest
 {
-    @AfterClass
-    public static void after() {
-        CacheFactory.shutdown();
-    }
 
     // ---- Test cases
 
@@ -46,85 +47,96 @@ extends AbstractCoherenceRegionFactoryTest
      * Tests CoherenceRegionFactory.start() with no properties supplied.
      */
     @Test
+    @Order(1)
     public void testStartWithNoProperties()
     {
-        //the CoherenceRegionFactory is started in AbstractCoherenceRegionFactoryTest.setup()
-        assertEquals("Expect cluster of one after start", 1, CacheFactory.getCluster().getMemberSet().size());
-        assertNotNull("Expect non-null cache factory", getCoherenceRegionFactory().getConfigurableCacheFactory());
+        setUpAbstractCoherenceRegionFactoryTest();
+        assertEquals(1, CacheFactory.getCluster().getMemberSet().size(), "Expect cluster of one after start");
+        assertNotNull(this.coherenceRegionFactory.getCoherenceSession(), "Expect non-null coherence session");
     }
 
     /**
      * Tests CoherenceRegionFactory.stop().
      */
     @Test
-    public void testStop()
-    {
-        getCoherenceRegionFactory().stop();
-        assertNull("Expect null cache factory after stop", getCoherenceRegionFactory().getConfigurableCacheFactory());
+    @Order(2)
+    public void testStop() {
+        this.coherenceRegionFactory.stop();
+        assertNull(getCoherenceRegionFactory().getCoherenceSession(), "Expect null cache coherence session after stop");
     }
 
     /**
      * Tests CoherenceRegionFactory.isMinimalPutsEnabledByDefault().
      */
     @Test
+    @Order(3)
     public void testMinimalPutsEnabledByDefault()
     {
-        assertTrue("Expect minimal puts enabled by default", getCoherenceRegionFactory().isMinimalPutsEnabledByDefault());
+        assertTrue(getCoherenceRegionFactory().isMinimalPutsEnabledByDefault(), "Expect minimal puts enabled by default");
     }
 
     /**
      * Tests CoherenceRegionFactory.getDefaultAccessType().
      */
     @Test
+    @Order(3)
     public void testDefaultAccessType()
     {
-        assertEquals("Expect default access type READ_WRITE", AccessType.READ_WRITE, getCoherenceRegionFactory().getDefaultAccessType());
+        assertEquals(AccessType.READ_WRITE, getCoherenceRegionFactory().getDefaultAccessType(), "Expect default access type READ_WRITE");
     }
 
     /**
      * Tests CoherenceRegionFactory.nextTimestamp().
      */
     @Test
+    @Order(4)
     public void testNextTimestamp()
     {
-        long currentTime = getCoherenceRegionFactory().nextTimestamp();
-        assertTrue("Expect positive current time value", currentTime > 0);
+        long currentTime = this.coherenceRegionFactory.nextTimestamp();
+        assertTrue(currentTime > 0, "Expect positive current time value");
+        this.coherenceRegionFactory.stop();
     }
 
-    /**
-     * Tests CoherenceRegionFactory.buildQueryResultsRegion() with no properties.
-     */
+//    /**
+//     * Tests CoherenceRegionFactory.buildQueryResultsRegion() with no properties.
+//     */
 //    @Test
+//    @Order(5)
 //    public void testBuildQueryResultsRegionWithNoProperties()
 //    {
 //        //start the CoherenceRegionFactory in order to instantiate the CacheFactory used in buildEntityRegion()
 //        //the CacheFactory is instantiated in start() because it depends on the properties passed in there
 //        testStartWithNoProperties();
-//
-//        Region region = region = getCoherenceRegionFactory().buildDomainDataRegion(
-//                        new DomainDataRegionConfigImpl.Builder("foo").build(), null);
+//        final DomainDataRegionConfig domainDataRegionConfig = new DomainDataRegionConfigImpl.Builder("foo").build();
+//        final Region region = this.coherenceRegionFactory.buildDomainDataRegion(
+//                domainDataRegionConfig, null);
 //
 //        //assertTrue("Expect an instance of the correct CoherenceRegion subclass", coherenceRegionSubclass.isAssignableFrom(region.getClass()));
 //    }
-
+//
     /**
      * Tests CoherenceRegionFactory.buildTimestampsRegion() with no properties.
      */
     @Test
+    @Order(6)
     public void testBuildTimestampsRegionWithNoProperties()
     {
         testStartWithNoProperties();
-        String regionName = "testBuild_CoherenceRegion_timestamps";
-        final TimestampsRegionTemplate region = (TimestampsRegionTemplate) super.coherenceRegionFactory.buildTimestampsRegion(regionName, getSessionFactoryImplmentor());
-        assertTrue("Expect an instance of the correct CoherenceRegion subclass", region.getStorageAccess() instanceof CoherenceStorageAccess);
+        final String regionName = "testBuild_CoherenceRegion_timestamps";
+        final SessionFactoryImplementor sessionFactoryImplementor = getSessionFactoryImplementor(this.coherenceRegionFactory);
 
+        final TimestampsRegion timestampsRegion = this.coherenceRegionFactory.buildTimestampsRegion(regionName, sessionFactoryImplementor);
+
+        final TimestampsRegionTemplate region = (TimestampsRegionTemplate) timestampsRegion;
+        assertTrue(region.getStorageAccess() instanceof CoherenceStorageAccess, "Expect an instance of the correct CoherenceRegion subclass");
+        this.coherenceRegionFactory.stop();
     }
 
-    private SessionFactoryImplementor getSessionFactoryImplmentor() {
+    private SessionFactoryImplementor getSessionFactoryImplementor(CoherenceRegionFactory coherenceRegionFactory) {
         BootstrapServiceRegistry bsr = new BootstrapServiceRegistryBuilder().build();
 
         final StandardServiceRegistry ssr = new StandardServiceRegistryBuilder( bsr )
-                .applySetting(AvailableSettings.CACHE_REGION_FACTORY, CoherenceRegionFactory.class.getName())
+                .applySetting(AvailableSettings.CACHE_REGION_FACTORY, coherenceRegionFactory)
                 .applySetting("hibernate.connection.url", "jdbc:hsqldb:mem:test")
                 .build();
 
