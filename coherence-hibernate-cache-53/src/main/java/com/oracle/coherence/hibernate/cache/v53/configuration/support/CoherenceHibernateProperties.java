@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -8,12 +8,11 @@ package com.oracle.coherence.hibernate.cache.v53.configuration.support;
 
 import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Defines all the Hibernate Properties that re specific for Coherence Hibernate.
+ * Defines all Hibernate Properties that are specific for Coherence Hibernate.
  *
  * @author Gunnar Hillert
  * @since 2.1
@@ -146,7 +145,8 @@ public class CoherenceHibernateProperties {
 
 					if (value instanceof String) {
 						resolvedCoherenceProperties.put(keyWithoutPrefix, value);
-					} else {
+					}
+					else {
 						throw new IllegalStateException(String.format("Coherence property '%s' must be an instance of String.", value));
 					}
 				}

@@ -199,6 +199,8 @@ include the following property setting in `hibernate.cfg.xml`:
 </property>
 ----
 
+NOTE: Coherence Hibernate Cache `5.3+` uses the link:{coherence-ce-docs}core/02_bootstrap[Coherence Bootstrap API].
+
 In addition to setting the `hibernate.cache.region.factory_class` property, you must also configure Hibernate to use
 second-level caching by setting the appropriate Hibernate configuration property to `true`, as follows:
 
@@ -372,13 +374,27 @@ considered if the underlying database can be written by clients other than the H
 
 === Additional Configuration Options
 
+==== Session Name `5.3+`
+
+Property `com.oracle.coherence.hibernate.cache.session_name` allows to specify a name for the
+underlying Coherence session. If not specified, the default session name will be used.
+
+==== Session Type `5.3+`
+
+Property `com.oracle.coherence.hibernate.cache.session_type` can take the following values:
+
+- CLIENT - The session is a client session, that is it expects to be a Coherence*Extend client.
+- GRPC   - The session is a gRPC client session.
+- SERVER - The session is a server session, that is it expects to be a Coherence cluster member.
+This is the *default* type if no value is specified.
+
 ==== Minimal Puts
 
 Hibernate provides the configuration property `hibernate.cache.use_minimal_puts`, which optimizes cache management for
 clustered caches by minimizing cache update operations. The Coherence caching provider enables this by default. Setting
 this property to false might increase overhead for cache management.
 
-==== Coherence-specific properties
+==== Coherence-specific properties `5.3+`
 
 When providing Hibernate properties, you can also specify any
 {coherence-docs}develop-applications/system-property-overrides.html#GUID-32230D28-4976-4147-A887-0A0120FF5C7E[Coherence system property overrides]
@@ -402,7 +418,7 @@ com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log.level: 9
 
 Under the covers, Coherence Hibernate is configured using a custom implementation of a Coherence `SystemPropertyResolver`.
 
-==== Logging
+==== Logging `5.3+`
 
 Without specifying any custom logging properties, Coherence Hibernate will set the logger of Coherence to
 `slf4j`. Therefore, Coherence Hibernate should integrate seamlessly into your application out of the box.

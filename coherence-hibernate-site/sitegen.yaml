@@ -20,6 +20,7 @@ engine:
       timestamp: "${timestamp}"
       github-repository: "https://github.com/coherence-community/coherence-hibernate"
       coherence-docs: "https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/"
+      coherence-ce-docs: https://coherence.community/latest/21.12/docs/#/docs/
       hibernate-website: "https://hibernate.org/orm/"
       hibernate-docs: "https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single"
 assets:
