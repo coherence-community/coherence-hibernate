@@ -211,10 +211,10 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
             }
 
             if (coherenceHibernateProperties.getSessionName() != null) {
-                this.setCoherenceSession(coherence.getSession());
+                this.setCoherenceSession(coherence.getSession(coherenceHibernateProperties.getSessionName()));
             }
             else {
-                this.setCoherenceSession(coherence.getSession(coherenceHibernateProperties.getSessionName()));
+                this.setCoherenceSession(coherence.getSession());
             }
         }
 
