@@ -1,7 +1,6 @@
-:release-version: 2.0.0
+:release-version: 2.1.1
 :hibernate-docs: https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single/Hibernate_User_Guide.html
-:snapshot-version: 2.1.0-SNAPSHOT
-:milestone-version: 2.1.0-M1
+:snapshot-version: 2.1.2-SNAPSHOT
 :website: https://hibernate.coherence.community/
 
 
@@ -37,8 +36,7 @@ as well as extensive JavaDoc for the Coherence Hibernate source code.
 [width="75%"]
 |=======
 |*{snapshot-version}* | {website}{snapshot-version}[Website] | {website}{snapshot-version}/api/index.html[API Doc.]
-|*{milestone-version}* | {website}{milestone-version}[Website] | {website}{milestone-version}/api/index.html[API Doc.]
-|*{release-version}* | {website}{release-version}[Website] | N/A
+|*{release-version}* | {website}{release-version}[Website] | {website}{release-version}/api/index.html[API Doc.]
 |=======
 
 NOTE: The http://maven.apache.org[Apache Maven]-based snapshots and releases for this project are published to
