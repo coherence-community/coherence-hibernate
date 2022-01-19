@@ -258,6 +258,9 @@ lang="xml"
     com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory
 &lt;/property&gt;</markup>
 
+<div class="admonition note">
+<p class="admonition-inline">Coherence Hibernate Cache <code>5.3+</code> uses the <a id="" title="" target="_blank" href="https://coherence.community/latest/21.12/docs/#/docs/core/02_bootstrap">Coherence Bootstrap API</a>.</p>
+</div>
 <p>In addition to setting the <code>hibernate.cache.region.factory_class</code> property, you must also configure Hibernate to use
 second-level caching by setting the appropriate Hibernate configuration property to <code>true</code>, as follows:</p>
 
@@ -478,6 +481,34 @@ considered if the underlying database can be written by clients other than the H
 <h3 id="_additional_configuration_options">Additional Configuration Options</h3>
 <div class="section">
 
+<h4 id="_session_name_5_3">Session Name <code>5.3+</code></h4>
+<div class="section">
+<p>Property <code>com.oracle.coherence.hibernate.cache.session_name</code> allows to specify a name for the
+underlying Coherence session. If not specified, the default session name will be used.</p>
+
+</div>
+
+<h4 id="_session_type_5_3">Session Type <code>5.3+</code></h4>
+<div class="section">
+<p>Property <code>com.oracle.coherence.hibernate.cache.session_type</code> can take the following values:</p>
+
+<ul class="ulist">
+<li>
+<p>CLIENT - The session is a client session, that is it expects to be a Coherence*Extend client.</p>
+
+</li>
+<li>
+<p>GRPC   - The session is a gRPC client session.</p>
+
+</li>
+<li>
+<p>SERVER - The session is a server session, that is it expects to be a Coherence cluster member.
+This is the <strong>default</strong> type if no value is specified.</p>
+
+</li>
+</ul>
+</div>
+
 <h4 id="_minimal_puts">Minimal Puts</h4>
 <div class="section">
 <p>Hibernate provides the configuration property <code>hibernate.cache.use_minimal_puts</code>, which optimizes cache management for
@@ -486,7 +517,7 @@ this property to false might increase overhead for cache management.</p>
 
 </div>
 
-<h4 id="_coherence_specific_properties">Coherence-specific properties</h4>
+<h4 id="_coherence_specific_properties_5_3">Coherence-specific properties <code>5.3+</code></h4>
 <div class="section">
 <p>When providing Hibernate properties, you can also specify any
 <a id="" title="" target="_blank" href="https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-applications/system-property-overrides.html#GUID-32230D28-4976-4147-A887-0A0120FF5C7E">Coherence system property overrides</a>
@@ -513,7 +544,7 @@ com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log.level: 9
 
 </div>
 
-<h4 id="_logging">Logging</h4>
+<h4 id="_logging_5_3">Logging <code>5.3+</code></h4>
 <div class="section">
 <p>Without specifying any custom logging properties, Coherence Hibernate will set the logger of Coherence to
 <code>slf4j</code>. Therefore, Coherence Hibernate should integrate seamlessly into your application out of the box.</p>

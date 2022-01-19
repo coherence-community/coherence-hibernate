@@ -326,4 +326,16 @@ classes. For more detailed technical information, see the <a id="" title="" targ
 </div>
 </div>
 </div>
+
+<h2 id="_sample">Sample</h2>
+<div class="section">
+<p>For an example please see take a look at the Coherence Spring JPA Repository CacheStore Demo.</p>
+
+<ul class="ulist">
+<li>
+<p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-spring/tree/master/samples/cachestore-demo">https://github.com/coherence-community/coherence-spring/tree/master/samples/cachestore-demo</a></p>
+
+</li>
+</ul>
+</div>
 </doc-view>
