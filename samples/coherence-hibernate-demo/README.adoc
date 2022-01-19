@@ -115,7 +115,7 @@ We have added 2 domain objects to the application:
 
 === Add Required Dependencies
 
-First, please add the respective dependency to your `pom.xml`. In our case, we are using Hibernate version `5.6.0.final`.
+First, please add the respective dependency to your `pom.xml`. In our case, we are using Hibernate version `5.6.3.final`.
 Therefore, the dependency to add is:
 
 [source,xml,indent=1,subs="verbatim,quotes,attributes"]
@@ -123,7 +123,7 @@ Therefore, the dependency to add is:
 <dependency>
     <groupId>com.oracle.coherence.hibernate</groupId>
     <artifactId>coherence-hibernate-cache-53</artifactId>
-    <version>2.1.0-SNAPSHOT</version>
+    <version>2.1.1</version>
 </dependency>
 ----
 
@@ -134,7 +134,7 @@ You will also need to add a specific version of Coherence, e.g.:
 <dependency>
     <groupId>com.oracle.coherence.ce</groupId>
     <artifactId>coherence</artifactId>
-    <version>21.06.2</version>
+    <version>21.12</version>
 </dependency>
 ----
 
