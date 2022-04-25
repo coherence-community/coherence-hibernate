@@ -100,7 +100,7 @@
 
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.11.1</assertj.version>
-        <coherence.version>21.12.2</coherence.version>
+        <coherence.version>21.12.4</coherence.version>
         <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
         <hibernate52.version>5.2.18.Final</hibernate52.version>
