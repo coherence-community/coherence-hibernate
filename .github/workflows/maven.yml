@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     if: github.repository_owner == 'coherence-community'
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.4.0
     - name: Set up JDK 11
@@ -32,7 +32,10 @@ jobs:
     - name: Build - Hibernate 5.5.x
       run: mvn clean install -B -Powasp -Phibernate55
     - name: Build + deploy with Maven (Website + Snapshots)
-      run: mvn clean deploy -B -Powasp --settings .mvn/settings.xml
+      run: |
+          git config --global user.email "github-action@users.noreply.github.com"
+          git config --global user.name "GitHub Action"
+          mvn clean deploy -B -Powasp --settings .mvn/settings.xml
       env:
         MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         MAVEN_SONATYPE_USERNAME: "${{secrets.MAVEN_SONATYPE_USERNAME}}"

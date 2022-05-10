@@ -380,6 +380,7 @@
                             <skipProvidedScope>true</skipProvidedScope>
                             <skipRuntimeScope>true</skipRuntimeScope>
                             <skipTestScope>true</skipTestScope>
+                            <cveValidForHours>24</cveValidForHours>
                             <suppressionFiles>
                                 <suppressionFile>${basedir}/src/main/config/dependency-check-suppression.xml</suppressionFile>
                             </suppressionFiles>
