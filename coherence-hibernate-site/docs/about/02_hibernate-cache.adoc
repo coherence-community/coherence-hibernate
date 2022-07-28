@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-    Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+    Copyright (c) 2013, 2022, Oracle and/or its affiliates.
 
     Licensed under the Universal Permissive License v 1.0 as shown at
     https://oss.oracle.com/licenses/upl.
@@ -109,10 +109,19 @@ link:{coherence-docs}develop-applications/processing-data-cache.html[EntryProces
 However, the cache server JVMs do not need the Hibernate application's jar files containing entity classes etc.
 
 The client / application server JVMs do of course need the Hibernate application's jar files containing entity classes
-etc. They should also be configured to be "`storage-disabled`", i.e. to not store contents of distributed caches. See
-comments in the default `hibernate-second-level-cache-config.xml` for details on how to accomplish that configuration --
-it amounts to starting clients and servers with slightly different cache configuration files, or passing
-`–Dtangosol.coherence.distributed.localstorage=false` to client JVMs.
+etc.
+
+When configuring Coherence you should also consider the following two points in regard to storage-enabled cache server JVMs:
+
+- If there is no separate tier of storage-enabled cache server JVMs in the Coherence cluster, then having application JVMs
+be storage-enabled is feasible, at the cost of increased heap utilization (by second-level cache contents) in those JVMs
+
+- If there is a separate tier of storage-enabled cache server JVMs in the Coherence cluster, then application JVMs should
+be storage-disabled cluster members or remote clients of Coherence*Extend or gRPC proxy servers.
+
+See the comments in the default `hibernate-second-level-cache-config.xml` for details on how to accomplish the relevant
+configuration. It amounts to enabling/disabling local storage by making changes to the cache configuration files, or by
+passing `–Dtangosol.coherence.distributed.localstorage=false` to client JVMs.
 
 TIP: As of Coherence Hibernate `2.1.0` and using the `coherence-hibernate-cache-53` module, you can specify Coherence
 property overrides via Hibernate properties.
