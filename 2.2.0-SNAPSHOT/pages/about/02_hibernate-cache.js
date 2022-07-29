@@ -152,9 +152,25 @@ jar file artifacts available to their ClassLoaders. Specifically, both need
 However, the cache server JVMs do not need the Hibernate application&#8217;s jar files containing entity classes etc.</p>
 
 <p>The client / application server JVMs do of course need the Hibernate application&#8217;s jar files containing entity classes
-etc. They should also be configured to be &#8220;storage-disabled&#8221;, i.e. to not store contents of distributed caches. See
-comments in the default <code>hibernate-second-level-cache-config.xml</code> for details on how to accomplish that configuration&#8201;&#8212;&#8201;it amounts to starting clients and servers with slightly different cache configuration files, or passing
-<code>–Dtangosol.coherence.distributed.localstorage=false</code> to client JVMs.</p>
+etc.</p>
+
+<p>When configuring Coherence you should also consider the following two points in regard to storage-enabled cache server JVMs:</p>
+
+<ul class="ulist">
+<li>
+<p>If there is no separate tier of storage-enabled cache server JVMs in the Coherence cluster, then having application JVMs
+be storage-enabled is feasible, at the cost of increased heap utilization (by second-level cache contents) in those JVMs</p>
+
+</li>
+<li>
+<p>If there is a separate tier of storage-enabled cache server JVMs in the Coherence cluster, then application JVMs should
+be storage-disabled cluster members or remote clients of Coherence*Extend or gRPC proxy servers.</p>
+
+</li>
+</ul>
+<p>See the comments in the default <code>hibernate-second-level-cache-config.xml</code> for details on how to accomplish the relevant
+configuration. It amounts to enabling/disabling local storage by making changes to the cache configuration files, or by
+passing <code>–Dtangosol.coherence.distributed.localstorage=false</code> to client JVMs.</p>
 
 <div class="admonition tip">
 <p class="admonition-inline">As of Coherence Hibernate <code>2.1.0</code> and using the <code>coherence-hibernate-cache-53</code> module, you can specify Coherence
