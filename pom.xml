@@ -100,11 +100,11 @@
 
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.11.1</assertj.version>
-        <coherence.version>22.06</coherence.version>
+        <coherence.version>22.06.1</coherence.version>
         <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
         <hibernate52.version>5.2.18.Final</hibernate52.version>
-        <hibernate53.version>5.6.3.Final</hibernate53.version>
+        <hibernate53.version>5.6.10.Final</hibernate53.version>
         <hsqldb.version>2.2.9</hsqldb.version>
         <hsqldb.version>2.2.9</hsqldb.version>
         <junit.version>4.13.2</junit.version>
