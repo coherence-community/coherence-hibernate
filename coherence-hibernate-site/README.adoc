@@ -18,7 +18,7 @@ The module is not part of the default build and must be built separately.
 
 [source,shell]
 ----
-mvn clean install -DskipTests -P docs -pl docs
+mvn clean install -DskipTests -P docs -pl coherence-hibernate-site
 ----
 
 === View the Docs
@@ -27,7 +27,7 @@ To view the documentation to see what it looks like after building run the follo
 
 [source,shell]
 ----
-mvn exec:exec -P docs -pl docs
+mvn exec:exec -P docs -pl coherence-hibernate-site
 ----
 
 Docs can be viewd at http://localhost:8080
