@@ -166,41 +166,53 @@ function createRoutes(){
 
 function createNav(){
     return [
-        { header: 'Project Website' },
         {
-            title: 'Getting Started',
-            action: 'assistant',
-            group: '/about',
-            items: [
-                { href: '/about/01_overview', title: 'Overview' },
-                { href: '/about/02_hibernate-cache', title: 'Hibernate Cache' },
-                { href: '/about/03_hibernate-cache-store', title: 'Coherence Hibernate CacheStore' }
+            groups: [
+                {
+                    title: 'Project Website',
+                    group: '/about',
+                    items: [
+                        {
+                            title: 'Getting Started',
+                            action: 'assistant',
+                            group: '/about',
+                            items: [
+                                { href: '/about/01_overview', title: 'Overview' },
+                                { href: '/about/02_hibernate-cache', title: 'Hibernate Cache' },
+                                { href: '/about/03_hibernate-cache-store', title: 'Coherence Hibernate CacheStore' }
+                            ]
+                        },
+                        {
+                            title: 'Development',
+                            action: 'fa-code',
+                            group: '/dev',
+                            items: [
+                                { href: '/dev/01_license', title: 'License' },
+                                { href: '/dev/02_source-code', title: 'Source Code' },
+                                { href: '/dev/03_build-instructions', title: 'Building' },
+                                { href: '/dev/04_issue-tracking', title: 'Issue Tracking' },
+                                { href: '/dev/05_contributions', title: 'Contributing' },
+                                { href: '/dev/06_history', title: 'Change History' },
+                                { href: '/dev/07_getting-help', title: 'Getting Help' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    title: 'Reference Documentation',
+                    group: '/docs',
+                    items: [
+                        {
+                            title: 'Javadocs',
+                            action: 'code',
+                            href: 'api/index.html',
+                            target: '_blank'
+                        }
+                    ]
+                },
             ]
-        },
-        {
-            title: 'Development',
-            action: 'fa-code',
-            group: '/dev',
-            items: [
-                { href: '/dev/01_license', title: 'License' },
-                { href: '/dev/02_source-code', title: 'Source Code' },
-                { href: '/dev/03_build-instructions', title: 'Building' },
-                { href: '/dev/04_issue-tracking', title: 'Issue Tracking' },
-                { href: '/dev/05_contributions', title: 'Contributing' },
-                { href: '/dev/06_history', title: 'Change History' },
-                { href: '/dev/07_getting-help', title: 'Getting Help' }
-            ]
-        },
-        { divider: true },
-        { header: 'Reference Documentation' },
-        {
-            title: 'Javadocs',
-            action: 'code',
-            href: 'api/index.html',
-            target: '_blank'
-        },
-        { divider: true },
-        { header: 'Additional Resources' },
+        }
+        ,{ header: 'Additional Resources' },
         {
             title: 'Slack',
             action: 'fa-slack',

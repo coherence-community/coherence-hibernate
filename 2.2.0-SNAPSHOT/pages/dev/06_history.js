@@ -6,6 +6,18 @@
 reverse chronological order.</p>
 
 
+<h3 id="_version_2_2_0_august_2022">Version 2.2.0 (August, 2022)</h3>
+<div class="section">
+<p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.2.0">https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.2.0</a></p>
+
+</div>
+
+<h3 id="_version_2_1_1_jan_2022">Version 2.1.1 (Jan, 2022)</h3>
+<div class="section">
+<p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.1.1">https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.1.1</a></p>
+
+</div>
+
 <h3 id="_version_2_1_0_m1_nov_2021">Version 2.1.0-M1 (Nov 2021)</h3>
 <div class="section">
 
