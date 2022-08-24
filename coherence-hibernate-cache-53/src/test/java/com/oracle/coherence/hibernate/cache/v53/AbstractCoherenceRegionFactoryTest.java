@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -12,8 +12,9 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.selector.spi.StrategySelector;
 import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.internal.DefaultCacheKeysFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -99,7 +100,7 @@ public abstract class AbstractCoherenceRegionFactoryTest
     /**
      * Set up the test fixture.
      */
-//    @BeforeEach
+    @BeforeEach
     public void setUpAbstractCoherenceRegionFactoryTest()
     {
         //use a started CoherenceRegionFactory in the test, as a convenience
@@ -110,7 +111,7 @@ public abstract class AbstractCoherenceRegionFactoryTest
     /**
      * Tear down the test fixture.
      */
-//    @AfterEach
+    @AfterEach
     public void tearDownAbstractCoherenceRegionFactoryTest()
     {
         if (coherenceRegionFactory == null)

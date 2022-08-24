@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     if: github.repository_owner == 'coherence-community'
+    strategy:
+      matrix:
+        coherence-version: [ LATEST, 14_1_1 ]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.4.0
@@ -31,7 +34,14 @@ jobs:
       run: mvn clean install -B -Powasp -Phibernate54
     - name: Build - Hibernate 5.5.x
       run: mvn clean install -B -Powasp -Phibernate55
-    - name: Build + deploy with Maven (Website + Snapshots)
+    - name: Build with Coherence ${{ matrix.coherence-version }}
+      if: "matrix.coherence-version == 14_1_1"
+      run: |
+        git config --global user.email "github-action@users.noreply.github.com"
+        git config --global user.name "GitHub Action"
+        mvn clean install -B --settings .mvn/settings.xml -Pcoherence14_1_1
+    - name: Build + deploy with Maven (Website + Snapshots) - ${{ matrix.coherence-version }}
+      if: "matrix.coherence-version == LATEST"
       run: |
           git config --global user.email "github-action@users.noreply.github.com"
           git config --global user.name "GitHub Action"

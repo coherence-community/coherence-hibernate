@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2022, Oracle and/or its affiliates.
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -19,7 +26,6 @@
 	<properties>
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
 		<hibernate.version>5.6.3.Final</hibernate.version>
-		<coherence.version>22.06</coherence.version>
 		<hibernate-micrometer.version>5.6.3.Final</hibernate-micrometer.version>
 		<spring-boot.version>2.7.2</spring-boot.version>
 		<tomcat.version>9.0.63</tomcat.version>

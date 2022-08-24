@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -8,9 +8,8 @@ package com.oracle.coherence.hibernate.cache.v53.access.processor;
 
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
 import com.tangosol.net.CacheFactory;
-import com.tangosol.net.Coherence;
+import com.tangosol.net.ConfigurableCacheFactory;
 import com.tangosol.net.NamedCache;
-import com.tangosol.net.Session;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -32,12 +31,10 @@ public class AfterInsertProcessorTests {
 	@Test
 	public void insertValue() throws ExecutionException, InterruptedException {
 
-		// Create the Coherence instance from the configuration
-		final Coherence coherence = Coherence.clusterMember();
-		coherence.start().get();
+		final ConfigurableCacheFactory factory = CacheFactory.getCacheFactoryBuilder().getConfigurableCacheFactory("tests-hibernate-second-level-cache-config.xml",
+				getClass().getClassLoader());
 
-		final Session coherenceSession = coherence.getSession();
-		final NamedCache<Long, CoherenceRegionValue> fooCache = coherenceSession.getCache("foo");
+		final NamedCache<Long, CoherenceRegionValue> fooCache = factory.ensureCache("foo", null);
 
 		assertThat(fooCache.size()).isEqualTo(0);
 
@@ -48,6 +45,6 @@ public class AfterInsertProcessorTests {
 		assertThat(fooCache.size()).isEqualTo(1);
 		assertThat(fooCache.get(1L)).isEqualTo(coherenceRegionValue);
 
-		coherence.close();
+		CacheFactory.shutdown();
 	}
 }
