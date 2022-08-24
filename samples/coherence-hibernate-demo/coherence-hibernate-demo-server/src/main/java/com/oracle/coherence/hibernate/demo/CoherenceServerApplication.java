@@ -1,21 +1,16 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.demo;
 
-import java.util.Map;
-
+import com.tangosol.net.CacheFactory;
+import com.tangosol.net.ConfigurableCacheFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import com.tangosol.net.Coherence;
-import com.tangosol.net.CoherenceConfiguration;
-import com.tangosol.net.NamedMap;
-import com.tangosol.net.SessionConfiguration;
 
 /**
  *
@@ -29,18 +24,15 @@ public class CoherenceServerApplication {
 		SpringApplication.run(CoherenceServerApplication.class, args);
 	}
 
-	@Bean(destroyMethod = "close")
-	public Coherence coherenceServer() {
-		final SessionConfiguration sessionConfiguration = SessionConfiguration.builder()
-				.withConfigUri("coherence-cache-config.xml")
-				.build();
+	@Bean(destroyMethod = "dispose")
+	public ConfigurableCacheFactory coherenceServer() {
+		CacheFactory.ensureCluster();
 
-		final CoherenceConfiguration cfg = CoherenceConfiguration.builder()
-				.withSessions(sessionConfiguration)
-				.build();
-		final Coherence coherence = Coherence.clusterMember(cfg);
-		coherence.start().join();
+		final ConfigurableCacheFactory factory = CacheFactory.getCacheFactoryBuilder().getConfigurableCacheFactory(
+				"coherence-cache-config.xml",
+				getClass().getClassLoader());
 
-		return coherence;
+		factory.activate();
+		return factory;
 	}
 }

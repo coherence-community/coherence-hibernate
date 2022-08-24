@@ -369,6 +369,12 @@
             </properties>
         </profile>
         <profile>
+            <id>coherence14_1_1</id>
+            <properties>
+                <coherence.version>14.1.1-0-10</coherence.version>
+            </properties>
+        </profile>
+        <profile>
             <id>hibernate55</id>
             <properties>
                 <hibernate53.version>5.5.8.Final</hibernate53.version>

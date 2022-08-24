@@ -6,8 +6,6 @@
  */
 package com.oracle.coherence.hibernate.cache.v53.configuration.support;
 
-import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,7 +49,6 @@ public class CoherenceHibernateProperties {
 
 	private final String cacheConfigFilePath;
 	private final String sessionName;
-	private final SessionType sessionType;
 
 	private final Map<String, Object> coherenceProperties;
 
@@ -97,13 +94,6 @@ public class CoherenceHibernateProperties {
 					null);
 		}
 
-		if (sessionTypeAsString != null) {
-			Assert.hasText(sessionTypeAsString, "The sessionType cannot be an empty String.");
-			this.sessionType = SessionType.valueOf(sessionTypeAsString.toUpperCase());
-		}
-		else {
-			this.sessionType = null;
-		}
 	}
 
 	public String getCacheConfigFilePath() {
@@ -112,10 +102,6 @@ public class CoherenceHibernateProperties {
 
 	public String getSessionName() {
 		return sessionName;
-	}
-
-	public SessionType getSessionType() {
-		return sessionType;
 	}
 
 	public Map<String, Object> getCoherenceProperties() {
