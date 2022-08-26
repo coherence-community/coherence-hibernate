@@ -17,7 +17,7 @@ Provider Interface (SPI) to be configured. In Hibernate version 3.3 (released
 September 11th 2008) the second-level cache SPI was significantly redesigned. Over
 the next couple of versions the SPI was further refined leading to breaking changes.
 
-=== Supported Versions
+=== Supported Hibernate Versions
 
 We provide dedicated releases of the Hibernate Second-Level Cache implementations
 for Oracle Coherence depending on the Hibernate versions. The following versions
@@ -42,6 +42,12 @@ are supported:
 
 IMPORTANT: Active development (new features) focuses on the `coherence-hibernate-cache-53` module. This module also
 supports the latest stable release version of Hibernate `5.6.x`.
+
+=== Supported Coherence Versions
+
+The minimum Coherence version that is supported by Coherence Hibernate is `12.2.1.1` (Commercial). You can of course also
+use the open-source versions of Coherence, such as Coherence CE `14.1.1.0.10`. We do recommended using the latest version if
+possible.
 
 === Overview
 
@@ -207,8 +213,6 @@ include the following property setting in `hibernate.cfg.xml`:
     com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory
 </property>
 ----
-
-NOTE: Coherence Hibernate Cache `5.3+` uses the link:{coherence-ce-docs}core/02_bootstrap[Coherence Bootstrap API].
 
 In addition to setting the `hibernate.cache.region.factory_class` property, you must also configure Hibernate to use
 second-level caching by setting the appropriate Hibernate configuration property to `true`, as follows:
@@ -386,16 +390,7 @@ considered if the underlying database can be written by clients other than the H
 ==== Session Name `5.3+`
 
 Property `com.oracle.coherence.hibernate.cache.session_name` allows to specify a name for the
-underlying Coherence session. If not specified, the default session name will be used.
-
-==== Session Type `5.3+`
-
-Property `com.oracle.coherence.hibernate.cache.session_type` can take the following values:
-
-- CLIENT - The session is a client session, that is it expects to be a Coherence*Extend client.
-- GRPC   - The session is a gRPC client session.
-- SERVER - The session is a server session, that is it expects to be a Coherence cluster member.
-This is the *default* type if no value is specified.
+underlying Coherence session. If not specified, the default session name will be used. Requires Coherence `21.12` or higher.
 
 ==== Minimal Puts
 
