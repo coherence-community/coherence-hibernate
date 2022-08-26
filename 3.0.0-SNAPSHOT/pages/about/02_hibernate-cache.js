@@ -11,7 +11,7 @@ September 11th 2008) the second-level cache SPI was significantly redesigned. Ov
 the next couple of versions the SPI was further refined leading to breaking changes.</p>
 
 
-<h3 id="_supported_versions">Supported Versions</h3>
+<h3 id="_supported_hibernate_versions">Supported Hibernate Versions</h3>
 <div class="section">
 <p>We provide dedicated releases of the Hibernate Second-Level Cache implementations
 for Oracle Coherence depending on the Hibernate versions. The following versions
@@ -54,6 +54,14 @@ are supported:</p>
 <p class="admonition-inline">Active development (new features) focuses on the <code>coherence-hibernate-cache-53</code> module. This module also
 supports the latest stable release version of Hibernate <code>5.6.x</code>.</p>
 </div>
+</div>
+
+<h3 id="_supported_coherence_versions">Supported Coherence Versions</h3>
+<div class="section">
+<p>The minimum Coherence version that is supported by Coherence Hibernate is <code>12.2.1.1</code> (Commercial). You can of course also
+use the open-source versions of Coherence, such as Coherence CE <code>14.1.1.0.10</code>. We do recommended using the latest version if
+possible.</p>
+
 </div>
 
 <h3 id="_overview">Overview</h3>
@@ -274,9 +282,6 @@ lang="xml"
     com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory
 &lt;/property&gt;</markup>
 
-<div class="admonition note">
-<p class="admonition-inline">Coherence Hibernate Cache <code>5.3+</code> uses the <a id="" title="" target="_blank" href="https://coherence.community/latest/21.12/docs/#/docs/core/02_bootstrap">Coherence Bootstrap API</a>.</p>
-</div>
 <p>In addition to setting the <code>hibernate.cache.region.factory_class</code> property, you must also configure Hibernate to use
 second-level caching by setting the appropriate Hibernate configuration property to <code>true</code>, as follows:</p>
 
@@ -500,29 +505,8 @@ considered if the underlying database can be written by clients other than the H
 <h4 id="_session_name_5_3">Session Name <code>5.3+</code></h4>
 <div class="section">
 <p>Property <code>com.oracle.coherence.hibernate.cache.session_name</code> allows to specify a name for the
-underlying Coherence session. If not specified, the default session name will be used.</p>
+underlying Coherence session. If not specified, the default session name will be used. Requires Coherence <code>21.12</code> or higher.</p>
 
-</div>
-
-<h4 id="_session_type_5_3">Session Type <code>5.3+</code></h4>
-<div class="section">
-<p>Property <code>com.oracle.coherence.hibernate.cache.session_type</code> can take the following values:</p>
-
-<ul class="ulist">
-<li>
-<p>CLIENT - The session is a client session, that is it expects to be a Coherence*Extend client.</p>
-
-</li>
-<li>
-<p>GRPC   - The session is a gRPC client session.</p>
-
-</li>
-<li>
-<p>SERVER - The session is a server session, that is it expects to be a Coherence cluster member.
-This is the <strong>default</strong> type if no value is specified.</p>
-
-</li>
-</ul>
 </div>
 
 <h4 id="_minimal_puts">Minimal Puts</h4>
