@@ -179,6 +179,8 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
             this.cacheKeysFactory = new DefaultCacheKeysFactory();
         }
 
+        this.systemPropertyResolver.initialize();
+
         prepareCoherenceSessionIfNeeded(coherenceHibernateProperties);
 
         if (LOGGER.isDebugEnabled())
@@ -238,6 +240,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
         }
 
         System.clearProperty("coherence.log");
+        this.systemPropertyResolver.unset();
 
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Shutdown of Coherence complete.");

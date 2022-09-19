@@ -15,24 +15,21 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * A Coherence {@link SystemPropertyResolver} and {@link EnvironmentVariableResolver} that uses a configurable {@link Map}
- * to return Coherence configuration properties.
+ * A helper class that makes Coherence-bound configuration properties available as System property.
  * <p>
  * This class needs to be eagerly instantiated by Coherence Hibernate before any Coherence class that might need properties.
  *
  * @author Gunnar Hillert
  * @since 2.1
  */
-public class CoherenceHibernateSystemPropertyResolver
-		implements EnvironmentVariableResolver, SystemPropertyResolver  {
+public class CoherenceHibernateSystemPropertyResolver {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceHibernateSystemPropertyResolver.class);
 
-
 	/**
-	 * The Coherence properties to be resolved.
+	 * The Coherence properties to be used.
 	 */
-	private static volatile Map<String, Object> coherenceProperties = new ConcurrentHashMap<>(0);
+	private volatile Map<String, Object> coherenceProperties = new ConcurrentHashMap<>(0);
 
 	/**
 	 * This constructor is required so that Coherence can discover
@@ -52,49 +49,44 @@ public class CoherenceHibernateSystemPropertyResolver
 	public CoherenceHibernateSystemPropertyResolver(Map<String, Object> coherenceProperties) {
 		this();
 		Assert.notNull(coherenceProperties, "coherenceProperties must not be null.");
-		CoherenceHibernateSystemPropertyResolver.coherenceProperties = coherenceProperties;
+		this.coherenceProperties = coherenceProperties;
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Providing the following coherenceProperties: {}", coherenceProperties);
 		}
 	}
 
-	@Override
 	public String getProperty(String coherenceProperty) {
-		if (CoherenceHibernateSystemPropertyResolver.coherenceProperties != null) {
-			final Object property = CoherenceHibernateSystemPropertyResolver.coherenceProperties.get(coherenceProperty);
-			if (property != null) {
-				if (property instanceof String) {
-					return (String) property;
-				}
-				else {
-					throw new IllegalStateException(
-							String.format("Coherence property '%s' must be an instance of String.", coherenceProperty));
-				}
-			}
-		}
-		return System.getProperty(coherenceProperty);
-	}
-
-	@Override
-	public String getEnv(String coherenceProperty) {
-		if (CoherenceHibernateSystemPropertyResolver.coherenceProperties != null) {
-			final Object property = CoherenceHibernateSystemPropertyResolver.coherenceProperties.get(coherenceProperty);
-			if (property instanceof String) {
-				return (String) property;
+		Assert.notNull(coherenceProperty, "coherenceProperty must not be null.");
+		if (this.coherenceProperties != null && !this.coherenceProperties.isEmpty()) {
+			final Object propertyValue = this.coherenceProperties.get(coherenceProperty);
+			if (propertyValue instanceof String) {
+				return (String) propertyValue;
 			}
 			else {
 				throw new IllegalStateException(
 						String.format("Coherence property '%s' must be an instance of String.", coherenceProperty));
 			}
+		} else {
+			return null;
 		}
-		return System.getenv(coherenceProperty);
+	}
+	public void unset() {
+		for (String propertyKey : this.coherenceProperties.keySet()) {
+			System.clearProperty(propertyKey);
+		}
 	}
 
 	public synchronized void addCoherenceProperty(String key, String value) {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Adding Coherence Property - key: {}, value: {}.", key, value);
 		}
-		CoherenceHibernateSystemPropertyResolver.coherenceProperties.put(key, value);
+		this.coherenceProperties.put(key, value);
+	}
+
+	public void initialize() {
+		for (String propertyKey : this.coherenceProperties.keySet()) {
+			System.setProperty(propertyKey, this.getProperty(propertyKey));
+		}
 	}
 }
