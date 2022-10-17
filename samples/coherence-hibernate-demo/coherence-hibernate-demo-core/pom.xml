@@ -42,7 +42,6 @@
 			<artifactId>coherence</artifactId>
 			<version>${coherence.version}</version>
 		</dependency>
-
 	</dependencies>
 
 </project>

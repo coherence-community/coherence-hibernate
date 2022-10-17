@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * http://oss.oracle.com/licenses/upl.
@@ -11,13 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 
-import com.oracle.coherence.hibernate.demo.configuration.EventMixin;
-import com.oracle.coherence.hibernate.demo.model.Event;
-
 /**
- *
  * @author Gunnar Hillert
- *
  */
 @SpringBootApplication
 public class CoherenceHibernateDemoApplication {
@@ -29,7 +24,7 @@ public class CoherenceHibernateDemoApplication {
 	@Bean
 	public Jackson2ObjectMapperBuilderCustomizer addCustomBigDecimalDeserialization() {
 		return builder -> {
-			builder.mixIn(Event.class, EventMixin.class);
+			// Customize if needed
 		};
 	}
 }

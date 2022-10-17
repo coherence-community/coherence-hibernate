@@ -1,14 +1,18 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.demo.model;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,33 +20,33 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NaturalId;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
- *
  * @author Gunnar Hillert
- *
  */
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name="EVENTS")
+@Table(name = "EVENTS")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Event {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@NaturalId
 	private String title;
 
 	@NaturalId
-	private Date date;
+	private LocalDate date;
 
 	@ManyToMany(targetEntity = Person.class)
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	@JsonIdentityReference(alwaysAsId = true)
 	private Set<Person> participants = new HashSet<>();
 
 	public Event() {
@@ -56,11 +60,11 @@ public class Event {
 		this.id = id;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
@@ -90,4 +94,10 @@ public class Event {
 		person.getEvents().remove(this);
 	}
 
+	@JsonProperty("participants")
+	public void setParticipantIds(Set<Long> participantIds) {
+		this.participants.addAll(participantIds.stream().map(id -> {
+			return new Person(id);
+		}).collect(Collectors.toList()));
+	}
 }

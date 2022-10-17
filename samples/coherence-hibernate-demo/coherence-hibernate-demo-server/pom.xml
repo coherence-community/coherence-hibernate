@@ -51,6 +51,18 @@
 			<artifactId>coherence-hibernate-demo-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.oracle.coherence.ce</groupId>
+			<artifactId>coherence</artifactId>
+			<version>${coherence.version}</version>
+		</dependency>
+
+		<!-- Management over REST -->
+<!--		<dependency>-->
+<!--			<groupId>com.oracle.coherence.ce</groupId>-->
+<!--			<artifactId>coherence-json</artifactId>-->
+<!--			<version>${coherence.version}</version>-->
+<!--		</dependency>-->
 	</dependencies>
 
 </project>

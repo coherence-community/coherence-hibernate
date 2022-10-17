@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -21,6 +21,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -32,6 +36,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name="PEOPLE")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Person.class
+)
 public class Person {
 
 	@Id
@@ -43,15 +49,21 @@ public class Person {
 
 	@ManyToMany(targetEntity = Event.class)
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+	@JsonIdentityReference
+	@JsonIgnore
 	private Set<Event> events = new HashSet<>();
 
-	@ElementCollection(fetch = FetchType.LAZY)
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "PERSON_EMAIL_ADDR", joinColumns = @JoinColumn(name = "PERSON_ID"))
 	@Column(name = "EMAIL_ADDR")
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Set<String> emailAddresses = new HashSet<>();
 
 	public Person() {
+	}
+
+	public Person(Long id) {
+		this.id = id;
 	}
 
 	public Long getId() {
