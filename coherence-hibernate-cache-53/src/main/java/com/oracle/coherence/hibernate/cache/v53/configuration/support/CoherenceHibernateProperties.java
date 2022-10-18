@@ -33,14 +33,20 @@ public class CoherenceHibernateProperties {
 	public static final String CACHE_CONFIG_FILE_PATH_DEFAULT_VALUE = "hibernate-second-level-cache-config.xml";
 
 	/**
+	 * By default, the DefaultCacheServer will not be bootstrapped and this property is false by default.
+	 */
+	public static final String START_CACHE_SERVER_DEFAULT_VALUE = "false";
+
+	/**
 	 * The name of the property specifying the Coherence-specific logger. This will set the logger of the Coherence
 	 * sub-system.
 	 */
 	public static final String COHERENCE_LOGGER_PROPERTY_NAME = "coherence.log";
 	public static final String COHERENCE_LOGGER_DEFAULT_VALUE = "slf4j";
 
-	public static final String COHERENCE_SESSION_NAME_PROPERTY_NAME  = PROPERTY_NAME_PREFIX + "session_name";
-	public static final String COHERENCE_SESSION_TYPE_PROPERTY_NAME  = PROPERTY_NAME_PREFIX + "session_type";
+	public static final String COHERENCE_SESSION_NAME_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "session_name";
+	public static final String COHERENCE_SESSION_TYPE_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "session_type";
+	public static final String START_CACHE_SERVER_PROPERTY_NAME = PROPERTY_NAME_PREFIX + "start_cache_server";
 
 	/**
 	 * By default, empty, indicating that no Coherence property prefix is applied.
@@ -49,6 +55,8 @@ public class CoherenceHibernateProperties {
 
 	private final String cacheConfigFilePath;
 	private final String sessionName;
+
+	private final boolean startCacheServer;
 
 	private final Map<String, Object> coherenceProperties;
 
@@ -94,6 +102,20 @@ public class CoherenceHibernateProperties {
 					null);
 		}
 
+		// ~~~~~
+
+		String startCacheServer = (hibernateProperties == null) ?
+				null :
+				(String) hibernateProperties.get(CoherenceHibernateProperties.START_CACHE_SERVER_PROPERTY_NAME);
+
+		if (startCacheServer == null) {
+			startCacheServer = System.getProperty(
+					CoherenceHibernateProperties.START_CACHE_SERVER_PROPERTY_NAME,
+					CoherenceHibernateProperties.START_CACHE_SERVER_DEFAULT_VALUE);
+		}
+
+		this.startCacheServer = Boolean.valueOf(startCacheServer);
+
 	}
 
 	public String getCacheConfigFilePath() {
@@ -106,6 +128,10 @@ public class CoherenceHibernateProperties {
 
 	public Map<String, Object> getCoherenceProperties() {
 		return coherenceProperties;
+	}
+
+	public boolean isStartCacheServer() {
+		return startCacheServer;
 	}
 
 	private Map<String, Object> getCoherenceSystemProperties(Map hibernateProperties) {

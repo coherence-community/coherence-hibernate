@@ -60,6 +60,10 @@ public class CoherenceHibernateSystemPropertyResolver {
 		Assert.notNull(coherenceProperty, "coherenceProperty must not be null.");
 		if (this.coherenceProperties != null && !this.coherenceProperties.isEmpty()) {
 			final Object propertyValue = this.coherenceProperties.get(coherenceProperty);
+			if (propertyValue == null) {
+				return null;
+			}
+
 			if (propertyValue instanceof String) {
 				return (String) propertyValue;
 			}

@@ -13,9 +13,10 @@ import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceH
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateSystemPropertyResolver;
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.ConfigUtils;
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
-
 import com.tangosol.net.CacheFactory;
-import com.tangosol.net.ConfigurableCacheFactory;
+import com.tangosol.net.Cluster;
+import com.tangosol.net.DefaultCacheServer;
+import com.tangosol.net.ExtensibleConfigurableCacheFactory;
 import com.tangosol.net.NamedCache;
 import com.tangosol.net.Session;
 import com.tangosol.net.options.WithClassLoader;
@@ -61,16 +62,16 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
 
     private final boolean requiresShutDown;
 
-    /**
-     * The ConfigurableCacheFactory used by this CoherenceRegionFactory.
-     */
-    private ConfigurableCacheFactory cacheFactory;
+    private DefaultCacheServer defaultCacheServer;
 
     // ---- Constructors
 
     /**
      * Default constructor. Any Coherence instances created will implicitly require a shutdown of Coherence when
-     * {@link #stop()} is called via {@link #releaseFromUse()}.
+     * {@link #stop()} is called via {@link #releaseFromUse()}. This option will by default start Coherence as a
+     * Cache client. This means that Coherence services are disabled by default (e.g. Local Storage). You can
+     * start Coherence as a CacheServer and local storage will be enabled by default and all default services will be
+     * started as well. Please provide property {@link CoherenceHibernateProperties#START_CACHE_SERVER_PROPERTY_NAME}
      */
     public CoherenceRegionFactory() {
         this.coherenceSession = null;
@@ -106,7 +107,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
      *   <li>{{@link org.hibernate.cache.internal.DefaultCacheKeysFactory}}
      *   <li>{@link org.hibernate.cache.internal.SimpleCacheKeysFactory}
      * </ul>
-     *
+     * <p>
      * If none is specified, then the {@link org.hibernate.cache.internal.DefaultCacheKeysFactory} is used.
      */
     private CacheKeysFactory cacheKeysFactory;
@@ -189,15 +190,19 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
         }
     }
 
-    private void prepareCoherenceSessionIfNeeded(CoherenceHibernateProperties coherenceHibernateProperties) {
+    private void prepareCoherenceSessionIfNeeded(CoherenceHibernateProperties coherenceHibernateProperties)
+    {
         if (this.coherenceSession == null) {
+            if (coherenceHibernateProperties.isStartCacheServer()) {
+                final ExtensibleConfigurableCacheFactory.Dependencies deps =
+                        ExtensibleConfigurableCacheFactory.DependenciesHelper.newInstance(coherenceHibernateProperties.getCacheConfigFilePath());
 
-            CacheFactory.ensureCluster();
-
-            final ConfigurableCacheFactory factory = CacheFactory.getCacheFactoryBuilder().getConfigurableCacheFactory(
-                    coherenceHibernateProperties.getCacheConfigFilePath(),
-                    getClass().getClassLoader());
-            this.cacheFactory = factory;
+                final ExtensibleConfigurableCacheFactory cacheFactory = new ExtensibleConfigurableCacheFactory(deps);
+                this.defaultCacheServer = new DefaultCacheServer(cacheFactory);
+                this.defaultCacheServer.startDaemon(5000);
+            } else {
+                CacheFactory.ensureCluster();
+            }
 
             final List<Session.Option> sessionOptions = new ArrayList<>();
 
@@ -232,6 +237,10 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
         if (this.requiresShutDown) {
             CacheFactory.getCluster().shutdown();
             CacheFactory.shutdown();
+
+            if (this.defaultCacheServer != null) {
+                this.defaultCacheServer.shutdownServer();
+            }
         }
         else {
             if (LOGGER.isDebugEnabled()) {
@@ -247,13 +256,11 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
         }
 
         this.setCoherenceSession(null);
-        this.cacheFactory = null;
-
     }
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * see also https://stackoverflow.com/a/12389310/835934
      */
     @Override
