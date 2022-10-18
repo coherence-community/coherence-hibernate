@@ -24,3 +24,4 @@ management:
 logging:
   level:
     com.oracle.coherence: info
+    org.springframework: info

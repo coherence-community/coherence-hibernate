@@ -18,6 +18,17 @@ import org.springframework.context.annotation.Bean;
 public class CoherenceHibernateDemoApplication {
 
 	public static void main(String[] args) {
+
+		/*
+		 * Usually when testing Coherence locally, where the whole Coherence cluster runs on e.g. a laptop,
+		 * restricting the cluster formation to loopback (127.0.0.1) is often useful. The same properties are also
+		 * set by the Maven pom.xml for the JUnit tests.
+		 */
+		System.setProperty("coherence.localhost", "127.0.0.1");
+		System.setProperty("coherence.ttl", "0");
+		System.setProperty("java.net.preferIPv4Stack", "true");
+		System.setProperty("coherence.wka", "127.0.0.1");
+
 		SpringApplication.run(CoherenceHibernateDemoApplication.class, args);
 	}
 
