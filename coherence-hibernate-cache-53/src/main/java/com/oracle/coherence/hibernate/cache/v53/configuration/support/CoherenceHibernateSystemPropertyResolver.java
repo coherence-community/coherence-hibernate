@@ -6,8 +6,6 @@
  */
 package com.oracle.coherence.hibernate.cache.v53.configuration.support;
 
-import com.tangosol.coherence.config.EnvironmentVariableResolver;
-import com.tangosol.coherence.config.SystemPropertyResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
