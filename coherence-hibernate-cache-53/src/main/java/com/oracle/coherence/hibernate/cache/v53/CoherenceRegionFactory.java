@@ -8,6 +8,7 @@ package com.oracle.coherence.hibernate.cache.v53;
 
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegionImpl;
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
+import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.Assert;
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateProperties;
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateSystemPropertyResolver;
@@ -63,6 +64,8 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     private final boolean requiresShutDown;
 
     private DefaultCacheServer defaultCacheServer;
+
+    private Cluster cluster = null;
 
     // ---- Constructors
 
@@ -193,15 +196,19 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     private void prepareCoherenceSessionIfNeeded(CoherenceHibernateProperties coherenceHibernateProperties)
     {
         if (this.coherenceSession == null) {
-            if (coherenceHibernateProperties.isStartCacheServer()) {
-                final ExtensibleConfigurableCacheFactory.Dependencies deps =
-                        ExtensibleConfigurableCacheFactory.DependenciesHelper.newInstance(coherenceHibernateProperties.getCacheConfigFilePath());
+            if (coherenceHibernateProperties.getSessionType() == null || SessionType.SERVER.equals(coherenceHibernateProperties.getSessionType()))
+            {
+                if (coherenceHibernateProperties.isStartCacheServer()) {
+                    final ExtensibleConfigurableCacheFactory.Dependencies deps =
+                            ExtensibleConfigurableCacheFactory.DependenciesHelper.newInstance(coherenceHibernateProperties.getCacheConfigFilePath());
 
-                final ExtensibleConfigurableCacheFactory cacheFactory = new ExtensibleConfigurableCacheFactory(deps);
-                this.defaultCacheServer = new DefaultCacheServer(cacheFactory);
-                this.defaultCacheServer.startDaemon(5000);
-            } else {
+                    final ExtensibleConfigurableCacheFactory cacheFactory = new ExtensibleConfigurableCacheFactory(deps);
+                    this.defaultCacheServer = new DefaultCacheServer(cacheFactory);
+                    this.defaultCacheServer.startDaemon(5000);
+                }
+
                 CacheFactory.ensureCluster();
+
             }
 
             final List<Session.Option> sessionOptions = new ArrayList<>();
@@ -284,7 +291,14 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     @Override
     public long nextTimestamp()
     {
-        return CacheFactory.ensureCluster().getTimeMillis();
+        if (this.cluster == null)
+        {
+            return System.currentTimeMillis();
+        }
+        else
+        {
+            return CacheFactory.ensureCluster().getTimeMillis();
+        }
     }
 
     // ---- Internal

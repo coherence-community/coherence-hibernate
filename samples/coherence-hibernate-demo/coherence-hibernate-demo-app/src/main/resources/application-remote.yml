@@ -2,7 +2,9 @@ spring:
   jpa:
     properties:
       com.oracle.coherence.hibernate.cache.cache_config_file_path: remote-hibernate-second-level-cache-config.xml
+      com.oracle.coherence.hibernate.cache.coherence_properties.coherence.tcmp.enabled: false
       com.oracle.coherence.hibernate.cache.start_cache_server: false
+      com.oracle.coherence.hibernate.cache.session_type: client
   datasource:
     url: jdbc:hsqldb:hsql://localhost:9001/maindb
     username: coherence
