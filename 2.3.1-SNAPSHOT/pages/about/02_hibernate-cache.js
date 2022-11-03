@@ -230,12 +230,12 @@ lang="xml"
 &lt;dependency&gt;
     &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
     &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
-    &lt;version&gt;5.6.10.Final&lt;/version&gt;
+    &lt;version&gt;5.6.12.Final&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;com.oracle.coherence.ce&lt;/groupId&gt;
     &lt;artifactId&gt;coherence&lt;/artifactId&gt;
-    &lt;version&gt;22.06.1&lt;/version&gt;
+    &lt;version&gt;22.06.2&lt;/version&gt;
 &lt;/dependency&gt;</markup>
 
 </div>
