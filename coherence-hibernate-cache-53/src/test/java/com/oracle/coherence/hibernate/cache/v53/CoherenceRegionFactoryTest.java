@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -14,11 +14,10 @@ import org.hibernate.boot.registry.BootstrapServiceRegistry;
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cache.cfg.internal.DomainDataRegionConfigImpl;
-import org.hibernate.cache.cfg.spi.DomainDataRegionConfig;
-import org.hibernate.cache.spi.Region;
+import org.hibernate.cache.spi.QueryResultsRegion;
 import org.hibernate.cache.spi.TimestampsRegion;
 import org.hibernate.cache.spi.access.AccessType;
+import org.hibernate.cache.spi.support.QueryResultsRegionTemplate;
 import org.hibernate.cache.spi.support.TimestampsRegionTemplate;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -97,23 +96,24 @@ extends AbstractCoherenceRegionFactoryTest
         this.coherenceRegionFactory.stop();
     }
 
-//    /**
-//     * Tests CoherenceRegionFactory.buildQueryResultsRegion() with no properties.
-//     */
-//    @Test
-//    @Order(5)
-//    public void testBuildQueryResultsRegionWithNoProperties()
-//    {
-//        //start the CoherenceRegionFactory in order to instantiate the CacheFactory used in buildEntityRegion()
-//        //the CacheFactory is instantiated in start() because it depends on the properties passed in there
-//        testStartWithNoProperties();
-//        final DomainDataRegionConfig domainDataRegionConfig = new DomainDataRegionConfigImpl.Builder("foo").build();
-//        final Region region = this.coherenceRegionFactory.buildDomainDataRegion(
-//                domainDataRegionConfig, null);
-//
-//        //assertTrue("Expect an instance of the correct CoherenceRegion subclass", coherenceRegionSubclass.isAssignableFrom(region.getClass()));
-//    }
-//
+    /**
+     * Tests CoherenceRegionFactory.buildQueryResultsRegion() with no properties.
+     */
+    @Test
+    @Order(5)
+    public void testBuildQueryResultsRegionWithNoProperties()
+    {
+        testStartWithNoProperties();
+        final String regionName = "testBuild_CoherenceRegion_queryresults";
+
+        final QueryResultsRegion queryResultsRegion = this.coherenceRegionFactory.buildQueryResultsRegion(
+                regionName, getSessionFactoryImplementor(this.coherenceRegionFactory));
+        final QueryResultsRegionTemplate region = (QueryResultsRegionTemplate) queryResultsRegion;
+
+        assertTrue(region.getStorageAccess() instanceof CoherenceStorageAccess, "Expect an instance of the correct CoherenceRegion subclass");
+        this.coherenceRegionFactory.stop();
+    }
+
     /**
      * Tests CoherenceRegionFactory.buildTimestampsRegion() with no properties.
      */

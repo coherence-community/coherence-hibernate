@@ -25,11 +25,11 @@
 
 	<properties>
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
-		<hibernate.version>5.6.3.Final</hibernate.version>
-		<hibernate-micrometer.version>5.6.3.Final</hibernate-micrometer.version>
-		<spring-boot.version>2.7.3</spring-boot.version>
-		<tomcat.version>9.0.65</tomcat.version>
-		<jackson-bom.version>2.14.0-rc1</jackson-bom.version>
+		<hibernate.version>5.6.12.Final</hibernate.version>
+		<hibernate-micrometer.version>5.6.12.Final</hibernate-micrometer.version>
+		<spring-boot.version>2.7.5</spring-boot.version>
+		<tomcat.version>9.0.68</tomcat.version>
+		<jackson-bom.version>2.14.0-rc3</jackson-bom.version>
 	</properties>
 
 	<modules>
@@ -68,6 +68,16 @@
 				<groupId>org.apache.tomcat.embed</groupId>
 				<artifactId>tomcat-embed-websocket</artifactId>
 				<version>${tomcat.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>1.33</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>${hsqldb.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

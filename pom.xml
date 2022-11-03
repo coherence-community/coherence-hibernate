@@ -88,7 +88,7 @@
         <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
         <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
@@ -96,22 +96,22 @@
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
-        <versions-maven-plugin>2.8.1</versions-maven-plugin>
+        <versions-maven-plugin>2.13.0</versions-maven-plugin>
 
         <!-- dependency versions (alphabetically) -->
-        <assertj.version>3.11.1</assertj.version>
+        <assertj.version>3.23.1</assertj.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
         <coherence.version>22.06.2</coherence.version>
         <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
         <hibernate52.version>5.2.18.Final</hibernate52.version>
-        <hibernate53.version>5.6.10.Final</hibernate53.version>
-        <hsqldb.version>2.7.0</hsqldb.version>
+        <hibernate53.version>5.6.12.Final</hibernate53.version>
+        <hsqldb.version>2.7.1</hsqldb.version>
         <junit.version>4.13.2</junit.version>
-        <junit5.version>5.8.2</junit5.version>
-        <logback.version>1.2.10</logback.version>
-        <mockito.version>4.0.0</mockito.version>
-        <slf4j.version>1.7.32</slf4j.version>
+        <junit5.version>5.9.1</junit5.version>
+        <logback.version>1.4.4</logback.version>
+        <mockito.version>4.8.1</mockito.version>
+        <slf4j.version>1.7.36</slf4j.version>
     </properties>
 
     <distributionManagement>
