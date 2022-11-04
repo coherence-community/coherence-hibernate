@@ -64,82 +64,7 @@ Hibernate for data access and management, and that run in a cluster of applicati
 NOTE: Before you use the Coherence Hibernate Cache support, please also consider other caching strategies. Ultimately,
 you should make a decision that is most applicable to the needs of your application.
 
-=== Configuration and Serialization Requirements
-
-==== Serialization
-
-Familiarize yourself with the Coherence Documentation, especially the chapter on
-link:{coherence-docs}develop-applications/performing-basic-cache-operations.html#GUID-F9BCA574-ABFC-4F0D-94EA-949E5B7621E7[Performing Basic Cache Operations]
-as it also details the *Requirements for Cached Objects*:
-
-Cache keys and values must be serializable (for example, `java.io.Serializable` or Coherence link:{coherence-docs}develop-applications/using-portable-object-format.html#GUID-F331E5AB-0B3B-4313-A2E3-AA95A40AD913[Portable Object Format]
-(POF) serialization). Furthermore, cache keys must provide an implementation of
-
-* `hashCode()` and
-* `equals()`
-
-Those methods must return consistent results across cluster nodes. This implies that the implementation of `hashCode()`
-and `equals()` must be based solely on the object's serializable state (that is, the object's non-transient fields). Most
-built-in Java types, such as `String`, `Integer` and `Date`, meet this requirement. Some cache implementations
-(specifically the partitioned cache) use the serialized form of the key objects for equality testing, which means that
-keys for which `equals()` returns `true` must serialize identically. Most built-in Java types meet this requirement as
-well.
-
-==== Cache Keys
-
-By default, Coherence Hibernate uses the `DefaultCacheKeysFactory`. When using Hibernate `5.2` or later, you can customize
-the used `CacheKeysFactory` using the Hibernate property:
-
-* `hibernate.cache.keys_factory`
-
-You can specify the following values:
-
-* `default`, which wraps identifiers in the tuple (`DefaultCacheKeysFactory`)
-* `simple`, uses identifiers as keys without any wrapping (`SimpleCacheKeysFactory`)
-* fully qualified class name that implements `org.hibernate.cache.spi.CacheKeysFactory`
-
-NOTE: Hibernate versions before `5.3.0` have issues with composite keys, when using the `DefaultCacheKeysFactory`.
-If you need to use composite keys, please consider using the `SimpleCacheKeysFactory` instead.
-
-==== Configuring Clients and Servers for Hibernate Second-Level Caching
-
-Both the clients of the Coherence Hibernate second-level caches -- e.g. application server JVMs running Hibernate-based
-applications -- and the Coherence cache server JVMs actually holding the cache contents need to have a common set of
-jar file artifacts available to their ClassLoaders. Specifically, both need
-`coherence-hibernate-cache-xx-{version-coherence-hibernate}.jar` and its dependencies Coherence and Hibernate
-(and their dependencies).
-
-The Coherence cache server JVMs need the Hibernate core jar file to deserialize `CacheEntry` classes
-(`org.hibernate.cache.spi.entry.*`) since the Coherence Hibernate second-level cache implementation uses Coherence
-link:{coherence-docs}develop-applications/processing-data-cache.html[EntryProcessors] to optimize concurrency control.
-However, the cache server JVMs do not need the Hibernate application's jar files containing entity classes etc.
-
-The client / application server JVMs do of course need the Hibernate application's jar files containing entity classes
-etc.
-
-When configuring Coherence you should also consider the following two points in regard to storage-enabled cache server JVMs:
-
-- If there is no separate tier of storage-enabled cache server JVMs in the Coherence cluster, then having application JVMs
-be storage-enabled is feasible, at the cost of increased heap utilization (by second-level cache contents) in those JVMs
-
-- If there is a separate tier of storage-enabled cache server JVMs in the Coherence cluster, then application JVMs should
-be storage-disabled cluster members or remote clients of Coherence*Extend or gRPC proxy servers.
-
-See the comments in the default `hibernate-second-level-cache-config.xml` for details on how to accomplish the relevant
-configuration. It amounts to enabling/disabling local storage by making changes to the cache configuration files, or by
-passing `–Dtangosol.coherence.distributed.localstorage=false` to client JVMs.
-
-TIP: As of Coherence Hibernate `2.1.0` and using the `coherence-hibernate-cache-53` module, you can specify Coherence
-property overrides via Hibernate properties.
-E.g. `com.oracle.coherence.hibernate.cache.coherence_properties.tangosol.coherence.distributed.localstorage=false`
-
-Both client and server JVMs will need the same Coherence operational configuration specifying necessary cluster
-communication parameters. See the chapter on
-link:{coherence-docs}develop-applications/understanding-configuration.html#GUID-360B798E-2120-44A9-8B09-1FDD9AB40EB5[Understanding Configuration]
-in the reference documentation. Coherence provides default operational configuration, but it is a best practice to
-override communication parameters and cluster name to make them unique for each separate application environment.
-
-=== Installing the Coherence Hibernate Second-Level Cache
+=== Getting Started
 
 Installing the Coherence Hibernate second-level cache implementation amounts to obtaining a distribution of
 `coherence-hibernate-cache-xx-{version-coherence-hibernate}.jar` for the respective Hibernate version of your application.
@@ -182,6 +107,83 @@ declaration may look like the following:
     <version>{version-coherence}</version>
 </dependency>
 ----
+
+TIP: In the GitHub repository under samples, you will find a Spring Boot-based application that using Coherence Hibernate.
+Please see the respective
+https://github.com/coherence-community/coherence-hibernate/blob/master/samples/coherence-hibernate-demo/README.adoc[README] for details.
+
+=== Serialization Requirements
+
+Familiarize yourself with the Coherence Documentation, especially the chapter on
+link:{coherence-docs}develop-applications/performing-basic-cache-operations.html#GUID-F9BCA574-ABFC-4F0D-94EA-949E5B7621E7[Performing Basic Cache Operations]
+as it also details the *Requirements for Cached Objects*:
+
+Cache keys and values must be serializable (for example, `java.io.Serializable` or Coherence link:{coherence-docs}develop-applications/using-portable-object-format.html#GUID-F331E5AB-0B3B-4313-A2E3-AA95A40AD913[Portable Object Format]
+(POF) serialization). Furthermore, cache keys must provide an implementation of
+
+* `hashCode()` and
+* `equals()`
+
+Those methods must return consistent results across cluster nodes. This implies that the implementation of `hashCode()`
+and `equals()` must be based solely on the object's serializable state (that is, the object's non-transient fields). Most
+built-in Java types, such as `String`, `Integer` and `Date`, meet this requirement. Some cache implementations
+(specifically the partitioned cache) use the serialized form of the key objects for equality testing, which means that
+keys for which `equals()` returns `true` must serialize identically. Most built-in Java types meet this requirement as
+well.
+
+=== Cache Keys
+
+By default, Coherence Hibernate uses the `DefaultCacheKeysFactory`. When using Hibernate `5.2` or later, you can customize
+the used `CacheKeysFactory` using the Hibernate property:
+
+* `hibernate.cache.keys_factory`
+
+You can specify the following values:
+
+* `default`, which wraps identifiers in the tuple (`DefaultCacheKeysFactory`)
+* `simple`, uses identifiers as keys without any wrapping (`SimpleCacheKeysFactory`)
+* fully qualified class name that implements `org.hibernate.cache.spi.CacheKeysFactory`
+
+NOTE: Hibernate versions before `5.3.0` have issues with composite keys, when using the `DefaultCacheKeysFactory`.
+If you need to use composite keys, please consider using the `SimpleCacheKeysFactory` instead.
+
+=== Configuring Clients and Servers for Hibernate Second-Level Caching
+
+Both the clients of the Coherence Hibernate second-level caches -- e.g. application server JVMs running Hibernate-based
+applications -- and the Coherence cache server JVMs actually holding the cache contents need to have a common set of
+jar file artifacts available to their ClassLoaders. Specifically, both need
+`coherence-hibernate-cache-xx-{version-coherence-hibernate}.jar` and its dependencies Coherence and Hibernate
+(and their dependencies).
+
+The Coherence cache server JVMs need the Hibernate core jar file to deserialize `CacheEntry` classes
+(`org.hibernate.cache.spi.entry.*`) since the Coherence Hibernate second-level cache implementation uses Coherence
+link:{coherence-docs}develop-applications/processing-data-cache.html[EntryProcessors] to optimize concurrency control.
+However, the cache server JVMs do not need the Hibernate application's jar files containing entity classes etc.
+
+The client / application server JVMs do of course need the Hibernate application's jar files containing entity classes
+etc.
+
+When configuring Coherence you should also consider the following two points in regard to storage-enabled cache server JVMs:
+
+- If there is no separate tier of storage-enabled cache server JVMs in the Coherence cluster, then having application JVMs
+be storage-enabled is feasible, at the cost of increased heap utilization (by second-level cache contents) in those JVMs
+
+- If there is a separate tier of storage-enabled cache server JVMs in the Coherence cluster, then application JVMs should
+be storage-disabled cluster members or remote clients of Coherence*Extend or gRPC proxy servers.
+
+See the comments in the default `hibernate-second-level-cache-config.xml` for details on how to accomplish the relevant
+configuration. It amounts to enabling/disabling local storage by making changes to the cache configuration files, or by
+passing `–Dtangosol.coherence.distributed.localstorage=false` to client JVMs.
+
+TIP: As of Coherence Hibernate `2.1.0` and using the `coherence-hibernate-cache-53` module, you can specify Coherence
+property overrides via Hibernate properties.
+E.g. `com.oracle.coherence.hibernate.cache.coherence_properties.tangosol.coherence.distributed.localstorage=false`
+
+Both client and server JVMs will need the same Coherence operational configuration specifying necessary cluster
+communication parameters. See the chapter on
+link:{coherence-docs}develop-applications/understanding-configuration.html#GUID-360B798E-2120-44A9-8B09-1FDD9AB40EB5[Understanding Configuration]
+in the reference documentation. Coherence provides default operational configuration, but it is a best practice to
+override communication parameters and cluster name to make them unique for each separate application environment.
 
 === Configuring Hibernate Second-Level and Query Caching
 
@@ -361,7 +363,7 @@ equivalent annotation.
 
 IMPORTANT: The Coherence Hibernate second-level cache implementation does not support the transactional cache concurrency strategy.
 
-=== Configuring Coherence Caches for Hibernate Second-Level Caching
+=== Coherence Cache Configuration
 
 By default, the Coherence Hibernate second-level cache implementation uses a cache configuration file named
 `hibernate-second-level-cache-config.xml` at the root level in `coherence-hibernate-cache-53-{version-coherence-hibernate}.jar`.
@@ -392,6 +394,33 @@ considered if the underlying database can be written by clients other than the H
 Property `com.oracle.coherence.hibernate.cache.session_name` allows to specify a name for the
 underlying Coherence session. If not specified, the default session name will be used. Requires Coherence `21.12` or higher.
 
+==== Session Type `5.3+`
+
+Using property `com.oracle.coherence.hibernate.cache.session_type` you can specify the type of the session. By default,
+the session type is `server` which means that the Coherence Hibernate application becomes a node in the Coherence cluster
+using the Tangosol Cluster Management Protocol (TCMP). Please see the chapter Introduction to Coherence Clusters of
+the Coherence reference guide for more details.
+
+- Client
+- Server (default)
+
+If, on the other hand, you would like to connect to Coherence in strict client mode using either Coherence*Extend or
+gRPC, you will need to set the session type to `client`. In that case, the Coherence Hibernate application will not use
+TCMP.
+
+TIP: When using Coherence Hibernate in pure client mode, please also set the Coherence property
+`coherence.tcmp.enabled` to `false`, either via System property of the custom Hibernate property:
+`com.oracle.coherence.hibernate.cache.coherence_properties.coherence.tcmp.enabled: false`.
+
+==== Start full Cache Server 5.3+
+
+By default, Coherence Hibernate starts a minimal Coherence cluster node without starting any additional services. Since
+Coherence Hibernate `5.3.1`, we also provide an option to start Coherence using the `DefaultCacheServer`. That way a
+fully featured Coherence Cluster node is started, allowing for the configuration of e.g. Management over REST, which
+allows for the convenient introspection of the Cluster node and its caches using the https://github.com/oracle/coherence-cli[Coherence CLI].
+
+NOTE: This option is ignored if you set `com.oracle.coherence.hibernate.cache.session_type` to `client`.
+
 ==== Minimal Puts
 
 Hibernate provides the configuration property `hibernate.cache.use_minimal_puts`, which optimizes cache management for
@@ -419,8 +448,6 @@ and setting the log level to maximum, you could specify:
 com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log=/path/to/coherence.log
 com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log.level: 9
 ----
-
-Under the covers, Coherence Hibernate is configured using a custom implementation of a Coherence `SystemPropertyResolver`.
 
 ==== Logging `5.3+`
 
