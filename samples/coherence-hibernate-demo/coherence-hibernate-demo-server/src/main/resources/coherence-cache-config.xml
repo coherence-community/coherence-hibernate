@@ -43,13 +43,6 @@ meaningful to other cache configurations unless similarly defined there.
     </cache-mapping>
   </caching-scheme-mapping>
 
-  <topic-scheme-mapping>
-    <topic-mapping>
-      <topic-name>*</topic-name>
-      <scheme-name>topic-server</scheme-name>
-    </topic-mapping>
-  </topic-scheme-mapping>
-
   <caching-schemes>
     <!-- near caching scheme for clustered clients -->
     <near-scheme>
@@ -115,13 +108,6 @@ meaningful to other cache configurations unless similarly defined there.
       </distributed-scheme>
 
     <!-- partitioned topic scheme for servers -->
-    <paged-topic-scheme>
-      <scheme-name>topic-server</scheme-name>
-      <service-name>PartitionedTopic</service-name>
-      <local-storage system-property="coherence.distributed.localstorage">true</local-storage>
-      <autostart>true</autostart>
-      <high-units>{topic-high-units-bytes 0B}</high-units>
-    </paged-topic-scheme>
 
     <!-- proxy scheme that allows extend clients to connect to the cluster over TCP/IP -->
     <proxy-scheme>
