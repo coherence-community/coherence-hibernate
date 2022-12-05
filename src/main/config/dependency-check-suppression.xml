@@ -68,4 +68,11 @@
         <packageUrl regex="true">^pkg:maven/org\.springframework/spring.*$</packageUrl>
         <cve>CVE-2016-1000027</cve>
     </suppress>
+
+    <suppress>
+        <notes><![CDATA[
+       file name: snakeyaml-1.33.jar
+       ]]></notes>
+        <cve>CVE-2022-1471</cve>
+    </suppress>
 </suppressions>
