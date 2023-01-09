@@ -70,9 +70,15 @@
     </suppress>
 
     <suppress>
-        <notes><![CDATA[
+        <notes><![CDATA[ Sample coherence-hibernate-demo
        file name: snakeyaml-1.33.jar
        ]]></notes>
         <cve>CVE-2022-1471</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[ Sample coherence-hibernate-demo
+       file name: snakeyaml-1.33.jar
+       ]]></notes>
+        <cve>CVE-2022-3064</cve>
     </suppress>
 </suppressions>
