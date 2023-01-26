@@ -100,8 +100,8 @@
 
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.23.1</assertj.version>
-        <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
-        <coherence.version>22.06.2</coherence.version>
+        <coherence.groupId>com.oracle.coherence</coherence.groupId>
+        <coherence.version>12.2.1-3-19</coherence.version>
         <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
         <hibernate52.version>5.2.18.Final</hibernate52.version>
