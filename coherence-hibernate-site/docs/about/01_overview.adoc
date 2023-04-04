@@ -45,7 +45,7 @@ Hibernate as the implementation of a Coherence CacheStore
 
 [CARD]
 .Samples
-[icon=format_list_bulleted,link=https://github.com/coherence-community/coherence-hibernate/tree/master/samples,link-type=url]
+[icon=format_list_bulleted,link=https://github.com/coherence-community/coherence-hibernate/tree/main/samples,link-type=url]
 --
 Sample Applications.
 --

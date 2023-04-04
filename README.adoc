@@ -44,7 +44,7 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 == Samples
 
 The reference documentation will also refer to various demo and sample applications. Those are part of this
-repository, and you can find those in the https://github.com/coherence-community/coherence-hibernate/tree/master/samples[samples] module.
+repository, and you can find those in the https://github.com/coherence-community/coherence-hibernate/tree/main/samples[samples] module.
 
 == Building from Source
 

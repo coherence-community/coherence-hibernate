@@ -110,7 +110,7 @@ declaration may look like the following:
 
 TIP: In the GitHub repository under samples, you will find a Spring Boot-based application that using Coherence Hibernate.
 Please see the respective
-https://github.com/coherence-community/coherence-hibernate/blob/master/samples/coherence-hibernate-demo/README.adoc[README] for details.
+https://github.com/coherence-community/coherence-hibernate/blob/main/samples/coherence-hibernate-demo/README.adoc[README] for details.
 
 === Serialization Requirements
 
