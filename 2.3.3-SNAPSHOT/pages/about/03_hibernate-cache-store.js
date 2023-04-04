@@ -333,7 +333,7 @@ classes. For more detailed technical information, see the <a id="" title="" targ
 
 <ul class="ulist">
 <li>
-<p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-spring/tree/master/samples/cachestore-demo">https://github.com/coherence-community/coherence-spring/tree/master/samples/cachestore-demo</a></p>
+<p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-spring/tree/main/samples/cachestore-demo">https://github.com/coherence-community/coherence-spring/tree/main/samples/cachestore-demo</a></p>
 
 </li>
 </ul>

@@ -15,7 +15,7 @@ Coherence Hibernate project.</p>
 <h3 id="_becoming_a_contributor">Becoming a Contributor</h3>
 <div class="section">
 <p>The details of how to contribute to Coherence Hibernate are detailed in
-<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/blob/master/CONTRIBUTING.adoc">CONTRIBUTING.adoc</a>
+<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/blob/main/CONTRIBUTING.adoc">CONTRIBUTING.adoc</a>
 in the Coherence Hibernate GitHub repository.</p>
 
 </div>

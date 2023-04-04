@@ -129,7 +129,7 @@ lang="xml"
 <div class="admonition tip">
 <p class="admonition-inline">In the GitHub repository under samples, you will find a Spring Boot-based application that using Coherence Hibernate.
 Please see the respective
-<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/blob/master/samples/coherence-hibernate-demo/README.adoc">README</a> for details.</p>
+<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/blob/main/samples/coherence-hibernate-demo/README.adoc">README</a> for details.</p>
 </div>
 </div>
 
