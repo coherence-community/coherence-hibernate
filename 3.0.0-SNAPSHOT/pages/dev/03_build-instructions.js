@@ -20,7 +20,7 @@ lang="bash"
 >./mvnw clean package</markup>
 
 <p>For detailed instructions, please see the main
-<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/blob/master/README.adoc">README</a> of the Coherence Hibernate
+<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/blob/main/README.adoc">README</a> of the Coherence Hibernate
 source code repository.</p>
 
 </doc-view>

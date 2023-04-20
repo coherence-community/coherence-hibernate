@@ -71,7 +71,7 @@ modules:</p>
 </v-flex>
 <v-flex xs12 sm4 lg3>
 <v-card>
-<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/tree/master/samples"><div class="card__link-hover"/>
+<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/tree/main/samples"><div class="card__link-hover"/>
 </a>
 <v-layout align-center justify-center class="">
 <v-avatar size="150px">
