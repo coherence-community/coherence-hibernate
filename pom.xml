@@ -61,9 +61,6 @@
         <module>coherence-hibernate-cache-store</module>
         <module>coherence-hibernate-cache-store-tests</module>
         <module>coherence-hibernate-cache-core</module>
-        <module>coherence-hibernate-cache-4</module>
-        <module>coherence-hibernate-cache-5</module>
-        <module>coherence-hibernate-cache-52</module>
         <module>coherence-hibernate-cache-53</module>
         <module>samples</module>
         <module>coherence-hibernate-site</module>
