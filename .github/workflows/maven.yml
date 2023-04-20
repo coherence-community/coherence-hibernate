@@ -6,7 +6,7 @@ on:
   schedule:
     - cron: "0 5 * * *"
   push:
-    branches: [ main ]
+    branches: [ main, 2.3.x ]
 jobs:
   build:
     if: github.repository_owner == 'coherence-community'
