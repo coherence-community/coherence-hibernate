@@ -4,16 +4,16 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53;
+package com.oracle.coherence.hibernate.cache.v6;
 
-import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegionImpl;
-import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
-import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
-import com.oracle.coherence.hibernate.cache.v53.configuration.support.Assert;
-import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateProperties;
-import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateSystemPropertyResolver;
-import com.oracle.coherence.hibernate.cache.v53.configuration.support.ConfigUtils;
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
+import com.oracle.coherence.hibernate.cache.v6.access.CoherenceDomainDataRegionImpl;
+import com.oracle.coherence.hibernate.cache.v6.access.CoherenceStorageAccessImpl;
+import com.oracle.coherence.hibernate.cache.v6.configuration.session.SessionType;
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.Assert;
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.CoherenceHibernateProperties;
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.CoherenceHibernateSystemPropertyResolver;
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.ConfigUtils;
+import com.oracle.coherence.hibernate.cache.v6.region.CoherenceRegion;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.Cluster;
 import com.tangosol.net.DefaultCacheServer;

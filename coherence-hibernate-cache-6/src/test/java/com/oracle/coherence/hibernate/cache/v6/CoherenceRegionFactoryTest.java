@@ -4,9 +4,9 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53;
+package com.oracle.coherence.hibernate.cache.v6;
 
-import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccess;
+import com.oracle.coherence.hibernate.cache.v6.access.CoherenceStorageAccess;
 import com.tangosol.net.CacheFactory;
 
 import org.hibernate.boot.MetadataSources;

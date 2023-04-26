@@ -4,10 +4,10 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53.configuration;
+package com.oracle.coherence.hibernate.cache.v6.configuration;
 
-import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
-import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateProperties;
+import com.oracle.coherence.hibernate.cache.v6.configuration.session.SessionType;
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.CoherenceHibernateProperties;
 
 import org.junit.jupiter.api.Test;
 

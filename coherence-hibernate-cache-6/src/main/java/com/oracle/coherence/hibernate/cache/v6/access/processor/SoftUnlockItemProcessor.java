@@ -4,11 +4,11 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53.access.processor;
+package com.oracle.coherence.hibernate.cache.v6.access.processor;
 
 import java.io.Serializable;
 
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
+import com.oracle.coherence.hibernate.cache.v6.region.CoherenceRegionValue;
 import org.hibernate.cache.spi.access.SoftLock;
 
 import com.tangosol.util.InvocableMap;

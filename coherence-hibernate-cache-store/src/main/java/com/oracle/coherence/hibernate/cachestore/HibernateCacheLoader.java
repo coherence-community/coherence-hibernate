@@ -9,13 +9,14 @@ package com.oracle.coherence.hibernate.cachestore;
 import com.tangosol.net.cache.CacheLoader;
 import com.tangosol.util.Base;
 import org.hibernate.CacheMode;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.metamodel.spi.MetamodelImplementor;
+import org.hibernate.query.Query;
 
 import java.io.File;
 import java.io.Serializable;
@@ -221,8 +222,9 @@ public class HibernateCacheLoader
         }
 
         // Look up the Hibernate metadata for the entity
-        ClassMetadata entityClassMetadata =
-                sessionFactory.getClassMetadata(sEntityName);
+        MetamodelImplementor metamodel = (MetamodelImplementor) sessionFactory.getMetamodel();
+        ClassMetadata entityClassMetadata = (ClassMetadata) metamodel.entityPersister(sEntityName);
+
         if (entityClassMetadata == null)
         {
             throw new RuntimeException("Unable to find ClassMetadata" +
@@ -466,7 +468,7 @@ public class HibernateCacheLoader
     {
         ClassMetadata classMetaData = getEntityClassMetadata();
 
-        Serializable intrinsicIdentifier =
+        Object intrinsicIdentifier =
                 classMetaData.getIdentifier(entity, sessionImplementor);
 
         if (intrinsicIdentifier == null)

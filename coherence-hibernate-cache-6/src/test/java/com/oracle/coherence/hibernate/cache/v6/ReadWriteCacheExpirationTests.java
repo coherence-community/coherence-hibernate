@@ -4,11 +4,11 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53;
+package com.oracle.coherence.hibernate.cache.v6;
 
-import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegionImpl;
-import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
-import com.oracle.coherence.hibernate.cache.v53.support.Foo;
+import com.oracle.coherence.hibernate.cache.v6.access.CoherenceDomainDataRegionImpl;
+import com.oracle.coherence.hibernate.cache.v6.access.CoherenceStorageAccessImpl;
+import com.oracle.coherence.hibernate.cache.v6.support.Foo;
 import com.tangosol.net.CacheFactory;
 
 import org.assertj.core.api.Assertions;

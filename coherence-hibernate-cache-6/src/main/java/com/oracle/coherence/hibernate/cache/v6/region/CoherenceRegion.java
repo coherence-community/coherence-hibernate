@@ -4,10 +4,10 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53.region;
+package com.oracle.coherence.hibernate.cache.v6.region;
 
-import com.oracle.coherence.hibernate.cache.v53.configuration.support.Assert;
-import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateProperties;
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.Assert;
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.CoherenceHibernateProperties;
 import com.tangosol.net.NamedCache;
 import com.tangosol.util.Base;
 import com.tangosol.util.InvocableMap;

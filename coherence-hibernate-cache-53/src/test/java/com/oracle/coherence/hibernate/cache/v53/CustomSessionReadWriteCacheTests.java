@@ -13,6 +13,7 @@ import com.tangosol.net.CacheFactory;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.query.Query;
 import org.hibernate.stat.CacheRegionStatistics;
 import org.hibernate.stat.Statistics;
@@ -228,6 +229,7 @@ public class CustomSessionReadWriteCacheTests extends BaseCoreFunctionalTestCase
 		session.close();
 
 		assertThat(itemStatistics.getPutCount()).isEqualTo(6);
+
 		assertThat(itemStatistics.getHitCount()).isEqualTo(5);
 		assertThat(itemStatistics.getMissCount()).isEqualTo(1);
 

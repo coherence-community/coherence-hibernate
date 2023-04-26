@@ -4,7 +4,7 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53.region;
+package com.oracle.coherence.hibernate.cache.v6.region;
 
 import java.io.Serializable;
 import java.util.ArrayList;

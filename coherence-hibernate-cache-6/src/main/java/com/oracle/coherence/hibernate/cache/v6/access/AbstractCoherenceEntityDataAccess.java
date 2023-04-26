@@ -4,10 +4,10 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53.access;
+package com.oracle.coherence.hibernate.cache.v6.access;
 
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
+import com.oracle.coherence.hibernate.cache.v6.region.CoherenceRegion;
+import com.oracle.coherence.hibernate.cache.v6.region.CoherenceRegionValue;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.CacheKeysFactory;
 import org.hibernate.cache.spi.DomainDataRegion;
@@ -16,7 +16,7 @@ import org.hibernate.cache.spi.support.AbstractDomainDataRegion;
 import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
-import com.oracle.coherence.hibernate.cache.v53.access.processor.PutFromLoadProcessor;
+import com.oracle.coherence.hibernate.cache.v6.access.processor.PutFromLoadProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

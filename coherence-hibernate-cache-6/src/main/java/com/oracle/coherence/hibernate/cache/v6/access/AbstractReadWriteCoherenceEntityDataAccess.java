@@ -4,21 +4,21 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53.access;
+package com.oracle.coherence.hibernate.cache.v6.access;
 
-import com.oracle.coherence.hibernate.cache.v53.access.processor.AfterInsertProcessor;
-import com.oracle.coherence.hibernate.cache.v53.access.processor.AfterUpdateProcessor;
-import com.oracle.coherence.hibernate.cache.v53.access.processor.SoftLockItemProcessor;
-import com.oracle.coherence.hibernate.cache.v53.access.processor.SoftUnlockItemProcessor;
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
+import com.oracle.coherence.hibernate.cache.v6.access.processor.AfterInsertProcessor;
+import com.oracle.coherence.hibernate.cache.v6.access.processor.AfterUpdateProcessor;
+import com.oracle.coherence.hibernate.cache.v6.access.processor.SoftLockItemProcessor;
+import com.oracle.coherence.hibernate.cache.v6.access.processor.SoftUnlockItemProcessor;
+import com.oracle.coherence.hibernate.cache.v6.region.CoherenceRegionValue;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.DomainDataRegion;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
-import com.oracle.coherence.hibernate.cache.v53.access.processor.GetProcessor;
-import com.oracle.coherence.hibernate.cache.v53.access.processor.ReadWritePutFromLoadProcessor;
+import com.oracle.coherence.hibernate.cache.v6.access.processor.GetProcessor;
+import com.oracle.coherence.hibernate.cache.v6.access.processor.ReadWritePutFromLoadProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

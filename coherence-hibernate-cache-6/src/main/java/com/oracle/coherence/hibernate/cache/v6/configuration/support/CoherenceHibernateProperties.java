@@ -4,9 +4,9 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53.configuration.support;
+package com.oracle.coherence.hibernate.cache.v6.configuration.support;
 
-import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
+import com.oracle.coherence.hibernate.cache.v6.configuration.session.SessionType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

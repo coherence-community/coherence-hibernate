@@ -6,7 +6,7 @@
  */
 package org.hibernate.tutorial;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 
 import java.util.*;

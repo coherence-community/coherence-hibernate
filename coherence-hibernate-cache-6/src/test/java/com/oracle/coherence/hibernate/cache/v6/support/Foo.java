@@ -4,7 +4,7 @@
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.cache.v53.support;
+package com.oracle.coherence.hibernate.cache.v6.support;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
