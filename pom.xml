@@ -69,9 +69,9 @@
 
     <properties>
         <!-- project options -->
-        <java.version>8</java.version>
+        <java.version>17</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
-        <java.version.enforcer>1.8</java.version.enforcer>
+        <java.version.enforcer>${java.version}</java.version.enforcer>
         <maven.minimum.version>3.6.0</maven.minimum.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skip-sign-artifacts>true</skip-sign-artifacts>
@@ -99,7 +99,7 @@
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.23.1</assertj.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
-        <coherence.version>22.06.2</coherence.version>
+        <coherence.version>23.03</coherence.version>
         <hibernate6.version>6.2.1.Final</hibernate6.version>
         <hibernate53.version>5.6.12.Final</hibernate53.version>
         <hsqldb.version>2.7.1</hsqldb.version>
