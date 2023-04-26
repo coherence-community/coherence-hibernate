@@ -64,7 +64,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${hibernate60.version}</version>
+            <version>${hibernate6.version}</version>
         </dependency>
 
         <!-- Hibernate uses slf4j for logging, for our purposes here use the simple backend -->

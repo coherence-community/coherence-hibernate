@@ -100,9 +100,7 @@
         <assertj.version>3.23.1</assertj.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
         <coherence.version>22.06.2</coherence.version>
-        <hibernate62.version>6.2.1.Final</hibernate62.version>
-        <hibernate61.version>6.1.7.Final</hibernate61.version>
-        <hibernate60.version>6.0.2.Final</hibernate60.version>
+        <hibernate6.version>6.2.1.Final</hibernate6.version>
         <hibernate53.version>5.6.12.Final</hibernate53.version>
         <hsqldb.version>2.7.1</hsqldb.version>
         <junit.version>4.13.2</junit.version>
@@ -355,27 +353,21 @@
             </build>
         </profile>
         <profile>
-            <id>hibernate53</id>
+            <id>hibernate60</id>
             <properties>
-                <hibernate53.version>5.3.23.Final</hibernate53.version>
+                <hibernate6.version>6.0.2.Final</hibernate6.version>
             </properties>
         </profile>
         <profile>
-            <id>hibernate54</id>
+            <id>hibernate61</id>
             <properties>
-                <hibernate53.version>5.4.32.Final</hibernate53.version>
+                <hibernate6.version>6.1.7.Final</hibernate6.version>
             </properties>
         </profile>
         <profile>
             <id>coherence14_1_1</id>
             <properties>
                 <coherence.version>14.1.1-0-10</coherence.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>hibernate55</id>
-            <properties>
-                <hibernate53.version>5.5.8.Final</hibernate53.version>
             </properties>
         </profile>
         <profile>

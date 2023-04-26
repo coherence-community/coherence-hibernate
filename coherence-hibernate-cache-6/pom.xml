@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${hibernate60.version}</version>
+            <version>${hibernate6.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-testing</artifactId>
-            <version>${hibernate60.version}</version>
+            <version>${hibernate6.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
