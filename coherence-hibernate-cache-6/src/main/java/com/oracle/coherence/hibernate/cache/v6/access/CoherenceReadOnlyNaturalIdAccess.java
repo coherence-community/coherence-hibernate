@@ -111,13 +111,13 @@ implements NaturalIdDataAccess
     }
 
     @Override
-    public Object generateCacheKey(Object[] naturalIdValues, EntityPersister persister, SharedSessionContractImplementor session)
+    public Object generateCacheKey(Object naturalIdValues, EntityPersister persister, SharedSessionContractImplementor session)
     {
         return this.getCacheKeysFactory().createNaturalIdKey(naturalIdValues, persister, session);
     }
 
     @Override
-    public Object[] getNaturalIdValues(Object cacheKey)
+    public Object getNaturalIdValues(Object cacheKey)
     {
         return this.getCacheKeysFactory().getNaturalIdValues(cacheKey);
     }

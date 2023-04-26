@@ -6,6 +6,8 @@
  */
 package com.oracle.coherence.hibernate.cache.v53.access;
 
+import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
+import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.CacheKeysFactory;
 import org.hibernate.cache.spi.DomainDataRegion;
@@ -15,8 +17,6 @@ import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 import com.oracle.coherence.hibernate.cache.v53.access.processor.PutFromLoadProcessor;
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -10,6 +10,7 @@ import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegion
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
 import com.oracle.coherence.hibernate.cache.v53.support.Foo;
 import com.tangosol.net.CacheFactory;
+import org.assertj.core.api.Assertions;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
@@ -48,6 +49,7 @@ public class CustomSessionReadWriteCacheTests extends BaseCoreFunctionalTestCase
 	protected void configure(Configuration cfg) {
 		super.configure(cfg);
 		cfg.setProperty(Environment.CACHE_REGION_PREFIX, "");
+		cfg.setProperty(Environment.SHOW_SQL, "true");
 		cfg.setProperty(Environment.GENERATE_STATISTICS, "true");
 		cfg.setProperty(Environment.USE_SECOND_LEVEL_CACHE, "true");
 		cfg.setProperty(Environment.USE_QUERY_CACHE, "true");
@@ -62,7 +64,7 @@ public class CustomSessionReadWriteCacheTests extends BaseCoreFunctionalTestCase
 		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("foo");
 		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
 
-		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
+		Assertions.assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
 
 		final Session session = openSession();
 		session.beginTransaction();
@@ -224,16 +226,33 @@ public class CustomSessionReadWriteCacheTests extends BaseCoreFunctionalTestCase
 		query.setCacheRegion("fooQueryCache");
 		query.setParameter("name", "kenny%");
 		final List<Foo> fooList = query.getResultList();
+
+		final CacheRegionStatistics fooListStatistics = statistics.getDomainDataRegionStatistics("fooQueryCache");
+
+		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("foo");
+		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
+
+		coherenceStorageAccess.getDelegate();
+
 		session.getTransaction().commit();
 		session.close();
 
-		assertThat(itemStatistics.getPutCount()).isEqualTo(6);
+		/*
+		 * Compared to Hibernate 5.6.x, this test behaves slightly different. The returned entities of the query will
+		 * also be updated. The minimalPuts in AbstractEntityInitializer are hard-coded to false when calling
+		 * {@link org.hibernate.cache.spi.access.EntityDataAccess#putFromLoad(SharedSessionContractImplementor, Object, Object, Object)}.
+		 *
+		 * see:
+		 * - https://github.com/hibernate/hibernate-orm/blob/main/hibernate-core/src/main/java/org/hibernate/sql/results/graph/entity/AbstractEntityInitializer.java#L979
+		 * - https://github.com/hibernate/hibernate-orm/blob/6.0/migration-guide.adoc#query-result-cache
+		 */
+		// assertThat(itemStatistics.getPutCount()).isEqualTo(6);
+		assertThat(itemStatistics.getPutCount()).isEqualTo(8);
+
 		assertThat(itemStatistics.getHitCount()).isEqualTo(5);
 		assertThat(itemStatistics.getMissCount()).isEqualTo(1);
 
 		assertThat(fooList.size()).isEqualTo(2);
-
-		final CacheRegionStatistics fooListStatistics = statistics.getDomainDataRegionStatistics("fooQueryCache");
 
 		assertThat(fooListStatistics.getPutCount()).isEqualTo(1);
 		assertThat(fooListStatistics.getHitCount()).isEqualTo(0);
@@ -256,8 +275,8 @@ public class CustomSessionReadWriteCacheTests extends BaseCoreFunctionalTestCase
 		session.getTransaction().commit();
 		session.close();
 
-		assertThat(itemStatistics.getPutCount()).isEqualTo(6);
-		assertThat(itemStatistics.getHitCount()).isEqualTo(7);
+		assertThat(itemStatistics.getPutCount()).isEqualTo(8);
+		assertThat(itemStatistics.getHitCount()).isEqualTo(5);
 		assertThat(itemStatistics.getMissCount()).isEqualTo(1);
 
 		assertThat(fooList.size()).isEqualTo(2);

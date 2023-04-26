@@ -18,18 +18,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A CoherenceReadWriteNaturalIdAccess is a Coherence-based read-write region access strategy
- * for Hibernate natural ID regions.
+ * A CoherenceNonstrictReadWriteNaturalIdAccess is a CoherenceRegionAccessStrategy
+ * implementing Hibernate's nonstrict-read-write cache concurrency strategy for a natural ID region.
  *
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-public class CoherenceReadWriteNaturalIdAccess
-extends AbstractReadWriteCoherenceEntityDataAccess
+public class CoherenceNonstrictReadWriteNaturalIdAccess
+extends AbstractCoherenceEntityDataAccess
 implements NaturalIdDataAccess
 {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceReadWriteNaturalIdAccess.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceNonstrictReadWriteNaturalIdAccess.class);
 
     // ---- Constructors
 
@@ -39,24 +39,14 @@ implements NaturalIdDataAccess
      * @param domainDataRegion the domain data region
      * @param domainDataStorageAccess the domain data storage access
      */
-    public CoherenceReadWriteNaturalIdAccess(DomainDataRegion domainDataRegion,
+    public CoherenceNonstrictReadWriteNaturalIdAccess(DomainDataRegion domainDataRegion,
             DomainDataStorageAccess domainDataStorageAccess)
     {
         super(domainDataRegion, domainDataStorageAccess, null);
     }
 
 
-//    // ---- interface org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy
-//
-//    /**
-//     * {@inheritDoc}
-//     */
-//    @Override
-//    public NaturalIdRegion getRegion()
-//    {
-//        debugf("%s.getRegion()", this);
-//        return getCoherenceRegion();
-//    }
+    // ---- interface org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy
 
     /**
      * {@inheritDoc}
@@ -70,7 +60,7 @@ implements NaturalIdDataAccess
         //"asynchrononous" (i.e. non-transactional) strategies should insert it in afterInsert instead.
         if (LOGGER.isDebugEnabled())
         {
-            LOGGER.debug("insert - key: {}, value: {}",key, value);
+            LOGGER.debug("insert({}, {})", key, value);
         }
         return false;
     }
@@ -84,12 +74,13 @@ implements NaturalIdDataAccess
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting a natural ID.
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
-        //In implementation we only insert the entry if there was no entry already present at the argument key
+        //But in nonstrict-read-write cache concurrency strategies, don't put newly inserted natural IDs, to force
+        //subsequent putFromLoad.
         if (LOGGER.isDebugEnabled())
         {
             LOGGER.debug("afterInsert({}, {})", key, value);
         }
-        return afterInsert(key, newCacheValue(value, null));
+        return false;
     }
 
     /**
@@ -104,7 +95,7 @@ implements NaturalIdDataAccess
         //"asynchrononous" (i.e. non-transactional) strategies should update it in afterUpdate instead.
         if (LOGGER.isDebugEnabled())
         {
-            LOGGER.debug("update({}, {})",key, value);
+            LOGGER.debug("update({}, {})", key, value);
         }
         return false;
     }
@@ -119,35 +110,31 @@ implements NaturalIdDataAccess
         //Hibernate will make the call sequence lockItem() -> remove() -> update() -> afterUpdate() when updating a natural ID.
         //"Asynchrononous" (i.e. non-transactional) strategies should invalidate or update the cache entry here and release the lock,
         //as appropriate for the kind of strategy (nonstrict-read-write vs. read-write).
-        //In the read-write strategy we only update the cache value if it is present and was not multiply locked.
+        //In the nonstrict-read-write strategy we remove the cache entry to force subsequent putFromLoad.
         if (LOGGER.isDebugEnabled())
         {
             LOGGER.debug("afterUpdate({}, {}, {})", key, value, lock);
         }
-        return afterUpdate(key, newCacheValue(value, null), lock);
+        remove(session, key);
+        unlockItem(session, key, lock);
+        return false;
     }
 
     @Override
-    public Object generateCacheKey(Object[] naturalIdValues, EntityPersister persister, SharedSessionContractImplementor session)
+    public Object generateCacheKey(Object naturalIdValues, EntityPersister persister, SharedSessionContractImplementor session)
     {
         return this.getCacheKeysFactory().createNaturalIdKey(naturalIdValues, persister, session);
     }
 
     @Override
-    public Object[] getNaturalIdValues(Object cacheKey)
+    public Object getNaturalIdValues(Object cacheKey)
     {
         return this.getCacheKeysFactory().getNaturalIdValues(cacheKey);
     }
 
     @Override
     public AccessType getAccessType() {
-        return AccessType.READ_WRITE;
-    }
-
-
-    @Override
-    public boolean contains(Object key) {
-        return false;
+        return AccessType.READ_ONLY;
     }
 
 }

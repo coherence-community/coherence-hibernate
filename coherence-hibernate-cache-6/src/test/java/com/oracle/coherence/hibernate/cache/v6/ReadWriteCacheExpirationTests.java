@@ -11,6 +11,7 @@ import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImp
 import com.oracle.coherence.hibernate.cache.v53.support.Foo;
 import com.tangosol.net.CacheFactory;
 
+import org.assertj.core.api.Assertions;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
@@ -60,7 +61,7 @@ public class ReadWriteCacheExpirationTests extends BaseCoreFunctionalTestCase {
 		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("foo");
 		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
 
-		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
+		Assertions.assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
 
 		final Session session = openSession();
 		session.beginTransaction();
@@ -84,7 +85,7 @@ public class ReadWriteCacheExpirationTests extends BaseCoreFunctionalTestCase {
 		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("foo");
 		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
 
-		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(1);
+		Assertions.assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(1);
 
 		final Session session = openSession();
 		session.beginTransaction();
@@ -109,7 +110,7 @@ public class ReadWriteCacheExpirationTests extends BaseCoreFunctionalTestCase {
 
 		Thread.sleep(1500);
 
-		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
+		Assertions.assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
 
 		final Session session = openSession();
 		session.beginTransaction();

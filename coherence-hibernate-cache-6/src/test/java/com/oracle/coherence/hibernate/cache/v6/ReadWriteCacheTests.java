@@ -227,7 +227,17 @@ public class ReadWriteCacheTests extends BaseCoreFunctionalTestCase {
 		session.getTransaction().commit();
 		session.close();
 
-		assertThat(itemStatistics.getPutCount()).isEqualTo(6);
+		/*
+		 * Compared to Hibernate 5.6.x, this test behaves slightly different. The returned entities of the query will
+		 * also be updated. The minimalPuts in AbstractEntityInitializer are hard-coded to false when calling
+		 * {@link org.hibernate.cache.spi.access.EntityDataAccess#putFromLoad(SharedSessionContractImplementor, Object, Object, Object)}.
+		 *
+		 * see:
+		 * - https://github.com/hibernate/hibernate-orm/blob/main/hibernate-core/src/main/java/org/hibernate/sql/results/graph/entity/AbstractEntityInitializer.java#L979
+		 * - https://github.com/hibernate/hibernate-orm/blob/6.0/migration-guide.adoc#query-result-cache
+		 */
+		// assertThat(itemStatistics.getPutCount()).isEqualTo(6);
+		assertThat(itemStatistics.getPutCount()).isEqualTo(8);
 		assertThat(itemStatistics.getHitCount()).isEqualTo(5);
 		assertThat(itemStatistics.getMissCount()).isEqualTo(1);
 
@@ -256,8 +266,8 @@ public class ReadWriteCacheTests extends BaseCoreFunctionalTestCase {
 		session.getTransaction().commit();
 		session.close();
 
-		assertThat(itemStatistics.getPutCount()).isEqualTo(6);
-		assertThat(itemStatistics.getHitCount()).isEqualTo(7);
+		assertThat(itemStatistics.getPutCount()).isEqualTo(8);
+		assertThat(itemStatistics.getHitCount()).isEqualTo(5);
 		assertThat(itemStatistics.getMissCount()).isEqualTo(1);
 
 		assertThat(fooList.size()).isEqualTo(2);

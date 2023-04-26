@@ -59,7 +59,7 @@
 
     <modules>
         <module>coherence-hibernate-cache-store</module>
-        <module>coherence-hibernate-cache-store-tests</module>
+<!--        <module>coherence-hibernate-cache-store-tests</module>-->
         <module>coherence-hibernate-cache-core</module>
         <module>coherence-hibernate-cache-53</module>
         <module>coherence-hibernate-cache-6</module>
@@ -100,16 +100,16 @@
         <assertj.version>3.23.1</assertj.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
         <coherence.version>22.06.2</coherence.version>
-        <hibernate4.version>4.3.11.Final</hibernate4.version>
-        <hibernate5.version>5.1.17.Final</hibernate5.version>
-        <hibernate52.version>5.2.18.Final</hibernate52.version>
+        <hibernate62.version>6.2.1.Final</hibernate62.version>
+        <hibernate61.version>6.1.7.Final</hibernate61.version>
+        <hibernate60.version>6.0.2.Final</hibernate60.version>
         <hibernate53.version>5.6.12.Final</hibernate53.version>
         <hsqldb.version>2.7.1</hsqldb.version>
         <junit.version>4.13.2</junit.version>
         <junit5.version>5.9.1</junit5.version>
-        <logback.version>1.4.4</logback.version>
+        <logback.version>1.4.7</logback.version>
         <mockito.version>4.8.1</mockito.version>
-        <slf4j.version>1.7.36</slf4j.version>
+        <slf4j.version>2.0.4</slf4j.version>
     </properties>
 
     <distributionManagement>

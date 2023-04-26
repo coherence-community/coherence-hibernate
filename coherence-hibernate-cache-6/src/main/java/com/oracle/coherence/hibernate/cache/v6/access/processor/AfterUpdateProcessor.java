@@ -8,9 +8,9 @@ package com.oracle.coherence.hibernate.cache.v53.access.processor;
 
 import java.io.Serializable;
 
+import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
 import org.hibernate.cache.spi.access.SoftLock;
 
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
 import com.tangosol.util.InvocableMap;
 import com.tangosol.util.processor.AbstractProcessor;
 

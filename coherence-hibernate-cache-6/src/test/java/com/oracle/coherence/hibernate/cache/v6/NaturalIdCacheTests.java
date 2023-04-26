@@ -10,6 +10,7 @@ import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegion
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
 import com.oracle.coherence.hibernate.cache.v53.support.Book;
 import com.tangosol.net.CacheFactory;
+import org.assertj.core.api.Assertions;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
@@ -62,7 +63,7 @@ public class NaturalIdCacheTests extends BaseCoreFunctionalTestCase {
 		CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("book");
 		CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
 
-		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
+		Assertions.assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
 
 		final Session session = openSession();
 		session.beginTransaction();

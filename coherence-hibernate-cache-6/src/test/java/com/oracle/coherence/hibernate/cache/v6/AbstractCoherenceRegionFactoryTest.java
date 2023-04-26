@@ -6,7 +6,8 @@
  */
 package com.oracle.coherence.hibernate.cache.v53;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.selector.spi.StrategySelector;
@@ -39,7 +40,7 @@ public abstract class AbstractCoherenceRegionFactoryTest
     /**
      * The Properties used to start the CoherenceRegionFactory.
      */
-    private Properties properties;
+    private Map<String, Object> properties;
 
     /**
      * The Hibernate SessionFactoryOptions used to start the CoherenceRegionFactory.
@@ -68,11 +69,11 @@ public abstract class AbstractCoherenceRegionFactoryTest
      *
      * @return the Properties used to start the CoherenceRegionFactory
      */
-    protected Properties getProperties()
+    protected Map<String, Object> getProperties()
     {
         if (properties == null)
         {
-            properties = new Properties();
+            properties = new HashMap<>();
         }
         return properties;
     }
