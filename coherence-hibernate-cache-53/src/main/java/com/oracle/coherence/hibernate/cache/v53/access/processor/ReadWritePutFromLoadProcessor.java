@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -27,7 +27,6 @@ public class ReadWritePutFromLoadProcessor
 extends AbstractProcessor
 implements Serializable
 {
-
 
     // ---- Constants
 
@@ -91,13 +90,16 @@ implements Serializable
         boolean isReplaceable = true;
         if (entry.isPresent())
         {
-            if (minimalPutsInEffect) return false;
+            if (minimalPutsInEffect) {
+                return false;
+            }
             CoherenceRegionValue presentValue = (CoherenceRegionValue) entry.getValue();
             isReplaceable = presentValue.isReplaceableFromLoad(txTimestamp, replacementValue.getVersion(), versionComparator);
         }
-        if (isReplaceable) entry.setValue(replacementValue);
+        if (isReplaceable) {
+            entry.setValue(replacementValue);
+        }
         return isReplaceable;
     }
-
 
 }
