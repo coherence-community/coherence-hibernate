@@ -1,15 +1,14 @@
 /*
- * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.demo.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oracle.coherence.hibernate.demo.controller.dto.EventDto;
 import com.oracle.coherence.hibernate.demo.model.Event;
 import com.oracle.coherence.hibernate.demo.service.EventService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 /**
  * Explicit controller for retrieving Events.
@@ -31,27 +31,36 @@ import java.time.LocalDate;
 @RequestMapping(path = "/api/events")
 public class EventController {
 
-	@Autowired
-	private EventService eventService;
+	private final EventService eventService;
 
-	@Autowired
-	ObjectMapper om;
+	public EventController(EventService eventService) {
+		this.eventService = eventService;
+	}
 
 	@GetMapping
-	public Page<Event> getEvents(Pageable pageable) {
-		return eventService.listEvents(pageable);
+	public Page<EventDto> getEvents(Pageable pageable) {
+		return eventService.listEvents(pageable).map(event ->
+				new EventDto(event.getId(), event.getTitle(), event.getDate()));
 	}
 
 	@PostMapping
 	public Long createEvent(
 			@RequestParam("title") String title,
 			@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-		return eventService.createAndStoreEvent(title, date);
+		return eventService.createAndStoreEvent(title, date).getId();
 	}
 
 	@GetMapping("/{id}")
-	public Event getEvent(@PathVariable Long id, @RequestParam(required = false, defaultValue = "false") boolean withParticipants) {
-		Event event = eventService.getEvent(id, withParticipants);
-		return event;
+	public EventDto getEvent(@PathVariable Long id,
+			@RequestParam(required = false, defaultValue = "false") boolean usingJpaQuery,
+			@RequestParam(required = false, defaultValue = "false") boolean withParticipants) {
+		Event event = eventService.getEvent(id, usingJpaQuery, withParticipants);
+		EventDto eventDto = new EventDto(event.getId(), event.getTitle(), event.getDate());
+
+		if (withParticipants) {
+			eventDto.setParticipants(event.getParticipants().stream().map(e -> e.getId()).collect(Collectors.toSet()));
+		}
+
+		return eventDto;
 	}
 }

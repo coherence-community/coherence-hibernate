@@ -65,8 +65,8 @@ Once started the embedded database is empty. Let's create an event and 2 people:
 curl --request POST 'http://localhost:8080/api/events?title=First%20Event&date=2020-11-30'
 curl --request POST 'http://localhost:8080/api/people?firstName=Conrad&lastName=Zuse&age=85'
 curl --request POST 'http://localhost:8080/api/people?firstName=Alan&lastName=Turing&age=41'
+curl --request POST 'http://localhost:8080/api/people/1/add-to-event/1'
 curl --request POST 'http://localhost:8080/api/people/2/add-to-event/1'
-curl --request POST 'http://localhost:8080/api/people/3/add-to-event/1'
 ----
 
 If you query for the event at `http://localhost:8080/api/events/1` you will be able to retrieve your event. For the
@@ -152,7 +152,7 @@ In order to configure Hibernate, we will set the following Hibernate properties:
 [source,properties,indent=1,subs="verbatim,quotes,attributes"]
 ----
 hibernate.cache.use_second_level_cache=true
-hibernate.cache.region.factory_class=com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory
+hibernate.cache.region.factory_class=com.oracle.coherence.hibernate.cache.v6.CoherenceRegionFactory
 hibernate.cache.use_query_cache=true
 ----
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -9,7 +9,6 @@ package com.oracle.coherence.hibernate.demo.service.impl;
 import com.oracle.coherence.hibernate.demo.dao.EventRepository;
 import com.oracle.coherence.hibernate.demo.model.Event;
 import com.oracle.coherence.hibernate.demo.service.EventService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,11 @@ import java.time.LocalDate;
 @Service
 public class DefaultEventService implements EventService {
 
-	@Autowired
-	private EventRepository eventRepository;
+	private final EventRepository eventRepository;
+
+	public DefaultEventService(EventRepository eventRepository) {
+		this.eventRepository = eventRepository;
+	}
 
 	@Override
 	public Page<Event> listEvents(Pageable pageable) {
@@ -33,37 +35,31 @@ public class DefaultEventService implements EventService {
 	}
 
 	@Override
-	public Long createAndStoreEvent(String title, LocalDate date) {
+	public Event createAndStoreEvent(String title, LocalDate date) {
 		final Event event = new Event();
 		event.setTitle(title);
 		event.setDate(date);
-
-		final Event savedEvent = this.eventRepository.save(event);
-		return savedEvent.getId();
+		return this.eventRepository.save(event);
 	}
 
 	@Override
-	public Event getEvent(Long id, boolean withParticipants) {
+	public Event getEvent(Long id, boolean usingJpaQuery, boolean withParticipants) {
 
 		final Event event;
-		Event eventToReturn = new Event();
 
-		if (withParticipants) {
+		if (usingJpaQuery) {
 			event = this.eventRepository.getEventWithParticipants(id).orElseThrow(() ->
 					new EventNotFoundException(id));
-			eventToReturn.getParticipants().addAll(event.getParticipants());
 			return event;
 		}
 		else {
 			event = this.eventRepository.findById(id).orElseThrow(() ->
 					new EventNotFoundException(id));
+			if (withParticipants) {
+				System.out.println(event.getParticipants().size());
+			}
 		}
-
-		eventToReturn.setDate(event.getDate());
-		eventToReturn.setTitle(event.getTitle());
-		eventToReturn.setId(event.getId());
-
-		return eventToReturn;
+		return event;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -8,7 +8,6 @@ package com.oracle.coherence.hibernate.demo.service.impl;
 
 import com.oracle.coherence.hibernate.demo.dao.EventRepository;
 import com.oracle.coherence.hibernate.demo.model.Event;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,16 +16,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.oracle.coherence.hibernate.demo.dao.PersonRepository;
 import com.oracle.coherence.hibernate.demo.model.Person;
 import com.oracle.coherence.hibernate.demo.service.PersonService;
+import org.springframework.util.Assert;
 
 @Transactional
 @Service
 public class DefaultPersonService implements PersonService {
 
-	@Autowired
-	private PersonRepository personRepository;
+	private final PersonRepository personRepository;
 
-	@Autowired
-	private EventRepository eventRepository;
+	private final EventRepository eventRepository;
+
+	public DefaultPersonService(PersonRepository personRepository, EventRepository eventRepository) {
+		this.personRepository = personRepository;
+		this.eventRepository = eventRepository;
+	}
 
 	@Override
 	public Page<Person> listPeople(Pageable pageable) {
@@ -35,6 +38,9 @@ public class DefaultPersonService implements PersonService {
 
 	@Override
 	public Long createAndStorePerson(String firstName, String lastName, int age) {
+		Assert.hasText(firstName, "FirstName must not be null or empty.");
+		Assert.hasText(lastName, "LastName must not be null or empty.");
+		Assert.isTrue(age > 0, "The age must be a positive number.");
 		final Person person = new Person();
 		person.setFirstname(firstName);
 		person.setLastname(lastName);
@@ -45,13 +51,22 @@ public class DefaultPersonService implements PersonService {
 
 	@Override
 	public void addPersonToEvent(Long personId, Long eventId) {
+		Assert.notNull(personId, "PersonId must not be null.");
+		Assert.notNull(eventId, "EventId must not be null.");
+
 		Person person = this.personRepository.findById(personId).orElseThrow(() ->
 				new PersonNotFoundException(personId));
 		Event event = this.eventRepository.findById(eventId).orElseThrow(() ->
 				new EventNotFoundException(eventId));
-		person.addToEvent(event);
 		event.addParticipant(person);
 		this.eventRepository.save(event);
+	}
+
+	@Override
+	public Person getPerson(Long personId) {
+		Assert.notNull(personId, "PersonId must not be null.");
+		return this.personRepository.findById(personId).orElseThrow(() ->
+				new PersonNotFoundException(personId));
 	}
 
 }

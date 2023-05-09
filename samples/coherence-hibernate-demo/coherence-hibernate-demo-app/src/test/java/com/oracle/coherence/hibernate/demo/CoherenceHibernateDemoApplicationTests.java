@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -8,7 +8,9 @@ package com.oracle.coherence.hibernate.demo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
+import com.oracle.coherence.hibernate.demo.controller.dto.PersonDto;
 import com.oracle.coherence.hibernate.demo.model.Event;
+import com.oracle.coherence.hibernate.demo.model.Person;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.NamedCache;
 import org.hibernate.Session;
@@ -26,7 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,11 +37,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Full integration test that verifies several Hibernate second-level cache scenarios.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CoherenceHibernateDemoApplicationTests {
+
+    private static final String EVENT_ENTITY_CACHE_NAME = "com.oracle.coherence.hibernate.demo.model.Event";
+    private static final String PERSON_ENTITY_CACHE_NAME = "com.oracle.coherence.hibernate.demo.model.Person";
+
+    private static final String EVENT_PARTICIPANTS_COLLECTION_CACHE_NAME = "com.oracle.coherence.hibernate.demo.model.Event.participants";
+    private static final String PERSON_EVENTS_COLLECTION_CACHE_NAME = "com.oracle.coherence.hibernate.demo.model.Person.events";
+
+    private static final String DEFAULT_QUERY_RESULTS_REGION = "default-query-results-region";
 
     @Autowired
     private MockMvc mvc;
@@ -54,23 +67,53 @@ class CoherenceHibernateDemoApplicationTests {
     private String person1Id;
     private String person2Id;
 
+    private final TestStats testStats = new TestStats();
+
     /*
      * When using @TestInstance(TestInstance.Lifecycle.PER_CLASS), you can't use @BeforeAll as that is too late for setting
      * system property "coherence.cacheconfig".
      */
-    {
+    static {
         System.setProperty("coherence.cacheconfig", "hibernate-second-level-cache-config.xml");
         System.setProperty("coherence.distributed.localstorage", "true");
     }
 
+    /**
+     * First, lets make sure the context loads.
+     */
     @Test
     @Order(1)
     void contextLoads() {
+        assertThat(testStats.getCoherenceEventCacheSize()).isZero();
+        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isZero();
+        assertThat(testStats.getCacheMissCount()).isZero();
+        assertThat(testStats.getCachePutCount()).isZero();
+
+        assertThat(testStats.getQueryCacheHitCount()).isZero();
+        assertThat(testStats.getQueryCacheMissCount()).isZero();
+        assertThat(testStats.getQueryCachePutCount()).isZero();
+
+        assertThat(testStats.getCacheRegionNamesSize()).isEqualTo(5);
     }
 
+    /**
+     * In this test, we create a single {@link Event}. This should lead to the following cache expectations:
+     *
+     * <ul>
+     *     <li>Upon persisting the Event, the event will also be PUT into the cache</li>
+     *     <li>The size of the Coherence Event cache should be 1</li>
+     * </ul>
+     *
+     */
     @Test
     @Order(2)
     void createOneEvent() throws Exception {
+
         final MockHttpServletRequestBuilder authenticationRequestBuilder = post("/api/events")
                 .param("title", "My Event")
                 .param("date", "2020-11-30");
@@ -78,25 +121,42 @@ class CoherenceHibernateDemoApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
-        System.out.println(this.eventId);
+
         assertThat(this.eventId).containsOnlyDigits();
 
-        NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache("com.oracle.coherence.hibernate.demo.model.Event");
-        assertThat(namedCache).hasSize(1);
+        final Object cacheValue = testStats.getCoherenceEventCache().values().iterator().next();
+        assertThat(cacheValue).isInstanceOf(CoherenceRegionValue.class);
+        assertThat(((CoherenceRegionValue) cacheValue).getValue()).isInstanceOf(StandardCacheEntryImpl.class);
 
-        CoherenceRegionValue cacheValue = namedCache.values().iterator().next();
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(cacheValue.getValue()).isInstanceOf(StandardCacheEntryImpl.class);
+        assertThat(testStats.getCacheHitCount()).isZero();
+        assertThat(testStats.getCacheMissCount()).isZero();
+        assertThat(testStats.getCachePutCount()).isEqualTo(1);
 
-        Statistics statistics = em.unwrap(Session.class).getSessionFactory().getStatistics();
-        assertThat(statistics.getSecondLevelCachePutCount()).isEqualTo(1L);
+        assertThat(testStats.getQueryCacheHitCount()).isZero();
+        assertThat(testStats.getQueryCacheMissCount()).isZero();
+        assertThat(testStats.getQueryCachePutCount()).isZero();
     }
 
+    /**
+     * In this test, we retrieve a single {@link Event}. This should lead to the following cache expectations:
+     *
+     * <ul>
+     *     <li>We should see a SecondLevelCacheHitCount of 1</li>
+     *     <li>all other numbers stay the same</li>
+     * </ul>
+     *
+     */
     @Test
     @Order(3)
     void getEvent() throws Exception {
-        final MockHttpServletRequestBuilder authenticationRequestBuilder = get("/api/events/{eventId}", this.eventId);
-        String eventResponse = this.mvc.perform(authenticationRequestBuilder)
+        final MockHttpServletRequestBuilder requestBuilder = get("/api/events/{eventId}", this.eventId);
+        final String eventResponse = this.mvc.perform(requestBuilder)
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
@@ -108,16 +168,165 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache("com.oracle.coherence.hibernate.demo.model.Event");
-        assertThat(namedCache).hasSize(1);
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        Statistics statistics = em.unwrap(Session.class).getSessionFactory().getStatistics();
-        assertThat(statistics.getSecondLevelCachePutCount()).isEqualTo(1L);
+        assertThat(testStats.getCacheHitCount()).isEqualTo(1);
+        assertThat(testStats.getCacheMissCount()).isZero();
+        assertThat(testStats.getCachePutCount()).isEqualTo(1);
+
+        assertThat(testStats.getQueryCacheHitCount()).isZero();
+        assertThat(testStats.getQueryCacheMissCount()).isZero();
+        assertThat(testStats.getQueryCachePutCount()).isZero();
+    }
+
+    /**
+     * A slight variation, in this test, we retrieve a single {@link Event} but we also trigger a fetch on the
+     * lazy property {@link Event#getParticipants()}, which is currently still empty. This should lead to the following
+     * cache expectations:
+     *
+     * <ul>
+     *     <li>We should see a SecondLevelCacheHitCount in creased from 1 to 2</li>
+     *     <li>See our first SecondLevelCacheMissCount (1) when accessing the Set of participants</li>
+     *     <li>The SecondLevelCachePutCount increases from 1 to 2 as the empty collection of participants will be added to
+     *     the Coherence cache</li>
+     * </ul>
+     *
+     * See also:
+     * <a href="https://docs.jboss.org/hibernate/orm/6.2/userguide/html_single/Hibernate_User_Guide.html#caching-collection">Hibernate User Guide</a>
+     * <p>
+     * "The collection cache is not write-through". "Collections are read-through, meaning they are cached upon being
+     * accessed for the first time".
+     * <p>
+     * Therefore, the empty collection of participants was not added to the cache when the {@link Event} was created in
+     * the previous test.
+     *
+     */
+    @Test
+    @Order(4)
+    void getEventWithParticipants() throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder = get("/api/events/{eventId}", this.eventId)
+                .param("withParticipants", "true");
+        final String eventResponse = this.mvc.perform(requestBuilder)
+                .andDo(print())
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andReturn().getResponse().getContentAsString();
+        final Event event = this.objectMapper.readValue(eventResponse, Event.class);
+
+        assertThat(event.getId()).isEqualTo(1L);
+        assertThat(event.getParticipants()).isEmpty();
+
+        assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
+        assertThat(event.getTitle()).isEqualTo("My Event");
+
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getCachePutCount()).isEqualTo(2);
+
+        assertThat(testStats.getQueryCacheHitCount()).isZero();
+        assertThat(testStats.getQueryCacheMissCount()).isZero();
+        assertThat(testStats.getQueryCachePutCount()).isZero();
+    }
+
+    /**
+     * In this test we are going to use the Query cache for the first time. Instead of triggering the lazy participant
+     * collection on the {@link Event} (see previous test), we will use a JPA query that employs a fetch join on the
+     * Event participants. As a result, we will see the following cache behavior:
+     *
+     * <ul>
+     *     <li>We should see the QueryCacheMissCount increase from 0 to 1</li>
+     *     <li>We should see the QueryCachePutCount increase from 0 to 1</li>
+     *     <li>The Event and the Set of participants will be updated, thus the
+     *     SecondLevelCachePutCount will increase from 2 to 4</li>
+     * </ul>
+     *
+     * See also:
+     * <a href="https://docs.jboss.org/hibernate/orm/6.2/userguide/html_single/Hibernate_User_Guide.html#caching-query">Hibernate_User_Guide</a>
+     * <p>
+     * "For entity queries, the query cache does not cache the state of the actual entities. Instead, it stores the
+     * entity identifiers".
+     *
+     */
+    @Test
+    @Order(5)
+    void getEventWithParticipantsAndQueryCache() throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder = get("/api/events/{eventId}", this.eventId)
+                .param("usingJpaQuery", "true");
+        final String eventResponse = this.mvc.perform(requestBuilder)
+                .andDo(print())
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andReturn().getResponse().getContentAsString();
+        final Event event = this.objectMapper.readValue(eventResponse, Event.class);
+
+        assertThat(event.getId()).isEqualTo(1L);
+        assertThat(event.getParticipants()).isEmpty();
+
+        assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
+        assertThat(event.getTitle()).isEqualTo("My Event");
+
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getCachePutCount()).isEqualTo(4);
+
+        assertThat(testStats.getQueryCacheHitCount()).isZero();
+        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     @Test
-    @Order(4)
-    void createTwoPeople() throws Exception {
+    @Order(6)
+    void getEventWithParticipantsAndQueryCacheSecondTime() throws Exception {
+        final MockHttpServletRequestBuilder requestBuilder = get("/api/events/{eventId}", this.eventId)
+                .param("usingJpaQuery", "true");
+        final String eventResponse = this.mvc.perform(requestBuilder)
+                .andDo(print())
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andReturn().getResponse().getContentAsString();
+        final Event event = this.objectMapper.readValue(eventResponse, Event.class);
+
+        assertThat(event.getId()).isEqualTo(1L);
+        assertThat(event.getParticipants()).isEmpty();
+
+        assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
+        assertThat(event.getTitle()).isEqualTo("My Event");
+
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getCachePutCount()).isEqualTo(5); // Not sure about this one, why is
+        // Why is Event#participants added to the cache again? No SQL query is executed though
+
+        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+    }
+
+    /**
+     * Now we are going to 1 {@link Person}.
+     */
+    @Test
+    @Order(7)
+    void createFirstPerson() throws Exception {
         this.person1Id = this.mvc.perform(
                         post("/api/people")
                                 .param("firstName", "Conrad")
@@ -126,6 +335,28 @@ class CoherenceHibernateDemoApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
+
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getCachePutCount()).isEqualTo(6);
+
+        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+    }
+
+    /**
+     * We are going to create a second {@link Person}.
+     */
+    @Test
+    @Order(8)
+    void createSecondPerson() throws Exception {
         this.person2Id = this.mvc.perform(
                         post("/api/people")
                                 .param("firstName", "Alan")
@@ -135,35 +366,114 @@ class CoherenceHibernateDemoApplicationTests {
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
 
-        NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache("com.oracle.coherence.hibernate.demo.model.Event");
-        assertThat(namedCache).hasSize(1);
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        Statistics statistics = em.unwrap(Session.class).getSessionFactory().getStatistics();
-        assertThat(statistics.getSecondLevelCachePutCount()).isEqualTo(3L);
+        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getCachePutCount()).isEqualTo(7);
+
+        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     @Test
-    @Order(5)
+    @Order(9)
+    void getTwoPeople() throws Exception {
+
+        final MockHttpServletRequestBuilder requestBuilder = get("/api/people/{personId}", this.person1Id);
+        final String eventResponse = this.mvc.perform(requestBuilder)
+                .andDo(print())
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andReturn().getResponse().getContentAsString();
+        final PersonDto person1 = this.objectMapper.readValue(eventResponse, PersonDto.class);
+
+        assertThat(person1.getId()).isEqualTo(1L);
+        assertThat(person1.getAge()).isEqualTo(85);
+        assertThat(person1.getFirstname()).isEqualTo("Conrad");
+        assertThat(person1.getLastname()).isEqualTo("Zuse");
+        assertThat(person1.getEvents()).isEmpty();
+
+        final MockHttpServletRequestBuilder requestBuilder2 = get("/api/people/{personId}", this.person2Id);
+        final String eventResponse2 = this.mvc.perform(requestBuilder2)
+                .andDo(print())
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andReturn().getResponse().getContentAsString();
+        final PersonDto person2 = this.objectMapper.readValue(eventResponse2, PersonDto.class);
+
+        assertThat(person2.getId()).isEqualTo(2L);
+        assertThat(person2.getAge()).isEqualTo(41);
+        assertThat(person2.getFirstname()).isEqualTo("Alan");
+        assertThat(person2.getLastname()).isEqualTo("Turing");
+        assertThat(person2.getEvents()).isEmpty();
+
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isEqualTo(4);
+        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getCachePutCount()).isEqualTo(7);
+
+        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+    }
+
+    @Test
+    @Order(10)
     void addPeopleToEvent() throws Exception {
         this.mvc.perform(
                         post("/api/people/{personId}/add-to-event/{eventId}", this.person1Id, this.eventId))
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()));
+
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isEqualTo(7); // Person, Event, Event#participants
+        assertThat(testStats.getCacheMissCount()).isEqualTo(2); //Person#events
+        assertThat(testStats.getCachePutCount()).isEqualTo(8); //Person#events
+
+        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+
         this.mvc.perform(
                         post("/api/people/{personId}/add-to-event/{eventId}", this.person2Id, this.eventId))
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()));
 
-        Statistics statistics = em.unwrap(Session.class).getSessionFactory().getStatistics();
-        assertThat(statistics.getSecondLevelCachePutCount()).isEqualTo(9L);
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isEqualTo(9);
+        assertThat(testStats.getCacheMissCount()).isEqualTo(4);
+        assertThat(testStats.getCachePutCount()).isEqualTo(11);
+
+        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     @Test
-    @Order(6)
+    @Order(11)
     void getEventWithPeople() throws Exception {
         final MockHttpServletRequestBuilder authenticationRequestBuilder = get("/api/events/{eventId}", this.eventId)
                 .param("withParticipants", "true");
-        String eventResponse = this.mvc.perform(authenticationRequestBuilder)
+        final String eventResponse = this.mvc.perform(authenticationRequestBuilder)
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
@@ -175,16 +485,27 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        Statistics statistics = em.unwrap(Session.class).getSessionFactory().getStatistics();
-        assertThat(statistics.getSecondLevelCachePutCount()).isEqualTo(12L);
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isEqualTo(10);
+        assertThat(testStats.getCacheMissCount()).isEqualTo(5);
+        assertThat(testStats.getCachePutCount()).isEqualTo(14);
+
+        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     @Test
-    @Order(7)
+    @Order(12)
     void getEventWithPeopleAgain() throws Exception {
         final MockHttpServletRequestBuilder authenticationRequestBuilder = get("/api/events/{eventId}", this.eventId)
                 .param("withParticipants", "true");
-        String eventResponse = this.mvc.perform(authenticationRequestBuilder)
+        final String eventResponse = this.mvc.perform(authenticationRequestBuilder)
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
@@ -196,9 +517,77 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        Statistics statistics = em.unwrap(Session.class).getSessionFactory().getStatistics();
-        assertThat(statistics.getSecondLevelCachePutCount()).isEqualTo(12L);
-        assertThat(statistics.getQueryCacheHitCount()).isEqualTo(1L);
+        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        assertThat(testStats.getCacheHitCount()).isEqualTo(14);
+        assertThat(testStats.getCacheMissCount()).isEqualTo(5);
+        assertThat(testStats.getCachePutCount()).isEqualTo(14);
+
+        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
+    private final class TestStats {
+
+        public long getCacheHitCount() {
+            return getHibernateStatistics().getSecondLevelCacheHitCount();
+        }
+
+        public long getCacheMissCount() {
+            return getHibernateStatistics().getSecondLevelCacheMissCount();
+        }
+
+        public long getCachePutCount() {
+            return getHibernateStatistics().getSecondLevelCachePutCount();
+        }
+
+        public long getQueryCacheHitCount() {
+            return getHibernateStatistics().getQueryCacheHitCount();
+        }
+
+        public long getQueryCacheMissCount() {
+            return getHibernateStatistics().getQueryCacheMissCount();
+        }
+
+        public long getQueryCachePutCount() {
+            return getHibernateStatistics().getQueryCachePutCount();
+        }
+
+        private Statistics getHibernateStatistics() {
+            return em.unwrap(Session.class).getSessionFactory().getStatistics();
+        }
+
+        public long getCoherenceEventCacheSize() {
+            return getCoherenceEventCache().size();
+        }
+
+        public NamedCache<? ,?> getCoherenceEventCache() {
+            return CacheFactory.getCache(EVENT_ENTITY_CACHE_NAME);
+        }
+
+        public long getCoherencePersonCacheSize() {
+            return CacheFactory.getCache(PERSON_ENTITY_CACHE_NAME).size();
+        }
+
+        public long getCoherencePersonEventsCollectionCacheSize() {
+            return CacheFactory.getCache(PERSON_EVENTS_COLLECTION_CACHE_NAME).size();
+        }
+
+        public long getCoherenceEventParticipantsCollectionCacheSize() {
+            return CacheFactory.getCache(EVENT_PARTICIPANTS_COLLECTION_CACHE_NAME).size();
+        }
+
+        public long getCoherenceDefaultQueryResultsRegionCacheSize() {
+            return CacheFactory.getCache(DEFAULT_QUERY_RESULTS_REGION).size();
+        }
+
+        public long getCacheRegionNamesSize() {
+            return getHibernateStatistics().getSecondLevelCacheRegionNames().length;
+        }
+    }
 }

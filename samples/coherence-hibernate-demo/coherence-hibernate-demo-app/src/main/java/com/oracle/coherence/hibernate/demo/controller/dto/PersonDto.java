@@ -1,52 +1,51 @@
 /*
- * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
-package com.oracle.coherence.hibernate.demo.model;
+package com.oracle.coherence.hibernate.demo.controller.dto;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 /**
  *
  * @author Gunnar Hillert
  *
  */
-@Entity
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name="PEOPLE")
-public class Person implements Serializable {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = PersonDto.class
+)
+public class PersonDto implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	private int age;
 	private String firstname;
 	private String lastname;
 
-	@ManyToMany(mappedBy = "participants")
-	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	private Set<Event> events = new HashSet<>();
+	@JsonIdentityReference
+	@JsonIgnore
+	private Set<EventDto> events = new HashSet<>();
 
-	public Person() {
+	public PersonDto() {
 	}
 
-	public Person(Long id) {
+	public PersonDto(Long id) {
 		this.id = id;
+	}
+
+	public PersonDto(Long id, String firstname, String lastname, int age) {
+		this.id = id;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.age = age;
 	}
 
 	public Long getId() {
@@ -81,11 +80,11 @@ public class Person implements Serializable {
 		this.lastname = lastname;
 	}
 
-	public Set<Event> getEvents() {
+	public Set<EventDto> getEvents() {
 		return events;
 	}
 
-	protected void setEvents(Set<Event> events) {
+	protected void setEvents(Set<EventDto> events) {
 		this.events = events;
 	}
 
@@ -93,7 +92,7 @@ public class Person implements Serializable {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		Person person = (Person) o;
+		PersonDto person = (PersonDto) o;
 		return Objects.equals(id, person.id);
 	}
 

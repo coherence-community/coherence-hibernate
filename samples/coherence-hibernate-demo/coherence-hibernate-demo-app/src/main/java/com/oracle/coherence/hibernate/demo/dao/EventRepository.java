@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.QueryHint;
+import jakarta.persistence.QueryHint;
 import java.util.Optional;
 
 /**
@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-	@Query("SELECT event FROM Event event join fetch event.participants p join fetch p.events where event.id = :eventId")
+	@Query("SELECT event FROM Event event left join fetch event.participants p where event.id = :eventId")
 	@QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"))
 	Optional<Event> getEventWithParticipants(@Param("eventId") Long eventId);
 }

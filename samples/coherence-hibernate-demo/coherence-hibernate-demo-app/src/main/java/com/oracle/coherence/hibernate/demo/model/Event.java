@@ -1,29 +1,28 @@
 /*
- * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.CascadeType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Gunnar Hillert
@@ -31,8 +30,7 @@ import java.util.stream.Collectors;
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "EVENTS")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Event {
+public class Event implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,9 +42,11 @@ public class Event {
 	@NaturalId
 	private LocalDate date;
 
-	@ManyToMany(targetEntity = Person.class)
+	@ManyToMany(cascade = {
+			CascadeType.PERSIST,
+			CascadeType.MERGE
+	})
 	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	@JsonIdentityReference(alwaysAsId = true)
 	private Set<Person> participants = new HashSet<>();
 
 	public Event() {
@@ -94,10 +94,16 @@ public class Event {
 		person.getEvents().remove(this);
 	}
 
-	@JsonProperty("participants")
-	public void setParticipantIds(Set<Long> participantIds) {
-		this.participants.addAll(participantIds.stream().map(id -> {
-			return new Person(id);
-		}).collect(Collectors.toList()));
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Event event = (Event) o;
+		return Objects.equals(id, event.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

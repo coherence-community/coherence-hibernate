@@ -12,12 +12,13 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Bean;
 
 /**
+ * Main entry point to the Coherence Hibernate demo application.
  * @author Gunnar Hillert
  */
 @SpringBootApplication
 public class CoherenceHibernateDemoApplication {
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 
 		/*
 		 * Usually when testing Coherence locally, where the whole Coherence cluster runs on e.g. a laptop,

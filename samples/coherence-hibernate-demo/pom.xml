@@ -25,11 +25,8 @@
 
 	<properties>
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
-		<hibernate.version>5.6.12.Final</hibernate.version>
 		<hibernate-micrometer.version>5.6.12.Final</hibernate-micrometer.version>
-		<spring-boot.version>2.7.11</spring-boot.version>
-		<tomcat.version>9.0.74</tomcat.version>
-		<jackson-bom.version>2.14.0-rc3</jackson-bom.version>
+		<spring-boot.version>3.0.6</spring-boot.version>
 	</properties>
 
 	<modules>
@@ -41,33 +38,11 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>com.fasterxml.jackson</groupId>
-				<artifactId>jackson-bom</artifactId>
-				<version>${jackson-bom.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>${spring-boot.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.tomcat.embed</groupId>
-				<artifactId>tomcat-embed-core</artifactId>
-				<version>${tomcat.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.tomcat.embed</groupId>
-				<artifactId>tomcat-embed-el</artifactId>
-				<version>${tomcat.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.tomcat.embed</groupId>
-				<artifactId>tomcat-embed-websocket</artifactId>
-				<version>${tomcat.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.yaml</groupId>
