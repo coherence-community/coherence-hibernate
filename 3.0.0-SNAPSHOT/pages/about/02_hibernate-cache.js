@@ -123,7 +123,7 @@ lang="xml"
 &lt;dependency&gt;
     &lt;groupId&gt;com.oracle.coherence.ce&lt;/groupId&gt;
     &lt;artifactId&gt;coherence&lt;/artifactId&gt;
-    &lt;version&gt;22.06.2&lt;/version&gt;
+    &lt;version&gt;23.03&lt;/version&gt;
 &lt;/dependency&gt;</markup>
 
 <div class="admonition tip">
@@ -280,7 +280,7 @@ include the following property setting in <code>hibernate.cfg.xml</code>:</p>
 lang="xml"
 
 >&lt;property name="hibernate.cache.region.factory_class"&gt;
-    com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory
+    com.oracle.coherence.hibernate.cache.v6.CoherenceRegionFactory
 &lt;/property&gt;</markup>
 
 <p>In addition to setting the <code>hibernate.cache.region.factory_class</code> property, you must also configure Hibernate to use
