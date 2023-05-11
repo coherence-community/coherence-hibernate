@@ -121,6 +121,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-testing</artifactId>
+            <version>${hibernate6.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

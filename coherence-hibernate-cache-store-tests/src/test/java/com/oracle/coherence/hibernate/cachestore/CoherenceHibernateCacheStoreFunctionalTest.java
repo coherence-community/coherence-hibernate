@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -20,7 +20,6 @@ import com.tangosol.net.NamedCache;
 import com.tangosol.util.filter.AlwaysFilter;
 import com.tangosol.util.processor.ConditionalRemove;
 import org.hibernate.Session;
-import org.hibernate.tutorial.domain.Event;
 import org.hibernate.tutorial.domain.Person;
 import org.hibernate.tutorial.util.HibernateUtil;
 import org.junit.After;
@@ -30,8 +29,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -39,15 +36,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * A CoherenceHibernateCacheStoreFunctionalTest is a functional test of the Hibernate-based implementation

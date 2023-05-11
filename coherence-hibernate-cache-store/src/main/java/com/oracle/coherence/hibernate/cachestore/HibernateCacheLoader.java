@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -9,6 +9,7 @@ package com.oracle.coherence.hibernate.cachestore;
 import com.tangosol.net.cache.CacheLoader;
 import com.tangosol.util.Base;
 import org.hibernate.CacheMode;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -20,11 +21,9 @@ import org.hibernate.query.Query;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-
 
 /**
  * Data-driven CacheLoader implementation for Hibernate tables
@@ -41,6 +40,7 @@ import java.util.Map;
  * @author jp 2005.09.15
  * @author pp 2009.01.23
  * @author rs 2013.09.05
+ * @author Gunnar Hillert
  */
 public class HibernateCacheLoader
         extends Base
@@ -231,24 +231,6 @@ public class HibernateCacheLoader
                     " for Hibernate entity " + sEntityName + ".");
         }
         setEntityClassMetadata(entityClassMetadata);
-
-        // Create the loadAll query (it requires an identifier property).
-        // Use "fetch all properties" to force eager loading.
-        String sIdName;
-        if (entityClassMetadata.hasIdentifierProperty())
-        {
-            sIdName = entityClassMetadata.getIdentifierPropertyName();
-            azzert(sIdName != null);
-        }
-        else
-        {
-            throw new RuntimeException("Hibernate entity " + sEntityName +
-                    " does not have an ID column associated with it.");
-        }
-
-        String sLoadAllQuery = "from " + sEntityName + " fetch all properties where "
-                + sIdName + " in (:" + PARAM_IDS + ") ";
-        setLoadAllQuery(sLoadAllQuery);
     }
 
     /**
@@ -315,11 +297,11 @@ public class HibernateCacheLoader
     /**
      * Load a collection of Hibernate entities given a set of ids (keys)
      *
-     * @param keys  the cache keys; specifically, the entity ids
-     *
+     * @param keys  the cache keys; specifically, the entity ids. By default, entities will be returned in the order of the
+     *              provided List of keys
      * @return      the corresponding Hibernate entity instances
      */
-    public Map loadAll(Collection keys)
+    public Map loadAll(List keys)
     {
         ensureInitialized();
 
@@ -334,30 +316,44 @@ public class HibernateCacheLoader
         {
             tx = session.beginTransaction();
 
-            // Create the query
-            String sQuery = getLoadAllQuery();
-            Query query = session.createQuery(sQuery);
+            final List<?> result;
+            if (this.getLoadAllQuery() != null) {
+                // Create the query
+                String sQuery = getLoadAllQuery();
+                Query query = session.createQuery(sQuery);
 
-            // Prevent Hibernate from caching the results
-            query.setCacheMode(CacheMode.IGNORE);
-            query.setCacheable(false);
-            query.setReadOnly(true);
+                // Prevent Hibernate from caching the results
+                query.setCacheMode(CacheMode.IGNORE);
+                query.setCacheable(false);
+                query.setReadOnly(true);
 
-            // Parameterize the query (where :keys = keys)
-            query.setParameterList(PARAM_IDS, keys);
+                // Parameterize the query (where :keys = keys)
+                query.setParameterList(PARAM_IDS, keys);
+                result = query.list();
+            }
+            else {
+                result = session.byMultipleIds(this.m_sEntityName)
+                        .with(CacheMode.IGNORE)
+                        .multiLoad(keys);
+            }
 
             // Need a way to extract the key from an entity that we know
             // nothing about.
             ClassMetadata classMetaData = getEntityClassMetadata();
 
+            for (Object entity : result) {
+                Object[] propertyValues = classMetaData.getPropertyValues(entity);
+                for (Object propertyValue : propertyValues) {
+                    Hibernate.initialize(propertyValue);
+                }
+            }
+
             // Iterate through the results and place into the return map
-            for (Iterator iter = query.list().iterator(); iter.hasNext(); )
+            for (Object entity : result)
             {
-                Object entity = iter.next();
                 Object id = classMetaData.getIdentifier(entity, sessionImplementor);
                 results.put(id, entity);
             }
-
             tx.commit();
         }
         catch (Exception e)
@@ -387,8 +383,7 @@ public class HibernateCacheLoader
      */
     protected Session openSession()
     {
-        Session session = getSessionFactory().openSession();
-        return session;
+        return getSessionFactory().openSession();
     }
 
     /**
@@ -453,7 +448,7 @@ public class HibernateCacheLoader
     protected Object createEntityFromId(Object id, SessionImplementor sessionImplementor)
     {
         ClassMetadata cmd = getEntityClassMetadata();
-        Object o = cmd.instantiate((Serializable)id, sessionImplementor);
+        Object o = cmd.instantiate(id, sessionImplementor);
         return o;
     }
 
@@ -474,7 +469,7 @@ public class HibernateCacheLoader
         if (intrinsicIdentifier == null)
         {
             classMetaData
-                    .setIdentifier(entity, (Serializable)id, sessionImplementor);
+                    .setIdentifier(entity, id, sessionImplementor);
         }
         else
         {

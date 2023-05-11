@@ -59,7 +59,7 @@
 
     <modules>
         <module>coherence-hibernate-cache-store</module>
-<!--        <module>coherence-hibernate-cache-store-tests</module>-->
+        <module>coherence-hibernate-cache-store-tests</module>
         <module>coherence-hibernate-cache-core</module>
         <module>coherence-hibernate-cache-53</module>
         <module>coherence-hibernate-cache-6</module>
