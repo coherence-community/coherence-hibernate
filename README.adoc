@@ -1,6 +1,8 @@
-:release-version: 2.3.2
+:main-release-version: 3.0.0-SNAPSHOT
+:main-snapshot-version: 3.0.0-SNAPSHOT
+:2x-release-version: 2.3.2
+:2x-snapshot-version: 2.3.3-SNAPSHOT
 :hibernate-docs: https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single/Hibernate_User_Guide.html
-:snapshot-version: 3.0.0-SNAPSHOT
 :website: https://hibernate.coherence.community/
 
 = Welcome to the Oracle Coherence Hibernate Project
@@ -18,7 +20,7 @@ and the https://hibernate.org/orm/[Hibernate Object/Relational Mapping (ORM)] fr
 
 Two primary integration points are covered currently:
 
-* using Coherence as a {hibernate-docs}#caching[second-level cache] in Hibernate
+* using Coherence as a {hibernate-docs}#caching[second-level cache (2LC)] in Hibernate
 * using Hibernate as a Coherence CacheStore implementation
 
 Due to Hibernate Cache API changes, Coherence Hibernate `{snapshot-version}` provides dedicated Maven modules targeting those Hibernate versions:
@@ -41,6 +43,36 @@ as well as extensive JavaDoc for the Coherence Hibernate source code.
 
 NOTE: The http://maven.apache.org[Apache Maven]-based snapshots and releases for this project are published to
 https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
+
+== Supported Java & Coherence Versions
+
+[width="75%", cols="1,1,1,^1,^1"]
+|===
+|Coherence Hibernate       | Java | Coherence CE | Jakarta EE | Git Branch/Tag
+
+|*{main-snapshot-version}* | `17` | `23.03`      | ✅ | `main`
+|*{2x-release-version}*    | `11` | `22.06`      |            | `2.3.2`
+|*{2x-snapshot-version}*   | `11` | `22.06`      |            | `2.3.x`
+|===
+
+== Supported Hibernate Versions
+
+[width="75%", cols="1,1,1"]
+|===
+|Hibernate| Coherence Hibernate 2.3.x | Coherence Hibernate 3.0.x
+
+|`4.3.x`  | ✅                         | 
+|`5.0`    | ✅                         | 
+|`5.1`    | ✅                         | 
+|`5.2`    | ✅                         |
+|`5.3`    | ✅                         |
+|`5.4`    | ✅                         |
+|`5.5`    | ✅                         |
+|`5.6`    | ✅                         | ✅
+|`6.0`    |                           | ✅
+|`6.1`    |                           | ✅
+|`6.2`    |                           | ✅
+|===
 
 == Samples
 
