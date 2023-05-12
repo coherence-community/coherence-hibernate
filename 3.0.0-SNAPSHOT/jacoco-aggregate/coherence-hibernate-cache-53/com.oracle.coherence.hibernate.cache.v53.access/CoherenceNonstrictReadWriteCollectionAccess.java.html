@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CoherenceNonstrictReadWriteCollectionAccess.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-53</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v53.access</a> &gt; <span class="el_source">CoherenceNonstrictReadWriteCollectionAccess.java</span></div><h1>CoherenceNonstrictReadWriteCollectionAccess.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v53.access;
+
+import java.util.Comparator;
+
+import org.hibernate.cache.spi.DomainDataRegion;
+import org.hibernate.cache.spi.access.AccessType;
+import org.hibernate.cache.spi.access.CollectionDataAccess;
+import org.hibernate.cache.spi.support.DomainDataStorageAccess;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.persister.collection.CollectionPersister;
+
+/**
+ * A CoherenceNonstrictReadWriteCollectionAccess is CoherenceRegionAccessStrategy
+ * implementing Hibernate's nonstrict-read-write cache concurrency strategy for a collection region.
+ *
+ * @author Randy Stafford
+ * @author Gunnar Hillert
+ */
+public class CoherenceNonstrictReadWriteCollectionAccess
+extends AbstractCoherenceEntityDataAccess
+implements CollectionDataAccess
+{
+
+    // ---- Constuctors
+
+    /**
+     * Complete constructor.
+     *
+     * @param domainDataRegion the domain data region
+     * @param domainDataStorageAccess the domain data storage access
+     * @param versionComparator the version comparator
+     */
+    public CoherenceNonstrictReadWriteCollectionAccess(DomainDataRegion domainDataRegion,
+            DomainDataStorageAccess domainDataStorageAccess, Comparator&lt;?&gt; versionComparator)
+    {
+<span class="nc" id="L42">        super(domainDataRegion, domainDataStorageAccess, versionComparator);</span>
+<span class="nc" id="L43">    }</span>
+
+
+    // ---- interface org.hibernate.cache.spi.access.CollectionRegionAccessStrategy
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object generateCacheKey(Object id, CollectionPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier)
+    {
+<span class="nc" id="L54">        return this.getCacheKeysFactory().createCollectionKey(id, persister, sessionFactoryImplementor, tenantIdentifier);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object getCacheKeyId(Object cacheKey)
+    {
+<span class="nc" id="L63">        return this.getCacheKeysFactory().getCollectionId(cacheKey);</span>
+    }
+
+    @Override
+    public AccessType getAccessType() {
+<span class="nc" id="L68">        return AccessType.NONSTRICT_READ_WRITE;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AfterInsertProcessor.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-53</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v53.access.processor</a> &gt; <span class="el_source">AfterInsertProcessor.java</span></div><h1>AfterInsertProcessor.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v53.access.processor;
+
+import java.io.Serializable;
+
+import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
+import com.tangosol.util.InvocableMap;
+import com.tangosol.util.processor.AbstractProcessor;
+
+/**
+ * A AbstractReadWriteCoherenceEntityDataAccess.AfterInsertProcessor is an EntryProcessor
+ * responsible for inserting a value into cache if none is present, and returning a boolean
+ * indicating whether it did so, consistent with the expected behavior of a read-write cache
+ * access strategy's afterInsert() method.
+ *
+ * We move this behavior into the grid for efficient concurrency control.
+ *
+ * @author Randy Stafford
+ * @author Gunnar Hillert
+ */
+public class AfterInsertProcessor&lt;K&gt;
+extends AbstractProcessor&lt;K , CoherenceRegionValue, Boolean&gt;
+implements Serializable
+{
+
+
+    // ---- Constants
+
+    /**
+     * An identifier of this class's version for serialization purposes.
+     */
+    private static final long serialVersionUID = 2326579233150319530L;
+
+
+    // ---- Fields
+
+    /**
+     * The cache value for use by this AfterInsertProcessor.
+     */
+    private CoherenceRegionValue cacheValue;
+
+
+    // ---- Constructors
+
+    /**
+     * Complete constructor.
+     *
+     * @param cacheValue the cache value for use by this AfterInsertProcessor
+     */
+    public AfterInsertProcessor(CoherenceRegionValue cacheValue)
+<span class="nc" id="L56">    {</span>
+<span class="nc" id="L57">        this.cacheValue = cacheValue;</span>
+<span class="nc" id="L58">    }</span>
+
+
+    // ---- interface com.tangosol.util.InvocableMap.EntryProcessor
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Boolean process(InvocableMap.Entry entry)
+    {
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (entry.isPresent())</span>
+        {
+<span class="nc" id="L71">            return false;</span>
+        }
+        else
+        {
+<span class="nc" id="L75">            entry.setValue(cacheValue);</span>
+<span class="nc" id="L76">            return true;</span>
+        }
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

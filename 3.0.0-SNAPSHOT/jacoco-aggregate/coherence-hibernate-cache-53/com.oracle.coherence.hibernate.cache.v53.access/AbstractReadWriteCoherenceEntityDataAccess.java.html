@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AbstractReadWriteCoherenceEntityDataAccess.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-53</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v53.access</a> &gt; <span class="el_source">AbstractReadWriteCoherenceEntityDataAccess.java</span></div><h1>AbstractReadWriteCoherenceEntityDataAccess.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v53.access;
+
+import org.hibernate.cache.CacheException;
+import org.hibernate.cache.spi.DomainDataRegion;
+import org.hibernate.cache.spi.access.SoftLock;
+import org.hibernate.cache.spi.support.DomainDataStorageAccess;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+
+import com.oracle.coherence.hibernate.cache.v53.access.processor.AfterInsertProcessor;
+import com.oracle.coherence.hibernate.cache.v53.access.processor.AfterUpdateProcessor;
+import com.oracle.coherence.hibernate.cache.v53.access.processor.GetProcessor;
+import com.oracle.coherence.hibernate.cache.v53.access.processor.ReadWritePutFromLoadProcessor;
+import com.oracle.coherence.hibernate.cache.v53.access.processor.SoftLockItemProcessor;
+import com.oracle.coherence.hibernate.cache.v53.access.processor.SoftUnlockItemProcessor;
+import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Comparator;
+
+/**
+ * A AbstractReadWriteCoherenceEntityDataAccess is AbstractCoherenceEntityDataAccess
+ * implementing the &quot;read-write&quot; cache concurrency strategy as defined by Hibernate.
+ *
+ * @author Randy Stafford
+ * @author Gunnar Hillert
+ */
+abstract class AbstractReadWriteCoherenceEntityDataAccess
+extends AbstractCoherenceEntityDataAccess
+{
+
+<span class="nc" id="L38">    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractReadWriteCoherenceEntityDataAccess.class);</span>
+
+    // ---- Constructors
+
+    /**
+     * Complete constructor.
+     *
+     * @param domainDataRegion the CoherenceRegion for this AbstractReadWriteCoherenceEntityDataAccess
+     * @param domainDataStorageAccess the Hibernate SessionFactoryOptions object
+     * @param versionComparator
+     */
+    public AbstractReadWriteCoherenceEntityDataAccess(DomainDataRegion domainDataRegion,
+            DomainDataStorageAccess domainDataStorageAccess, Comparator&lt;?&gt; versionComparator)
+    {
+<span class="nc" id="L52">        super(domainDataRegion, domainDataStorageAccess, versionComparator);</span>
+<span class="nc" id="L53">    }</span>
+
+
+    // ---- interface org.hibernate.cache.spi.access.RegionAccessStrategy
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object get(SharedSessionContractImplementor session, Object key) throws CacheException
+    {
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L66">            LOGGER.debug(&quot;get({})&quot;, key);</span>
+        }
+<span class="nc" id="L68">        return getCoherenceRegion().invoke(key, new GetProcessor());</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public org.hibernate.cache.spi.access.SoftLock lockItem(SharedSessionContractImplementor session, Object key, Object version) throws CacheException
+    {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L79">            LOGGER.debug(&quot;lockItem({}, {})&quot;, key, version);</span>
+        }
+<span class="nc" id="L81">        CoherenceRegionValue valueIfAbsent = newCacheValue(null, version);</span>
+<span class="nc" id="L82">        CoherenceRegionValue.SoftLock newSoftLock = newSoftLock();</span>
+<span class="nc" id="L83">        SoftLockItemProcessor processor = new SoftLockItemProcessor(valueIfAbsent, newSoftLock);</span>
+<span class="nc" id="L84">        getCoherenceRegion().invoke(key, processor);</span>
+<span class="nc" id="L85">        return newSoftLock;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean putFromLoad(SharedSessionContractImplementor session, Object key, Object value, Object version, boolean minimalPutOverride)
+    throws CacheException
+    {
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L97">            LOGGER.debug(&quot;putFromLoad({}, {}, {}, {})&quot;, key, value, version, minimalPutOverride);</span>
+        }
+<span class="nc" id="L99">        CoherenceRegionValue newCacheValue = newCacheValue(value, version);</span>
+<span class="nc" id="L100">        ReadWritePutFromLoadProcessor processor = new ReadWritePutFromLoadProcessor(minimalPutOverride, this.getCoherenceRegion().nextTimestamp(), newCacheValue, super.getVersionComparator());</span>
+<span class="nc" id="L101">        return (Boolean) getCoherenceRegion().invoke(key, processor);</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void unlockItem(SharedSessionContractImplementor session, Object key, org.hibernate.cache.spi.access.SoftLock lock) throws CacheException
+    {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L112">            LOGGER.debug(&quot;unlockItem({}, {})&quot;, key, lock);</span>
+        }
+<span class="nc" id="L114">        SoftUnlockItemProcessor processor = new SoftUnlockItemProcessor(lock, getCoherenceRegion().nextTimestamp());</span>
+<span class="nc" id="L115">        getCoherenceRegion().invoke(key, processor);</span>
+<span class="nc" id="L116">    }</span>
+
+
+    // ---- Subclass interface
+
+    /**
+     * Coherence-based implementation of behavior common to:
+     * 1. org.hibernate.cache.spi.access.EntityRegionAccessStrategy.afterInsert(Object key, Object value, Object version) and
+     * 2. org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy.afterInsert(Object key, Object value).
+     *
+     * The only difference in implementation is that the cache value in a NaturalIdRegion will have a null version object.
+     *
+     * @param key the key at which to insert a value
+     * @param value the value to insert
+     *
+     * @return a boolean indicating whether cache contents were modified
+     */
+    protected boolean afterInsert(Object key, CoherenceRegionValue value)
+    {
+<span class="nc" id="L135">        final AfterInsertProcessor afterInsertProcessor = new AfterInsertProcessor(value);</span>
+<span class="nc" id="L136">        return (Boolean) getCoherenceRegion().invoke(key, afterInsertProcessor);</span>
+    }
+
+    /**
+     * Coherence-based implementation of behavior common to:
+     * 1. org.hibernate.cache.spi.access.EntityRegionAccessStrategy.afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) and
+     * 2. org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy.afterUpdate(Object key, Object value, SoftLock lock).
+     *
+     * The only difference in implementation is that the cache value in a NaturalIdRegion will have a null version object.
+     *
+     * @param key the key at which to insert a value
+     * @param value the value to insert
+     * @param softLock the softLock acquired in an earlier lockItem call with the argument key
+     *
+     * @return a boolean indicating whether cache contents were modified
+     */
+    protected boolean afterUpdate(Object key, CoherenceRegionValue value, SoftLock softLock)
+    {
+<span class="nc" id="L154">        long timeOfSoftLockRelease = getCoherenceRegion().nextTimestamp();</span>
+<span class="nc" id="L155">        AfterUpdateProcessor afterUpdateProcessor = new AfterUpdateProcessor(value, softLock, timeOfSoftLockRelease);</span>
+<span class="nc" id="L156">        return (Boolean) getCoherenceRegion().invoke(key, afterUpdateProcessor);</span>
+    }
+
+
+    // ---- Internal: factory
+
+    /**
+     * Returns a new SoftLock.
+     *
+     * @return a SoftLock newly constructed
+     */
+    private CoherenceRegionValue.SoftLock newSoftLock()
+    {
+<span class="nc" id="L169">        long lockExpirationTime = getCoherenceRegion().newSoftLockExpirationTime();</span>
+<span class="nc" id="L170">        return new CoherenceRegionValue.SoftLock(getUuid(), nextSoftLockSequenceNumber(), lockExpirationTime);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
