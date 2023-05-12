@@ -7,6 +7,7 @@
 
 image:https://github.com/coherence-community/coherence-hibernate/workflows/CI%20Coherence%20Hibernate/badge.svg[Build Status,link=https://github.com/coherence-community/coherence-hibernate/actions]
 image:https://img.shields.io/badge/license-UPL%201.0-blue.svg[License,link=https://oss.oracle.com/licenses/upl/]
+image:https://sonarcloud.io/api/project_badges/measure?project=coherence-community_coherence-hibernate&metric=alert_status[Quality Gate Status,link=https://sonarcloud.io/summary/new_code?id=coherence-community_coherence-hibernate]
 image:https://img.shields.io/github/v/release/coherence-community/coherence-hibernate[GitHub release (latest by date)]
 image:https://img.shields.io/badge/Coherence-Join%20Slack-red[Chat with us on slack,link=https://join.slack.com/t/oraclecoherence/shared_invite/zt-9ufv220y-Leudk0o5ntgNV0xraa8DNw]
 image:https://img.shields.io/stackexchange/stackoverflow/t/oracle-coherence?label=%20StackOverflow%20%7C%20oracle-coherence[Stack Exchange questions,link=https://stackoverflow.com/questions/tagged/oracle-coherence]

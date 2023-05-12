@@ -79,7 +79,7 @@
                         </goals>
                         <phase>prepare-package</phase>
                         <configuration>
-                            <source>8</source>
+                            <source>17</source>
                             <outputDirectory>${project.build.directory}/site/api</outputDirectory>
                             <includeDependencySources>true</includeDependencySources>
                             <dependencySourceIncludes>
@@ -89,12 +89,11 @@
                             <attach>false</attach>
                             <quiet>true</quiet>
                             <links>
-                                <link>https://docs.oracle.com/javase/8/docs/api/</link>
-                                <link>https://docs.oracle.com/javaee/7/api/</link>
+                                <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
+                                <link>https://jakarta.ee/specifications/platform/10/apidocs/</link>
                             </links>
-                            <additionalJOption>--no-module-directories</additionalJOption>
                             <bottom>
-                                Copyright © 2013, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0.
+                                Copyright © 2013, 2023, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0.
                             </bottom>
                         </configuration>
                     </execution>
@@ -218,6 +217,20 @@
                         <argument>8080</argument>
                     </arguments>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven-jacoco-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
