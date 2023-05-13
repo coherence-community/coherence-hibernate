@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -38,6 +38,7 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,15 +56,16 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
 
     // ---- Constants
 
+    @Serial
     private static final long serialVersionUID = -8434943540794407358L;
 
-    protected CoherenceHibernateSystemPropertyResolver systemPropertyResolver;
+    protected transient CoherenceHibernateSystemPropertyResolver systemPropertyResolver;
 
-    protected Session coherenceSession;
+    protected transient Session coherenceSession;
 
     private final boolean requiresShutDown;
 
-    private DefaultCacheServer defaultCacheServer;
+    private transient DefaultCacheServer defaultCacheServer;
 
     private Cluster cluster = null;
 
@@ -100,7 +102,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     /**
      * The Hibernate settings object; may contain user-supplied "minimal puts" setting.
      */
-    private SessionFactoryOptions sessionFactoryOptions;
+    private transient SessionFactoryOptions sessionFactoryOptions;
 
     /**
      * The Hibernate {@link CacheKeysFactory} to use. Hibernate ships with 2 {@link CacheKeysFactory}
@@ -113,7 +115,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
      * <p>
      * If none is specified, then the {@link org.hibernate.cache.internal.DefaultCacheKeysFactory} is used.
      */
-    private CacheKeysFactory cacheKeysFactory;
+    private transient CacheKeysFactory cacheKeysFactory;
 
     // ---- Accessing
 
@@ -268,7 +270,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     /**
      * {@inheritDoc}
      * <p>
-     * see also https://stackoverflow.com/a/12389310/835934
+     * see also <a href="https://stackoverflow.com/a/12389310/835934">stackoverflow.com/a/12389310/835934</a>
      */
     @Override
     public boolean isMinimalPutsEnabledByDefault()

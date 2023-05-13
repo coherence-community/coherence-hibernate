@@ -27,7 +27,7 @@ public class CoherenceHibernateSystemPropertyResolver {
 	/**
 	 * The Coherence properties to be used.
 	 */
-	private volatile Map<String, Object> coherenceProperties = new ConcurrentHashMap<>(0);
+	private Map<String, Object> coherenceProperties = new ConcurrentHashMap<>(0);
 
 	/**
 	 * This constructor is required so that Coherence can discover

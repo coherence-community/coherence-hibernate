@@ -232,8 +232,6 @@ public class CustomSessionReadWriteCacheTests extends BaseCoreFunctionalTestCase
 		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("foo");
 		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
 
-		coherenceStorageAccess.getDelegate();
-
 		session.getTransaction().commit();
 		session.close();
 

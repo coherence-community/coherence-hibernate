@@ -501,7 +501,7 @@ public class HibernateCacheLoader
      * ClassMetadata object for this CacheLoader's entity type
      * (has pseudo-final semantics, and is guarded by ensureInitialized())
      */
-    private volatile ClassMetadata m_entityClassMetadata;
+    private ClassMetadata m_entityClassMetadata;
 
     /**
      * An HQL query string for loadAll
@@ -517,5 +517,5 @@ public class HibernateCacheLoader
     /**
      * The Hibernate SessionFactory (the instance's copy)
      */
-    private volatile SessionFactory m_sessionFactory;
+    private SessionFactory m_sessionFactory;
 }

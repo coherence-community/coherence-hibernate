@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2023 Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -27,7 +27,7 @@ public class CoherenceHibernateSystemPropertyResolver {
 	/**
 	 * The Coherence properties to be used.
 	 */
-	private volatile Map<String, Object> coherenceProperties = new ConcurrentHashMap<>(0);
+	private Map<String, Object> coherenceProperties = new ConcurrentHashMap<>(0);
 
 	/**
 	 * This constructor is required so that Coherence can discover
