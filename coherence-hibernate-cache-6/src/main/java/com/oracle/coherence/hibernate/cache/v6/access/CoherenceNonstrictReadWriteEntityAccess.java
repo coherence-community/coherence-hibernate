@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -28,15 +28,9 @@ import org.slf4j.LoggerFactory;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-public class CoherenceNonstrictReadWriteEntityAccess
-extends AbstractCoherenceEntityDataAccess
-implements EntityDataAccess
-{
+public class CoherenceNonstrictReadWriteEntityAccess extends AbstractCoherenceEntityDataAccess implements EntityDataAccess {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceNonstrictReadWriteEntityAccess.class);
-
-
-    // ---- Constructors
 
     /**
      * Complete constructor.
@@ -46,26 +40,20 @@ implements EntityDataAccess
      * @param versionComparator the version comparator
      */
     public CoherenceNonstrictReadWriteEntityAccess(DomainDataRegion domainDataRegion,
-            DomainDataStorageAccess domainDataStorageAccess, Comparator<?> versionComparator)
-    {
+                                                   DomainDataStorageAccess domainDataStorageAccess, Comparator<?> versionComparator) {
         super(domainDataRegion, domainDataStorageAccess, versionComparator);
     }
-
-
-    // ---- interface org.hibernate.cache.spi.access.EntityRegionAccessStrategy
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean insert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException
-    {
+    public boolean insert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Synchronous" (i.e. transactional) access strategies should insert the cache entry here, but
         //"asynchrononous" (i.e. non-transactional) strategies should insert it in afterInsert instead.
-        if (LOGGER.isDebugEnabled())
-        {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("insert({}, {}, {})", key, value, version);
         }
         return false;
@@ -75,15 +63,13 @@ implements EntityDataAccess
      * {@inheritDoc}
      */
     @Override
-    public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException
-    {
+    public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -> afterInsert() when inserting an entity.
         //"Asynchrononous" (i.e. non-transactional) strategies should insert the cache entry here.
         //But in nonstrict-read-write cache concurrency strategies, don't put newly inserted entities, to force
         //subsequent putFromLoad.
-        if (LOGGER.isDebugEnabled())
-        {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("afterInsert({}, {}, {})", key, value, version);
         }
         return false;
@@ -93,14 +79,12 @@ implements EntityDataAccess
      * {@inheritDoc}
      */
     @Override
-    public boolean update(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
-    {
+    public boolean update(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence lockItem() -> update() -> afterUpdate() when updating an entity.
         //"Synchronous" (i.e. transactional) access strategies should update the cache entry here, but
         //"asynchrononous" (i.e. non-transactional) strategies should update it in afterUpdate instead.
-        if (LOGGER.isDebugEnabled())
-        {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("update({}, {}, {}, {})", key, value, currentVersion, previousVersion);
         }
         return false;
@@ -112,15 +96,13 @@ implements EntityDataAccess
      * <p>Implementation notes
      */
     @Override
-    public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
-    {
+    public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence lockItem() -> update() -> afterUpdate() when updating an entity.
         //"Asynchrononous" (i.e. non-transactional) strategies should invalidate or update the cache entry here and release the lock,
         //as appropriate for the kind of strategy (nonstrict-read-write vs. read-write).
         //In the nonstrict-read-write strategy we remove the cache entry to force subsequent putFromLoad.
-        if (LOGGER.isDebugEnabled())
-        {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("afterUpdate({}, {}, {}, {}, {})", key, value, currentVersion, previousVersion, lock);
         }
         remove(session, key);
@@ -129,14 +111,12 @@ implements EntityDataAccess
     }
 
     @Override
-    public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier)
-    {
-        return ((AbstractDomainDataRegion) this.getRegion()).getEffectiveKeysFactory().createEntityKey( id, persister, sessionFactoryImplementor, tenantIdentifier );
+    public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier) {
+        return ((AbstractDomainDataRegion) this.getRegion()).getEffectiveKeysFactory().createEntityKey(id, persister, sessionFactoryImplementor, tenantIdentifier);
     }
 
     @Override
-    public Object getCacheKeyId(Object cacheKey)
-    {
+    public Object getCacheKeyId(Object cacheKey) {
         return this.getCacheKeysFactory().getEntityId(cacheKey);
     }
 

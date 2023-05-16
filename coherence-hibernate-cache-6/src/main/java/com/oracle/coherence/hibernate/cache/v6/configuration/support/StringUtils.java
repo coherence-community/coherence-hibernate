@@ -13,21 +13,21 @@ package com.oracle.coherence.hibernate.cache.v6.configuration.support;
  */
 public abstract class StringUtils {
 
-	private StringUtils() {
-		throw new AssertionError();
-	}
+    private StringUtils() {
+        throw new AssertionError();
+    }
 
-	public static boolean hasText(String string) {
-		return (string != null && !string.isEmpty() && containsText(string));
-	}
+    public static boolean hasText(String string) {
+        return (string != null && !string.isEmpty() && containsText(string));
+    }
 
-	private static boolean containsText(CharSequence string) {
-		int stringLength = string.length();
-		for (int i = 0; i < stringLength; i++) {
-			if (!Character.isWhitespace(string.charAt(i))) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private static boolean containsText(CharSequence string) {
+        final int stringLength = string.length();
+        for (int i = 0; i < stringLength; i++) {
+            if (!Character.isWhitespace(string.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

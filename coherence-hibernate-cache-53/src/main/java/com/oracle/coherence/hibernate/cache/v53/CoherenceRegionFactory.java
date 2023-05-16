@@ -6,6 +6,10 @@
  */
 package com.oracle.coherence.hibernate.cache.v53;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegionImpl;
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
 import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
@@ -38,10 +42,6 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 /**
  * A CoherenceRegionFactory is a factory for regions of Hibernate second-level cache implemented with Oracle Coherence.
  *
@@ -49,25 +49,20 @@ import java.util.Map;
  * @author Gunnar Hillert
  * @since 2.1
  */
-public class CoherenceRegionFactory extends RegionFactoryTemplate
-{
+public class CoherenceRegionFactory extends RegionFactoryTemplate {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceRegionFactory.class);
-
-    // ---- Constants
 
     private static final long serialVersionUID = -8434943540794407358L;
 
-    protected CoherenceHibernateSystemPropertyResolver systemPropertyResolver;
+    protected transient CoherenceHibernateSystemPropertyResolver systemPropertyResolver;
 
-    protected Session coherenceSession;
+    protected transient Session coherenceSession;
 
     private final boolean requiresShutDown;
 
-    private DefaultCacheServer defaultCacheServer;
+    private transient DefaultCacheServer defaultCacheServer;
 
     private Cluster cluster = null;
-
-    // ---- Constructors
 
     /**
      * Default constructor. Any Coherence instances created will implicitly require a shutdown of Coherence when
@@ -95,12 +90,10 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
         this.requiresShutDown = false;
     }
 
-    // ---- Fields
-
     /**
      * The Hibernate settings object; may contain user-supplied "minimal puts" setting.
      */
-    private SessionFactoryOptions sessionFactoryOptions;
+    private transient SessionFactoryOptions sessionFactoryOptions;
 
     /**
      * The Hibernate {@link CacheKeysFactory} to use. Hibernate ships with 2 {@link CacheKeysFactory}
@@ -113,9 +106,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
      * <p>
      * If none is specified, then the {@link org.hibernate.cache.internal.DefaultCacheKeysFactory} is used.
      */
-    private CacheKeysFactory cacheKeysFactory;
-
-    // ---- Accessing
+    private transient CacheKeysFactory cacheKeysFactory;
 
     @Override
     protected CacheKeysFactory getImplicitCacheKeysFactory() {
@@ -124,43 +115,33 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
 
     /**
      * Returns the Coherence {@link Session} used by this {@link CoherenceRegionFactory}.
-     *
      * @return the Coherence {@link Session}
      */
-    protected Session getCoherenceSession()
-    {
+    protected Session getCoherenceSession() {
         return this.coherenceSession;
     }
 
     /**
      * Sets the Coherence {@link Session} used by this {@link CoherenceRegionFactory}.
-     *
      * @param coherenceSession the Coherence {@link Session} used by this CoherenceRegionFactory. May be null.
      */
-    protected void setCoherenceSession(Session coherenceSession)
-    {
+    protected void setCoherenceSession(Session coherenceSession) {
         this.coherenceSession = coherenceSession;
     }
-
-    // ---- interface java.lang.Object
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return getClass().getName() + "(" +
-                "coherenceSession=" + (this.coherenceSession == null ? "N/A" : this.coherenceSession.toString()) +
-                ", sessionFactoryOptions=" + sessionFactoryOptions +
+                "coherenceSession=" + ((this.coherenceSession != null) ? this.coherenceSession.toString() : "N/A") +
+                ", sessionFactoryOptions=" + this.sessionFactoryOptions +
                 ")";
     }
 
-    // ---- interface org.hibernate.cache.spi.RegionFactory
-
     @Override
-    protected void prepareForUse(SessionFactoryOptions settings, Map configValues)
-    {
+    protected void prepareForUse(SessionFactoryOptions settings, Map configValues) {
         this.sessionFactoryOptions = settings;
 
         final CoherenceHibernateProperties coherenceHibernateProperties = new CoherenceHibernateProperties(configValues);
@@ -172,14 +153,12 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
             this.systemPropertyResolver.addCoherenceProperty(CoherenceHibernateProperties.COHERENCE_LOGGER_PROPERTY_NAME, CoherenceHibernateProperties.COHERENCE_LOGGER_DEFAULT_VALUE);
         }
 
-        if (this.sessionFactoryOptions != null)
-        {
-            StrategySelector selector = this.sessionFactoryOptions.getServiceRegistry().getService(StrategySelector.class);
+        if (this.sessionFactoryOptions != null) {
+            final StrategySelector selector = this.sessionFactoryOptions.getServiceRegistry().getService(StrategySelector.class);
             this.cacheKeysFactory = selector.resolveDefaultableStrategy(CacheKeysFactory.class,
                     configValues.get(Environment.CACHE_KEYS_FACTORY), new DefaultCacheKeysFactory());
         }
-        else
-        {
+        else {
             this.cacheKeysFactory = new DefaultCacheKeysFactory();
         }
 
@@ -187,17 +166,14 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
 
         prepareCoherenceSessionIfNeeded(coherenceHibernateProperties);
 
-        if (LOGGER.isDebugEnabled())
-        {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("start({}, {})", settings, configValues);
         }
     }
 
-    private void prepareCoherenceSessionIfNeeded(CoherenceHibernateProperties coherenceHibernateProperties)
-    {
+    private void prepareCoherenceSessionIfNeeded(CoherenceHibernateProperties coherenceHibernateProperties) {
         if (this.coherenceSession == null) {
-            if (coherenceHibernateProperties.getSessionType() == null || SessionType.SERVER.equals(coherenceHibernateProperties.getSessionType()))
-            {
+            if (coherenceHibernateProperties.getSessionType() == null || SessionType.SERVER.equals(coherenceHibernateProperties.getSessionType())) {
                 if (coherenceHibernateProperties.isStartCacheServer()) {
                     final ExtensibleConfigurableCacheFactory.Dependencies deps =
                             ExtensibleConfigurableCacheFactory.DependenciesHelper.newInstance(coherenceHibernateProperties.getCacheConfigFilePath());
@@ -271,8 +247,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
      * see also https://stackoverflow.com/a/12389310/835934
      */
     @Override
-    public boolean isMinimalPutsEnabledByDefault()
-    {
+    public boolean isMinimalPutsEnabledByDefault() {
         return true;
     }
 
@@ -280,8 +255,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
      * {@inheritDoc}
      */
     @Override
-    public AccessType getDefaultAccessType()
-    {
+    public AccessType getDefaultAccessType() {
         return AccessType.READ_WRITE;
     }
 
@@ -289,14 +263,11 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
      * {@inheritDoc}
      */
     @Override
-    public long nextTimestamp()
-    {
-        if (this.cluster == null)
-        {
+    public long nextTimestamp() {
+        if (this.cluster == null) {
             return System.currentTimeMillis();
         }
-        else
-        {
+        else {
             return CacheFactory.ensureCluster().getTimeMillis();
         }
     }
@@ -305,20 +276,16 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
 
     /**
      * Ensure the initialization of a NamedCache of the argument name.
-     *
      * @param cacheName the name of the NamedCache whose initialization to ensure
-     *
      * @return a NamedCache for the argument name
      */
-    protected NamedCache<?, ?> ensureNamedCache(String cacheName)
-    {
+    protected NamedCache<?, ?> ensureNamedCache(String cacheName) {
         return this.coherenceSession.getCache(cacheName);
     }
 
     @Override
     protected DomainDataStorageAccess createDomainDataStorageAccess(DomainDataRegionConfig regionConfig,
-        DomainDataRegionBuildingContext buildingContext)
-    {
+        DomainDataRegionBuildingContext buildingContext) {
         return new CoherenceStorageAccessImpl(
             this.createCoherenceRegion(regionConfig.getRegionName(), buildingContext.getSessionFactory())
         );
@@ -327,32 +294,28 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate
     @Override
     protected StorageAccess createTimestampsRegionStorageAccess(
             String regionName,
-            SessionFactoryImplementor sessionFactory)
-    {
+            SessionFactoryImplementor sessionFactory) {
         return new CoherenceStorageAccessImpl(this.createCoherenceRegion(regionName, sessionFactory));
     }
 
     @Override
-    protected StorageAccess createQueryResultsRegionStorageAccess(String regionName, SessionFactoryImplementor sessionFactory)
-    {
+    protected StorageAccess createQueryResultsRegionStorageAccess(String regionName, SessionFactoryImplementor sessionFactory) {
         return new CoherenceStorageAccessImpl(this.createCoherenceRegion(regionName, sessionFactory));
     }
 
     protected CoherenceRegion createCoherenceRegion(final String unqualifiedRegionName,
-                                                    final SessionFactoryImplementor sessionFactory)
-    {
+                                                    final SessionFactoryImplementor sessionFactory) {
         return new CoherenceRegion(this, this.ensureNamedCache(unqualifiedRegionName), sessionFactory.getProperties());
     }
 
     @Override
     public DomainDataRegion buildDomainDataRegion(final DomainDataRegionConfig regionConfig,
-                                                  final DomainDataRegionBuildingContext buildingContext)
-    {
+                                                  final DomainDataRegionBuildingContext buildingContext) {
         return new CoherenceDomainDataRegionImpl(
           regionConfig,
           this,
           createDomainDataStorageAccess(regionConfig, buildingContext),
-          cacheKeysFactory,
+          this.cacheKeysFactory,
           buildingContext
         );
     }

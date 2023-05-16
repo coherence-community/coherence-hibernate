@@ -10,27 +10,22 @@ package com.oracle.coherence.hibernate.demo.service.impl;
  * An exception indicating that a {@link com.oracle.coherence.hibernate.demo.model.Event} was not found.
  * @author Gunnar Hillert
  */
-public class EventNotFoundException extends RuntimeException
-    {
+public class EventNotFoundException extends RuntimeException {
     private static final String EVENT_NOT_FOUND_MESSAGE = "Unable to find event with id '%s'.";
 
     /**
      * Create the exception.
-     *
      * @param message reason for the exception.
      */
-    public EventNotFoundException(String message)
-        {
+    public EventNotFoundException(String message) {
         super(message);
-        }
+    }
 
     /**
      * Create the exception.
-     *
      * @param eventId id of the {@link com.oracle.coherence.hibernate.demo.model.Event} that could not be found.
      */
-    public EventNotFoundException(Long eventId)
-        {
+    public EventNotFoundException(Long eventId) {
         this(String.format(EVENT_NOT_FOUND_MESSAGE, eventId));
-        }
+    }
 }

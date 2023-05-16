@@ -17,88 +17,91 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- *
+ * The Person Model class.
  * @author Gunnar Hillert
  *
  */
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name="PEOPLE")
+@Table(name = "PEOPLE")
 public class Person implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	private int age;
-	private String firstname;
-	private String lastname;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private int age;
+    private String firstname;
+    private String lastname;
 
-	@ManyToMany(mappedBy = "participants")
-	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	private Set<Event> events = new HashSet<>();
+    @ManyToMany(mappedBy = "participants")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Event> events = new HashSet<>();
 
-	public Person() {
-	}
+    public Person() {
+    }
 
-	public Person(Long id) {
-		this.id = id;
-	}
+    public Person(Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public int getAge() {
-		return age;
-	}
+    public int getAge() {
+        return this.age;
+    }
 
-	public void setAge(int age) {
-		this.age = age;
-	}
+    public void setAge(int age) {
+        this.age = age;
+    }
 
-	public String getFirstname() {
-		return firstname;
-	}
+    public String getFirstname() {
+        return this.firstname;
+    }
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
 
-	public String getLastname() {
-		return lastname;
-	}
+    public String getLastname() {
+        return this.lastname;
+    }
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
 
-	public Set<Event> getEvents() {
-		return events;
-	}
+    public Set<Event> getEvents() {
+        return this.events;
+    }
 
-	protected void setEvents(Set<Event> events) {
-		this.events = events;
-	}
+    protected void setEvents(Set<Event> events) {
+        this.events = events;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Person person = (Person) o;
-		return Objects.equals(id, person.id);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Person person = (Person) o;
+        return Objects.equals(this.id, person.id);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id);
+    }
 }

@@ -6,13 +6,12 @@
  */
 package com.oracle.coherence.hibernate.cache.v53.configuration;
 
-import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
-import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateProperties;
-
-import org.junit.jupiter.api.Test;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
+import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateProperties;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -22,13 +22,7 @@ import org.hibernate.persister.collection.CollectionPersister;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-public class CoherenceReadOnlyCollectionAccess
-extends AbstractCoherenceEntityDataAccess
-implements CollectionDataAccess
-{
-
-
-    // ---- Constuctors
+public class CoherenceReadOnlyCollectionAccess extends AbstractCoherenceEntityDataAccess implements CollectionDataAccess {
 
     /**
      * Complete constructor.
@@ -38,8 +32,7 @@ implements CollectionDataAccess
      * @param versionComparator the version comparator
      */
     public CoherenceReadOnlyCollectionAccess(DomainDataRegion domainDataRegion,
-            DomainDataStorageAccess domainDataStorageAccess, Comparator<?> versionComparator)
-    {
+                                             DomainDataStorageAccess domainDataStorageAccess, Comparator<?> versionComparator) {
         super(domainDataRegion, domainDataStorageAccess, versionComparator);
     }
 
@@ -47,14 +40,12 @@ implements CollectionDataAccess
     // ---- interface org.hibernate.cache.spi.access.CollectionRegionAccessStrategy
 
     @Override
-    public Object generateCacheKey(Object id, CollectionPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier)
-    {
+    public Object generateCacheKey(Object id, CollectionPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier) {
         return this.getCacheKeysFactory().createCollectionKey(id, persister, sessionFactoryImplementor, tenantIdentifier);
     }
 
     @Override
-    public Object getCacheKeyId(Object cacheKey)
-    {
+    public Object getCacheKeyId(Object cacheKey) {
         return this.getCacheKeysFactory().getCollectionId(cacheKey);
     }
 

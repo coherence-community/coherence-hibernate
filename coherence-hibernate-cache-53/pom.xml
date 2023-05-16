@@ -83,7 +83,7 @@
 		</dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-testing</artifactId>
+            <artifactId>hibernate-testing-jakarta</artifactId>
             <version>${hibernate53.version}</version>
             <scope>test</scope>
         </dependency>

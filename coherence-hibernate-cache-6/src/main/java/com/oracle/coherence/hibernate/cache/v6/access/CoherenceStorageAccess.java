@@ -10,6 +10,8 @@ import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 
 /**
+ * Coherence Extension of {@link DomainDataStorageAccess}.
+ * @author Gunnar Hillert
  * @author Gunnar Hillert
  */
 public interface CoherenceStorageAccess extends DomainDataStorageAccess {

@@ -6,18 +6,18 @@
  */
 package com.oracle.coherence.hibernate.demo.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 /**
- *
+ * Data transfer object for {@link com.oracle.coherence.hibernate.demo.model.Person}s.
  * @author Gunnar Hillert
  *
  */
@@ -49,7 +49,7 @@ public class PersonDto implements Serializable {
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -57,7 +57,7 @@ public class PersonDto implements Serializable {
 	}
 
 	public int getAge() {
-		return age;
+		return this.age;
 	}
 
 	public void setAge(int age) {
@@ -65,7 +65,7 @@ public class PersonDto implements Serializable {
 	}
 
 	public String getFirstname() {
-		return firstname;
+		return this.firstname;
 	}
 
 	public void setFirstname(String firstname) {
@@ -73,7 +73,7 @@ public class PersonDto implements Serializable {
 	}
 
 	public String getLastname() {
-		return lastname;
+		return this.lastname;
 	}
 
 	public void setLastname(String lastname) {
@@ -81,7 +81,7 @@ public class PersonDto implements Serializable {
 	}
 
 	public Set<EventDto> getEvents() {
-		return events;
+		return this.events;
 	}
 
 	protected void setEvents(Set<EventDto> events) {
@@ -90,14 +90,18 @@ public class PersonDto implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PersonDto person = (PersonDto) o;
-		return Objects.equals(id, person.id);
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final PersonDto person = (PersonDto) o;
+		return Objects.equals(this.id, person.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(this.id);
 	}
 }

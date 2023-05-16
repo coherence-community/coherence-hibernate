@@ -6,12 +6,12 @@
  */
 package com.oracle.coherence.hibernate.cache.v53.access;
 
+import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
 import org.hibernate.cache.spi.access.SoftLock;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
-
 /**
+ * Implementation of {@link CoherenceStorageAccess}. Will delegation operations to {@link CoherenceRegion}.
  *
  * @author Gunnar Hillert
  *
@@ -68,7 +68,7 @@ public class CoherenceStorageAccessImpl implements CoherenceStorageAccess {
     }
 
     public CoherenceRegion getDelegate() {
-        return delegate;
+        return this.delegate;
     }
 
 }

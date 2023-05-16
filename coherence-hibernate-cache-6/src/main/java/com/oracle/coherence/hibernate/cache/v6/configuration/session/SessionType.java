@@ -16,15 +16,15 @@ package com.oracle.coherence.hibernate.cache.v6.configuration.session;
  */
 public enum SessionType {
 
-	/**
-	 * The session is a client session, that is it expects to be a Coherence*Extend client.
-	 */
-	CLIENT,
+    /**
+     * The session is a client session, that is it expects to be a Coherence*Extend client.
+     */
+    CLIENT,
 
-	/**
-	 * The session is a server session, that is it expects to be a Coherence cluster member. This is the default type if
-	 * none is specified for a configuration.
-	 */
-	SERVER
+    /**
+     * The session is a server session, that is it expects to be a Coherence cluster member. This is the default type if
+     * none is specified for a configuration.
+     */
+    SERVER
 
 }

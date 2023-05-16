@@ -6,6 +6,8 @@
  */
 package com.oracle.coherence.hibernate.cache.v53;
 
+import java.util.List;
+
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegionImpl;
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
 import com.oracle.coherence.hibernate.cache.v53.support.Foo;
@@ -21,8 +23,6 @@ import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,8 +66,8 @@ public class ReadWriteCacheTests extends BaseCoreFunctionalTestCase {
 
 		final Session session = openSession();
 		session.beginTransaction();
-		final Foo itemToSave = new Foo( "bar" );
-		this.idOfSavedItem = (Long) session.save( itemToSave );
+		final Foo itemToSave = new Foo("bar");
+		this.idOfSavedItem = (Long) session.save(itemToSave);
 		session.flush();
 		session.getTransaction().commit();
 
@@ -101,7 +101,7 @@ public class ReadWriteCacheTests extends BaseCoreFunctionalTestCase {
 
 		final Session session = openSession();
 		session.beginTransaction();
-		final Foo itemToUpdate = session.get(Foo.class, idOfSavedItem);
+		final Foo itemToUpdate = session.get(Foo.class, this.idOfSavedItem);
 		itemToUpdate.setName("newdata");
 		session.update(itemToUpdate);
 		session.flush();
@@ -120,7 +120,7 @@ public class ReadWriteCacheTests extends BaseCoreFunctionalTestCase {
 		final CacheRegionStatistics itemStatistics = statistics.getDomainDataRegionStatistics("foo");
 
 		final Session session = openSession();
-		final Foo fooItem = session.get(Foo.class, idOfSavedItem);
+		final Foo fooItem = session.get(Foo.class, this.idOfSavedItem);
 
 		assertThat(itemStatistics.getPutCount()).isEqualTo(1);
 		assertThat(itemStatistics.getHitCount()).isEqualTo(3);

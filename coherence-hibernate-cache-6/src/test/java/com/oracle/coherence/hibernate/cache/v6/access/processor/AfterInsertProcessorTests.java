@@ -6,15 +6,15 @@
  */
 package com.oracle.coherence.hibernate.cache.v6.access.processor;
 
+import java.time.Instant;
+import java.util.concurrent.ExecutionException;
+
 import com.oracle.coherence.hibernate.cache.v6.region.CoherenceRegionValue;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.ConfigurableCacheFactory;
 import com.tangosol.net.NamedCache;
 import org.junit.AfterClass;
 import org.junit.Test;
-
-import java.time.Instant;
-import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,7 +40,7 @@ public class AfterInsertProcessorTests {
 
 		final CoherenceRegionValue coherenceRegionValue = new CoherenceRegionValue("bar", 1,  Instant.now().toEpochMilli());
 		final AfterInsertProcessor afterInsertProcessor = new AfterInsertProcessor(coherenceRegionValue);
-		Boolean result = fooCache.<Boolean>invoke(1L, afterInsertProcessor);
+		final Boolean result = fooCache.<Boolean>invoke(1L, afterInsertProcessor);
 		assertThat(result).isTrue();
 		assertThat(fooCache.size()).isEqualTo(1);
 		assertThat(fooCache.get(1L)).isEqualTo(coherenceRegionValue);

@@ -6,16 +6,17 @@
  */
 package com.oracle.coherence.hibernate.demo.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 /**
+ * Data transfer object for {@link com.oracle.coherence.hibernate.demo.model.Event}s.
  * @author Gunnar Hillert
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -39,7 +40,7 @@ public class EventDto implements Serializable {
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -47,7 +48,7 @@ public class EventDto implements Serializable {
 	}
 
 	public LocalDate getDate() {
-		return date;
+		return this.date;
 	}
 
 	public void setDate(LocalDate date) {
@@ -55,7 +56,7 @@ public class EventDto implements Serializable {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -63,7 +64,7 @@ public class EventDto implements Serializable {
 	}
 
 	public Set<Long> getParticipants() {
-		return participants;
+		return this.participants;
 	}
 
 	public void setParticipants(Set<Long> participantIds) {
@@ -72,14 +73,18 @@ public class EventDto implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		EventDto event = (EventDto) o;
-		return Objects.equals(id, event.id);
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final EventDto event = (EventDto) o;
+		return Objects.equals(this.id, event.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(this.id);
 	}
 }

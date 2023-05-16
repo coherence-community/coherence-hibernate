@@ -1,4 +1,4 @@
 /**
- * Contains Web Controllers
+ * Contains Web Controllers.
  */
 package com.oracle.coherence.hibernate.demo.controller;

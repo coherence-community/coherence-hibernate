@@ -6,6 +6,8 @@
  */
 package com.oracle.coherence.hibernate.cache.v53.region;
 
+import java.util.Map;
+
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.Assert;
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateProperties;
 import com.tangosol.net.NamedCache;
@@ -24,8 +26,6 @@ import org.hibernate.cache.spi.RegionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 /**
  * CoherenceRegion is an abstract superclass for classes representing different kinds of "region" in the Hibernate
  * second-level cache.  It abstracts behavior (and state) common to all types of Hibernate second-level cache region.
@@ -39,13 +39,9 @@ import java.util.Map;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-public class CoherenceRegion
-implements Region, ExtendedStatisticsSupport
-{
+public class CoherenceRegion implements Region, ExtendedStatisticsSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceRegion.class);
-
-    // ---- Constants
 
     /**
      * The prefix of the names of all properties specific to this SPI implementation.
@@ -62,9 +58,6 @@ implements Region, ExtendedStatisticsSupport
     */
     public static final int DEFAULT_LOCK_LEASE_DURATION = 60 * 1000;
 
-
-    // ---- Fields
-
     /**
     * The lock lease timeout in milliseconds.
     */
@@ -77,25 +70,20 @@ implements Region, ExtendedStatisticsSupport
 
     private final RegionFactory regionFactory;
 
-    // ---- Constructors
-
     /**
      * Complete constructor.
-     *
      * @param regionFactory the region factory
      * @param namedCache the Coherence NamedCache
      * @param properties the properties
      */
-    public CoherenceRegion(RegionFactory regionFactory, NamedCache namedCache, Map<String, Object> properties)
-    {
+    public CoherenceRegion(RegionFactory regionFactory, NamedCache namedCache, Map<String, Object> properties) {
         Assert.notNull(regionFactory, "regionFactory must not be null.");
         Assert.notNull(namedCache, "namedCache must not be null.");
 
-        if (LOGGER.isDebugEnabled())
-        {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Constructing CoherenceRegion for NamedCache '{}'.", namedCache.getCacheName());
         }
-        lockLeaseDuration = (int) getDurationProperty(
+        this.lockLeaseDuration = (int) getDurationProperty(
                 properties,
                 LOCK_LEASE_DURATION_PROPERTY_NAME,
                 DEFAULT_LOCK_LEASE_DURATION,
@@ -104,100 +92,79 @@ implements Region, ExtendedStatisticsSupport
         this.regionFactory = regionFactory;
     }
 
-    // ---- Accessors
-
     /**
      * Returns the NamedCache implementing this CoherenceRegion.
-     *
      * @return the NamedCache implementing this CoherenceRegion
      */
-    protected NamedCache getNamedCache()
-    {
-        return namedCache;
+    protected NamedCache getNamedCache() {
+        return this.namedCache;
     }
 
     @Override
     public RegionFactory getRegionFactory() {
-        return regionFactory;
+        return this.regionFactory;
     }
-
-    // ---- interface java.lang.Object
 
     /**
      * {@inheritDoc}}
      */
     @Override
-    public String toString()
-    {
-        StringBuilder stringBuilder = new StringBuilder(getClass().getName());
+    public String toString() {
+        final StringBuilder stringBuilder = new StringBuilder(getClass().getName());
         stringBuilder.append("(");
-        stringBuilder.append(namedCache.getCacheName());
+        stringBuilder.append(this.namedCache.getCacheName());
         stringBuilder.append(")");
         return stringBuilder.toString();
     }
 
-
-    // ---- API: CoherenceCachedDomainDataAccess support
-
     /**
      * Computes and returns the expiration time for a new soft lock.
-     *
      * @return a long representing the expiration time for a new soft lock
      */
-    public long newSoftLockExpirationTime()
-    {
+    public long newSoftLockExpirationTime() {
         return nextTimestamp() + getTimeout();
     }
 
     /**
      * Returns the object at the argument key in this CoherenceRegion.
-     *
      * @param key the key of the sought object
-     *
      * @return the CoherenceRegionValue at the argument key in this CoherenceRegion
      */
-    public Object getValue(Object key)
-    {
+    public Object getValue(Object key) {
         //don't use an EntryProcessor here, because that precludes near cache hits.
         //access strategies with more strict concurrency control requirements call invoke() not getValue().
         final Object value = getNamedCache().get(key);
-        return value == null ? null : value;
+        return (value != null) ? value : null;
     }
 
     /**
      * Put the argument value into this CoherenceRegion at the argument key.
-     *
      * @param key the key at which to put the value
      * @param value the value to put
      */
-    public void putValue(Object key, Object value)
-    {
+    public void putValue(Object key, Object value) {
         getNamedCache().invoke(key, new ConditionalPut(AlwaysFilter.INSTANCE, value));
     }
 
     /**
      * Evicts from this CoherenceRegion the entry at the argument key.
-     *
      * @param key the key of the entry to remove
      */
-    public void evict(Object key)
-    {
+    public void evict(Object key) {
         getNamedCache().invoke(key, new ConditionalRemove(AlwaysFilter.INSTANCE));
     }
 
     /**
      * Evicts all entries from this CoherenceRegion.
      */
-    public void evictAll()
-    {
+    public void evictAll() {
         getNamedCache().clear();
     }
 
     /**
      * Locks the entire cache.
      */
-    public void lockCache()
-    {
+    public void lockCache() {
         // will only work as imagined with caches of replicated topology
         InvocableMapHelper.lockAll(getNamedCache(), getNamedCache().keySet(), 0);
     }
@@ -205,22 +172,18 @@ implements Region, ExtendedStatisticsSupport
     /**
      * Unlocks the entire cache.
      */
-    public void unlockCache()
-    {
+    public void unlockCache() {
         // will only work as imagined with caches of replicated topology
         InvocableMapHelper.unlockAll(getNamedCache(), getNamedCache().keySet());
     }
 
     /**
      * Invoke the argument EntryProcessor on the argument key and return the result of the invocation.
-     *
      * @param key the key on which to invoke the EntryProcessor
      * @param entryProcessor the EntryProcessor to invoke.
-     *
      * @return the Object resulting from the EntryProcessor invocation
      */
-    public Object invoke(Object key, InvocableMap.EntryProcessor entryProcessor)
-    {
+    public Object invoke(Object key, InvocableMap.EntryProcessor entryProcessor) {
         return getNamedCache().invoke(key, entryProcessor);
     }
 
@@ -231,10 +194,8 @@ implements Region, ExtendedStatisticsSupport
      * {@inheritDoc}
      */
     @Override
-    public String getName()
-    {
-        if (LOGGER.isDebugEnabled())
-        {
+    public String getName() {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("getName()");
         }
         return getNamedCache().getCacheName();
@@ -244,25 +205,17 @@ implements Region, ExtendedStatisticsSupport
      * {@inheritDoc}
      */
     @Override
-    public void destroy() throws CacheException
-    {
+    public void destroy() throws CacheException {
         if (!getNamedCache().isReleased()) {
-            if (LOGGER.isDebugEnabled())
-            {
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("destroy()");
             }
             getNamedCache().release();
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    //@Override
-    public boolean contains(Object key)
-    {
-        if (LOGGER.isDebugEnabled())
-        {
+    public boolean contains(Object key) {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("contains({})", key);
         }
         return getNamedCache().invoke(key, new ExtractorProcessor(IdentityExtractor.INSTANCE)) != null;
@@ -272,10 +225,8 @@ implements Region, ExtendedStatisticsSupport
      * {@inheritDoc}
      */
     @Override
-    public long getSizeInMemory()
-    {
-        if (LOGGER.isDebugEnabled())
-        {
+    public long getSizeInMemory() {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("getSizeInMemory()");
         }
         return -1;
@@ -285,10 +236,8 @@ implements Region, ExtendedStatisticsSupport
      * {@inheritDoc}
      */
     @Override
-    public long getElementCountInMemory()
-    {
-        if (LOGGER.isDebugEnabled())
-        {
+    public long getElementCountInMemory() {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("getElementCountInMemory()");
         }
         return getNamedCache().size();
@@ -298,10 +247,8 @@ implements Region, ExtendedStatisticsSupport
      * {@inheritDoc}
      */
     @Override
-    public long getElementCountOnDisk()
-    {
-        if (LOGGER.isDebugEnabled())
-        {
+    public long getElementCountOnDisk() {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("getElementCountOnDisk()");
         }
         return -1;
@@ -309,14 +256,11 @@ implements Region, ExtendedStatisticsSupport
 
     /**
      * This method is undocumented in Hibernate javadoc, but seems intended to return the "current" time.
-     *
      * @return a millisecond clock value
      */
     //@Override
-    public long nextTimestamp()
-    {
-        if (LOGGER.isDebugEnabled())
-        {
+    public long nextTimestamp() {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("nextTimestamp()");
         }
         return getRegionFactory().nextTimestamp();
@@ -325,17 +269,14 @@ implements Region, ExtendedStatisticsSupport
     /**
      * This method is undocumented in Hibernate javadoc.  Comments in the Coherence-based implementation of the
      * Hibernate 2.1 second-level cache SPI suggest the returned value is used as a lock lease duration.
-     *
      * @return an int lock lease duration
      */
-    public int getTimeout()
-    {
-        if (LOGGER.isDebugEnabled())
-        {
+    public int getTimeout() {
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("getTimeout()");
         }
         // Note that this must be the same time units as getTimestamp
-        return lockLeaseDuration;
+        return this.lockLeaseDuration;
     }
 
 
@@ -343,39 +284,31 @@ implements Region, ExtendedStatisticsSupport
 
     /**
     * Get a duration value in milliseconds from the argument properties or defaults, capped at a maximum value.
-    *
     * @param properties the property set containing the property
     * @param propertyName the name of the property
     * @param defaultValue the default value (in milliseconds)
     * @param maxValue the maximum value (saturating, in milliseconds)
-    *
     * @return a long duration value in milliseconds
     */
-    protected long getDurationProperty(Map<String, Object> properties, String propertyName, long defaultValue, long maxValue)
-    {
+    protected long getDurationProperty(Map<String, Object> properties, String propertyName, long defaultValue, long maxValue) {
         Base.azzert(maxValue >= defaultValue);
         Base.azzert(defaultValue >= 0);
 
-        String propertyValue = (String) properties.get(propertyName);
+        final String propertyValue = (String) properties.get(propertyName);
         long duration;
-        try
-        {
+        try {
             duration = Base.parseTime(propertyValue);
         }
-        catch (Exception e)
-        {
-            if (LOGGER.isErrorEnabled())
-            {
+        catch (Exception ex) {
+            if (LOGGER.isErrorEnabled()) {
                 LOGGER.error("Error parsing duration property {}; provided value was " +
                          "{}; using default of {} milliseconds.", propertyName, propertyValue, defaultValue);
             }
             duration = defaultValue;
         }
 
-        if (duration > maxValue)
-        {
-            if (LOGGER.isDebugEnabled())
-            {
+        if (duration > maxValue) {
+            if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Capping {} at {} milliseconds.", propertyName, maxValue);
             }
             duration = maxValue;

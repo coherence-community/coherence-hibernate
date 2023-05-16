@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -12,6 +12,8 @@ import java.util.Set;
 /**
  * Source copied from http://docs.jboss.org/hibernate/orm/4.2/manual/en-US/html/ch01.html
  * and adapted for functional testing of coherence-hibernate-second-level-cache.
+ * @author Randy Staffford
+ * @author Gunnar Hillert
  */
 public class Person {
 
@@ -23,52 +25,43 @@ public class Person {
     private Set<Event> events = new HashSet<>();
     private Set<String> emailAddresses = new HashSet<>();
 
-    public Person() {}
-
-    // Accessor methods for all properties, private setter for 'id'
-
-    public Long getId()
-    {
-        return id;
+    public Person() {
     }
 
-    public void setId(Long id)
-    {
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getAge()
-    {
-        return age;
+    public int getAge() {
+        return this.age;
     }
 
-    public void setAge(int age)
-    {
+    public void setAge(int age) {
         this.age = age;
     }
 
-    public String getFirstname()
-    {
-        return firstname;
+    public String getFirstname() {
+        return this.firstname;
     }
 
-    public void setFirstname(String firstname)
-    {
+    public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
-    public String getLastname()
-    {
-        return lastname;
+    public String getLastname() {
+        return this.lastname;
     }
 
-    public void setLastname(String lastname)
-    {
+    public void setLastname(String lastname) {
         this.lastname = lastname;
     }
 
     public Set<Event> getEvents() {
-        return events;
+        return this.events;
     }
 
     protected void setEvents(Set<Event> events) {
@@ -86,7 +79,7 @@ public class Person {
     }
 
     public Set<String> getEmailAddresses() {
-        return emailAddresses;
+        return this.emailAddresses;
     }
 
     public void setEmailAddresses(Set<String> emailAddresses) {

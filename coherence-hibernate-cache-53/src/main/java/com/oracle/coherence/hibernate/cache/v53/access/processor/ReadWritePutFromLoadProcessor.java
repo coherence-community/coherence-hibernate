@@ -23,20 +23,12 @@ import com.tangosol.util.processor.AbstractProcessor;
  *
  * @author Randy Stafford
  */
-public class ReadWritePutFromLoadProcessor
-extends AbstractProcessor
-implements Serializable
-{
-
-    // ---- Constants
+public class ReadWritePutFromLoadProcessor extends AbstractProcessor implements Serializable {
 
     /**
      * An identifier of this class's version for serialization purposes.
      */
     private static final long serialVersionUID = -3993308461928039511L;
-
-
-    // ---- Fields
 
     /**
      * A flag indicating whether "minimal puts" is in effect for Hibernate.
@@ -59,47 +51,36 @@ implements Serializable
      */
     private Comparator versionComparator;
 
-
-    // ---- Constructors
-
     /**
      * Complete constructor.
-     *
      * @param minimalPutsInEffect a flag indicating whether "minimal puts" is in effect for Hibernate
-     * @param txTimestamp From Hibernate javadoc, "a timestamp prior to the transaction start time" [where "the transaction" loaded the potential replacement value from database]
+     * @param txTimestamp from Hibernate javadoc, "a timestamp prior to the transaction start time" [where "the transaction" loaded the potential replacement value from database]
      * @param replacementValue the replacement cache value in this ReadWritePutFromLoadProcessor
      * @param versionComparator a Comparator for comparing actual value versions
      */
-    public ReadWritePutFromLoadProcessor(boolean minimalPutsInEffect, long txTimestamp, CoherenceRegionValue replacementValue, Comparator versionComparator)
-    {
+    public ReadWritePutFromLoadProcessor(boolean minimalPutsInEffect, long txTimestamp, CoherenceRegionValue replacementValue, Comparator versionComparator) {
         this.minimalPutsInEffect = minimalPutsInEffect;
         this.txTimestamp = txTimestamp;
         this.replacementValue = replacementValue;
         this.versionComparator = versionComparator;
     }
 
-
-    // ---- interface com.tangosol.util.InvocableMap.EntryProcessor
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object process(InvocableMap.Entry entry)
-    {
+    public Object process(InvocableMap.Entry entry) {
         boolean isReplaceable = true;
-        if (entry.isPresent())
-        {
-            if (minimalPutsInEffect) {
+        if (entry.isPresent()) {
+            if (this.minimalPutsInEffect) {
                 return false;
             }
-            CoherenceRegionValue presentValue = (CoherenceRegionValue) entry.getValue();
-            isReplaceable = presentValue.isReplaceableFromLoad(txTimestamp, replacementValue.getVersion(), versionComparator);
+            final CoherenceRegionValue presentValue = (CoherenceRegionValue) entry.getValue();
+            isReplaceable = presentValue.isReplaceableFromLoad(this.txTimestamp, this.replacementValue.getVersion(), this.versionComparator);
         }
         if (isReplaceable) {
-            entry.setValue(replacementValue);
+            entry.setValue(this.replacementValue);
         }
         return isReplaceable;
     }
-
 }

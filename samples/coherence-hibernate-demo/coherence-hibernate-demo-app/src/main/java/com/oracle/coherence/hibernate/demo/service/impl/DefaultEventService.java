@@ -6,17 +6,19 @@
  */
 package com.oracle.coherence.hibernate.demo.service.impl;
 
+import java.time.LocalDate;
+
 import com.oracle.coherence.hibernate.demo.dao.EventRepository;
 import com.oracle.coherence.hibernate.demo.model.Event;
 import com.oracle.coherence.hibernate.demo.service.EventService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-
 /**
+ * Implementation of {@link EventService}.
  * @author Gunnar Hillert
  */
 @Transactional

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -21,21 +21,12 @@ import com.tangosol.util.processor.AbstractProcessor;
  *
  * @author Randy Stafford
  */
-public class SoftLockItemProcessor
-extends AbstractProcessor
-implements Serializable
-{
-
-
-    // ---- Constants
+public class SoftLockItemProcessor extends AbstractProcessor implements Serializable {
 
     /**
      * An identifier of this class's version for serialization purposes.
      */
     private static final long serialVersionUID = 5452465432039772596L;
-
-
-    // ---- Fields
 
     /**
      * The SoftLock to be added to the cache value.
@@ -47,37 +38,26 @@ implements Serializable
      */
     private CoherenceRegionValue valueIfAbsent;
 
-
-    // ---- Constructors
-
     /**
      * Complete constructor.
-     *
      * @param valueIfAbsent the cache value to soft lock in case there is no cache value already present
      * @param softLock the SoftLock to be added to the cache value
      */
-    public SoftLockItemProcessor(CoherenceRegionValue valueIfAbsent, CoherenceRegionValue.SoftLock softLock)
-    {
+    public SoftLockItemProcessor(CoherenceRegionValue valueIfAbsent, CoherenceRegionValue.SoftLock softLock) {
         this.valueIfAbsent = valueIfAbsent;
         this.softLock = softLock;
     }
-
-
-    // ---- interface com.tangosol.util.InvocableMap.EntryProcessor
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object process(InvocableMap.Entry entry)
-    {
-        CoherenceRegionValue cacheValue = entry.isPresent() ?
+    public Object process(InvocableMap.Entry entry) {
+        final CoherenceRegionValue cacheValue = entry.isPresent() ?
                 (CoherenceRegionValue) entry.getValue() :
-                valueIfAbsent;
-        cacheValue.addSoftLock(softLock);
+                this.valueIfAbsent;
+        cacheValue.addSoftLock(this.softLock);
         entry.setValue(cacheValue);
         return null;
     }
-
-
 }

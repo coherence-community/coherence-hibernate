@@ -7,6 +7,9 @@
 package com.oracle.coherence.hibernate.demo.controller;
 
 import com.oracle.coherence.hibernate.demo.controller.dto.PersonDto;
+import com.oracle.coherence.hibernate.demo.model.Person;
+import com.oracle.coherence.hibernate.demo.service.PersonService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oracle.coherence.hibernate.demo.model.Person;
-import com.oracle.coherence.hibernate.demo.service.PersonService;
-
 /**
  * Explicit controller for retrieving People.
  *
@@ -27,8 +27,8 @@ import com.oracle.coherence.hibernate.demo.service.PersonService;
  *
  */
 @RestController
-@RequestMapping(path="/api/people")
-@Transactional()
+@RequestMapping(path = "/api/people")
+@Transactional
 public class PersonController {
 
 	private final PersonService personService;
@@ -39,7 +39,7 @@ public class PersonController {
 
 	@GetMapping
 	public Page<PersonDto> getPeople(Pageable pageable) {
-		return personService.listPeople(pageable).map(person ->
+		return this.personService.listPeople(pageable).map((person) ->
 			new PersonDto(person.getId(), person.getFirstname(), person.getLastname(), person.getAge()));
 	}
 
@@ -48,12 +48,12 @@ public class PersonController {
 		@RequestParam("firstName") String firstName,
 		@RequestParam("lastName") String lastName,
 		@RequestParam("age") int age) {
-		return personService.createAndStorePerson(firstName, lastName, age);
+		return this.personService.createAndStorePerson(firstName, lastName, age);
 	}
 
 	@GetMapping("/{personId}")
 	public PersonDto getSinglePerson(@PathVariable("personId") Long personId) {
-		final Person person = personService.getPerson(personId);
+		final Person person = this.personService.getPerson(personId);
 		return new PersonDto(person.getId(), person.getFirstname(), person.getLastname(), person.getAge());
 	}
 
@@ -61,6 +61,6 @@ public class PersonController {
 	public void addPersonToEvent(
 		@PathVariable("personId") Long personId,
 		@PathVariable("eventId") Long eventId) {
-		personService.addPersonToEvent(personId, eventId);
+		this.personService.addPersonToEvent(personId, eventId);
 	}
 }

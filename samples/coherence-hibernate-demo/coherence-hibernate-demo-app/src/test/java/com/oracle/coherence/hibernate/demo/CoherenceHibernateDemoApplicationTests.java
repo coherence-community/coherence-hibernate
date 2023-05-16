@@ -6,6 +6,8 @@
  */
 package com.oracle.coherence.hibernate.demo;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
 import com.oracle.coherence.hibernate.demo.controller.dto.PersonDto;
@@ -13,23 +15,23 @@ import com.oracle.coherence.hibernate.demo.model.Event;
 import com.oracle.coherence.hibernate.demo.model.Person;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.NamedCache;
+import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.cache.spi.entry.StandardCacheEntryImpl;
 import org.hibernate.stat.Statistics;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import jakarta.persistence.EntityManager;
-import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -67,7 +69,7 @@ class CoherenceHibernateDemoApplicationTests {
     private String person1Id;
     private String person2Id;
 
-    private final TestStats testStats = new TestStats();
+    private TestStats testStats;
 
     /*
      * When using @TestInstance(TestInstance.Lifecycle.PER_CLASS), you can't use @BeforeAll as that is too late for setting
@@ -78,27 +80,32 @@ class CoherenceHibernateDemoApplicationTests {
         System.setProperty("coherence.distributed.localstorage", "true");
     }
 
+    @BeforeEach
+    void setup() {
+        this.testStats = new TestStats(this.em);
+    }
+
     /**
      * First, lets make sure the context loads.
      */
     @Test
     @Order(1)
     void contextLoads() {
-        assertThat(testStats.getCoherenceEventCacheSize()).isZero();
-        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isZero();
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isZero();
-        assertThat(testStats.getCacheMissCount()).isZero();
-        assertThat(testStats.getCachePutCount()).isZero();
+        assertThat(this.testStats.getCacheHitCount()).isZero();
+        assertThat(this.testStats.getCacheMissCount()).isZero();
+        assertThat(this.testStats.getCachePutCount()).isZero();
 
-        assertThat(testStats.getQueryCacheHitCount()).isZero();
-        assertThat(testStats.getQueryCacheMissCount()).isZero();
-        assertThat(testStats.getQueryCachePutCount()).isZero();
+        assertThat(this.testStats.getQueryCacheHitCount()).isZero();
+        assertThat(this.testStats.getQueryCacheMissCount()).isZero();
+        assertThat(this.testStats.getQueryCachePutCount()).isZero();
 
-        assertThat(testStats.getCacheRegionNamesSize()).isEqualTo(5);
+        assertThat(this.testStats.getCacheRegionNamesSize()).isEqualTo(5);
     }
 
     /**
@@ -124,23 +131,23 @@ class CoherenceHibernateDemoApplicationTests {
 
         assertThat(this.eventId).containsOnlyDigits();
 
-        final Object cacheValue = testStats.getCoherenceEventCache().values().iterator().next();
+        final Object cacheValue = this.testStats.getCoherenceEventCache().values().iterator().next();
         assertThat(cacheValue).isInstanceOf(CoherenceRegionValue.class);
         assertThat(((CoherenceRegionValue) cacheValue).getValue()).isInstanceOf(StandardCacheEntryImpl.class);
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isZero();
-        assertThat(testStats.getCacheMissCount()).isZero();
-        assertThat(testStats.getCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getCacheHitCount()).isZero();
+        assertThat(this.testStats.getCacheMissCount()).isZero();
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(1);
 
-        assertThat(testStats.getQueryCacheHitCount()).isZero();
-        assertThat(testStats.getQueryCacheMissCount()).isZero();
-        assertThat(testStats.getQueryCachePutCount()).isZero();
+        assertThat(this.testStats.getQueryCacheHitCount()).isZero();
+        assertThat(this.testStats.getQueryCacheMissCount()).isZero();
+        assertThat(this.testStats.getQueryCachePutCount()).isZero();
     }
 
     /**
@@ -168,19 +175,19 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(1);
-        assertThat(testStats.getCacheMissCount()).isZero();
-        assertThat(testStats.getCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(1);
+        assertThat(this.testStats.getCacheMissCount()).isZero();
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(1);
 
-        assertThat(testStats.getQueryCacheHitCount()).isZero();
-        assertThat(testStats.getQueryCacheMissCount()).isZero();
-        assertThat(testStats.getQueryCachePutCount()).isZero();
+        assertThat(this.testStats.getQueryCacheHitCount()).isZero();
+        assertThat(this.testStats.getQueryCacheMissCount()).isZero();
+        assertThat(this.testStats.getQueryCachePutCount()).isZero();
     }
 
     /**
@@ -222,19 +229,19 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
-        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getCachePutCount()).isEqualTo(2);
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(2);
 
-        assertThat(testStats.getQueryCacheHitCount()).isZero();
-        assertThat(testStats.getQueryCacheMissCount()).isZero();
-        assertThat(testStats.getQueryCachePutCount()).isZero();
+        assertThat(this.testStats.getQueryCacheHitCount()).isZero();
+        assertThat(this.testStats.getQueryCacheMissCount()).isZero();
+        assertThat(this.testStats.getQueryCachePutCount()).isZero();
     }
 
     /**
@@ -273,19 +280,19 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
-        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getCachePutCount()).isEqualTo(4);
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(4);
 
-        assertThat(testStats.getQueryCacheHitCount()).isZero();
-        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheHitCount()).isZero();
+        assertThat(this.testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     @Test
@@ -305,20 +312,20 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isZero();
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
-        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getCachePutCount()).isEqualTo(5); // Not sure about this one, why is
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(5); // Not sure about this one, why is
         // Why is Event#participants added to the cache again? No SQL query is executed though
 
-        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     /**
@@ -336,19 +343,19 @@ class CoherenceHibernateDemoApplicationTests {
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
-        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getCachePutCount()).isEqualTo(6);
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(6);
 
-        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     /**
@@ -366,19 +373,19 @@ class CoherenceHibernateDemoApplicationTests {
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(2);
-        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getCachePutCount()).isEqualTo(7);
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(2);
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(7);
 
-        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     @Test
@@ -411,19 +418,19 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(person2.getLastname()).isEqualTo("Turing");
         assertThat(person2.getEvents()).isEmpty();
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(4);
-        assertThat(testStats.getCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getCachePutCount()).isEqualTo(7);
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(4);
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(7);
 
-        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     @Test
@@ -434,38 +441,38 @@ class CoherenceHibernateDemoApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()));
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(7); // Person, Event, Event#participants
-        assertThat(testStats.getCacheMissCount()).isEqualTo(2); //Person#events
-        assertThat(testStats.getCachePutCount()).isEqualTo(8); //Person#events
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(7); // Person, Event, Event#participants
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(2); //Person#events
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(8); //Person#events
 
-        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCachePutCount()).isEqualTo(1);
 
         this.mvc.perform(
                         post("/api/people/{personId}/add-to-event/{eventId}", this.person2Id, this.eventId))
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()));
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(9);
-        assertThat(testStats.getCacheMissCount()).isEqualTo(4);
-        assertThat(testStats.getCachePutCount()).isEqualTo(11);
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(9);
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(4);
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(11);
 
-        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     @Test
@@ -485,19 +492,19 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(10);
-        assertThat(testStats.getCacheMissCount()).isEqualTo(5);
-        assertThat(testStats.getCachePutCount()).isEqualTo(14);
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(10);
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(5);
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(14);
 
-        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     @Test
@@ -517,76 +524,82 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        assertThat(testStats.getCoherenceEventCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonCacheSize()).isEqualTo(2);
-        assertThat(testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
-        assertThat(testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+        assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonCacheSize()).isEqualTo(2);
+        assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
+        assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
 
-        assertThat(testStats.getCacheHitCount()).isEqualTo(14);
-        assertThat(testStats.getCacheMissCount()).isEqualTo(5);
-        assertThat(testStats.getCachePutCount()).isEqualTo(14);
+        assertThat(this.testStats.getCacheHitCount()).isEqualTo(14);
+        assertThat(this.testStats.getCacheMissCount()).isEqualTo(5);
+        assertThat(this.testStats.getCachePutCount()).isEqualTo(14);
 
-        assertThat(testStats.getQueryCacheHitCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCacheMissCount()).isEqualTo(1);
-        assertThat(testStats.getQueryCachePutCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheHitCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCacheMissCount()).isEqualTo(1);
+        assertThat(this.testStats.getQueryCachePutCount()).isEqualTo(1);
     }
 
     private final class TestStats {
 
-        public long getCacheHitCount() {
+        private final EntityManager em;
+
+        private TestStats(EntityManager em) {
+            this.em = em;
+        }
+
+        private long getCacheHitCount() {
             return getHibernateStatistics().getSecondLevelCacheHitCount();
         }
 
-        public long getCacheMissCount() {
+        private long getCacheMissCount() {
             return getHibernateStatistics().getSecondLevelCacheMissCount();
         }
 
-        public long getCachePutCount() {
+        private long getCachePutCount() {
             return getHibernateStatistics().getSecondLevelCachePutCount();
         }
 
-        public long getQueryCacheHitCount() {
+        private long getQueryCacheHitCount() {
             return getHibernateStatistics().getQueryCacheHitCount();
         }
 
-        public long getQueryCacheMissCount() {
+        private long getQueryCacheMissCount() {
             return getHibernateStatistics().getQueryCacheMissCount();
         }
 
-        public long getQueryCachePutCount() {
+        private long getQueryCachePutCount() {
             return getHibernateStatistics().getQueryCachePutCount();
         }
 
         private Statistics getHibernateStatistics() {
-            return em.unwrap(Session.class).getSessionFactory().getStatistics();
+            return this.em.unwrap(Session.class).getSessionFactory().getStatistics();
         }
 
-        public long getCoherenceEventCacheSize() {
+        private long getCoherenceEventCacheSize() {
             return getCoherenceEventCache().size();
         }
 
-        public NamedCache<? ,?> getCoherenceEventCache() {
+        private NamedCache<?, ?> getCoherenceEventCache() {
             return CacheFactory.getCache(EVENT_ENTITY_CACHE_NAME);
         }
 
-        public long getCoherencePersonCacheSize() {
+        private long getCoherencePersonCacheSize() {
             return CacheFactory.getCache(PERSON_ENTITY_CACHE_NAME).size();
         }
 
-        public long getCoherencePersonEventsCollectionCacheSize() {
+        private long getCoherencePersonEventsCollectionCacheSize() {
             return CacheFactory.getCache(PERSON_EVENTS_COLLECTION_CACHE_NAME).size();
         }
 
-        public long getCoherenceEventParticipantsCollectionCacheSize() {
+        private long getCoherenceEventParticipantsCollectionCacheSize() {
             return CacheFactory.getCache(EVENT_PARTICIPANTS_COLLECTION_CACHE_NAME).size();
         }
 
-        public long getCoherenceDefaultQueryResultsRegionCacheSize() {
+        private long getCoherenceDefaultQueryResultsRegionCacheSize() {
             return CacheFactory.getCache(DEFAULT_QUERY_RESULTS_REGION).size();
         }
 
-        public long getCacheRegionNamesSize() {
+        private long getCacheRegionNamesSize() {
             return getHibernateStatistics().getSecondLevelCacheRegionNames().length;
         }
     }

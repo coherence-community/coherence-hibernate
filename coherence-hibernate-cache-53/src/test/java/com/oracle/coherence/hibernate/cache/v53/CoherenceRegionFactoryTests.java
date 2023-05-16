@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -8,7 +8,6 @@ package com.oracle.coherence.hibernate.cache.v53;
 
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccess;
 import com.tangosol.net.CacheFactory;
-
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.BootstrapServiceRegistry;
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
@@ -21,7 +20,11 @@ import org.hibernate.cache.spi.support.QueryResultsRegionTemplate;
 import org.hibernate.cache.spi.support.TimestampsRegionTemplate;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,19 +39,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CoherenceRegionFactoryTest
-extends AbstractCoherenceRegionFactoryTest
-{
-
-    // ---- Test cases
+public class CoherenceRegionFactoryTests extends AbstractCoherenceRegionFactoryTests {
 
     /**
      * Tests CoherenceRegionFactory.start() with no properties supplied.
      */
     @Test
     @Order(1)
-    public void testStartWithNoProperties()
-    {
+    public void testStartWithNoProperties() {
         setUpAbstractCoherenceRegionFactoryTest();
         assertEquals(1, CacheFactory.getCluster().getMemberSet().size(), "Expect cluster of one after start");
         assertNotNull(this.coherenceRegionFactory.getCoherenceSession(), "Expect non-null coherence session");
@@ -69,8 +67,7 @@ extends AbstractCoherenceRegionFactoryTest
      */
     @Test
     @Order(3)
-    public void testMinimalPutsEnabledByDefault()
-    {
+    public void testMinimalPutsEnabledByDefault() {
         assertTrue(getCoherenceRegionFactory().isMinimalPutsEnabledByDefault(), "Expect minimal puts enabled by default");
     }
 
@@ -79,8 +76,7 @@ extends AbstractCoherenceRegionFactoryTest
      */
     @Test
     @Order(3)
-    public void testDefaultAccessType()
-    {
+    public void testDefaultAccessType() {
         assertEquals(AccessType.READ_WRITE, getCoherenceRegionFactory().getDefaultAccessType(), "Expect default access type READ_WRITE");
     }
 
@@ -89,9 +85,8 @@ extends AbstractCoherenceRegionFactoryTest
      */
     @Test
     @Order(4)
-    public void testNextTimestamp()
-    {
-        long currentTime = this.coherenceRegionFactory.nextTimestamp();
+    public void testNextTimestamp() {
+        final long currentTime = this.coherenceRegionFactory.nextTimestamp();
         assertTrue(currentTime > 0, "Expect positive current time value");
         this.coherenceRegionFactory.stop();
     }
@@ -101,8 +96,7 @@ extends AbstractCoherenceRegionFactoryTest
      */
     @Test
     @Order(5)
-    public void testBuildQueryResultsRegionWithNoProperties()
-    {
+    public void testBuildQueryResultsRegionWithNoProperties() {
         testStartWithNoProperties();
         final String regionName = "testBuild_CoherenceRegion_queryresults";
 
@@ -119,8 +113,7 @@ extends AbstractCoherenceRegionFactoryTest
      */
     @Test
     @Order(6)
-    public void testBuildTimestampsRegionWithNoProperties()
-    {
+    public void testBuildTimestampsRegionWithNoProperties() {
         testStartWithNoProperties();
         final String regionName = "testBuild_CoherenceRegion_timestamps";
         final SessionFactoryImplementor sessionFactoryImplementor = getSessionFactoryImplementor(this.coherenceRegionFactory);
@@ -133,9 +126,9 @@ extends AbstractCoherenceRegionFactoryTest
     }
 
     private SessionFactoryImplementor getSessionFactoryImplementor(CoherenceRegionFactory coherenceRegionFactory) {
-        BootstrapServiceRegistry bsr = new BootstrapServiceRegistryBuilder().build();
+        final BootstrapServiceRegistry bsr = new BootstrapServiceRegistryBuilder().build();
 
-        final StandardServiceRegistry ssr = new StandardServiceRegistryBuilder( bsr )
+        final StandardServiceRegistry ssr = new StandardServiceRegistryBuilder(bsr)
                 .applySetting(AvailableSettings.CACHE_REGION_FACTORY, coherenceRegionFactory)
                 .applySetting("hibernate.connection.url", "jdbc:hsqldb:mem:test")
                 .build();
@@ -143,16 +136,16 @@ extends AbstractCoherenceRegionFactoryTest
         final SessionFactoryImplementor sessionFactory;
 
         try {
-            sessionFactory = (SessionFactoryImplementor) new MetadataSources( ssr )
+            sessionFactory = (SessionFactoryImplementor) new MetadataSources(ssr)
                     //.addAnnotatedClass( TheEntity.class )
                     .buildMetadata()
                     .getSessionFactoryBuilder()
                     .build();
             return sessionFactory;
         }
-        catch ( Exception e ) {
-            StandardServiceRegistryBuilder.destroy( ssr );
-            throw e;
+        catch (Exception ex) {
+            StandardServiceRegistryBuilder.destroy(ssr);
+            throw ex;
         }
     }
 }

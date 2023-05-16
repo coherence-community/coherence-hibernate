@@ -6,6 +6,12 @@
  */
 package com.oracle.coherence.hibernate.cachestore;
 
+import java.io.File;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.tangosol.net.cache.CacheLoader;
 import com.tangosol.util.Base;
 import org.hibernate.CacheMode;
@@ -19,14 +25,8 @@ import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.query.Query;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
- * Data-driven CacheLoader implementation for Hibernate tables
+ * Data-driven CacheLoader implementation for Hibernate tables.
  * <p>
  * These methods all follow the pattern of:
  * <ol>
@@ -42,95 +42,111 @@ import java.util.Map;
  * @author rs 2013.09.05
  * @author Gunnar Hillert
  */
-public class HibernateCacheLoader
-        extends Base
-        implements CacheLoader
-{
-    // ----- Constructor(s) -------------------------------------------------
+public class HibernateCacheLoader extends Base implements CacheLoader {
 
     /**
-     * Default constructor.  If using this constructor, it is expected that
+     * Name of the "ids" named parameter in HQL bulk queries.
+     */
+    protected static final String PARAM_IDS = "ids";
+
+    /**
+     * Has this instance been initialized?
+     */
+    private boolean initialized;
+
+    /**
+     * ClassMetadata object for this CacheLoader's entity type (has pseudo-final semantics, and is guarded by
+     * ensureInitialized()).
+     */
+    private ClassMetadata entityClassMetadata;
+
+    /**
+     * An HQL query string for loadAll (has pseudo-final semantics, and is guarded by ensureInitialized()).
+     */
+    private volatile String loadAllQuery;
+
+    /**
+     * The entity name.
+     */
+    private volatile String entityName;
+
+    /**
+     * The Hibernate SessionFactory (the instance's copy).
+     */
+    private SessionFactory sessionFactory;
+
+    /**
+     * Default constructor. If using this constructor, it is expected that
      * the {@code entityName} and {@code sessionFactory} attributes will
      * be set prior to usage.
      */
-    public HibernateCacheLoader()
-    {
+    public HibernateCacheLoader() {
     }
 
     /**
      * Constructor which accepts an entityName. Configures Hibernate using
      * the default Hibernate configuration. The current implementation parses
      * this file once-per-instance (there is typically a single instance per).
-     *
-     * @param sEntityName    the Hibernate entity (i.e., the HQL table name)
+     * @param entityName the Hibernate entity (i.e., the HQL table name)
      */
-    public HibernateCacheLoader(String sEntityName)
-    {
-        m_sEntityName = sEntityName;
+    public HibernateCacheLoader(String entityName) {
+        this.entityName = entityName;
 
         // Configure using the default Hibernate configuration.
-        Configuration configuration = new Configuration();
+        final Configuration configuration = new Configuration();
         configuration.configure();
 
-        m_sessionFactory = configuration.buildSessionFactory();
+        this.sessionFactory = configuration.buildSessionFactory();
     }
 
     /**
      * Constructor which accepts an entityName and a Hibernate configuration
      * resource. The current implementation instantiates a SessionFactory per
      * instance (implying one instance per CacheStore-backed NamedCache).
-     *
-     * @param sEntityName   Hibernate entity (i.e. the HQL table name)
-     * @param sResource     Hibernate config classpath resource (e.g. hibernate.cfg.xml)
+     * @param entityName the Hibernate entity (i.e. the HQL table name)
+     * @param resource the Hibernate config classpath resource (e.g. hibernate.cfg.xml)
      */
-    public HibernateCacheLoader(String sEntityName, String sResource)
-    {
-        m_sEntityName = sEntityName;
+    public HibernateCacheLoader(String entityName, String resource) {
+        this.entityName = entityName;
 
         /*
         If we start caching these we need to be aware that the resource may
         be relative (and so we should not key the cache by resource name).
         */
-        Configuration configuration = new Configuration();
-        configuration.configure(sResource);
+        final Configuration configuration = new Configuration();
+        configuration.configure(resource);
 
-        m_sessionFactory = configuration.buildSessionFactory();
+        this.sessionFactory = configuration.buildSessionFactory();
     }
 
     /**
      * Constructor which accepts an entityName and a Hibernate configuration
      * resource. The current implementation instantiates a SessionFactory per
      * instance (implying one instance per CacheStore-backed NamedCache).
-     *
-     * @param sEntityName       Hibernate entity (i.e. the HQL table name)
-     * @param configurationFile Hibernate config file (e.g. hibernate.cfg.xml)
+     * @param entityName the Hibernate entity (i.e. the HQL table name)
+     * @param configurationFile the Hibernate config file (e.g. hibernate.cfg.xml)
      */
-    public HibernateCacheLoader(String sEntityName, File configurationFile)
-    {
-        m_sEntityName = sEntityName;
+    public HibernateCacheLoader(String entityName, File configurationFile) {
+        this.entityName = entityName;
 
         /*
         If we start caching these we should cache by canonical file name.
         */
-        Configuration configuration = new Configuration();
+        final Configuration configuration = new Configuration();
         configuration.configure(configurationFile);
 
-        m_sessionFactory = configuration.buildSessionFactory();
+        this.sessionFactory = configuration.buildSessionFactory();
     }
 
     /**
-     * Constructor which accepts an entityName and a Hibernate
-     * {@code SessionFactory}.  This allows for external configuration
-     * of the SessionFactory (for instance using Spring.)
-     *
-     * @param sEntityName       Hibernate entity (i.e. the HQL table name)
-     * @param sessionFactory    Hibernate SessionFactory
+     * Constructor which accepts an entityName and a Hibernate {@code SessionFactory}.
+     * This allows for external configuration of the SessionFactory (for instance using Spring).
+     * @param entityName the Hibernate entity (i.e. the HQL table name)
+     * @param sessionFactory the Hibernate SessionFactory
      */
-    public HibernateCacheLoader(String sEntityName,
-                                SessionFactory sessionFactory)
-    {
-        m_sEntityName    = sEntityName;
-        m_sessionFactory = sessionFactory;
+    public HibernateCacheLoader(String entityName, SessionFactory sessionFactory) {
+        this.entityName = entityName;
+        this.sessionFactory = sessionFactory;
     }
 
 
@@ -138,64 +154,50 @@ public class HibernateCacheLoader
 
     /**
      * Get the Hibernate SessionFactory.
-     *
-     * @return  the Hibernate SessionFactory
+     * @return the Hibernate SessionFactory
      */
-    public SessionFactory getSessionFactory()
-    {
-        return m_sessionFactory;
+    public SessionFactory getSessionFactory() {
+        return this.sessionFactory;
     }
 
     /**
      * Set the Hibernate SessionFactory to be used by this CacheLoader.  This
      * attribute can only be set once during the lifecycle of an instance.
-     *
      * @param sessionFactory the Hibernate SessionFactory
-     *
-     * @throws IllegalStateException  if the session factory has already
-     *                                been set
+     * @throws IllegalStateException  if the session factory has already been set
      */
-    public synchronized void setSessionFactory(SessionFactory sessionFactory)
-    {
-        if (m_sessionFactory != null)
-        {
+    public synchronized void setSessionFactory(SessionFactory sessionFactory) {
+        if (this.sessionFactory != null) {
             throw new IllegalStateException("SessionFactory has already been set");
         }
-        m_sessionFactory = sessionFactory;
+        this.sessionFactory = sessionFactory;
     }
 
     /**
-     * Get the Hibernate entity name
-     *
+     * Get the Hibernate entity name.
      * @return the entity name
      */
-    protected String getEntityName()
-    {
-        return m_sEntityName;
+    protected String getEntityName() {
+        return this.entityName;
     }
 
     /**
-     * Set the Hibernate entity name.  This attribute can only be set once
+     * Set the Hibernate entity name. This attribute can only be set once
      * during the lifecycle of an instance.
-     *
-     * @param sEntityName the entity name
-     *
-     * @throws IllegalStateException  if the entity name has already been set
+     * @param entityName the entity name
+     * @throws IllegalStateException if the entity name has already been set
      */
-    public synchronized void setEntityName(String sEntityName)
-    {
-        if (m_sEntityName != null)
-        {
+    public synchronized void setEntityName(String entityName) {
+        if (this.entityName != null) {
             throw new IllegalStateException("Entity name has already been set");
         }
-        m_sEntityName = sEntityName;
+        this.entityName = entityName;
     }
-
 
     // ----- Initialization methods ----------------------------------------
 
     /**
-     * Initializer (must be called post-constructor)
+     * Initializer (must be called post-constructor).
      * <p>
      * We do this specifically so that derived classes can safely create
      * override methods that depend on a fully constructed object state.
@@ -204,31 +206,26 @@ public class HibernateCacheLoader
      * classes. If this method is overridden, super must be called at the
      * end of the overriding method.
      */
-    protected void initialize()
-    {
-        String sEntityName = m_sEntityName;
+    protected void initialize() {
 
-        if (sEntityName == null)
-        {
+        if (this.entityName == null) {
             throw new IllegalStateException("Entity name attribute was not set");
         }
 
-        SessionFactory sessionFactory = getSessionFactory();
-        if (sessionFactory == null)
-        {
+        final SessionFactory sessionFactory = getSessionFactory();
+        if (sessionFactory == null) {
             // Can only occur with derived classes
             throw new IllegalStateException("No session factory was specified, " +
                     "and a hibernate configuration file was not provided.");
         }
 
         // Look up the Hibernate metadata for the entity
-        MetamodelImplementor metamodel = (MetamodelImplementor) sessionFactory.getMetamodel();
-        ClassMetadata entityClassMetadata = (ClassMetadata) metamodel.entityPersister(sEntityName);
+        final MetamodelImplementor metamodel = (MetamodelImplementor) sessionFactory.getMetamodel();
+        final ClassMetadata entityClassMetadata = (ClassMetadata) metamodel.entityPersister(this.entityName);
 
-        if (entityClassMetadata == null)
-        {
+        if (entityClassMetadata == null) {
             throw new RuntimeException("Unable to find ClassMetadata" +
-                    " for Hibernate entity " + sEntityName + ".");
+                    " for Hibernate entity " + this.entityName + ".");
         }
         setEntityClassMetadata(entityClassMetadata);
     }
@@ -237,12 +234,10 @@ public class HibernateCacheLoader
      * Called by all API-implementing methods for lazy initialization. This
      * should never be called from a constructor.
      */
-    protected synchronized void ensureInitialized()
-    {
-        if (!m_fInitialized)
-        {
+    protected synchronized void ensureInitialized() {
+        if (!this.initialized) {
             initialize();
-            m_fInitialized = true;
+            this.initialized = true;
         }
     }
 
@@ -250,44 +245,37 @@ public class HibernateCacheLoader
     // ----- CacheLoader API methods ----------------------------------------
 
     /**
-     * Load a Hibernate entity given an id (key)
-     *
-     * @param key   the cache key; specifically, the entity id
-     *
-     * @return      the corresponding Hibernate entity instance
+     * Load a Hibernate entity given an id (key).
+     * @param key the cache key; specifically, the entity id
+     * @return the corresponding Hibernate entity instance
      */
-    public Object load(Object key)
-    {
+    public Object load(Object key) {
         ensureInitialized();
 
-        Transaction tx = null;
+        Transaction transaction = null;
 
         Object value = null;
 
-        Session session = openSession();
+        final Session session = openSession();
 
-        try
-        {
-            tx = session.beginTransaction();
+        try {
+            transaction = session.beginTransaction();
 
             // The Hibernate docs indicate that the returned value is
             // sufficiently "detached" for our purposes (without explicitly
             // converting the state to transient).
-            value = session.get(getEntityName(), (Serializable)key);
+            value = session.get(getEntityName(), (Serializable) key);
 
-            tx.commit();
+            transaction.commit();
         }
-        catch (Exception e)
-        {
-            if (tx != null)
-            {
-                tx.rollback();
+        catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
             }
 
-            throw ensureRuntimeException(e);
+            throw ensureRuntimeException(ex);
         }
-        finally
-        {
+        finally {
             closeSession(session);
         }
 
@@ -295,32 +283,29 @@ public class HibernateCacheLoader
     }
 
     /**
-     * Load a collection of Hibernate entities given a set of ids (keys)
-     *
-     * @param keys  the cache keys; specifically, the entity ids. By default, entities will be returned in the order of the
+     * Load a collection of Hibernate entities given a set of ids (keys).
+     * @param keys the cache keys; specifically, the entity ids. By default, entities will be returned in the order of the
      *              provided List of keys
-     * @return      the corresponding Hibernate entity instances
+     * @return the corresponding Hibernate entity instances
      */
-    public Map loadAll(List keys)
-    {
+    public Map loadAll(List keys) {
         ensureInitialized();
 
-        Map results = new HashMap();
+        final Map results = new HashMap();
 
-        Transaction tx = null;
+        Transaction transaction = null;
 
-        Session session = openSession();
-        SessionImplementor sessionImplementor = (SessionImplementor) session;
+        final Session session = openSession();
+        final SessionImplementor sessionImplementor = (SessionImplementor) session;
 
-        try
-        {
-            tx = session.beginTransaction();
+        try {
+            transaction = session.beginTransaction();
 
             final List<?> result;
             if (this.getLoadAllQuery() != null) {
                 // Create the query
-                String sQuery = getLoadAllQuery();
-                Query query = session.createQuery(sQuery);
+                final String sQuery = getLoadAllQuery();
+                final Query query = session.createQuery(sQuery);
 
                 // Prevent Hibernate from caching the results
                 query.setCacheMode(CacheMode.IGNORE);
@@ -332,190 +317,126 @@ public class HibernateCacheLoader
                 result = query.list();
             }
             else {
-                result = session.byMultipleIds(this.m_sEntityName)
+                result = session.byMultipleIds(this.entityName)
                         .with(CacheMode.IGNORE)
                         .multiLoad(keys);
             }
 
             // Need a way to extract the key from an entity that we know
             // nothing about.
-            ClassMetadata classMetaData = getEntityClassMetadata();
+            final ClassMetadata classMetaData = getEntityClassMetadata();
 
             for (Object entity : result) {
-                Object[] propertyValues = classMetaData.getPropertyValues(entity);
+                final Object[] propertyValues = classMetaData.getPropertyValues(entity);
                 for (Object propertyValue : propertyValues) {
                     Hibernate.initialize(propertyValue);
                 }
             }
 
             // Iterate through the results and place into the return map
-            for (Object entity : result)
-            {
-                Object id = classMetaData.getIdentifier(entity, sessionImplementor);
+            for (Object entity : result) {
+                final Object id = classMetaData.getIdentifier(entity, sessionImplementor);
                 results.put(id, entity);
             }
-            tx.commit();
+            transaction.commit();
         }
-        catch (Exception e)
-        {
-            if (tx != null)
-            {
-                tx.rollback();
+        catch (Exception ex) {
+            if (transaction != null) {
+                transaction.rollback();
             }
-
-            throw ensureRuntimeException(e);
+            throw ensureRuntimeException(ex);
         }
-        finally
-        {
+        finally {
             closeSession(session);
         }
 
         return results;
     }
 
-
     // ----- Helper methods -------------------------------------------------
 
     /**
      * Open a Hibernate Session.
-     *
-     * @return  the Hibernate Session object
+     * @return the Hibernate Session object
      */
-    protected Session openSession()
-    {
+    protected Session openSession() {
         return getSessionFactory().openSession();
     }
 
     /**
      * Close a Hibernate Session.
-     *
-     * @param session   the Hibernate Session object
+     * @param session the Hibernate Session object
      */
-    protected void closeSession(Session session)
-    {
+    protected void closeSession(Session session) {
         azzert(session != null, "Attempted to close a null session.");
         session.close();
     }
 
     /**
-     * Get the Hibernate ClassMetadata for the Hibernate entity
-     *
-     * @return  the ClassMetadata object
+     * Get the Hibernate ClassMetadata for the Hibernate entity.
+     * @return the ClassMetadata object
      */
-    protected ClassMetadata getEntityClassMetadata()
-    {
-        return m_entityClassMetadata;
+    protected ClassMetadata getEntityClassMetadata() {
+        return this.entityClassMetadata;
     }
 
     /**
-     * Get the Hibernate ClassMetadata for the Hibernate entity
-     *
-     * @param   entityClassMetadata     the ClassMetadata object
+     * Get the Hibernate ClassMetadata for the Hibernate entity.
+     * @param entityClassMetadata the ClassMetadata object
      */
-    protected void setEntityClassMetadata(ClassMetadata entityClassMetadata)
-    {
-        m_entityClassMetadata = entityClassMetadata;
+    protected void setEntityClassMetadata(ClassMetadata entityClassMetadata) {
+        this.entityClassMetadata = entityClassMetadata;
     }
 
     /**
-     * Get the parameterized loadAll HQL query string
-     *
+     * Get the parameterized loadAll HQL query string.
      * @return  a parameterized HQL query string
      */
-    protected String getLoadAllQuery()
-    {
-        return m_sLoadAllQuery;
+    protected String getLoadAllQuery() {
+        return this.loadAllQuery;
     }
 
     /**
-     * Get the parameterized loadAll HQL query string
-     *
-     * @param   sLoadAllQuery   a parameterized HQL query string
+     * Get the parameterized loadAll HQL query string.
+     * @param sLoadAllQuery a parameterized HQL query string
      */
-    protected void setLoadAllQuery(String sLoadAllQuery)
-    {
-        m_sLoadAllQuery = sLoadAllQuery;
+    protected void setLoadAllQuery(String sLoadAllQuery) {
+        this.loadAllQuery = sLoadAllQuery;
     }
 
     /**
-     * Create a transient entity instance given an entity id
-     *
+     * Create a transient entity instance given an entity id.
      * @param id the Hibernate entity id
      * @param sessionImplementor the Hibernate SessionImplementor
-     *
      * @return the Hibernate entity (may return null)
      */
-    protected Object createEntityFromId(Object id, SessionImplementor sessionImplementor)
-    {
-        ClassMetadata cmd = getEntityClassMetadata();
-        Object o = cmd.instantiate(id, sessionImplementor);
+    protected Object createEntityFromId(Object id, SessionImplementor sessionImplementor) {
+        final ClassMetadata cmd = getEntityClassMetadata();
+        final Object o = cmd.instantiate(id, sessionImplementor);
         return o;
     }
 
     /**
      * Ensure that there are no conflicts between an explicit and implicit key.
-     *
-     * @param id     the explicit key
+     * @param id the explicit key
      * @param entity an entity (containing an implicit key)
      * @param sessionImplementor the Hibernate SessionImplementor
      */
-    protected void validateIdentifier(Serializable id, Object entity, SessionImplementor sessionImplementor)
-    {
-        ClassMetadata classMetaData = getEntityClassMetadata();
+    protected void validateIdentifier(Serializable id, Object entity, SessionImplementor sessionImplementor) {
+        final ClassMetadata classMetaData = getEntityClassMetadata();
 
-        Object intrinsicIdentifier =
+        final Object intrinsicIdentifier =
                 classMetaData.getIdentifier(entity, sessionImplementor);
 
-        if (intrinsicIdentifier == null)
-        {
+        if (intrinsicIdentifier == null) {
             classMetaData
                     .setIdentifier(entity, id, sessionImplementor);
         }
-        else
-        {
-            if (!intrinsicIdentifier.equals(id))
-            {
+        else {
+            if (!intrinsicIdentifier.equals(id)) {
                 throw new IllegalArgumentException("Conflicting identifier " +
                         "information between entity " + entity + " and id " + id);
             }
         }
     }
-
-
-    // ----- constants ------------------------------------------------------
-
-    /**
-     * Name of the "ids" named parameter in HQL bulk queries
-     */
-    protected static final String PARAM_IDS = "ids";
-
-
-    // ----- private fields --------------------------------------------------
-
-    /**
-     * Has this instance been initialized?
-     */
-    private boolean m_fInitialized;
-
-    /**
-     * ClassMetadata object for this CacheLoader's entity type
-     * (has pseudo-final semantics, and is guarded by ensureInitialized())
-     */
-    private ClassMetadata m_entityClassMetadata;
-
-    /**
-     * An HQL query string for loadAll
-     * (has pseudo-final semantics, and is guarded by ensureInitialized())
-     */
-    private volatile String m_sLoadAllQuery;
-
-    /**
-     * The entity name
-     */
-    private volatile String m_sEntityName;
-
-    /**
-     * The Hibernate SessionFactory (the instance's copy)
-     */
-    private SessionFactory m_sessionFactory;
 }

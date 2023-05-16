@@ -7,17 +7,21 @@
 package com.oracle.coherence.hibernate.demo.service.impl;
 
 import com.oracle.coherence.hibernate.demo.dao.EventRepository;
+import com.oracle.coherence.hibernate.demo.dao.PersonRepository;
 import com.oracle.coherence.hibernate.demo.model.Event;
+import com.oracle.coherence.hibernate.demo.model.Person;
+import com.oracle.coherence.hibernate.demo.service.PersonService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.oracle.coherence.hibernate.demo.dao.PersonRepository;
-import com.oracle.coherence.hibernate.demo.model.Person;
-import com.oracle.coherence.hibernate.demo.service.PersonService;
 import org.springframework.util.Assert;
 
+/**
+ * Default implementation of {@link PersonService}.
+ * @author Gunnar Hillert
+ */
 @Transactional
 @Service
 public class DefaultPersonService implements PersonService {
@@ -33,7 +37,7 @@ public class DefaultPersonService implements PersonService {
 
 	@Override
 	public Page<Person> listPeople(Pageable pageable) {
-		return personRepository.findAll(pageable);
+		return this.personRepository.findAll(pageable);
 	}
 
 	@Override
@@ -54,9 +58,9 @@ public class DefaultPersonService implements PersonService {
 		Assert.notNull(personId, "PersonId must not be null.");
 		Assert.notNull(eventId, "EventId must not be null.");
 
-		Person person = this.personRepository.findById(personId).orElseThrow(() ->
+		final Person person = this.personRepository.findById(personId).orElseThrow(() ->
 				new PersonNotFoundException(personId));
-		Event event = this.eventRepository.findById(eventId).orElseThrow(() ->
+		final Event event = this.eventRepository.findById(eventId).orElseThrow(() ->
 				new EventNotFoundException(eventId));
 		event.addParticipant(person);
 		this.eventRepository.save(event);

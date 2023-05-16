@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -10,8 +10,6 @@ import com.oracle.coherence.hibernate.cache.v6.access.CoherenceDomainDataRegionI
 import com.oracle.coherence.hibernate.cache.v6.access.CoherenceStorageAccessImpl;
 import com.oracle.coherence.hibernate.cache.v6.support.Foo;
 import com.tangosol.net.CacheFactory;
-
-import org.assertj.core.api.Assertions;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
@@ -61,12 +59,12 @@ public class ReadWriteCacheExpirationTests extends BaseCoreFunctionalTestCase {
 		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("foo");
 		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
 
-		Assertions.assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
+		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
 
 		final Session session = openSession();
 		session.beginTransaction();
-		final Foo itemToSave = new Foo( "bar" );
-		this.idOfSavedItem = (Long) session.save( itemToSave );
+		final Foo itemToSave = new Foo("bar");
+		this.idOfSavedItem = (Long) session.save(itemToSave);
 		session.flush();
 		session.getTransaction().commit();
 
@@ -85,7 +83,7 @@ public class ReadWriteCacheExpirationTests extends BaseCoreFunctionalTestCase {
 		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("foo");
 		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
 
-		Assertions.assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(1);
+		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(1);
 
 		final Session session = openSession();
 		session.beginTransaction();
@@ -110,7 +108,7 @@ public class ReadWriteCacheExpirationTests extends BaseCoreFunctionalTestCase {
 
 		Thread.sleep(1500);
 
-		Assertions.assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
+		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
 
 		final Session session = openSession();
 		session.beginTransaction();

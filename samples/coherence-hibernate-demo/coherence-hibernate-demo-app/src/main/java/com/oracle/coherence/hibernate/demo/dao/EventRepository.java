@@ -6,17 +6,19 @@
  */
 package com.oracle.coherence.hibernate.demo.dao;
 
+import java.util.Optional;
+
 import com.oracle.coherence.hibernate.demo.model.Event;
+import jakarta.persistence.QueryHint;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import jakarta.persistence.QueryHint;
-import java.util.Optional;
-
 /**
+ * Spring Data Repository for {@link Event}s.
  * @author Gunnar Hillert
  */
 @Repository

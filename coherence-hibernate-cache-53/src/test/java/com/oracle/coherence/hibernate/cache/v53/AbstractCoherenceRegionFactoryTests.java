@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -15,6 +15,7 @@ import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,10 +27,7 @@ import static org.mockito.Mockito.when;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-public abstract class AbstractCoherenceRegionFactoryTest
-{
-
-    // ---- Fields
+public abstract class AbstractCoherenceRegionFactoryTests {
 
     /**
      * The CoherenceRegionFactory in the fixture.
@@ -46,18 +44,13 @@ public abstract class AbstractCoherenceRegionFactoryTest
      */
     private SessionFactoryOptions sessionFactoryOptions;
 
-
-    // ---- Accessing
-
     /**
      * Returns the CoherenceRegionFactory in the fixture.
      *
      * @return the CoherenceRegionFactory in the fixture
      */
-    protected CoherenceRegionFactory getCoherenceRegionFactory()
-    {
-        if (this.coherenceRegionFactory == null)
-        {
+    protected CoherenceRegionFactory getCoherenceRegionFactory() {
+        if (this.coherenceRegionFactory == null) {
             this.coherenceRegionFactory = new CoherenceRegionFactory();
         }
         return this.coherenceRegionFactory;
@@ -68,13 +61,11 @@ public abstract class AbstractCoherenceRegionFactoryTest
      *
      * @return the Properties used to start the CoherenceRegionFactory
      */
-    protected Properties getProperties()
-    {
-        if (properties == null)
-        {
-            properties = new Properties();
+    protected Properties getProperties() {
+        if (this.properties == null) {
+            this.properties = new Properties();
         }
-        return properties;
+        return this.properties;
     }
 
     /**
@@ -82,8 +73,7 @@ public abstract class AbstractCoherenceRegionFactoryTest
      *
      * @return the SessionFactoryOptions used to start the CoherenceRegionFactory
      */
-    protected SessionFactoryOptions getSessionFactoryOptions()
-    {
+    protected SessionFactoryOptions getSessionFactoryOptions() {
         final SessionFactoryOptions sessionFactoryOptions = mock(SessionFactoryOptions.class);
         final StandardServiceRegistry serviceRegistry = mock(StandardServiceRegistry.class);
         final StrategySelector strategySelector = mock(StrategySelector.class);
@@ -101,8 +91,7 @@ public abstract class AbstractCoherenceRegionFactoryTest
      * Set up the test fixture.
      */
     @BeforeEach
-    public void setUpAbstractCoherenceRegionFactoryTest()
-    {
+    public void setUpAbstractCoherenceRegionFactoryTest() {
         //use a started CoherenceRegionFactory in the test, as a convenience
         //to ensure the cluster is joined and the cache factory is configured etc.
         getCoherenceRegionFactory().start(getSessionFactoryOptions(), getProperties());
@@ -112,15 +101,11 @@ public abstract class AbstractCoherenceRegionFactoryTest
      * Tear down the test fixture.
      */
     @AfterEach
-    public void tearDownAbstractCoherenceRegionFactoryTest()
-    {
-        if (coherenceRegionFactory == null)
-        {
+    public void tearDownAbstractCoherenceRegionFactoryTest() {
+        if (this.coherenceRegionFactory == null) {
             return;
         }
-        coherenceRegionFactory.stop();
-        coherenceRegionFactory = null;
+        this.coherenceRegionFactory.stop();
+        this.coherenceRegionFactory = null;
     }
-
-
 }

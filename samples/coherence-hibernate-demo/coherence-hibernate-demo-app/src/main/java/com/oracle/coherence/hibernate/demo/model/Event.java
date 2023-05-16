@@ -6,25 +6,25 @@
  */
 package com.oracle.coherence.hibernate.demo.model;
 
-import jakarta.persistence.CascadeType;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NaturalId;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalId;
+
 /**
+ * The Event Model class.
  * @author Gunnar Hillert
  */
 @Entity
@@ -53,7 +53,7 @@ public class Event implements Serializable {
 	}
 
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
@@ -61,7 +61,7 @@ public class Event implements Serializable {
 	}
 
 	public LocalDate getDate() {
-		return date;
+		return this.date;
 	}
 
 	public void setDate(LocalDate date) {
@@ -69,7 +69,7 @@ public class Event implements Serializable {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -77,7 +77,7 @@ public class Event implements Serializable {
 	}
 
 	public Set<Person> getParticipants() {
-		return participants;
+		return this.participants;
 	}
 
 	protected void setParticipants(Set<Person> participants) {
@@ -96,14 +96,18 @@ public class Event implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Event event = (Event) o;
-		return Objects.equals(id, event.id);
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		final Event event = (Event) o;
+		return Objects.equals(this.id, event.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(this.id);
 	}
 }

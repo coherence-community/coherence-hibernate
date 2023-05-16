@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -18,35 +18,27 @@ import com.tangosol.util.processor.AbstractProcessor;
  * is soft-locked, thereby forcing Hibernate to read from the database.
  *
  * @author Randy Stafford
+ * @author Gunnar Hillert
  */
-public class GetProcessor
-extends AbstractProcessor
-implements Serializable
-{
-
-
-    // ---- Constants
+public class GetProcessor extends AbstractProcessor implements Serializable {
 
     /**
      * An identifier of this class's version for serialization purposes.
      */
     private static final long serialVersionUID = 2359701955887239611L;
 
-
-    // ---- interface com.tangosol.util.InvocableMap.EntryProcessor
-
     /**
      * {@inheritDoc}
      */
-
     @Override
-    public Object process(InvocableMap.Entry entry)
-    {
-        if (!entry.isPresent()) return null;
-        CoherenceRegionValue cacheValue = (CoherenceRegionValue) entry.getValue();
-        if (cacheValue.isSoftLocked()) return null;
+    public Object process(InvocableMap.Entry entry) {
+        if (!entry.isPresent()) {
+            return null;
+        }
+        final CoherenceRegionValue cacheValue = (CoherenceRegionValue) entry.getValue();
+        if (cacheValue.isSoftLocked()) {
+            return null;
+        }
         return cacheValue.getValue();
     }
-
-
 }

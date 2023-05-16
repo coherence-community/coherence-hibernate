@@ -6,13 +6,13 @@
  */
 package com.oracle.coherence.hibernate.demo.dao;
 
+import com.oracle.coherence.hibernate.demo.model.Person;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.oracle.coherence.hibernate.demo.model.Person;
-
 /**
- *
+ * Spring Data Repository for {@link Person}s.
  * @author Gunnar Hillert
  *
  */

@@ -6,17 +6,19 @@
  */
 package com.oracle.coherence.hibernate.demo.config;
 
+import java.io.IOException;
+
+import javax.sql.DataSource;
+
 import org.hsqldb.server.Server;
 import org.hsqldb.server.ServerAcl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-
-import javax.sql.DataSource;
-import java.io.IOException;
 
 /**
  * Start HSQLDB in server mode on port 9001 with username "coherence" and password "rocks".
@@ -27,7 +29,7 @@ import java.io.IOException;
 public class DatabaseConfig {
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server hsqlServer() throws ServerAcl.AclFormatException, IOException {
-        Server server = new Server();
+        final Server server = new Server();
         server.setAddress("localhost");
         server.setPort(9001);
         server.setSilent(false);
@@ -40,7 +42,7 @@ public class DatabaseConfig {
     @DependsOn("hsqlServer")
     public DataSource getDataSource(
             @Autowired DataSourceProperties dsProps) {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        final DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName(dsProps.getDriverClassName());
         dataSourceBuilder.url(dsProps.getUrl());
         dataSourceBuilder.username(dsProps.getUsername());

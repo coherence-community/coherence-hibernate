@@ -20,62 +20,42 @@ import com.tangosol.util.processor.AbstractProcessor;
  *
  * We move this behavior into the grid for efficient concurrency control.
  *
+ * @param <K> the type of the Map entry key, see {@link AbstractProcessor}
+ *
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-public class AfterInsertProcessor<K>
-extends AbstractProcessor<K , CoherenceRegionValue, Boolean>
-implements Serializable
-{
-
-
-    // ---- Constants
+public class AfterInsertProcessor<K> extends AbstractProcessor<K, CoherenceRegionValue, Boolean> implements Serializable {
 
     /**
      * An identifier of this class's version for serialization purposes.
      */
     private static final long serialVersionUID = 2326579233150319530L;
 
-
-    // ---- Fields
-
     /**
      * The cache value for use by this AfterInsertProcessor.
      */
     private CoherenceRegionValue cacheValue;
 
-
-    // ---- Constructors
-
     /**
      * Complete constructor.
-     *
      * @param cacheValue the cache value for use by this AfterInsertProcessor
      */
-    public AfterInsertProcessor(CoherenceRegionValue cacheValue)
-    {
+    public AfterInsertProcessor(CoherenceRegionValue cacheValue) {
         this.cacheValue = cacheValue;
     }
-
-
-    // ---- interface com.tangosol.util.InvocableMap.EntryProcessor
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Boolean process(InvocableMap.Entry entry)
-    {
-        if (entry.isPresent())
-        {
+    public Boolean process(InvocableMap.Entry entry) {
+        if (entry.isPresent()) {
             return false;
         }
-        else
-        {
-            entry.setValue(cacheValue);
+        else {
+            entry.setValue(this.cacheValue);
             return true;
         }
     }
-
-
 }
