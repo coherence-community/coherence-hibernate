@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
+            <artifactId>hibernate-core-jakarta</artifactId>
             <version>${hibernate53.version}</version>
             <scope>provided</scope>
         </dependency>
