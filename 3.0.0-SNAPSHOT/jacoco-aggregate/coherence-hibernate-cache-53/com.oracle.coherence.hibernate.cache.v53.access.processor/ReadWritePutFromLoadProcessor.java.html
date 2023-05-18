@@ -23,20 +23,12 @@ import com.tangosol.util.processor.AbstractProcessor;
  *
  * @author Randy Stafford
  */
-public class ReadWritePutFromLoadProcessor
-extends AbstractProcessor
-implements Serializable
-{
-
-    // ---- Constants
+public class ReadWritePutFromLoadProcessor extends AbstractProcessor implements Serializable {
 
     /**
      * An identifier of this class's version for serialization purposes.
      */
     private static final long serialVersionUID = -3993308461928039511L;
-
-
-    // ---- Fields
 
     /**
      * A flag indicating whether &quot;minimal puts&quot; is in effect for Hibernate.
@@ -59,48 +51,37 @@ implements Serializable
      */
     private Comparator versionComparator;
 
-
-    // ---- Constructors
-
     /**
      * Complete constructor.
-     *
      * @param minimalPutsInEffect a flag indicating whether &quot;minimal puts&quot; is in effect for Hibernate
-     * @param txTimestamp From Hibernate javadoc, &quot;a timestamp prior to the transaction start time&quot; [where &quot;the transaction&quot; loaded the potential replacement value from database]
+     * @param txTimestamp from Hibernate javadoc, &quot;a timestamp prior to the transaction start time&quot; [where &quot;the transaction&quot; loaded the potential replacement value from database]
      * @param replacementValue the replacement cache value in this ReadWritePutFromLoadProcessor
      * @param versionComparator a Comparator for comparing actual value versions
      */
-    public ReadWritePutFromLoadProcessor(boolean minimalPutsInEffect, long txTimestamp, CoherenceRegionValue replacementValue, Comparator versionComparator)
-<span class="nc" id="L74">    {</span>
-<span class="nc" id="L75">        this.minimalPutsInEffect = minimalPutsInEffect;</span>
-<span class="nc" id="L76">        this.txTimestamp = txTimestamp;</span>
-<span class="nc" id="L77">        this.replacementValue = replacementValue;</span>
-<span class="nc" id="L78">        this.versionComparator = versionComparator;</span>
-<span class="nc" id="L79">    }</span>
-
-
-    // ---- interface com.tangosol.util.InvocableMap.EntryProcessor
+<span class="nc" id="L61">    public ReadWritePutFromLoadProcessor(boolean minimalPutsInEffect, long txTimestamp, CoherenceRegionValue replacementValue, Comparator versionComparator) {</span>
+<span class="nc" id="L62">        this.minimalPutsInEffect = minimalPutsInEffect;</span>
+<span class="nc" id="L63">        this.txTimestamp = txTimestamp;</span>
+<span class="nc" id="L64">        this.replacementValue = replacementValue;</span>
+<span class="nc" id="L65">        this.versionComparator = versionComparator;</span>
+<span class="nc" id="L66">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Object process(InvocableMap.Entry entry)
-    {
-<span class="nc" id="L90">        boolean isReplaceable = true;</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (entry.isPresent())</span>
-        {
-<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (minimalPutsInEffect) {</span>
-<span class="nc" id="L94">                return false;</span>
+    public Object process(InvocableMap.Entry entry) {
+<span class="nc" id="L73">        boolean isReplaceable = true;</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (entry.isPresent()) {</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">            if (this.minimalPutsInEffect) {</span>
+<span class="nc" id="L76">                return false;</span>
             }
-<span class="nc" id="L96">            CoherenceRegionValue presentValue = (CoherenceRegionValue) entry.getValue();</span>
-<span class="nc" id="L97">            isReplaceable = presentValue.isReplaceableFromLoad(txTimestamp, replacementValue.getVersion(), versionComparator);</span>
+<span class="nc" id="L78">            final CoherenceRegionValue presentValue = (CoherenceRegionValue) entry.getValue();</span>
+<span class="nc" id="L79">            isReplaceable = presentValue.isReplaceableFromLoad(this.txTimestamp, this.replacementValue.getVersion(), this.versionComparator);</span>
         }
-<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (isReplaceable) {</span>
-<span class="nc" id="L100">            entry.setValue(replacementValue);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (isReplaceable) {</span>
+<span class="nc" id="L82">            entry.setValue(this.replacementValue);</span>
         }
-<span class="nc" id="L102">        return isReplaceable;</span>
+<span class="nc" id="L84">        return isReplaceable;</span>
     }
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

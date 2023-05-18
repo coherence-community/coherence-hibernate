@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CoherenceHibernateProperties.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-53</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v53.configuration.support</a> &gt; <span class="el_source">CoherenceHibernateProperties.java</span></div><h1>CoherenceHibernateProperties.java</h1><pre class="source lang-java linenums">/*
- * Copyright (c) 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.cache.v53.configuration.support;
 
-import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
 
 /**
  * Defines all Hibernate Properties that are specific for Coherence Hibernate.
@@ -19,168 +19,173 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CoherenceHibernateProperties {
 
-	/**
-	 * The prefix of the names of all properties specific to this SPI implementation.
-	 */
-	public static final String PROPERTY_NAME_PREFIX = &quot;com.oracle.coherence.hibernate.cache.&quot;;
+    /**
+     * The prefix of the names of all properties specific to this SPI implementation.
+     */
+    public static final String PROPERTY_NAME_PREFIX = &quot;com.oracle.coherence.hibernate.cache.&quot;;
 
-	/**
-	 * The name of the property specifying the path to the Coherence cache configuration file.
-	 */
-	public static final String CACHE_CONFIG_FILE_PATH_PROPERTY_NAME = PROPERTY_NAME_PREFIX + &quot;cache_config_file_path&quot;;
+    /**
+     * The name of the property specifying the path to the Coherence cache configuration file.
+     */
+    public static final String CACHE_CONFIG_FILE_PATH_PROPERTY_NAME = PROPERTY_NAME_PREFIX + &quot;cache_config_file_path&quot;;
 
-	/**
-	 * The default path to the cache configuration file.
-	 */
-	public static final String CACHE_CONFIG_FILE_PATH_DEFAULT_VALUE = &quot;hibernate-second-level-cache-config.xml&quot;;
+    /**
+     * The default path to the cache configuration file.
+     */
+    public static final String CACHE_CONFIG_FILE_PATH_DEFAULT_VALUE = &quot;hibernate-second-level-cache-config.xml&quot;;
 
-	/**
-	 * By default, the DefaultCacheServer will not be bootstrapped and this property is false by default.
-	 */
-	public static final String START_CACHE_SERVER_DEFAULT_VALUE = &quot;false&quot;;
+    /**
+     * By default, the DefaultCacheServer will not be bootstrapped and this property is false by default.
+     */
+    public static final String START_CACHE_SERVER_DEFAULT_VALUE = &quot;false&quot;;
 
-	/**
-	 * The name of the property specifying the Coherence-specific logger. This will set the logger of the Coherence
-	 * sub-system.
-	 */
-	public static final String COHERENCE_LOGGER_PROPERTY_NAME = &quot;coherence.log&quot;;
-	public static final String COHERENCE_LOGGER_DEFAULT_VALUE = &quot;slf4j&quot;;
+    /**
+     * The name of the property specifying the Coherence-specific logger. This will set the logger of the Coherence
+     * sub-system.
+     */
+    public static final String COHERENCE_LOGGER_PROPERTY_NAME = &quot;coherence.log&quot;;
 
-	public static final String COHERENCE_SESSION_NAME_PROPERTY_NAME = PROPERTY_NAME_PREFIX + &quot;session_name&quot;;
-	public static final String COHERENCE_SESSION_TYPE_PROPERTY_NAME = PROPERTY_NAME_PREFIX + &quot;session_type&quot;;
-	public static final String START_CACHE_SERVER_PROPERTY_NAME = PROPERTY_NAME_PREFIX + &quot;start_cache_server&quot;;
+    /**
+     * The name of the property specifying the default value for the logger implementation to be used.
+     */
+    public static final String COHERENCE_LOGGER_DEFAULT_VALUE = &quot;slf4j&quot;;
 
-	/**
-	 * By default, empty, indicating that no Coherence property prefix is applied.
-	 */
-	public static final String DEFAULT_PROPERTY_PREFIX = PROPERTY_NAME_PREFIX + &quot;coherence_properties.&quot;;
+    /**
+     * The name of the property specifying the session name.
+     */
+    public static final String COHERENCE_SESSION_NAME_PROPERTY_NAME = PROPERTY_NAME_PREFIX + &quot;session_name&quot;;
 
-	private final String cacheConfigFilePath;
-	private final String sessionName;
-	private final SessionType sessionType;
+    /**
+     * The name of the property specifying the Coherence session type.
+     */
+    public static final String COHERENCE_SESSION_TYPE_PROPERTY_NAME = PROPERTY_NAME_PREFIX + &quot;session_type&quot;;
 
-	private final boolean startCacheServer;
+    /**
+     * The name of the property specifying whether to start the Coherence cache server.
+     */
+    public static final String START_CACHE_SERVER_PROPERTY_NAME = PROPERTY_NAME_PREFIX + &quot;start_cache_server&quot;;
 
-	private final Map&lt;String, Object&gt; coherenceProperties;
+    /**
+     * By default, empty, indicating that no Coherence property prefix is applied.
+     */
+    public static final String DEFAULT_PROPERTY_PREFIX = PROPERTY_NAME_PREFIX + &quot;coherence_properties.&quot;;
 
-<span class="nc" id="L66">	public CoherenceHibernateProperties(Map hibernateProperties) {</span>
+    private final String cacheConfigFilePath;
+    private final String sessionName;
+    private final SessionType sessionType;
 
-<span class="nc" id="L68">		this.coherenceProperties = this.getCoherenceSystemProperties(hibernateProperties);</span>
+    private final boolean startCacheServer;
 
-<span class="nc bnc" id="L70" title="All 2 branches missed.">		String cacheConfigFilePath = (hibernateProperties == null) ?</span>
-<span class="nc" id="L71">				null :</span>
-<span class="nc" id="L72">				(String) hibernateProperties.get(CoherenceHibernateProperties.CACHE_CONFIG_FILE_PATH_PROPERTY_NAME);</span>
+    private final Map&lt;String, Object&gt; coherenceProperties;
 
-<span class="nc bnc" id="L74" title="All 2 branches missed.">		if (cacheConfigFilePath == null) {</span>
-<span class="nc" id="L75">			cacheConfigFilePath = System.getProperty(</span>
-					CoherenceHibernateProperties.CACHE_CONFIG_FILE_PATH_PROPERTY_NAME,
-					CoherenceHibernateProperties.CACHE_CONFIG_FILE_PATH_DEFAULT_VALUE);
-		}
+<span class="nc" id="L81">    public CoherenceHibernateProperties(Map hibernateProperties) {</span>
 
-<span class="nc" id="L80">		this.cacheConfigFilePath = cacheConfigFilePath;</span>
+<span class="nc" id="L83">        this.coherenceProperties = this.getCoherenceSystemProperties(hibernateProperties);</span>
 
-		// ~~~~~
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        String cacheConfigFilePath = (hibernateProperties != null) ?</span>
+<span class="nc" id="L86">                (String) hibernateProperties.get(CoherenceHibernateProperties.CACHE_CONFIG_FILE_PATH_PROPERTY_NAME) : null;</span>
 
-<span class="nc bnc" id="L84" title="All 2 branches missed.">		String sessionName = (hibernateProperties == null) ?</span>
-<span class="nc" id="L85">				null :</span>
-<span class="nc" id="L86">				(String) hibernateProperties.get(CoherenceHibernateProperties.COHERENCE_SESSION_NAME_PROPERTY_NAME);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (cacheConfigFilePath == null) {</span>
+<span class="nc" id="L89">            cacheConfigFilePath = System.getProperty(</span>
+                    CoherenceHibernateProperties.CACHE_CONFIG_FILE_PATH_PROPERTY_NAME,
+                    CoherenceHibernateProperties.CACHE_CONFIG_FILE_PATH_DEFAULT_VALUE);
+        }
 
-<span class="nc bnc" id="L88" title="All 2 branches missed.">		if (sessionName == null) {</span>
-<span class="nc" id="L89">			sessionName = System.getProperty(</span>
-					CoherenceHibernateProperties.COHERENCE_SESSION_NAME_PROPERTY_NAME,
-					null);
-		}
+<span class="nc" id="L94">        this.cacheConfigFilePath = cacheConfigFilePath;</span>
 
-<span class="nc" id="L94">		this.sessionName = sessionName;</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        String sessionName = (hibernateProperties != null) ?</span>
+<span class="nc" id="L97">		        (String) hibernateProperties.get(CoherenceHibernateProperties.COHERENCE_SESSION_NAME_PROPERTY_NAME) : null;</span>
 
-		// ~~~~~
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (sessionName == null) {</span>
+<span class="nc" id="L100">            sessionName = System.getProperty(</span>
+                    CoherenceHibernateProperties.COHERENCE_SESSION_NAME_PROPERTY_NAME,
+                    null);
+        }
 
-<span class="nc bnc" id="L98" title="All 2 branches missed.">		String sessionTypeAsString = (hibernateProperties == null) ?</span>
-<span class="nc" id="L99">				null :</span>
-<span class="nc" id="L100">				(String) hibernateProperties.get(CoherenceHibernateProperties.COHERENCE_SESSION_TYPE_PROPERTY_NAME);</span>
+<span class="nc" id="L105">        this.sessionName = sessionName;</span>
 
-<span class="nc bnc" id="L102" title="All 2 branches missed.">		if (sessionTypeAsString == null) {</span>
-<span class="nc" id="L103">			sessionTypeAsString = System.getProperty(</span>
-					CoherenceHibernateProperties.COHERENCE_SESSION_TYPE_PROPERTY_NAME,
-					null);
-		}
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        String sessionTypeAsString = (hibernateProperties != null) ?</span>
+<span class="nc" id="L108">                (String) hibernateProperties.get(CoherenceHibernateProperties.COHERENCE_SESSION_TYPE_PROPERTY_NAME) : null;</span>
 
-<span class="nc bnc" id="L108" title="All 2 branches missed.">		if (sessionTypeAsString != null) {</span>
-<span class="nc" id="L109">			Assert.hasText(sessionTypeAsString, &quot;The sessionType cannot be an empty String.&quot;);</span>
-<span class="nc" id="L110">			this.sessionType = SessionType.valueOf(sessionTypeAsString.toUpperCase());</span>
-		}
-		else {
-<span class="nc" id="L113">			this.sessionType = null;</span>
-		}
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (sessionTypeAsString == null) {</span>
+<span class="nc" id="L111">            sessionTypeAsString = System.getProperty(</span>
+                    CoherenceHibernateProperties.COHERENCE_SESSION_TYPE_PROPERTY_NAME,
+                    null);
+        }
 
-		// ~~~~~
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (sessionTypeAsString != null) {</span>
+<span class="nc" id="L117">            Assert.hasText(sessionTypeAsString, &quot;The sessionType cannot be an empty String.&quot;);</span>
+<span class="nc" id="L118">            this.sessionType = SessionType.valueOf(sessionTypeAsString.toUpperCase());</span>
+        }
+        else {
+<span class="nc" id="L121">            this.sessionType = null;</span>
+        }
 
-<span class="nc bnc" id="L118" title="All 2 branches missed.">		String startCacheServer = (hibernateProperties == null) ?</span>
-<span class="nc" id="L119">				null :</span>
-<span class="nc" id="L120">				(String) hibernateProperties.get(CoherenceHibernateProperties.START_CACHE_SERVER_PROPERTY_NAME);</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        String startCacheServer = (hibernateProperties != null) ?</span>
+<span class="nc" id="L125">                (String) hibernateProperties.get(CoherenceHibernateProperties.START_CACHE_SERVER_PROPERTY_NAME) : null;</span>
 
-<span class="nc bnc" id="L122" title="All 2 branches missed.">		if (startCacheServer == null) {</span>
-<span class="nc" id="L123">			startCacheServer = System.getProperty(</span>
-					CoherenceHibernateProperties.START_CACHE_SERVER_PROPERTY_NAME,
-					CoherenceHibernateProperties.START_CACHE_SERVER_DEFAULT_VALUE);
-		}
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (startCacheServer == null) {</span>
+<span class="nc" id="L128">            startCacheServer = System.getProperty(</span>
+                    CoherenceHibernateProperties.START_CACHE_SERVER_PROPERTY_NAME,
+                    CoherenceHibernateProperties.START_CACHE_SERVER_DEFAULT_VALUE);
+        }
 
-<span class="nc" id="L128">		this.startCacheServer = Boolean.valueOf(startCacheServer);</span>
+<span class="nc" id="L133">        this.startCacheServer = Boolean.valueOf(startCacheServer);</span>
 
-<span class="nc" id="L130">	}</span>
+<span class="nc" id="L135">    }</span>
 
-	public String getCacheConfigFilePath() {
-<span class="nc" id="L133">		return cacheConfigFilePath;</span>
-	}
+    public String getCacheConfigFilePath() {
+<span class="nc" id="L138">        return this.cacheConfigFilePath;</span>
+    }
 
-	public String getSessionName() {
-<span class="nc" id="L137">		return sessionName;</span>
-	}
+    public String getSessionName() {
+<span class="nc" id="L142">        return this.sessionName;</span>
+    }
 
-	public SessionType getSessionType() {
-<span class="nc" id="L141">		return sessionType;</span>
-	}
+    public SessionType getSessionType() {
+<span class="nc" id="L146">        return this.sessionType;</span>
+    }
 
-	public Map&lt;String, Object&gt; getCoherenceProperties() {
-<span class="nc" id="L145">		return coherenceProperties;</span>
-	}
+    public Map&lt;String, Object&gt; getCoherenceProperties() {
+<span class="nc" id="L150">        return this.coherenceProperties;</span>
+    }
 
-	public boolean isStartCacheServer() {
-<span class="nc" id="L149">		return startCacheServer;</span>
-	}
+    public boolean isStartCacheServer() {
+<span class="nc" id="L154">        return this.startCacheServer;</span>
+    }
 
-	private Map&lt;String, Object&gt; getCoherenceSystemProperties(Map hibernateProperties) {
-<span class="nc" id="L153">		final Map&lt;String, Object&gt; resolvedCoherenceProperties = new ConcurrentHashMap&lt;&gt;(0);</span>
+    private Map&lt;String, Object&gt; getCoherenceSystemProperties(Map hibernateProperties) {
+<span class="nc" id="L158">        final Map&lt;String, Object&gt; resolvedCoherenceProperties = new ConcurrentHashMap&lt;&gt;(0);</span>
 
-<span class="nc bnc" id="L155" title="All 2 branches missed.">		if (hibernateProperties != null) {</span>
-<span class="nc bnc" id="L156" title="All 2 branches missed.">			for (Object rawEntry : hibernateProperties.entrySet()) {</span>
-<span class="nc" id="L157">				final Map.Entry entry = (Map.Entry) rawEntry;</span>
-<span class="nc" id="L158">				final Object key = entry.getKey();</span>
-<span class="nc" id="L159">				final Object value = entry.getValue();</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (hibernateProperties != null) {</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            for (Object rawEntry : hibernateProperties.entrySet()) {</span>
+<span class="nc" id="L162">                final Map.Entry entry = (Map.Entry) rawEntry;</span>
+<span class="nc" id="L163">                final Object key = entry.getKey();</span>
+<span class="nc" id="L164">                final Object value = entry.getValue();</span>
 
-<span class="nc" id="L161">				Assert.notNull(key, &quot;The key of the Hibernate property must not be null.&quot;);</span>
-<span class="nc" id="L162">				Assert.notNull(value, &quot;The value of the Hibernate property must not be null.&quot;);</span>
+<span class="nc" id="L166">                Assert.notNull(key, &quot;The key of the Hibernate property must not be null.&quot;);</span>
+<span class="nc" id="L167">                Assert.notNull(value, &quot;The value of the Hibernate property must not be null.&quot;);</span>
 
-<span class="nc bnc" id="L164" title="All 2 branches missed.">				if (!(key instanceof String)) {</span>
-<span class="nc" id="L165">					throw new IllegalStateException(&quot;Map key should be a String.&quot;);</span>
-				}
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                if (!(key instanceof String)) {</span>
+<span class="nc" id="L170">                    throw new IllegalStateException(&quot;Map key should be a String.&quot;);</span>
+                }
 
-<span class="nc" id="L168">				final String keyAsString = (String) key;</span>
+<span class="nc" id="L173">                final String keyAsString = (String) key;</span>
 
-<span class="nc bnc" id="L170" title="All 2 branches missed.">				if (keyAsString.startsWith(DEFAULT_PROPERTY_PREFIX)) {</span>
-<span class="nc" id="L171">					final String keyWithoutPrefix = keyAsString.replace(DEFAULT_PROPERTY_PREFIX, &quot;&quot;);</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">                if (keyAsString.startsWith(DEFAULT_PROPERTY_PREFIX)) {</span>
+<span class="nc" id="L176">                    final String keyWithoutPrefix = keyAsString.replace(DEFAULT_PROPERTY_PREFIX, &quot;&quot;);</span>
 
-<span class="nc bnc" id="L173" title="All 2 branches missed.">					if (value instanceof String) {</span>
-<span class="nc" id="L174">						resolvedCoherenceProperties.put(keyWithoutPrefix, value);</span>
-					}
-					else {
-<span class="nc" id="L177">						throw new IllegalStateException(String.format(&quot;Coherence property '%s' must be an instance of String.&quot;, value));</span>
-					}
-				}
-<span class="nc" id="L180">			}</span>
-		}
+<span class="nc bnc" id="L178" title="All 2 branches missed.">                    if (value instanceof String) {</span>
+<span class="nc" id="L179">                        resolvedCoherenceProperties.put(keyWithoutPrefix, value);</span>
+                    }
+                    else {
+<span class="nc" id="L182">                        throw new IllegalStateException(String.format(&quot;Coherence property '%s' must be an instance of String.&quot;, value));</span>
+                    }
+                }
+<span class="nc" id="L185">            }</span>
+        }
 
-<span class="nc" id="L183">		return resolvedCoherenceProperties;</span>
-	}
+<span class="nc" id="L188">        return resolvedCoherenceProperties;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
