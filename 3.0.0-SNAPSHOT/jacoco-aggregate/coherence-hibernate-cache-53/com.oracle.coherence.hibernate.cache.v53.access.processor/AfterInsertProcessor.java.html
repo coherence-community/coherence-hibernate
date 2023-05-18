@@ -20,45 +20,63 @@ import com.tangosol.util.processor.AbstractProcessor;
  *
  * We move this behavior into the grid for efficient concurrency control.
  *
- * @param &lt;K&gt; the type of the Map entry key, see {@link AbstractProcessor}
- *
  * @author Randy Stafford
  * @author Gunnar Hillert
- *
  */
-public class AfterInsertProcessor&lt;K&gt; extends AbstractProcessor&lt;K, CoherenceRegionValue, Boolean&gt; implements Serializable {
+public class AfterInsertProcessor&lt;K&gt;
+extends AbstractProcessor&lt;K , CoherenceRegionValue, Boolean&gt;
+implements Serializable
+{
+
+
+    // ---- Constants
 
     /**
      * An identifier of this class's version for serialization purposes.
      */
     private static final long serialVersionUID = 2326579233150319530L;
 
+
+    // ---- Fields
+
     /**
      * The cache value for use by this AfterInsertProcessor.
      */
     private CoherenceRegionValue cacheValue;
+
+
+    // ---- Constructors
 
     /**
      * Complete constructor.
      *
      * @param cacheValue the cache value for use by this AfterInsertProcessor
      */
-<span class="nc" id="L46">    public AfterInsertProcessor(CoherenceRegionValue cacheValue) {</span>
-<span class="nc" id="L47">        this.cacheValue = cacheValue;</span>
-<span class="nc" id="L48">    }</span>
+    public AfterInsertProcessor(CoherenceRegionValue cacheValue)
+<span class="nc" id="L56">    {</span>
+<span class="nc" id="L57">        this.cacheValue = cacheValue;</span>
+<span class="nc" id="L58">    }</span>
+
+
+    // ---- interface com.tangosol.util.InvocableMap.EntryProcessor
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Boolean process(InvocableMap.Entry entry) {
-<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (entry.isPresent()) {</span>
-<span class="nc" id="L56">            return false;</span>
+    public Boolean process(InvocableMap.Entry entry)
+    {
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (entry.isPresent())</span>
+        {
+<span class="nc" id="L71">            return false;</span>
         }
-        else {
-<span class="nc" id="L59">            entry.setValue(this.cacheValue);</span>
-<span class="nc" id="L60">            return true;</span>
+        else
+        {
+<span class="nc" id="L75">            entry.setValue(cacheValue);</span>
+<span class="nc" id="L76">            return true;</span>
         }
     }
+
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

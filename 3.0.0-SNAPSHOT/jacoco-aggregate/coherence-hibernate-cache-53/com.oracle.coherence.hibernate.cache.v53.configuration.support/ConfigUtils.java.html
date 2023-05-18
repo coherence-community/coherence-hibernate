@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ConfigUtils.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-53</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v53.configuration.support</a> &gt; <span class="el_source">ConfigUtils.java</span></div><h1>ConfigUtils.java</h1><pre class="source lang-java linenums">/*
- * Copyright (c) 2022, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2022, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.cache.v53.configuration.support;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import com.tangosol.net.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Helper class for some common Configuration utilities.
@@ -20,49 +20,45 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ConfigUtils {
 
-<span class="nc" id="L23">    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigUtils.class);</span>
+<span class="nc" id="L23">	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigUtils.class);</span>
 
-    private static final String WITH_NAME_CLASS_NAME = &quot;com.tangosol.net.options.WithName&quot;;
-    private static final String WITH_NAME_CLASS_OF_METHOD_NAME = &quot;of&quot;;
+	private static final String WITH_NAME_CLASS_NAME = &quot;com.tangosol.net.options.WithName&quot;;
+	private static final String WITH_NAME_CLASS_OF_METHOD_NAME = &quot;of&quot;;
 
-<span class="nc" id="L28">    private ConfigUtils() {</span>
-<span class="nc" id="L29">        throw new AssertionError();</span>
-    }
+<span class="nc" id="L28">	private ConfigUtils() {</span>
+<span class="nc" id="L29">		throw new AssertionError();</span>
+	}
 
-    /**
-     * The {@link Session} name can only be specified using Coherence CE 21.12 and higher. Specifying a sessionNames for
-     * older Coherence versions will result in an {@link IllegalArgumentException} to be thrown.
-     * @param sessionName must not be null
-     * @return the Session.Option
-     */
-    public static Session.Option getSessionNameOption(String sessionName) {
-<span class="nc" id="L39">        Assert.notNull(sessionName, &quot;The sessionName must not be null.&quot;);</span>
-        try {
-<span class="nc" id="L41">            final Class&lt;?&gt; withNameClass = Class.forName(WITH_NAME_CLASS_NAME);</span>
-<span class="nc" id="L42">            final Method ofMethod = withNameClass.getMethod(WITH_NAME_CLASS_OF_METHOD_NAME, String.class);</span>
-<span class="nc" id="L43">            final Session.Option sessionNameOption = (Session.Option) ofMethod.invoke(null, sessionName);</span>
-<span class="nc" id="L44">            return sessionNameOption;</span>
-        }
-<span class="nc" id="L46">		catch (ClassNotFoundException ex) {</span>
-<span class="nc" id="L47">            final String errorMessage = String.format(&quot;The required Class '%s' was not found. Most likely you are using a Coherence version&quot; +</span>
-                    &quot;older than '21.12' which does not support specifying a session name.&quot;, WITH_NAME_CLASS_NAME);
-<span class="nc bnc" id="L49" title="All 2 branches missed.">            if (LOGGER.isErrorEnabled()) {</span>
-<span class="nc" id="L50">                LOGGER.error(errorMessage);</span>
-            }
-<span class="nc" id="L52">            throw new IllegalArgumentException(errorMessage, ex);</span>
-        }
-<span class="nc" id="L54">        catch (NoSuchMethodException ex) {</span>
-<span class="nc" id="L55">            throw new IllegalStateException(String.format(</span>
-                    &quot;Method '%s' of class '%s' was not found.&quot;, WITH_NAME_CLASS_OF_METHOD_NAME, WITH_NAME_CLASS_NAME), ex);
-        }
-<span class="nc" id="L58">        catch (InvocationTargetException ex) {</span>
-<span class="nc" id="L59">            throw new IllegalStateException(String.format(</span>
-                    &quot;Executing the '%s' method of class '%s' threw an unexpected exception.&quot;, WITH_NAME_CLASS_OF_METHOD_NAME, WITH_NAME_CLASS_NAME), ex);
-        }
-<span class="nc" id="L62">        catch (IllegalAccessException ex) {</span>
-<span class="nc" id="L63">            throw new IllegalStateException(String.format(</span>
-                    &quot;Method '%s' of class '%s' was not accessible.&quot;, WITH_NAME_CLASS_OF_METHOD_NAME, WITH_NAME_CLASS_NAME), ex);
-        }
-    }
+	/**
+	 * The {@link Session} name can only be specified using Coherence CE 21.12 and higher. Specifying a sessionNames for
+	 * older Coherence versions will result in an {@link IllegalArgumentException} to be thrown.
+	 * @param sessionName must not be null
+	 * @return the Session.Option
+	 */
+	public static Session.Option getSessionNameOption(String sessionName) {
+<span class="nc" id="L39">		Assert.notNull(sessionName, &quot;The sessionName must not be null.&quot;);</span>
+		try {
+<span class="nc" id="L41">			final Class&lt;?&gt; withNameClass = Class.forName(WITH_NAME_CLASS_NAME);</span>
+<span class="nc" id="L42">			final Method ofMethod = withNameClass.getMethod(WITH_NAME_CLASS_OF_METHOD_NAME, String.class);</span>
+<span class="nc" id="L43">			final Session.Option sessionNameOption = (Session.Option) ofMethod.invoke(null, sessionName);</span>
+<span class="nc" id="L44">			return sessionNameOption;</span>
+<span class="nc" id="L45">		} catch (ClassNotFoundException ex) {</span>
+<span class="nc" id="L46">			final String errorMessage = String.format(&quot;The required Class '%s' was not found. Most likely you are using a Coherence version&quot; +</span>
+					&quot;older than '21.12' which does not support specifying a session name.&quot;, WITH_NAME_CLASS_NAME);
+<span class="nc bnc" id="L48" title="All 2 branches missed.">			if (LOGGER.isErrorEnabled()) {</span>
+<span class="nc" id="L49">				LOGGER.error(errorMessage);</span>
+			}
+<span class="nc" id="L51">			throw new IllegalArgumentException(errorMessage, ex);</span>
+<span class="nc" id="L52">		} catch (NoSuchMethodException ex) {</span>
+<span class="nc" id="L53">			throw new IllegalStateException(String.format(</span>
+					&quot;Method '%s' of class '%s' was not found.&quot;, WITH_NAME_CLASS_OF_METHOD_NAME, WITH_NAME_CLASS_NAME), ex);
+<span class="nc" id="L55">		} catch (InvocationTargetException ex) {</span>
+<span class="nc" id="L56">			throw new IllegalStateException(String.format(</span>
+					&quot;Executing the '%s' method of class '%s' threw an unexpected exception.&quot;, WITH_NAME_CLASS_OF_METHOD_NAME, WITH_NAME_CLASS_NAME), ex);
+<span class="nc" id="L58">		} catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L59">			throw new IllegalStateException(String.format(</span>
+					&quot;Method '%s' of class '%s' was not accessible.&quot;, WITH_NAME_CLASS_OF_METHOD_NAME, WITH_NAME_CLASS_NAME), ex);
+		}
+	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

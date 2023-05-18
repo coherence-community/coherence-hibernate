@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CoherenceNonstrictReadWriteNaturalIdAccess.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-53</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v53.access</a> &gt; <span class="el_source">CoherenceNonstrictReadWriteNaturalIdAccess.java</span></div><h1>CoherenceNonstrictReadWriteNaturalIdAccess.java</h1><pre class="source lang-java linenums">/*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -24,9 +24,14 @@ import org.slf4j.LoggerFactory;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-public class CoherenceNonstrictReadWriteNaturalIdAccess extends AbstractCoherenceEntityDataAccess implements NaturalIdDataAccess {
+public class CoherenceNonstrictReadWriteNaturalIdAccess
+extends AbstractCoherenceEntityDataAccess
+implements NaturalIdDataAccess
+{
 
-<span class="nc" id="L29">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceNonstrictReadWriteNaturalIdAccess.class);</span>
+<span class="nc" id="L32">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceNonstrictReadWriteNaturalIdAccess.class);</span>
+
+    // ---- Constructors
 
     /**
      * Complete constructor.
@@ -35,87 +40,102 @@ public class CoherenceNonstrictReadWriteNaturalIdAccess extends AbstractCoherenc
      * @param domainDataStorageAccess the domain data storage access
      */
     public CoherenceNonstrictReadWriteNaturalIdAccess(DomainDataRegion domainDataRegion,
-            DomainDataStorageAccess domainDataStorageAccess) {
-<span class="nc" id="L39">        super(domainDataRegion, domainDataStorageAccess, null);</span>
-<span class="nc" id="L40">    }</span>
+            DomainDataStorageAccess domainDataStorageAccess)
+    {
+<span class="nc" id="L45">        super(domainDataRegion, domainDataStorageAccess, null);</span>
+<span class="nc" id="L46">    }</span>
+
+
+    // ---- interface org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean insert(SharedSessionContractImplementor session, Object key, Object value) throws CacheException {
+    public boolean insert(SharedSessionContractImplementor session, Object key, Object value) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence insert() -&gt; afterInsert() when inserting a natural ID.
         //&quot;Synchronous&quot; (i.e. transactional) access strategies should insert the cache entry here, but
         //&quot;asynchrononous&quot; (i.e. non-transactional) strategies should insert it in afterInsert instead.
-<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L52">            LOGGER.debug(&quot;insert({}, {})&quot;, key, value);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L63">            LOGGER.debug(&quot;insert({}, {})&quot;, key, value);</span>
         }
-<span class="nc" id="L54">        return false;</span>
+<span class="nc" id="L65">        return false;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value) throws CacheException {
+    public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence insert() -&gt; afterInsert() when inserting a natural ID.
         //&quot;Asynchrononous&quot; (i.e. non-transactional) strategies should insert the cache entry here.
         //But in nonstrict-read-write cache concurrency strategies, don't put newly inserted natural IDs, to force
         //subsequent putFromLoad.
-<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L68">            LOGGER.debug(&quot;afterInsert({}, {})&quot;, key, value);</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L81">            LOGGER.debug(&quot;afterInsert({}, {})&quot;, key, value);</span>
         }
-<span class="nc" id="L70">        return false;</span>
+<span class="nc" id="L83">        return false;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean update(SharedSessionContractImplementor session, Object key, Object value) throws CacheException {
+    public boolean update(SharedSessionContractImplementor session, Object key, Object value) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence lockItem() -&gt; remove() -&gt; update() -&gt; afterUpdate() when updating a natural ID.
         //&quot;Synchronous&quot; (i.e. transactional) access strategies should update the cache entry here, but
         //&quot;asynchrononous&quot; (i.e. non-transactional) strategies should update it in afterUpdate instead.
-<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L83">            LOGGER.debug(&quot;update({}, {})&quot;, key, value);</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L98">            LOGGER.debug(&quot;update({}, {})&quot;, key, value);</span>
         }
-<span class="nc" id="L85">        return false;</span>
+<span class="nc" id="L100">        return false;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, SoftLock lock) throws CacheException {
+    public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, SoftLock lock) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/NaturalIdRegionAccessStrategy.html
         //Hibernate will make the call sequence lockItem() -&gt; remove() -&gt; update() -&gt; afterUpdate() when updating a natural ID.
         //&quot;Asynchrononous&quot; (i.e. non-transactional) strategies should invalidate or update the cache entry here and release the lock,
         //as appropriate for the kind of strategy (nonstrict-read-write vs. read-write).
         //In the nonstrict-read-write strategy we remove the cache entry to force subsequent putFromLoad.
-<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L99">            LOGGER.debug(&quot;afterUpdate({}, {}, {})&quot;, key, value, lock);</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L116">            LOGGER.debug(&quot;afterUpdate({}, {}, {})&quot;, key, value, lock);</span>
         }
-<span class="nc" id="L101">        remove(session, key);</span>
-<span class="nc" id="L102">        unlockItem(session, key, lock);</span>
-<span class="nc" id="L103">        return false;</span>
+<span class="nc" id="L118">        remove(session, key);</span>
+<span class="nc" id="L119">        unlockItem(session, key, lock);</span>
+<span class="nc" id="L120">        return false;</span>
     }
 
     @Override
-    public Object generateCacheKey(Object[] naturalIdValues, EntityPersister persister, SharedSessionContractImplementor session) {
-<span class="nc" id="L108">        return this.getCacheKeysFactory().createNaturalIdKey(naturalIdValues, persister, session);</span>
+    public Object generateCacheKey(Object[] naturalIdValues, EntityPersister persister, SharedSessionContractImplementor session)
+    {
+<span class="nc" id="L126">        return this.getCacheKeysFactory().createNaturalIdKey(naturalIdValues, persister, session);</span>
     }
 
     @Override
-    public Object[] getNaturalIdValues(Object cacheKey) {
-<span class="nc" id="L113">        return this.getCacheKeysFactory().getNaturalIdValues(cacheKey);</span>
+    public Object[] getNaturalIdValues(Object cacheKey)
+    {
+<span class="nc" id="L132">        return this.getCacheKeysFactory().getNaturalIdValues(cacheKey);</span>
     }
 
     @Override
     public AccessType getAccessType() {
-<span class="nc" id="L118">        return AccessType.READ_ONLY;</span>
+<span class="nc" id="L137">        return AccessType.READ_ONLY;</span>
     }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

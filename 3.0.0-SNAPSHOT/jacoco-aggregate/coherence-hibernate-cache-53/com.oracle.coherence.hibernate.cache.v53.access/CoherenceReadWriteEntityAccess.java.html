@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CoherenceReadWriteEntityAccess.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-53</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v53.access</a> &gt; <span class="el_source">CoherenceReadWriteEntityAccess.java</span></div><h1>CoherenceReadWriteEntityAccess.java</h1><pre class="source lang-java linenums">/*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -28,9 +28,14 @@ import org.slf4j.LoggerFactory;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-public class CoherenceReadWriteEntityAccess extends AbstractReadWriteCoherenceEntityDataAccess implements EntityDataAccess {
+public class CoherenceReadWriteEntityAccess
+extends AbstractReadWriteCoherenceEntityDataAccess
+implements EntityDataAccess
+{
 
-<span class="nc" id="L33">    private static final Logger LOGGER = LoggerFactory.getLogger(EntityDataAccess.class);</span>
+<span class="nc" id="L36">    private static final Logger LOGGER = LoggerFactory.getLogger(EntityDataAccess.class);</span>
+
+    // ---- Constructors
 
     /**
      * Complete constructor.
@@ -40,92 +45,116 @@ public class CoherenceReadWriteEntityAccess extends AbstractReadWriteCoherenceEn
      * @param versionComparator the version comparator
      */
     public CoherenceReadWriteEntityAccess(DomainDataRegion domainDataRegion,
-            DomainDataStorageAccess domainDataStorageAccess, Comparator&lt;?&gt; versionComparator) {
-<span class="nc" id="L44">        super(domainDataRegion, domainDataStorageAccess, versionComparator);</span>
-<span class="nc" id="L45">    }</span>
+            DomainDataStorageAccess domainDataStorageAccess, Comparator&lt;?&gt; versionComparator)
+    {
+<span class="nc" id="L50">        super(domainDataRegion, domainDataStorageAccess, versionComparator);</span>
+<span class="nc" id="L51">    }</span>
+
+
+    // ---- interface org.hibernate.cache.spi.access.EntityRegionAccessStrategy
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public DomainDataRegion getRegion()
+//    {
+//        debugf(&quot;%s.getRegion()&quot;, this);
+//        return getCoherenceRegion();
+//    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean insert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException {
+    public boolean insert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -&gt; afterInsert() when inserting an entity.
         //&quot;Synchronous&quot; (i.e. transactional) access strategies should insert the cache entry here, but
         //&quot;asynchrononous&quot; (i.e. non-transactional) strategies should insert it in afterInsert instead.
-<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L57">            LOGGER.debug(&quot;insert({}, {}, {})&quot;, key, value, version);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L78">            LOGGER.debug(&quot;insert({}, {}, {})&quot;, key, value, version);</span>
         }
-<span class="nc" id="L59">        return false;</span>
+<span class="nc" id="L80">        return false;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException {
+    public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -&gt; afterInsert() when inserting an entity.
         //&quot;Asynchrononous&quot; (i.e. non-transactional) strategies should insert the cache entry here.
         //In implementation we only insert the entry if there was no entry already present at the argument key
-<span class="nc bnc" id="L71" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L72">            LOGGER.debug(&quot;insert({}, {}, {})&quot;, key, value, version);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L95">            LOGGER.debug(&quot;insert({}, {}, {})&quot;, key, value, version);</span>
         }
-<span class="nc" id="L74">        return super.afterInsert(key, newCacheValue(value, version));</span>
+<span class="nc" id="L97">        return super.afterInsert(key, newCacheValue(value, version));</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean update(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException {
+    public boolean update(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence lockItem() -&gt; update() -&gt; afterUpdate() when updating an entity.
         //&quot;Synchronous&quot; (i.e. transactional) access strategies should update the cache entry here, but
         //&quot;asynchrononous&quot; (i.e. non-transactional) strategies should update it in afterUpdate instead.
-<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L87">            LOGGER.debug(&quot;insert({}, {}, {}, {})&quot;, key, value, currentVersion, previousVersion);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L112">            LOGGER.debug(&quot;insert({}, {}, {}, {})&quot;, key, value, currentVersion, previousVersion);</span>
         }
-<span class="nc" id="L89">        return false;</span>
+<span class="nc" id="L114">        return false;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException {
+    public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence lockItem() -&gt; update() -&gt; afterUpdate() when updating an entity.
         //&quot;Asynchrononous&quot; (i.e. non-transactional) strategies should invalidate or update the cache entry here and release the lock,
         //as appropriate for the kind of strategy (nonstrict-read-write vs. read-write).
         //In the read-write strategy we only update the cache value if it is present and was not multiply locked.
-<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L103">            LOGGER.debug(&quot;afterUpdate({}, {}, {}, {}, {})&quot;, key, value, currentVersion, previousVersion, lock);</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L130">            LOGGER.debug(&quot;afterUpdate({}, {}, {}, {}, {})&quot;, key, value, currentVersion, previousVersion, lock);</span>
         }
-<span class="nc" id="L105">        return afterUpdate(key, newCacheValue(value, currentVersion), lock);</span>
+<span class="nc" id="L132">        return afterUpdate(key, newCacheValue(value, currentVersion), lock);</span>
     }
 
     @Override
-    public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier) {
-<span class="nc" id="L110">        return ((AbstractDomainDataRegion) this.getRegion()).getEffectiveKeysFactory().createEntityKey(id, persister, sessionFactoryImplementor, tenantIdentifier);</span>
+    public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier)
+    {
+<span class="nc" id="L138">        return ((AbstractDomainDataRegion) this.getRegion()).getEffectiveKeysFactory().createEntityKey( id, persister, sessionFactoryImplementor, tenantIdentifier );</span>
     }
 
     @Override
-    public Object getCacheKeyId(Object cacheKey) {
-<span class="nc" id="L115">        return this.getCacheKeysFactory().getEntityId(cacheKey);</span>
+    public Object getCacheKeyId(Object cacheKey)
+    {
+<span class="nc" id="L144">        return this.getCacheKeysFactory().getEntityId(cacheKey);</span>
     }
 
 
     @Override
     public AccessType getAccessType() {
-<span class="nc" id="L121">        return AccessType.READ_WRITE;</span>
+<span class="nc" id="L150">        return AccessType.READ_WRITE;</span>
     }
 
 
     @Override
     public boolean contains(Object key) {
         // TODO Auto-generated method stub
-<span class="nc" id="L128">        return false;</span>
+<span class="nc" id="L157">        return false;</span>
     }
 
 }

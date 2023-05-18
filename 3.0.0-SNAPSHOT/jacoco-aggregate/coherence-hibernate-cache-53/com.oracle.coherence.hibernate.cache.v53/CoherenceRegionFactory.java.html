@@ -6,10 +6,6 @@
  */
 package com.oracle.coherence.hibernate.cache.v53;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegionImpl;
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceStorageAccessImpl;
 import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionType;
@@ -42,6 +38,10 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * A CoherenceRegionFactory is a factory for regions of Hibernate second-level cache implemented with Oracle Coherence.
  *
@@ -49,20 +49,25 @@ import org.slf4j.LoggerFactory;
  * @author Gunnar Hillert
  * @since 2.1
  */
-public class CoherenceRegionFactory extends RegionFactoryTemplate {
-<span class="nc" id="L53">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceRegionFactory.class);</span>
+public class CoherenceRegionFactory extends RegionFactoryTemplate
+{
+<span class="nc" id="L54">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceRegionFactory.class);</span>
+
+    // ---- Constants
 
     private static final long serialVersionUID = -8434943540794407358L;
 
-    protected transient CoherenceHibernateSystemPropertyResolver systemPropertyResolver;
+    protected CoherenceHibernateSystemPropertyResolver systemPropertyResolver;
 
-    protected transient Session coherenceSession;
+    protected Session coherenceSession;
 
     private final boolean requiresShutDown;
 
-    private transient DefaultCacheServer defaultCacheServer;
+    private DefaultCacheServer defaultCacheServer;
 
-<span class="nc" id="L65">    private Cluster cluster = null;</span>
+<span class="nc" id="L68">    private Cluster cluster = null;</span>
+
+    // ---- Constructors
 
     /**
      * Default constructor. Any Coherence instances created will implicitly require a shutdown of Coherence when
@@ -71,10 +76,10 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
      * start Coherence as a CacheServer and local storage will be enabled by default and all default services will be
      * started as well. Please provide property {@link CoherenceHibernateProperties#START_CACHE_SERVER_PROPERTY_NAME}
      */
-<span class="nc" id="L74">    public CoherenceRegionFactory() {</span>
-<span class="nc" id="L75">        this.coherenceSession = null;</span>
-<span class="nc" id="L76">        this.requiresShutDown = true;</span>
-<span class="nc" id="L77">    }</span>
+<span class="nc" id="L79">    public CoherenceRegionFactory() {</span>
+<span class="nc" id="L80">        this.coherenceSession = null;</span>
+<span class="nc" id="L81">        this.requiresShutDown = true;</span>
+<span class="nc" id="L82">    }</span>
 
     /**
      * Constructor that allows to pass-in an externally created Coherence {@link Session}. In this case the external
@@ -84,16 +89,18 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
      *
      * @param coherenceSession must not be null
      */
-<span class="nc" id="L87">    public CoherenceRegionFactory(Session coherenceSession) {</span>
-<span class="nc" id="L88">        Assert.notNull(coherenceSession, &quot;The passed-in coherenceSession must not be null.&quot;);</span>
-<span class="nc" id="L89">        this.coherenceSession = coherenceSession;</span>
-<span class="nc" id="L90">        this.requiresShutDown = false;</span>
-<span class="nc" id="L91">    }</span>
+<span class="nc" id="L92">    public CoherenceRegionFactory(Session coherenceSession) {</span>
+<span class="nc" id="L93">        Assert.notNull(coherenceSession, &quot;The passed-in coherenceSession must not be null.&quot;);</span>
+<span class="nc" id="L94">        this.coherenceSession = coherenceSession;</span>
+<span class="nc" id="L95">        this.requiresShutDown = false;</span>
+<span class="nc" id="L96">    }</span>
+
+    // ---- Fields
 
     /**
      * The Hibernate settings object; may contain user-supplied &quot;minimal puts&quot; setting.
      */
-    private transient SessionFactoryOptions sessionFactoryOptions;
+    private SessionFactoryOptions sessionFactoryOptions;
 
     /**
      * The Hibernate {@link CacheKeysFactory} to use. Hibernate ships with 2 {@link CacheKeysFactory}
@@ -106,140 +113,157 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
      * &lt;p&gt;
      * If none is specified, then the {@link org.hibernate.cache.internal.DefaultCacheKeysFactory} is used.
      */
-    private transient CacheKeysFactory cacheKeysFactory;
+    private CacheKeysFactory cacheKeysFactory;
+
+    // ---- Accessing
 
     @Override
     protected CacheKeysFactory getImplicitCacheKeysFactory() {
-<span class="nc" id="L113">        return this.cacheKeysFactory;</span>
+<span class="nc" id="L122">        return this.cacheKeysFactory;</span>
     }
 
     /**
      * Returns the Coherence {@link Session} used by this {@link CoherenceRegionFactory}.
+     *
      * @return the Coherence {@link Session}
      */
-    protected Session getCoherenceSession() {
-<span class="nc" id="L121">        return this.coherenceSession;</span>
+    protected Session getCoherenceSession()
+    {
+<span class="nc" id="L132">        return this.coherenceSession;</span>
     }
 
     /**
      * Sets the Coherence {@link Session} used by this {@link CoherenceRegionFactory}.
+     *
      * @param coherenceSession the Coherence {@link Session} used by this CoherenceRegionFactory. May be null.
      */
-    protected void setCoherenceSession(Session coherenceSession) {
-<span class="nc" id="L129">        this.coherenceSession = coherenceSession;</span>
-<span class="nc" id="L130">    }</span>
+    protected void setCoherenceSession(Session coherenceSession)
+    {
+<span class="nc" id="L142">        this.coherenceSession = coherenceSession;</span>
+<span class="nc" id="L143">    }</span>
+
+    // ---- interface java.lang.Object
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-<span class="nc" id="L137">        return getClass().getName() + &quot;(&quot; +</span>
-<span class="nc bnc" id="L138" title="All 2 branches missed.">                &quot;coherenceSession=&quot; + ((this.coherenceSession != null) ? this.coherenceSession.toString() : &quot;N/A&quot;) +</span>
-                &quot;, sessionFactoryOptions=&quot; + this.sessionFactoryOptions +
+    public String toString()
+    {
+<span class="nc" id="L153">        return getClass().getName() + &quot;(&quot; +</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                &quot;coherenceSession=&quot; + (this.coherenceSession == null ? &quot;N/A&quot; : this.coherenceSession.toString()) +</span>
+                &quot;, sessionFactoryOptions=&quot; + sessionFactoryOptions +
                 &quot;)&quot;;
     }
 
+    // ---- interface org.hibernate.cache.spi.RegionFactory
+
     @Override
-    protected void prepareForUse(SessionFactoryOptions settings, Map configValues) {
-<span class="nc" id="L145">        this.sessionFactoryOptions = settings;</span>
+    protected void prepareForUse(SessionFactoryOptions settings, Map configValues)
+    {
+<span class="nc" id="L164">        this.sessionFactoryOptions = settings;</span>
 
-<span class="nc" id="L147">        final CoherenceHibernateProperties coherenceHibernateProperties = new CoherenceHibernateProperties(configValues);</span>
+<span class="nc" id="L166">        final CoherenceHibernateProperties coherenceHibernateProperties = new CoherenceHibernateProperties(configValues);</span>
 
-<span class="nc" id="L149">        final Map&lt;String, Object&gt; coherenceProperties = coherenceHibernateProperties.getCoherenceProperties();</span>
-<span class="nc" id="L150">        this.systemPropertyResolver = new CoherenceHibernateSystemPropertyResolver(coherenceProperties);</span>
+<span class="nc" id="L168">        final Map&lt;String, Object&gt; coherenceProperties = coherenceHibernateProperties.getCoherenceProperties();</span>
+<span class="nc" id="L169">        this.systemPropertyResolver = new CoherenceHibernateSystemPropertyResolver(coherenceProperties);</span>
 
-<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (this.systemPropertyResolver.getProperty(CoherenceHibernateProperties.COHERENCE_LOGGER_PROPERTY_NAME) == null) {</span>
-<span class="nc" id="L153">            this.systemPropertyResolver.addCoherenceProperty(CoherenceHibernateProperties.COHERENCE_LOGGER_PROPERTY_NAME, CoherenceHibernateProperties.COHERENCE_LOGGER_DEFAULT_VALUE);</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (this.systemPropertyResolver.getProperty(CoherenceHibernateProperties.COHERENCE_LOGGER_PROPERTY_NAME) == null) {</span>
+<span class="nc" id="L172">            this.systemPropertyResolver.addCoherenceProperty(CoherenceHibernateProperties.COHERENCE_LOGGER_PROPERTY_NAME, CoherenceHibernateProperties.COHERENCE_LOGGER_DEFAULT_VALUE);</span>
         }
 
-<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (this.sessionFactoryOptions != null) {</span>
-<span class="nc" id="L157">            final StrategySelector selector = this.sessionFactoryOptions.getServiceRegistry().getService(StrategySelector.class);</span>
-<span class="nc" id="L158">            this.cacheKeysFactory = selector.resolveDefaultableStrategy(CacheKeysFactory.class,</span>
-<span class="nc" id="L159">                    configValues.get(Environment.CACHE_KEYS_FACTORY), new DefaultCacheKeysFactory());</span>
-<span class="nc" id="L160">        }</span>
-        else {
-<span class="nc" id="L162">            this.cacheKeysFactory = new DefaultCacheKeysFactory();</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">        if (this.sessionFactoryOptions != null)</span>
+        {
+<span class="nc" id="L177">            StrategySelector selector = this.sessionFactoryOptions.getServiceRegistry().getService(StrategySelector.class);</span>
+<span class="nc" id="L178">            this.cacheKeysFactory = selector.resolveDefaultableStrategy(CacheKeysFactory.class,</span>
+<span class="nc" id="L179">                    configValues.get(Environment.CACHE_KEYS_FACTORY), new DefaultCacheKeysFactory());</span>
+<span class="nc" id="L180">        }</span>
+        else
+        {
+<span class="nc" id="L183">            this.cacheKeysFactory = new DefaultCacheKeysFactory();</span>
         }
 
-<span class="nc" id="L165">        this.systemPropertyResolver.initialize();</span>
+<span class="nc" id="L186">        this.systemPropertyResolver.initialize();</span>
 
-<span class="nc" id="L167">        prepareCoherenceSessionIfNeeded(coherenceHibernateProperties);</span>
+<span class="nc" id="L188">        prepareCoherenceSessionIfNeeded(coherenceHibernateProperties);</span>
 
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L170">            LOGGER.debug(&quot;start({}, {})&quot;, settings, configValues);</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L192">            LOGGER.debug(&quot;start({}, {})&quot;, settings, configValues);</span>
         }
-<span class="nc" id="L172">    }</span>
+<span class="nc" id="L194">    }</span>
 
-    private void prepareCoherenceSessionIfNeeded(CoherenceHibernateProperties coherenceHibernateProperties) {
-<span class="nc bnc" id="L175" title="All 2 branches missed.">        if (this.coherenceSession == null) {</span>
-<span class="nc bnc" id="L176" title="All 4 branches missed.">            if (coherenceHibernateProperties.getSessionType() == null || SessionType.SERVER.equals(coherenceHibernateProperties.getSessionType())) {</span>
-<span class="nc bnc" id="L177" title="All 2 branches missed.">                if (coherenceHibernateProperties.isStartCacheServer()) {</span>
-<span class="nc" id="L178">                    final ExtensibleConfigurableCacheFactory.Dependencies deps =</span>
-<span class="nc" id="L179">                            ExtensibleConfigurableCacheFactory.DependenciesHelper.newInstance(coherenceHibernateProperties.getCacheConfigFilePath());</span>
+    private void prepareCoherenceSessionIfNeeded(CoherenceHibernateProperties coherenceHibernateProperties)
+    {
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (this.coherenceSession == null) {</span>
+<span class="nc bnc" id="L199" title="All 4 branches missed.">            if (coherenceHibernateProperties.getSessionType() == null || SessionType.SERVER.equals(coherenceHibernateProperties.getSessionType()))</span>
+            {
+<span class="nc bnc" id="L201" title="All 2 branches missed.">                if (coherenceHibernateProperties.isStartCacheServer()) {</span>
+<span class="nc" id="L202">                    final ExtensibleConfigurableCacheFactory.Dependencies deps =</span>
+<span class="nc" id="L203">                            ExtensibleConfigurableCacheFactory.DependenciesHelper.newInstance(coherenceHibernateProperties.getCacheConfigFilePath());</span>
 
-<span class="nc" id="L181">                    final ExtensibleConfigurableCacheFactory cacheFactory = new ExtensibleConfigurableCacheFactory(deps);</span>
-<span class="nc" id="L182">                    this.defaultCacheServer = new DefaultCacheServer(cacheFactory);</span>
-<span class="nc" id="L183">                    this.defaultCacheServer.startDaemon(5000);</span>
+<span class="nc" id="L205">                    final ExtensibleConfigurableCacheFactory cacheFactory = new ExtensibleConfigurableCacheFactory(deps);</span>
+<span class="nc" id="L206">                    this.defaultCacheServer = new DefaultCacheServer(cacheFactory);</span>
+<span class="nc" id="L207">                    this.defaultCacheServer.startDaemon(5000);</span>
                 }
 
-<span class="nc" id="L186">                CacheFactory.ensureCluster();</span>
+<span class="nc" id="L210">                CacheFactory.ensureCluster();</span>
 
             }
 
-<span class="nc" id="L190">            final List&lt;Session.Option&gt; sessionOptions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L214">            final List&lt;Session.Option&gt; sessionOptions = new ArrayList&lt;&gt;();</span>
 
-<span class="nc bnc" id="L192" title="All 2 branches missed.">            if (coherenceHibernateProperties.getSessionName() != null) {</span>
-<span class="nc" id="L193">                sessionOptions.add(ConfigUtils.getSessionNameOption(coherenceHibernateProperties.getSessionName()));</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">            if (coherenceHibernateProperties.getSessionName() != null) {</span>
+<span class="nc" id="L217">                sessionOptions.add(ConfigUtils.getSessionNameOption(coherenceHibernateProperties.getSessionName()));</span>
             }
 
-<span class="nc" id="L196">            final Session.Option cacheConfigFilePathOption = WithConfiguration.using(coherenceHibernateProperties.getCacheConfigFilePath());</span>
-<span class="nc" id="L197">            final Session.Option classLoaderOption = WithClassLoader.using(getClass().getClassLoader());</span>
+<span class="nc" id="L220">            final Session.Option cacheConfigFilePathOption = WithConfiguration.using(coherenceHibernateProperties.getCacheConfigFilePath());</span>
+<span class="nc" id="L221">            final Session.Option classLoaderOption = WithClassLoader.using(getClass().getClassLoader());</span>
 
-<span class="nc" id="L199">            sessionOptions.add(cacheConfigFilePathOption);</span>
-<span class="nc" id="L200">            sessionOptions.add(classLoaderOption);</span>
+<span class="nc" id="L223">            sessionOptions.add(cacheConfigFilePathOption);</span>
+<span class="nc" id="L224">            sessionOptions.add(classLoaderOption);</span>
 
-<span class="nc" id="L202">            final Session sessionToSet = Session.create(sessionOptions.toArray(new Session.Option[0]));</span>
-<span class="nc" id="L203">            this.setCoherenceSession(sessionToSet);</span>
+<span class="nc" id="L226">            final Session sessionToSet = Session.create(sessionOptions.toArray(new Session.Option[0]));</span>
+<span class="nc" id="L227">            this.setCoherenceSession(sessionToSet);</span>
         }
-<span class="nc" id="L205">    }</span>
+<span class="nc" id="L229">    }</span>
 
     @Override
     protected void releaseFromUse() {
-<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (this.getCoherenceSession() != null) {</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (this.getCoherenceSession() != null) {</span>
             try {
-<span class="nc" id="L211">                this.coherenceSession.close();</span>
+<span class="nc" id="L235">                this.coherenceSession.close();</span>
             }
-<span class="nc" id="L213">            catch (Exception ex) {</span>
-<span class="nc bnc" id="L214" title="All 2 branches missed.">                if (LOGGER.isErrorEnabled()) {</span>
-<span class="nc" id="L215">                    LOGGER.error(&quot;Unable to close session '{}'.&quot;, this.coherenceSession, ex);</span>
+<span class="nc" id="L237">            catch (Exception ex) {</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">                if (LOGGER.isErrorEnabled()) {</span>
+<span class="nc" id="L239">                    LOGGER.error(&quot;Unable to close session '{}'.&quot;, this.coherenceSession, ex);</span>
                 }
-<span class="nc" id="L217">            }</span>
+<span class="nc" id="L241">            }</span>
         }
 
-<span class="nc bnc" id="L220" title="All 2 branches missed.">        if (this.requiresShutDown) {</span>
-<span class="nc" id="L221">            CacheFactory.getCluster().shutdown();</span>
-<span class="nc" id="L222">            CacheFactory.shutdown();</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">        if (this.requiresShutDown) {</span>
+<span class="nc" id="L245">            CacheFactory.getCluster().shutdown();</span>
+<span class="nc" id="L246">            CacheFactory.shutdown();</span>
 
-<span class="nc bnc" id="L224" title="All 2 branches missed.">            if (this.defaultCacheServer != null) {</span>
-<span class="nc" id="L225">                this.defaultCacheServer.shutdownServer();</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">            if (this.defaultCacheServer != null) {</span>
+<span class="nc" id="L249">                this.defaultCacheServer.shutdownServer();</span>
             }
         }
         else {
-<span class="nc bnc" id="L229" title="All 2 branches missed.">            if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L230">                LOGGER.debug(&quot;Skipping Coherence shutdown as requiresShutDown flag is false.&quot;);</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">            if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L254">                LOGGER.debug(&quot;Skipping Coherence shutdown as requiresShutDown flag is false.&quot;);</span>
             }
         }
 
-<span class="nc" id="L234">        System.clearProperty(&quot;coherence.log&quot;);</span>
-<span class="nc" id="L235">        this.systemPropertyResolver.unset();</span>
+<span class="nc" id="L258">        System.clearProperty(&quot;coherence.log&quot;);</span>
+<span class="nc" id="L259">        this.systemPropertyResolver.unset();</span>
 
-<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (LOGGER.isInfoEnabled()) {</span>
-<span class="nc" id="L238">            LOGGER.info(&quot;Shutdown of Coherence complete.&quot;);</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        if (LOGGER.isInfoEnabled()) {</span>
+<span class="nc" id="L262">            LOGGER.info(&quot;Shutdown of Coherence complete.&quot;);</span>
         }
 
-<span class="nc" id="L241">        this.setCoherenceSession(null);</span>
-<span class="nc" id="L242">    }</span>
+<span class="nc" id="L265">        this.setCoherenceSession(null);</span>
+<span class="nc" id="L266">    }</span>
 
     /**
      * {@inheritDoc}
@@ -247,28 +271,33 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
      * see also https://stackoverflow.com/a/12389310/835934
      */
     @Override
-    public boolean isMinimalPutsEnabledByDefault() {
-<span class="nc" id="L251">        return true;</span>
+    public boolean isMinimalPutsEnabledByDefault()
+    {
+<span class="nc" id="L276">        return true;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public AccessType getDefaultAccessType() {
-<span class="nc" id="L259">        return AccessType.READ_WRITE;</span>
+    public AccessType getDefaultAccessType()
+    {
+<span class="nc" id="L285">        return AccessType.READ_WRITE;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public long nextTimestamp() {
-<span class="nc bnc" id="L267" title="All 2 branches missed.">        if (this.cluster == null) {</span>
-<span class="nc" id="L268">            return System.currentTimeMillis();</span>
+    public long nextTimestamp()
+    {
+<span class="nc bnc" id="L294" title="All 2 branches missed.">        if (this.cluster == null)</span>
+        {
+<span class="nc" id="L296">            return System.currentTimeMillis();</span>
         }
-        else {
-<span class="nc" id="L271">            return CacheFactory.ensureCluster().getTimeMillis();</span>
+        else
+        {
+<span class="nc" id="L300">            return CacheFactory.ensureCluster().getTimeMillis();</span>
         }
     }
 
@@ -276,46 +305,54 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
 
     /**
      * Ensure the initialization of a NamedCache of the argument name.
+     *
      * @param cacheName the name of the NamedCache whose initialization to ensure
+     *
      * @return a NamedCache for the argument name
      */
-    protected NamedCache&lt;?, ?&gt; ensureNamedCache(String cacheName) {
-<span class="nc" id="L283">        return this.coherenceSession.getCache(cacheName);</span>
+    protected NamedCache&lt;?, ?&gt; ensureNamedCache(String cacheName)
+    {
+<span class="nc" id="L315">        return this.coherenceSession.getCache(cacheName);</span>
     }
 
     @Override
     protected DomainDataStorageAccess createDomainDataStorageAccess(DomainDataRegionConfig regionConfig,
-        DomainDataRegionBuildingContext buildingContext) {
-<span class="nc" id="L289">        return new CoherenceStorageAccessImpl(</span>
-<span class="nc" id="L290">            this.createCoherenceRegion(regionConfig.getRegionName(), buildingContext.getSessionFactory())</span>
+        DomainDataRegionBuildingContext buildingContext)
+    {
+<span class="nc" id="L322">        return new CoherenceStorageAccessImpl(</span>
+<span class="nc" id="L323">            this.createCoherenceRegion(regionConfig.getRegionName(), buildingContext.getSessionFactory())</span>
         );
     }
 
     @Override
     protected StorageAccess createTimestampsRegionStorageAccess(
             String regionName,
-            SessionFactoryImplementor sessionFactory) {
-<span class="nc" id="L298">        return new CoherenceStorageAccessImpl(this.createCoherenceRegion(regionName, sessionFactory));</span>
+            SessionFactoryImplementor sessionFactory)
+    {
+<span class="nc" id="L332">        return new CoherenceStorageAccessImpl(this.createCoherenceRegion(regionName, sessionFactory));</span>
     }
 
     @Override
-    protected StorageAccess createQueryResultsRegionStorageAccess(String regionName, SessionFactoryImplementor sessionFactory) {
-<span class="nc" id="L303">        return new CoherenceStorageAccessImpl(this.createCoherenceRegion(regionName, sessionFactory));</span>
+    protected StorageAccess createQueryResultsRegionStorageAccess(String regionName, SessionFactoryImplementor sessionFactory)
+    {
+<span class="nc" id="L338">        return new CoherenceStorageAccessImpl(this.createCoherenceRegion(regionName, sessionFactory));</span>
     }
 
     protected CoherenceRegion createCoherenceRegion(final String unqualifiedRegionName,
-                                                    final SessionFactoryImplementor sessionFactory) {
-<span class="nc" id="L308">        return new CoherenceRegion(this, this.ensureNamedCache(unqualifiedRegionName), sessionFactory.getProperties());</span>
+                                                    final SessionFactoryImplementor sessionFactory)
+    {
+<span class="nc" id="L344">        return new CoherenceRegion(this, this.ensureNamedCache(unqualifiedRegionName), sessionFactory.getProperties());</span>
     }
 
     @Override
     public DomainDataRegion buildDomainDataRegion(final DomainDataRegionConfig regionConfig,
-                                                  final DomainDataRegionBuildingContext buildingContext) {
-<span class="nc" id="L314">        return new CoherenceDomainDataRegionImpl(</span>
+                                                  final DomainDataRegionBuildingContext buildingContext)
+    {
+<span class="nc" id="L351">        return new CoherenceDomainDataRegionImpl(</span>
           regionConfig,
           this,
-<span class="nc" id="L317">          createDomainDataStorageAccess(regionConfig, buildingContext),</span>
-          this.cacheKeysFactory,
+<span class="nc" id="L354">          createDomainDataStorageAccess(regionConfig, buildingContext),</span>
+          cacheKeysFactory,
           buildingContext
         );
     }

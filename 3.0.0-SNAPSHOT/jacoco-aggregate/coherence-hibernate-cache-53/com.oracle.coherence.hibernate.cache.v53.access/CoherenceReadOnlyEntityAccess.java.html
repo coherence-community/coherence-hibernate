@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CoherenceReadOnlyEntityAccess.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-53</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v53.access</a> &gt; <span class="el_source">CoherenceReadOnlyEntityAccess.java</span></div><h1>CoherenceReadOnlyEntityAccess.java</h1><pre class="source lang-java linenums">/*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -28,95 +28,113 @@ import org.slf4j.LoggerFactory;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-public class CoherenceReadOnlyEntityAccess extends AbstractCoherenceEntityDataAccess implements EntityDataAccess {
+public class CoherenceReadOnlyEntityAccess
+extends AbstractCoherenceEntityDataAccess
+implements EntityDataAccess
+{
 
-<span class="nc" id="L33">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceReadOnlyEntityAccess.class);</span>
+<span class="nc" id="L36">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceReadOnlyEntityAccess.class);</span>
+
+    // ---- Constructors
 
     /**
      * Complete constructor.
      *
-     * @param domainDataRegion must not be null
-     * @param domainDataStorageAccess must not be null
-     * @param versionComparator must not be null
+     * @param domainDataRegion the domain data region
+     * @param versionComparator the version comparator
      */
     public CoherenceReadOnlyEntityAccess(DomainDataRegion domainDataRegion,
-            DomainDataStorageAccess domainDataStorageAccess, Comparator&lt;?&gt; versionComparator) {
-<span class="nc" id="L44">        super(domainDataRegion, domainDataStorageAccess, versionComparator);</span>
-<span class="nc" id="L45">    }</span>
+            DomainDataStorageAccess domainDataStorageAccess, Comparator&lt;?&gt; versionComparator)
+    {
+<span class="nc" id="L49">        super(domainDataRegion, domainDataStorageAccess, versionComparator);</span>
+<span class="nc" id="L50">    }</span>
+
+
+    // ---- interface org.hibernate.cache.spi.access.EntityRegionAccessStrategy
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean insert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException {
+    public boolean insert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -&gt; afterInsert() when inserting an entity.
         //&quot;Synchronous&quot; (i.e. transactional) access strategies should insert the cache entry here, but
         //&quot;asynchrononous&quot; (i.e. non-transactional) strategies should insert it in afterInsert instead.
-<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L57">            LOGGER.debug(&quot;insert({}, {}, {})&quot;, key, value, version);</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L67">            LOGGER.debug(&quot;insert({}, {}, {})&quot;, key, value, version);</span>
         }
-<span class="nc" id="L59">        return false;</span>
+<span class="nc" id="L69">        return false;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException {
+    public boolean afterInsert(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException
+    {
         //per http://docs.jboss.org/hibernate/orm/4.1/javadocs/org/hibernate/cache/spi/access/EntityRegionAccessStrategy.html,
         //Hibernate will make the call sequence insert() -&gt; afterInsert() when inserting an entity.
         //&quot;Asynchrononous&quot; (i.e. non-transactional) strategies should insert the cache entry here.
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L71">            LOGGER.debug(&quot;afterInsert({}, {}, {})&quot;, key, value, version);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L83">            LOGGER.debug(&quot;afterInsert({}, {}, {})&quot;, key, value, version);</span>
         }
-<span class="nc" id="L73">        getCoherenceRegion().putValue(key, newCacheValue(value, version));</span>
-<span class="nc" id="L74">        return true;</span>
+<span class="nc" id="L85">        getCoherenceRegion().putValue(key, newCacheValue(value, version));</span>
+<span class="nc" id="L86">        return true;</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean update(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException {
+    public boolean update(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException
+    {
         //read-only cache entries should not be updated
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L84">            LOGGER.debug(&quot;update({}, {}, {}, {})&quot;, key, value, currentVersion, previousVersion);</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L98">            LOGGER.debug(&quot;update({}, {}, {}, {})&quot;, key, value, currentVersion, previousVersion);</span>
         }
-<span class="nc" id="L86">        throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);</span>
+<span class="nc" id="L100">        throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);</span>
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException {
+    public boolean afterUpdate(SharedSessionContractImplementor session, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException
+    {
         //read-only cache entries should not be updated
-<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L96">            LOGGER.debug(&quot;afterUpdate({}, {}, {}, {}, {})&quot;, key, value, currentVersion, previousVersion, lock);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled())</span>
+        {
+<span class="nc" id="L112">            LOGGER.debug(&quot;afterUpdate({}, {}, {}, {}, {})&quot;, key, value, currentVersion, previousVersion, lock);</span>
         }
-<span class="nc" id="L98">        throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);</span>
+<span class="nc" id="L114">        throw new UnsupportedOperationException(WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE);</span>
     }
 
     @Override
-    public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier) {
-<span class="nc" id="L103">        return ((AbstractDomainDataRegion) this.getRegion()).getEffectiveKeysFactory().createEntityKey(id, persister, sessionFactoryImplementor, tenantIdentifier);</span>
+    public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor sessionFactoryImplementor, String tenantIdentifier)
+    {
+<span class="nc" id="L120">        return ((AbstractDomainDataRegion) this.getRegion()).getEffectiveKeysFactory().createEntityKey( id, persister, sessionFactoryImplementor, tenantIdentifier );</span>
     }
 
     @Override
-    public Object getCacheKeyId(Object cacheKey) {
-<span class="nc" id="L108">        return this.getCacheKeysFactory().getEntityId(cacheKey);</span>
+    public Object getCacheKeyId(Object cacheKey)
+    {
+<span class="nc" id="L126">        return this.getCacheKeysFactory().getEntityId(cacheKey);</span>
     }
 
     @Override
     public AccessType getAccessType() {
-<span class="nc" id="L113">        return AccessType.READ_ONLY;</span>
+<span class="nc" id="L131">        return AccessType.READ_ONLY;</span>
     }
 
     @Override
     public boolean contains(Object key) {
         // TODO Auto-generated method stub
-<span class="nc" id="L119">        return false;</span>
+<span class="nc" id="L137">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
