@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>HibernateCacheStore.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-store</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cachestore</a> &gt; <span class="el_source">HibernateCacheStore.java</span></div><h1>HibernateCacheStore.java</h1><pre class="source lang-java linenums">/*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.cachestore;
-
-
-import com.tangosol.net.cache.CacheStore;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.engine.spi.SessionImplementor;
 
 import java.io.File;
 import java.io.Serializable;
@@ -19,262 +12,223 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.tangosol.net.cache.CacheStore;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.engine.spi.SessionImplementor;
 
 /**
- * Data-driven CacheStore implementation for Hibernate tables
+ * Data-driven CacheStore implementation for Hibernate tables.
  *
  * @author jp 2005.09.15
  * @author pp 2009.01.23
  * @author rs 2013.09.05
+ * @author Gunnar Hillert
  */
-public class HibernateCacheStore
-        extends HibernateCacheLoader
-        implements CacheStore
-{
-    // ----- Constructor(s) -------------------------------------------------
+public class HibernateCacheStore extends HibernateCacheLoader implements CacheStore {
 
     /**
-     * Default constructor.  If using this constructor, it is expected that
+     * Default constructor. If using this constructor, it is expected that
      * the {@code entityName} and {@code sessionFactory} attributes will
      * be set prior to usage.
      */
-    public HibernateCacheStore()
-    {
-<span class="nc" id="L43">        super();</span>
-<span class="nc" id="L44">    }</span>
+    public HibernateCacheStore() {
+<span class="nc" id="L37">        super();</span>
+<span class="nc" id="L38">    }</span>
 
     /**
-     * Constructor which accepts an entityName
-     *
-     * @param entityName    the Hibernate entity (the fully-qualified class name)
+     * Constructor which accepts an entityName.
+     * @param entityName the Hibernate entity (the fully-qualified class name)
      */
-    public HibernateCacheStore(String entityName)
-    {
-<span class="nc" id="L53">        super(entityName);</span>
-<span class="nc" id="L54">    }</span>
+    public HibernateCacheStore(String entityName) {
+<span class="nc" id="L45">        super(entityName);</span>
+<span class="nc" id="L46">    }</span>
 
     /**
      * Constructor which accepts an entityName and a hibernate configuration
      * resource. The current implementation instantiates a SessionFactory per
      * instance (implying one instance per CacheStore-backed NamedCache).
-     *
-     * @param sEntityName Hibernate entity (i.e. the HQL table name)
-     * @param sResource   Hibernate config classpath resource (e.g.
-     *                     hibernate.cfg.xml)
+     * @param sEntityName the Hibernate entity (i.e. the HQL table name)
+     * @param sResource the Hibernate config classpath resource (e.g. hibernate.cfg.xml)
      */
-    public HibernateCacheStore(String sEntityName, String sResource)
-    {
-<span class="nc" id="L67">        super(sEntityName, sResource);</span>
+    public HibernateCacheStore(String sEntityName, String sResource) {
+<span class="nc" id="L56">        super(sEntityName, sResource);</span>
+<span class="nc" id="L57">    }</span>
+
+    /**
+     * Constructor which accepts an entityName and a hibernate configuration
+     * resource. The current implementation instantiates a SessionFactory per
+     * instance (implying one instance per CacheStore-backed NamedCache).
+     * @param sEntityName the Hibernate entity (i.e. the HQL table name)
+     * @param configurationFile the Hibernate config file (e.g. hibernate.cfg.xml)
+     */
+    public HibernateCacheStore(String sEntityName, File configurationFile) {
+<span class="nc" id="L67">        super(sEntityName, configurationFile);</span>
 <span class="nc" id="L68">    }</span>
 
     /**
-     * Constructor which accepts an entityName and a hibernate configuration
-     * resource. The current implementation instantiates a SessionFactory per
-     * instance (implying one instance per CacheStore-backed NamedCache).
-     *
-     * @param sEntityName        Hibernate entity (i.e. the HQL table name)
-     * @param configurationFile  Hibernate config file (e.g. hibernate.cfg.xml)
-     */
-    public HibernateCacheStore(String sEntityName, File configurationFile)
-    {
-<span class="nc" id="L80">        super(sEntityName, configurationFile);</span>
-<span class="nc" id="L81">    }</span>
-
-    /**
      * Constructor which accepts an entityName and a Hibernate
-     * {@code SessionFactory}.  This allows for external configuration
+     * {@code SessionFactory}. This allows for external configuration
      * of the SessionFactory (for instance using Spring.)
-     *
-     * @param sEntityName       Hibernate entity (i.e. the HQL table name)
-     * @param sessionFactory    Hibernate SessionFactory
+     * @param sEntityName the Hibernate entity (i.e. the HQL table name)
+     * @param sessionFactory the Hibernate SessionFactory
      */
-    public HibernateCacheStore(String sEntityName, SessionFactory sessionFactory)
-    {
-<span class="nc" id="L93">        super(sEntityName, sessionFactory);</span>
-<span class="nc" id="L94">    }</span>
+    public HibernateCacheStore(String sEntityName, SessionFactory sessionFactory) {
+<span class="nc" id="L78">        super(sEntityName, sessionFactory);</span>
+<span class="nc" id="L79">    }</span>
 
 
     // ----- CacheStore API methods -----------------------------------------
 
     /**
-     * Store a Hibernate entity given an id (key) and entity (value)
+     * Store a Hibernate entity given an id (key) and entity (value).
      * &lt;p&gt;
      * The entity must have an identifier attribute, and it must be either
      * null (undefined) or equal to the cache key.
-     *
      * @param key   the cache key; specifically, the entity id
      * @param value the cache value; specifically, the entity
      */
-    public void store(Object key, Object value)
-    {
-<span class="nc" id="L110">        ensureInitialized();</span>
+    public void store(Object key, Object value) {
+<span class="nc" id="L93">        ensureInitialized();</span>
 
-<span class="nc" id="L112">        Transaction tx = null;</span>
+<span class="nc" id="L95">        Transaction tx = null;</span>
 
-<span class="nc" id="L114">        Session session = openSession();</span>
+<span class="nc" id="L97">        final Session session = openSession();</span>
 
-        try
-        {
-<span class="nc" id="L118">            tx = session.beginTransaction();</span>
+        try {
+<span class="nc" id="L100">            tx = session.beginTransaction();</span>
 
-<span class="nc" id="L120">            validateIdentifier((Serializable)key, value, (SessionImplementor) session);</span>
+<span class="nc" id="L102">            validateIdentifier((Serializable) key, value, (SessionImplementor) session);</span>
 
             // Save or Update (since we don't know if this is an insert or an
             // update)
-<span class="nc" id="L124">            session.merge(getEntityName(), value);</span>
+<span class="nc" id="L106">            session.merge(getEntityName(), value);</span>
 
-<span class="nc" id="L126">            tx.commit();</span>
+<span class="nc" id="L108">            tx.commit();</span>
         }
-<span class="nc" id="L128">        catch (Exception e)</span>
-        {
-<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (tx != null)</span>
-            {
-<span class="nc" id="L132">                tx.rollback();</span>
+<span class="nc" id="L110">        catch (Exception ex) {</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            if (tx != null) {</span>
+<span class="nc" id="L112">                tx.rollback();</span>
             }
 
-<span class="nc" id="L135">            throw ensureRuntimeException(e);</span>
+<span class="nc" id="L115">            throw ensureRuntimeException(ex);</span>
         }
-        finally
-        {
-<span class="nc" id="L139">            closeSession(session);</span>
+        finally {
+<span class="nc" id="L118">            closeSession(session);</span>
         }
-<span class="nc" id="L141">    }</span>
+<span class="nc" id="L120">    }</span>
 
     /**
      * Store a collection of Hibernate entities given a Map of ids (keys) and
-     * entities (values)
-     *
+     * entities (values).
      * @param entries   a mapping of ids (keys) to entities (values)
      */
-    public void storeAll(Map entries)
-    {
-<span class="nc" id="L151">        ensureInitialized();</span>
+    public void storeAll(Map entries) {
+<span class="nc" id="L128">        ensureInitialized();</span>
 
-<span class="nc" id="L153">        Transaction tx = null;</span>
+<span class="nc" id="L130">        Transaction tx = null;</span>
 
-<span class="nc" id="L155">        Session session = openSession();</span>
+<span class="nc" id="L132">        final Session session = openSession();</span>
 
-        try
-        {
-<span class="nc" id="L159">            tx = session.beginTransaction();</span>
+        try {
+<span class="nc" id="L135">            tx = session.beginTransaction();</span>
 
             // We just iterate through the incoming set and individually
             // save each one. Note that this is still part of a single
             // Hibernate transaction so it may batch them.
-<span class="nc bnc" id="L164" title="All 2 branches missed.">            for (Iterator iter = entries.entrySet().iterator(); iter.hasNext(); )</span>
-            {
-<span class="nc" id="L166">                Map.Entry entry = (Map.Entry)iter.next();</span>
-<span class="nc" id="L167">                Serializable id = (Serializable)entry.getKey();</span>
-<span class="nc" id="L168">                Object entity = entry.getValue();</span>
-<span class="nc" id="L169">                validateIdentifier(id, entity, (SessionImplementor) session);</span>
-<span class="nc" id="L170">                session.merge(entity);</span>
-<span class="nc" id="L171">            }</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            for (Iterator iter = entries.entrySet().iterator(); iter.hasNext(); ) {</span>
+<span class="nc" id="L141">                final Map.Entry entry = (Map.Entry) iter.next();</span>
+<span class="nc" id="L142">                final Serializable id = (Serializable) entry.getKey();</span>
+<span class="nc" id="L143">                final Object entity = entry.getValue();</span>
+<span class="nc" id="L144">                validateIdentifier(id, entity, (SessionImplementor) session);</span>
+<span class="nc" id="L145">                session.merge(entity);</span>
+<span class="nc" id="L146">            }</span>
 
-<span class="nc" id="L173">            tx.commit();</span>
+<span class="nc" id="L148">            tx.commit();</span>
         }
-<span class="nc" id="L175">        catch (Exception e)</span>
-        {
-<span class="nc bnc" id="L177" title="All 2 branches missed.">            if (tx != null)</span>
-            {
-<span class="nc" id="L179">                tx.rollback();</span>
+<span class="nc" id="L150">        catch (Exception ex) {</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            if (tx != null) {</span>
+<span class="nc" id="L152">                tx.rollback();</span>
             }
-
-<span class="nc" id="L182">            throw ensureRuntimeException(e);</span>
+<span class="nc" id="L154">            throw ensureRuntimeException(ex);</span>
         }
-        finally
-        {
-<span class="nc" id="L186">            closeSession(session);</span>
+        finally {
+<span class="nc" id="L157">            closeSession(session);</span>
         }
-<span class="nc" id="L188">    }</span>
+<span class="nc" id="L159">    }</span>
 
     /**
-     * Erase a Hibernate entity given an id (key)
-     *
+     * Erase a Hibernate entity given an id (key).
      * @param key   the cache key; specifically, the entity id
      */
-    public void erase(Object key)
-    {
-<span class="nc" id="L197">        ensureInitialized();</span>
+    public void erase(Object key) {
+<span class="nc" id="L166">        ensureInitialized();</span>
 
-<span class="nc" id="L199">        Transaction tx = null;</span>
+<span class="nc" id="L168">        Transaction tx = null;</span>
 
-<span class="nc" id="L201">        Session session = openSession();</span>
+<span class="nc" id="L170">        final Session session = openSession();</span>
 
-        try
-        {
-<span class="nc" id="L205">            tx = session.beginTransaction();</span>
+        try {
+<span class="nc" id="L173">            tx = session.beginTransaction();</span>
 
             // Hibernate deletes objects ... it has no &quot;delete by key&quot;.
             // So we need to load the objects before we delete them.
             // We may be able to use an HQL delete instead.
-<span class="nc" id="L210">            Object entity = createEntityFromId(key, (SessionImplementor) session);</span>
-<span class="nc bnc" id="L211" title="All 2 branches missed.">            if (entity != null)</span>
-            {
-<span class="nc" id="L213">                session.delete(entity);</span>
+<span class="nc" id="L178">            final Object entity = createEntityFromId(key, (SessionImplementor) session);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">            if (entity != null) {</span>
+<span class="nc" id="L180">                session.delete(entity);</span>
             }
 
-<span class="nc" id="L216">            tx.commit();</span>
+<span class="nc" id="L183">            tx.commit();</span>
         }
-<span class="nc" id="L218">        catch (Exception e)</span>
-        {
-<span class="nc bnc" id="L220" title="All 2 branches missed.">            if (tx != null)</span>
-            {
-<span class="nc" id="L222">                tx.rollback();</span>
+<span class="nc" id="L185">        catch (Exception ex) {</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">            if (tx != null) {</span>
+<span class="nc" id="L187">                tx.rollback();</span>
             }
-
-<span class="nc" id="L225">            throw ensureRuntimeException(e);</span>
+<span class="nc" id="L189">            throw ensureRuntimeException(ex);</span>
         }
-        finally
-        {
-<span class="nc" id="L229">            closeSession(session);</span>
+        finally {
+<span class="nc" id="L192">            closeSession(session);</span>
         }
-<span class="nc" id="L231">    }</span>
+<span class="nc" id="L194">    }</span>
 
     /**
-     * Erase a set of Hibernate entities given an collection of ids (keys)
-     *
+     * Erase a set of Hibernate entities given an collection of ids (keys).
      * @param keys  the cache keys; specifically, the entity ids
      */
-    public void eraseAll(Collection keys)
-    {
-<span class="nc" id="L240">        ensureInitialized();</span>
+    public void eraseAll(Collection keys) {
+<span class="nc" id="L201">        ensureInitialized();</span>
 
-<span class="nc" id="L242">        Transaction tx = null;</span>
+<span class="nc" id="L203">        Transaction tx = null;</span>
 
-<span class="nc" id="L244">        Session session = openSession();</span>
+<span class="nc" id="L205">        final Session session = openSession();</span>
 
-        try
-        {
-<span class="nc" id="L248">            tx = session.beginTransaction();</span>
+        try {
+<span class="nc" id="L208">            tx = session.beginTransaction();</span>
 
             // We just iterate through the incoming set and individually
             // delete each one. Note that this is still part of a single
             // Hibernate transaction so it may batch them.
-<span class="nc bnc" id="L253" title="All 2 branches missed.">            for (Iterator iter = keys.iterator(); iter.hasNext();)</span>
-            {
-<span class="nc" id="L255">                Object key = iter.next();</span>
-<span class="nc" id="L256">                Object entity = createEntityFromId(key, (SessionImplementor) session);</span>
-<span class="nc bnc" id="L257" title="All 2 branches missed.">                if (entity != null)</span>
-                {
-<span class="nc" id="L259">                    session.delete(entity);</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">            for (Iterator iter = keys.iterator(); iter.hasNext();) {</span>
+<span class="nc" id="L214">                final Object key = iter.next();</span>
+<span class="nc" id="L215">                final Object entity = createEntityFromId(key, (SessionImplementor) session);</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">                if (entity != null) {</span>
+<span class="nc" id="L217">                    session.delete(entity);</span>
                 }
-<span class="nc" id="L261">            }</span>
+<span class="nc" id="L219">            }</span>
 
-<span class="nc" id="L263">            tx.commit();</span>
+<span class="nc" id="L221">            tx.commit();</span>
         }
-<span class="nc" id="L265">        catch (Exception e)</span>
-        {
-<span class="nc bnc" id="L267" title="All 2 branches missed.">            if (tx != null)</span>
-            {
-<span class="nc" id="L269">                tx.rollback();</span>
+<span class="nc" id="L223">        catch (Exception ex) {</span>
+<span class="nc bnc" id="L224" title="All 2 branches missed.">            if (tx != null) {</span>
+<span class="nc" id="L225">                tx.rollback();</span>
             }
-
-<span class="nc" id="L272">            throw ensureRuntimeException(e);</span>
+<span class="nc" id="L227">            throw ensureRuntimeException(ex);</span>
         }
-        finally
-        {
-<span class="nc" id="L276">            closeSession(session);</span>
+        finally {
+<span class="nc" id="L230">            closeSession(session);</span>
         }
-<span class="nc" id="L278">    }</span>
+<span class="nc" id="L232">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
