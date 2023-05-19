@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AbstractCoherenceEntityDataAccess.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-6</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v6.access</a> &gt; <span class="el_source">AbstractCoherenceEntityDataAccess.java</span></div><h1>AbstractCoherenceEntityDataAccess.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v6.access;
+
+import java.util.Comparator;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
+
+import com.oracle.coherence.hibernate.cache.v6.access.processor.PutFromLoadProcessor;
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.Assert;
+import com.oracle.coherence.hibernate.cache.v6.region.CoherenceRegion;
+import com.oracle.coherence.hibernate.cache.v6.region.CoherenceRegionValue;
+import org.hibernate.cache.CacheException;
+import org.hibernate.cache.spi.CacheKeysFactory;
+import org.hibernate.cache.spi.DomainDataRegion;
+import org.hibernate.cache.spi.access.SoftLock;
+import org.hibernate.cache.spi.support.AbstractDomainDataRegion;
+import org.hibernate.cache.spi.support.DomainDataStorageAccess;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * A AbstractCoherenceEntityDataAccess is an object implementing a strategy for accessing a cache region.
+ * Strategies vary with respect to transaction isolation enforcement.
+ *
+ * @author Randy Stafford
+ * @author Gunnar Hillert
+ */
+public abstract class AbstractCoherenceEntityDataAccess {
+
+<span class="nc" id="L36">    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCoherenceEntityDataAccess.class);</span>
+
+    /**
+     * The log message indicating lack of support for the transactional cache concurrency strategy.
+     */
+    public static final String TRANSACTIONAL_STRATEGY_NOT_SUPPORTED_MESSAGE =
+            &quot;The transactional cache concurrency strategy is not supported.&quot;;
+
+    /**
+     * A message indicating write operations are not supported in the read-only cache concurrency strategy.
+     */
+    protected static final String WRITE_OPERATIONS_NOT_SUPPORTED_MESSAGE =
+            &quot;Write operations are not supported in the read-only cache concurrency strategy.&quot;;
+
+    private final DomainDataRegion domainDataRegion;
+    private final DomainDataStorageAccess domainDataStorageAccess;
+
+    private Comparator&lt;?&gt; versionComparator;
+
+    /**
+     * A sequence number for soft locks acquired by this AbstractCoherenceEntityDataAccess.
+     * Monotonically increasing characteristic enforced by usage.
+     */
+<span class="nc" id="L59">    private AtomicLong softLockSequenceNumber = new AtomicLong(0L);</span>
+
+    /**
+     * A unique identifier of this AbstractCoherenceEntityDataAccess.
+     */
+<span class="nc" id="L64">    private UUID uuid = UUID.randomUUID();</span>
+
+    /**
+     * Complete constructor.
+     * @param domainDataRegion must not be null
+     * @param domainDataStorageAccess must not be null
+     * @param versionComparator must not be null
+     */
+<span class="nc" id="L72">    public AbstractCoherenceEntityDataAccess(DomainDataRegion domainDataRegion, DomainDataStorageAccess domainDataStorageAccess, Comparator&lt;?&gt; versionComparator) {</span>
+<span class="nc" id="L73">        Assert.notNull(domainDataRegion, &quot;domainDataRegion must not be null.&quot;);</span>
+<span class="nc" id="L74">        Assert.notNull(domainDataStorageAccess, &quot;storageAccess must not be null.&quot;);</span>
+        // Assert.notNull(versionComparator, &quot;versionComparator must not be null.&quot;); //TODO verify
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L78">            LOGGER.debug(&quot;Constructing AbstractCoherenceEntityDataAccess.&quot;);</span>
+        }
+<span class="nc" id="L80">        this.domainDataRegion = domainDataRegion;</span>
+<span class="nc" id="L81">        this.domainDataStorageAccess = domainDataStorageAccess;</span>
+<span class="nc" id="L82">        this.versionComparator = versionComparator;</span>
+<span class="nc" id="L83">    }</span>
+
+    /**
+     * Returns the CoherenceRegion for which this is a AbstractCoherenceEntityDataAccess.
+     * @return the CoherenceRegion for which this is a AbstractCoherenceEntityDataAccess
+     */
+    protected CoherenceRegion getCoherenceRegion() {
+<span class="nc" id="L90">        return ((CoherenceStorageAccessImpl) this.domainDataStorageAccess).getDelegate();</span>
+    }
+
+    public DomainDataRegion getRegion() {
+<span class="nc" id="L94">        return this.domainDataRegion;</span>
+    }
+
+    protected DomainDataStorageAccess getDomainDataStorageAccess() {
+<span class="nc" id="L98">        return this.domainDataStorageAccess;</span>
+    }
+
+    protected Comparator&lt;?&gt; getVersionComparator() {
+<span class="nc" id="L102">        return this.versionComparator;</span>
+    }
+
+    protected CacheKeysFactory getCacheKeysFactory() {
+<span class="nc" id="L106">        return ((AbstractDomainDataRegion) this.getRegion()).getEffectiveKeysFactory();</span>
+    }
+
+    /**
+     * Returns the UUID of this AbstractCoherenceEntityDataAccess.
+     * @return the UUID of this AbstractCoherenceEntityDataAccess
+     */
+    public UUID getUuid() {
+<span class="nc" id="L114">        return this.uuid;</span>
+    }
+
+    /**
+     * Returns the next sequence number for a SoftLock acquired by this AbstractCoherenceEntityDataAccess.
+     * @return the long that is the next sequence number for a SoftLock acquired by this AbstractCoherenceEntityDataAccess
+     */
+    public long nextSoftLockSequenceNumber() {
+<span class="nc" id="L122">        return this.softLockSequenceNumber.incrementAndGet();</span>
+    }
+
+    /**
+     * {@inheritDoc}}
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L130">        final StringBuilder stringBuilder = new StringBuilder(getClass().getName());</span>
+<span class="nc" id="L131">        stringBuilder.append(&quot;(&quot;);</span>
+<span class="nc" id="L132">        stringBuilder.append(&quot;coherenceRegion=&quot;).append(getCoherenceRegion());</span>
+<span class="nc" id="L133">        stringBuilder.append(&quot;, uuid=&quot;).append(this.uuid);</span>
+<span class="nc" id="L134">        stringBuilder.append(&quot;, softLockSequenceNumber=&quot;).append(this.softLockSequenceNumber);</span>
+<span class="nc" id="L135">        stringBuilder.append(&quot;)&quot;);</span>
+<span class="nc" id="L136">        return stringBuilder.toString();</span>
+    }
+
+    public Object get(SharedSessionContractImplementor session, Object key) throws CacheException {
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L141">            LOGGER.debug(&quot;getValue({})&quot;, key);</span>
+        }
+<span class="nc" id="L143">        final CoherenceRegionValue cacheValue = (CoherenceRegionValue) getCoherenceRegion().getValue(key);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        return (cacheValue != null) ? cacheValue.getValue() : null;</span>
+    }
+
+    public boolean putFromLoad(SharedSessionContractImplementor session, Object key, Object value, Object version) throws CacheException {
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L149">            LOGGER.debug(&quot;putFromLoad({}, {}, {})&quot;, key, value, version);</span>
+        }
+<span class="nc" id="L151">        return putFromLoad(session, key, value, version, this.getCoherenceRegion().getRegionFactory().isMinimalPutsEnabledByDefault()); //TODO</span>
+    }
+
+    public boolean putFromLoad(SharedSessionContractImplementor session, Object key, Object value, Object version, boolean minimalPutOverride)
+            throws CacheException {
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L157">            LOGGER.debug(&quot;putFromLoad({}, {}, {}, {})&quot;, key, value, version, minimalPutOverride);</span>
+        }
+<span class="nc" id="L159">        final CoherenceRegionValue newCacheValue = newCacheValue(value, version);</span>
+<span class="nc" id="L160">        final PutFromLoadProcessor processor = new PutFromLoadProcessor(minimalPutOverride, newCacheValue);</span>
+<span class="nc" id="L161">        return (Boolean) getCoherenceRegion().invoke(key, processor);</span>
+    }
+
+    public SoftLock lockItem(SharedSessionContractImplementor session, Object key, Object version) throws CacheException {
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L166">            LOGGER.debug(&quot;lockItem({}, {})&quot;, key, version);</span>
+        }
+        //for the majority of access strategies lockItem is a no-op
+<span class="nc" id="L169">        return null;</span>
+    }
+
+    public SoftLock lockRegion() throws CacheException {
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L174">            LOGGER.debug(&quot;lockRegion()&quot;);</span>
+        }
+<span class="nc" id="L176">        getCoherenceRegion().lockCache();</span>
+<span class="nc" id="L177">        return null;</span>
+    }
+
+    public void unlockItem(SharedSessionContractImplementor session, Object key, SoftLock lock) throws CacheException {
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L182">            LOGGER.debug(&quot;lockItem({}, {})&quot;, key, lock);</span>
+        }
+        //for the majority of access strategies unlockItem is a no-op
+<span class="nc" id="L185">    }</span>
+
+    public void unlockRegion(SoftLock lock) throws CacheException {
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L189">            LOGGER.debug(&quot;unlockRegion({})&quot;, lock);</span>
+        }
+<span class="nc" id="L191">        getCoherenceRegion().unlockCache();</span>
+<span class="nc" id="L192">    }</span>
+
+    public void remove(SharedSessionContractImplementor session, Object key) throws CacheException {
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L196">            LOGGER.debug(&quot;remove({})&quot;, key);</span>
+        }
+<span class="nc" id="L198">        evict(key);</span>
+<span class="nc" id="L199">    }</span>
+
+    public void removeAll(SharedSessionContractImplementor session) throws CacheException {
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L203">            LOGGER.debug(&quot;removeAll()&quot;);</span>
+        }
+<span class="nc" id="L205">        evictAll();</span>
+<span class="nc" id="L206">    }</span>
+
+    public void evict(Object key) throws CacheException {
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L210">            LOGGER.debug(&quot;evict({})&quot;, key);</span>
+        }
+<span class="nc" id="L212">        getCoherenceRegion().evict(key);</span>
+<span class="nc" id="L213">    }</span>
+
+    public void evictAll() throws CacheException {
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L217">            LOGGER.debug(&quot;evictAll()&quot;);</span>
+        }
+<span class="nc" id="L219">        getCoherenceRegion().evictAll();</span>
+<span class="nc" id="L220">    }</span>
+
+    /**
+     * Returns a new cache value with the argument value and version.
+     * @param value the value for the new cache value
+     * @param version the version for the new cache value
+     * @return a CoherenceRegion.Value with the argument value
+     */
+    public CoherenceRegionValue newCacheValue(Object value, Object version) {
+<span class="nc" id="L229">        return new CoherenceRegionValue(value, version, getCoherenceRegion().nextTimestamp());</span>
+    }
+
+    public boolean contains(Object key) {
+<span class="nc" id="L233">        return this.domainDataStorageAccess.contains(key);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
