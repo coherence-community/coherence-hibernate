@@ -156,7 +156,7 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
      * Get the Hibernate SessionFactory.
      * @return the Hibernate SessionFactory
      */
-    public SessionFactory getSessionFactory() {
+    public synchronized SessionFactory getSessionFactory() {
         return this.sessionFactory;
     }
 
@@ -177,7 +177,7 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
      * Get the Hibernate entity name.
      * @return the entity name
      */
-    protected String getEntityName() {
+    protected synchronized String getEntityName() {
         return this.entityName;
     }
 

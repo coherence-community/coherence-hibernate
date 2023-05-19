@@ -7,8 +7,11 @@
 
 package com.oracle.coherence.hibernate.demo;
 
+import org.assertj.core.api.Assertions;
+import org.hsqldb.server.Server;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
@@ -16,7 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CoherenceServerApplicationTests {
+
+    @Autowired
+    private Server databaseServer;
+
     @Test
     void contextLoads() {
+        Assertions.assertThat(this.databaseServer.isNotRunning()).isFalse();
     }
 }
