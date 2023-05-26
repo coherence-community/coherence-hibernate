@@ -29,7 +29,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate6.version}</version>
             <scope>provided</scope>

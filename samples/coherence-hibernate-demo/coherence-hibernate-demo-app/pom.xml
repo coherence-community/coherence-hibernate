@@ -69,9 +69,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-micrometer</artifactId>
-			<version>${hibernate-micrometer.version}</version>
 		</dependency>
 	</dependencies>
 
