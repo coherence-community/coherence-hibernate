@@ -201,7 +201,7 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         final Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         final Person savedPerson = newPerson();
-        session.save(savedPerson);
+        session.persist(savedPerson);
         session.getTransaction().commit();
 
         final Person gottenPerson = (Person) getPersonCache().get(savedPerson.getId());
@@ -220,8 +220,8 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         session.beginTransaction();
         final Person savedPerson1 = newPerson();
         final Person savedPerson2 = newPerson();
-        session.save(savedPerson1);
-        session.save(savedPerson2);
+        session.persist(savedPerson1);
+        session.persist(savedPerson2);
         session.getTransaction().commit();
 
         final Map gottenPersons = getPersonCache().getAll(Arrays.asList(new Long[] {savedPerson1.getId(), savedPerson2.getId()}));
@@ -246,7 +246,7 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         final Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         final Person savedPerson = newPerson();
-        session.save(savedPerson);
+        session.persist(savedPerson);
         session.getTransaction().commit();
 
         getPersonCache().get(savedPerson.getId());
@@ -266,8 +266,8 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         session.beginTransaction();
         final Person savedPerson1 = newPerson();
         final Person savedPerson2 = newPerson();
-        session.save(savedPerson1);
-        session.save(savedPerson2);
+        session.persist(savedPerson1);
+        session.persist(savedPerson2);
         session.getTransaction().commit();
 
         final List<Long> keyList = Arrays.asList(new Long[] {savedPerson1.getId(), savedPerson2.getId()});

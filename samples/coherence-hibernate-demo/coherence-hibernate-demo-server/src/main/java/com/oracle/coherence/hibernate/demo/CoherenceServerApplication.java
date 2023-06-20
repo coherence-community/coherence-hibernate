@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -20,6 +20,10 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class CoherenceServerApplication {
 
+    /**
+     * Starts the Spring Boot application.
+     * @param args program arguments
+     */
     public static void main(String[] args) {
 
         /*
@@ -35,6 +39,10 @@ public class CoherenceServerApplication {
         SpringApplication.run(CoherenceServerApplication.class, args);
     }
 
+    /**
+     * Spring bean that ensure that the Coherence instance is available.
+     * @return the ConfigurableCacheFactory
+     */
     @Bean(destroyMethod = "dispose")
     public ConfigurableCacheFactory coherenceServer() {
         CacheFactory.ensureCluster();

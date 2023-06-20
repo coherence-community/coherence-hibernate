@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import com.oracle.coherence.hibernate.demo.model.Event;
 import jakarta.persistence.QueryHint;
+import org.hibernate.jpa.AvailableHints;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-	@Query("SELECT event FROM Event event left join fetch event.participants p where event.id = :eventId")
-	@QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"))
-	Optional<Event> getEventWithParticipants(@Param("eventId") Long eventId);
+    @Query("SELECT event FROM Event event left join fetch event.participants p where event.id = :eventId")
+    @QueryHints(@QueryHint(name = AvailableHints.HINT_CACHEABLE, value = "true"))
+    Optional<Event> getEventWithParticipants(@Param("eventId") Long eventId);
 }

@@ -1,19 +1,15 @@
 /*
- * Copyright (c) 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.demo.config;
 
-import java.io.IOException;
-
 import javax.sql.DataSource;
 
 import org.hsqldb.server.Server;
-import org.hsqldb.server.ServerAcl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -27,8 +23,13 @@ import org.springframework.context.annotation.DependsOn;
  */
 @Configuration
 public class DatabaseConfig {
+
+    /**
+     * Bootstraps a simple in-memory HSQSL Server instance.
+     * @return the HSQLDB Server object that acts as a network database server
+     */
     @Bean(initMethod = "start", destroyMethod = "stop")
-    public Server hsqlServer() throws ServerAcl.AclFormatException, IOException {
+    public Server hsqlServer() {
         final Server server = new Server();
         server.setAddress("localhost");
         server.setPort(9001);
@@ -38,15 +39,19 @@ public class DatabaseConfig {
         return server;
     }
 
+    /**
+     * Returns the datasource. Spring bean specifies a dependency on the {@link DatabaseConfig#hsqlServer()} bean.
+     * @param dataSourceProperties the Spring Boot DataSource properties
+     * @return the configured DataSource
+     */
     @Bean
     @DependsOn("hsqlServer")
-    public DataSource getDataSource(
-            @Autowired DataSourceProperties dsProps) {
+    public DataSource getDataSource(DataSourceProperties dataSourceProperties) {
         final DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName(dsProps.getDriverClassName());
-        dataSourceBuilder.url(dsProps.getUrl());
-        dataSourceBuilder.username(dsProps.getUsername());
-        dataSourceBuilder.password(dsProps.getPassword());
+        dataSourceBuilder.driverClassName(dataSourceProperties.getDriverClassName());
+        dataSourceBuilder.url(dataSourceProperties.getUrl());
+        dataSourceBuilder.username(dataSourceProperties.getUsername());
+        dataSourceBuilder.password(dataSourceProperties.getPassword());
         return dataSourceBuilder.build();
     }
 

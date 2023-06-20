@@ -19,10 +19,12 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.UnknownEntityTypeException;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.metamodel.spi.MetamodelImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.metamodel.MappingMetamodel;
+import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.query.Query;
 
 /**
@@ -58,7 +60,7 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
      * ClassMetadata object for this CacheLoader's entity type (has pseudo-final semantics, and is guarded by
      * ensureInitialized()).
      */
-    private ClassMetadata entityClassMetadata;
+    private EntityPersister entityClassMetadata;
 
     /**
      * An HQL query string for loadAll (has pseudo-final semantics, and is guarded by ensureInitialized()).
@@ -220,14 +222,15 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
         }
 
         // Look up the Hibernate metadata for the entity
-        final MetamodelImplementor metamodel = (MetamodelImplementor) sessionFactory.getMetamodel();
-        final ClassMetadata entityClassMetadata = (ClassMetadata) metamodel.entityPersister(this.entityName);
-
-        if (entityClassMetadata == null) {
+        final MappingMetamodel metamodel = (MappingMetamodel) sessionFactory.getMetamodel();
+        try {
+            final EntityPersister entityPersister = metamodel.getEntityDescriptor(this.entityName);
+            setEntityClassMetadata(entityPersister);
+        }
+        catch (UnknownEntityTypeException ex) {
             throw new RuntimeException("Unable to find ClassMetadata" +
                     " for Hibernate entity " + this.entityName + ".");
         }
-        setEntityClassMetadata(entityClassMetadata);
     }
 
     /**
@@ -324,10 +327,10 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
 
             // Need a way to extract the key from an entity that we know
             // nothing about.
-            final ClassMetadata classMetaData = getEntityClassMetadata();
+            final EntityPersister entityPersister = getEntityClassMetadata();
 
             for (Object entity : result) {
-                final Object[] propertyValues = classMetaData.getPropertyValues(entity);
+                final Object[] propertyValues = entityPersister.getValues(entity);
                 for (Object propertyValue : propertyValues) {
                     Hibernate.initialize(propertyValue);
                 }
@@ -335,7 +338,7 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
 
             // Iterate through the results and place into the return map
             for (Object entity : result) {
-                final Object id = classMetaData.getIdentifier(entity, sessionImplementor);
+                final Object id = entityPersister.getIdentifier(entity, sessionImplementor);
                 results.put(id, entity);
             }
             transaction.commit();
@@ -376,16 +379,16 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
      * Get the Hibernate ClassMetadata for the Hibernate entity.
      * @return the ClassMetadata object
      */
-    protected ClassMetadata getEntityClassMetadata() {
+    protected EntityPersister getEntityClassMetadata() {
         return this.entityClassMetadata;
     }
 
     /**
-     * Get the Hibernate ClassMetadata for the Hibernate entity.
-     * @param entityClassMetadata the ClassMetadata object
+     * Get the Hibernate EntityPersister for the Hibernate entity.
+     * @param entityPersister the EntityPersister object
      */
-    protected void setEntityClassMetadata(ClassMetadata entityClassMetadata) {
-        this.entityClassMetadata = entityClassMetadata;
+    protected void setEntityClassMetadata(EntityPersister entityPersister) {
+        this.entityClassMetadata = entityPersister;
     }
 
     /**
@@ -410,8 +413,8 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
      * @param sessionImplementor the Hibernate SessionImplementor
      * @return the Hibernate entity (may return null)
      */
-    protected Object createEntityFromId(Object id, SessionImplementor sessionImplementor) {
-        final ClassMetadata cmd = getEntityClassMetadata();
+    protected Object createEntityFromId(Object id, SharedSessionContractImplementor sessionImplementor) {
+        final EntityPersister cmd = getEntityClassMetadata();
         final Object o = cmd.instantiate(id, sessionImplementor);
         return o;
     }
@@ -422,8 +425,8 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
      * @param entity an entity (containing an implicit key)
      * @param sessionImplementor the Hibernate SessionImplementor
      */
-    protected void validateIdentifier(Serializable id, Object entity, SessionImplementor sessionImplementor) {
-        final ClassMetadata classMetaData = getEntityClassMetadata();
+    protected void validateIdentifier(Serializable id, Object entity, SharedSessionContractImplementor sessionImplementor) {
+        final EntityPersister classMetaData = getEntityClassMetadata();
 
         final Object intrinsicIdentifier =
                 classMetaData.getIdentifier(entity, sessionImplementor);

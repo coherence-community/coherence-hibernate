@@ -177,7 +177,7 @@ public class HibernateCacheStore extends HibernateCacheLoader implements CacheSt
             // We may be able to use an HQL delete instead.
             final Object entity = createEntityFromId(key, (SessionImplementor) session);
             if (entity != null) {
-                session.delete(entity);
+                session.remove(entity);
             }
 
             tx.commit();
@@ -214,7 +214,7 @@ public class HibernateCacheStore extends HibernateCacheLoader implements CacheSt
                 final Object key = iter.next();
                 final Object entity = createEntityFromId(key, (SessionImplementor) session);
                 if (entity != null) {
-                    session.delete(entity);
+                    session.remove(entity);
                 }
             }
 

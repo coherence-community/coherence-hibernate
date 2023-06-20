@@ -1,13 +1,11 @@
 /*
- * Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.cache.v53;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.oracle.coherence.hibernate.cache.v53.access.CoherenceDomainDataRegionImpl;
@@ -16,7 +14,6 @@ import com.oracle.coherence.hibernate.cache.v53.configuration.session.SessionTyp
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.Assert;
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateProperties;
 import com.oracle.coherence.hibernate.cache.v53.configuration.support.CoherenceHibernateSystemPropertyResolver;
-import com.oracle.coherence.hibernate.cache.v53.configuration.support.ConfigUtils;
 import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegion;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.Cluster;
@@ -24,8 +21,7 @@ import com.tangosol.net.DefaultCacheServer;
 import com.tangosol.net.ExtensibleConfigurableCacheFactory;
 import com.tangosol.net.NamedCache;
 import com.tangosol.net.Session;
-import com.tangosol.net.options.WithClassLoader;
-import com.tangosol.net.options.WithConfiguration;
+import com.tangosol.net.SessionConfiguration;
 import org.hibernate.boot.registry.selector.spi.StrategySelector;
 import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.cfg.spi.DomainDataRegionBuildingContext;
@@ -187,19 +183,15 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
 
             }
 
-            final List<Session.Option> sessionOptions = new ArrayList<>();
-
+            final SessionConfiguration.Builder sessionConfigBuild = SessionConfiguration.builder();
             if (coherenceHibernateProperties.getSessionName() != null) {
-                sessionOptions.add(ConfigUtils.getSessionNameOption(coherenceHibernateProperties.getSessionName()));
+                sessionConfigBuild.named(coherenceHibernateProperties.getSessionName());
             }
 
-            final Session.Option cacheConfigFilePathOption = WithConfiguration.using(coherenceHibernateProperties.getCacheConfigFilePath());
-            final Session.Option classLoaderOption = WithClassLoader.using(getClass().getClassLoader());
+            sessionConfigBuild.withConfigUri(coherenceHibernateProperties.getCacheConfigFilePath());
+            sessionConfigBuild.withClassLoader(getClass().getClassLoader());
 
-            sessionOptions.add(cacheConfigFilePathOption);
-            sessionOptions.add(classLoaderOption);
-
-            final Session sessionToSet = Session.create(sessionOptions.toArray(new Session.Option[0]));
+            final Session sessionToSet = Session.create(sessionConfigBuild.build()).get();  //TODO
             this.setCoherenceSession(sessionToSet);
         }
     }
