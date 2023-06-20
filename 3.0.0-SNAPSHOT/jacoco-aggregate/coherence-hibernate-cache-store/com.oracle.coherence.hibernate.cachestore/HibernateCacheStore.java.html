@@ -177,7 +177,7 @@ public class HibernateCacheStore extends HibernateCacheLoader implements CacheSt
             // We may be able to use an HQL delete instead.
 <span class="nc" id="L178">            final Object entity = createEntityFromId(key, (SessionImplementor) session);</span>
 <span class="nc bnc" id="L179" title="All 2 branches missed.">            if (entity != null) {</span>
-<span class="nc" id="L180">                session.delete(entity);</span>
+<span class="nc" id="L180">                session.remove(entity);</span>
             }
 
 <span class="nc" id="L183">            tx.commit();</span>
@@ -214,7 +214,7 @@ public class HibernateCacheStore extends HibernateCacheLoader implements CacheSt
 <span class="nc" id="L214">                final Object key = iter.next();</span>
 <span class="nc" id="L215">                final Object entity = createEntityFromId(key, (SessionImplementor) session);</span>
 <span class="nc bnc" id="L216" title="All 2 branches missed.">                if (entity != null) {</span>
-<span class="nc" id="L217">                    session.delete(entity);</span>
+<span class="nc" id="L217">                    session.remove(entity);</span>
                 }
 <span class="nc" id="L219">            }</span>
 
