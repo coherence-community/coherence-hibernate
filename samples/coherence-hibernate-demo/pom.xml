@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2022, Oracle and/or its affiliates.
+  Copyright (c) 2022, 2023, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -27,9 +27,8 @@
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
 		<hibernate.version>5.6.12.Final</hibernate.version>
 		<hibernate-micrometer.version>5.6.12.Final</hibernate-micrometer.version>
-		<spring-boot.version>2.7.11</spring-boot.version>
+		<spring-boot.version>2.7.13</spring-boot.version>
 		<tomcat.version>9.0.74</tomcat.version>
-		<jackson-bom.version>2.14.0-rc3</jackson-bom.version>
 	</properties>
 
 	<modules>
@@ -40,13 +39,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>com.fasterxml.jackson</groupId>
-				<artifactId>jackson-bom</artifactId>
-				<version>${jackson-bom.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
