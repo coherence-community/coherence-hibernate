@@ -75,4 +75,10 @@
         <cve>CVE-2022-1471</cve>
     </suppress>
 
+    <suppress>
+        <notes><![CDATA[ jackson-databind-2.15.2.jar
+        Invalid - see: https://github.com/FasterXML/jackson-databind/issues/3997
+       ]]></notes>
+        <cve>CVE-2023-35116</cve>
+    </suppress>
 </suppressions>

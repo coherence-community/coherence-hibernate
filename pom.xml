@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+  Copyright (c) 2013, 2023, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -95,21 +95,21 @@
         <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <versions-maven-plugin>2.13.0</versions-maven-plugin>
 
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.23.1</assertj.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
-        <coherence.version>22.06.2</coherence.version>
+        <coherence.version>22.06.4</coherence.version>
         <hibernate4.version>4.3.11.Final</hibernate4.version>
         <hibernate5.version>5.1.17.Final</hibernate5.version>
         <hibernate52.version>5.2.18.Final</hibernate52.version>
-        <hibernate53.version>5.6.12.Final</hibernate53.version>
-        <hsqldb.version>2.7.1</hsqldb.version>
+        <hibernate53.version>5.6.15.Final</hibernate53.version>
+        <hsqldb.version>2.7.2</hsqldb.version>
         <junit.version>4.13.2</junit.version>
-        <junit5.version>5.9.1</junit5.version>
-        <logback.version>1.4.4</logback.version>
+        <junit5.version>5.9.3</junit5.version>
+        <logback.version>1.4.8</logback.version>
         <mockito.version>4.8.1</mockito.version>
         <slf4j.version>1.7.36</slf4j.version>
     </properties>
