@@ -11,7 +11,7 @@
 
     <groupId>com.oracle.coherence.hibernate</groupId>
     <artifactId>coherence-hibernate-parent</artifactId>
-    <version>2.3.3-SNAPSHOT</version>
+    <version>2.3.3</version>
     <packaging>pom</packaging>
 
     <name>Coherence Hibernate Project</name>
@@ -54,7 +54,7 @@
         <connection>scm:git:https://github.com/coherence-community/coherence-hibernate.git</connection>
         <developerConnection>scm:git:https://github.com/coherence-community/coherence-hibernate.git</developerConnection>
         <url>https://github.com/coherence-community/coherence-hibernate</url>
-        <tag>HEAD</tag>
+        <tag>v2.3.3</tag>
     </scm>
 
     <modules>

@@ -12,12 +12,12 @@
 	<parent>
 		<groupId>com.oracle.coherence.hibernate</groupId>
 		<artifactId>samples</artifactId>
-		<version>2.3.3-SNAPSHOT</version>
+		<version>2.3.3</version>
 	</parent>
 
 	<groupId>com.oracle.coherence.hibernate</groupId>
 	<artifactId>coherence-hibernate-demo-parent</artifactId>
-	<version>2.3.3-SNAPSHOT</version>
+	<version>2.3.3</version>
 	<packaging>pom</packaging>
 
 	<name>Samples - Coherence Hibernate Demo</name>
