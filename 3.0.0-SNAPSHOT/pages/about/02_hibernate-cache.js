@@ -32,35 +32,26 @@ are supported:</p>
 </thead>
 <tbody>
 <tr>
-<td class="">coherence-hibernate-cache-4</td>
-<td class=""><code>4.3.x</code></td>
-</tr>
-<tr>
-<td class="">coherence-hibernate-cache-5</td>
-<td class=""><code>5.0.x</code>, <code>5.1.x</code></td>
-</tr>
-<tr>
-<td class="">coherence-hibernate-cache-52</td>
-<td class=""><code>5.2.x</code></td>
+<td class="">coherence-hibernate-cache-6</td>
+<td class=""><code>6.1.x</code>, <code>6.2.x</code></td>
 </tr>
 <tr>
 <td class="">coherence-hibernate-cache-53</td>
-<td class=""><code>5.3.x</code>, <code>5.4.x</code>, <code>5.5.x</code>, <code>5.6.x</code></td>
+<td class=""><code>5.6.x</code></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="admonition important">
-<p class="admonition-inline">Active development (new features) focuses on the <code>coherence-hibernate-cache-53</code> module. This module also
-supports the latest stable release version of Hibernate <code>5.6.x</code>.</p>
+<p class="admonition-inline">Active development (new features) focuses on the <code>coherence-hibernate-cache-6</code> module. This module also
+supports the latest stable release version of Hibernate <code>6.2.x</code>.</p>
 </div>
 </div>
 
 <h3 id="_supported_coherence_versions">Supported Coherence Versions</h3>
 <div class="section">
-<p>The minimum Coherence version that is supported by Coherence Hibernate is <code>12.2.1.1</code> (Commercial). You can of course also
-use the open-source versions of Coherence, such as Coherence CE <code>14.1.1.0.10</code>. We do recommended using the latest version if
-possible.</p>
+<p>The minimum Coherence version that is supported by Coherence Hibernate is <code>23.03</code> (CE). We do recommend using the
+latest version of Coherence if possible.</p>
 
 </div>
 
@@ -95,11 +86,11 @@ lang="xml"
 
 >&lt;dependency&gt;
     &lt;groupId&gt;com.oracle.coherence.hibernate&lt;/groupId&gt;
-    &lt;artifactId&gt;coherence-hibernate-cache-53&lt;/artifactId&gt;
+    &lt;artifactId&gt;coherence-hibernate-cache-6&lt;/artifactId&gt;
     &lt;version&gt;3.0.0-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</markup>
 
-<p>Alternatively, you can download <code>coherence-hibernate-cache-53-3.0.0-SNAPSHOT.jar</code> from a Maven repository
+<p>Alternatively, you can download <code>coherence-hibernate-cache-6-3.0.0-SNAPSHOT.jar</code> from a Maven repository
 (e.g. <a id="" title="" target="_blank" href="https://repo1.maven.org/maven2/">https://repo1.maven.org/maven2/</a>) and use it in JVM classpaths. Or you can <router-link to="/dev/03_build-instructions">build</router-link>
 the Coherence Hibernate second-level cache implementation from sources.</p>
 
@@ -112,7 +103,7 @@ lang="xml"
 
 >&lt;dependency&gt;
     &lt;groupId&gt;com.oracle.coherence.hibernate&lt;/groupId&gt;
-    &lt;artifactId&gt;coherence-hibernate-cache-53&lt;/artifactId&gt;
+    &lt;artifactId&gt;coherence-hibernate-cache-6&lt;/artifactId&gt;
     &lt;version&gt;3.0.0-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;

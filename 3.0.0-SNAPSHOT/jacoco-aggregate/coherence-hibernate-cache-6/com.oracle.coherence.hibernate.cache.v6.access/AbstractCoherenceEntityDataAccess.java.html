@@ -148,7 +148,7 @@ public abstract class AbstractCoherenceEntityDataAccess {
 <span class="nc bnc" id="L148" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
 <span class="nc" id="L149">            LOGGER.debug(&quot;putFromLoad({}, {}, {})&quot;, key, value, version);</span>
         }
-<span class="nc" id="L151">        return putFromLoad(session, key, value, version, this.getCoherenceRegion().getRegionFactory().isMinimalPutsEnabledByDefault()); //TODO</span>
+<span class="nc" id="L151">        return putFromLoad(session, key, value, version, this.getCoherenceRegion().getRegionFactory().isMinimalPutsEnabledByDefault());</span>
     }
 
     public boolean putFromLoad(SharedSessionContractImplementor session, Object key, Object value, Object version, boolean minimalPutOverride)
