@@ -6,6 +6,24 @@
 reverse chronological order.</p>
 
 
+<h3 id="_version_3_0_0_july_4_2023">Version 3.0.0 (July 4, 2023)</h3>
+<div class="section">
+<p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/releases/tag/v3.0.0">https://github.com/coherence-community/coherence-hibernate/releases/tag/v3.0.0</a></p>
+
+</div>
+
+<h3 id="_version_2_3_3_july_2_2023">Version 2.3.3 (July 2, 2023)</h3>
+<div class="section">
+<p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.3.3">https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.3.3</a></p>
+
+</div>
+
+<h3 id="_version_2_3_2_january_26_2023">Version 2.3.2 (January 26, 2023)</h3>
+<div class="section">
+<p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.3.2">https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.3.2</a></p>
+
+</div>
+
 <h3 id="_version_2_3_1_november_3_2022">Version 2.3.1 (November 3, 2022)</h3>
 <div class="section">
 <p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.3.1">https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.3.1</a></p>
