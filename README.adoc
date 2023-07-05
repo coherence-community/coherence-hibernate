@@ -1,8 +1,8 @@
-:main-release-version: 3.0.0-SNAPSHOT
-:main-snapshot-version: 3.0.0-SNAPSHOT
-:2x-release-version: 2.3.2
-:2x-snapshot-version: 2.3.3-SNAPSHOT
-:hibernate-docs: https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single/Hibernate_User_Guide.html
+:main-release-version: 3.0.0
+:main-snapshot-version: 3.0.1-SNAPSHOT
+:2x-release-version: 2.3.3
+:2x-snapshot-version: 2.3.4-SNAPSHOT
+:hibernate-docs: https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html
 :website: https://hibernate.coherence.community/
 
 = Welcome to the Oracle Coherence Hibernate Project
@@ -23,7 +23,29 @@ Two primary integration points are covered currently:
 * using Coherence as a {hibernate-docs}#caching[second-level cache (2LC)] in Hibernate
 * using Hibernate as a Coherence CacheStore implementation
 
-Due to Hibernate Cache API changes, Coherence Hibernate `{snapshot-version}` provides dedicated Maven modules targeting those Hibernate versions:
+Starting with Coherence Hibernate `3.x`, we support https://jakarta.ee/[Jakarta EE]. Coherence Hibernate `2.x` will
+continue to support Java EE.
+
+[width="75%", cols="1,1,1,1,^1,1"]
+|===
+|Coherence Hibernate | Java | Coherence CE | Hibernate     | Jakarta | Git Branch/Tag
+
+|*3.0.x*             | `17` | `23.03`      | `5.6`, `6.x`  | ✔       | `main`
+|*2.3.x*             | `11` | `22.06`      | `4.3` - `5.6` |         | `2.3.x`
+|===
+
+=== Coherence Hibernate {main-release-version}
+
+Due to Hibernate Cache API changes, Coherence Hibernate `{main-release-version}` provides dedicated Maven modules targeting
+those Hibernate versions:
+
+* `coherence-hibernate-cache-53` supports Hibernate `5.6.x`
+* `coherence-hibernate-cache-6` supports Hibernate `6.x`
+
+=== Coherence Hibernate {2x-release-version}
+
+Due to Hibernate Cache API changes, Coherence Hibernate `{2x-release-version}` provides dedicated Maven modules targeting
+those Hibernate versions:
 
 * `coherence-hibernate-cache-4` supports Hibernate `4.3.x`
 * `coherence-hibernate-cache-5` supports Hibernate `5.0.x` and `5.1.x`
@@ -37,8 +59,10 @@ as well as extensive JavaDoc for the Coherence Hibernate source code.
 
 [width="75%"]
 |=======
-|*{snapshot-version}* | {website}{snapshot-version}[Website] | {website}{snapshot-version}/api/index.html[API Doc.]
-|*{release-version}* | {website}{release-version}[Website] | {website}{release-version}/api/index.html[API Doc.]
+|*{main-release-version}* | {website}{main-release-version}[Website] | {website}{main-release-version}/api/index.html[API Doc.]
+|*{main-snapshot-version}* | {website}{main-snapshot-version}[Website] | {website}{main-snapshot-version}/api/index.html[API Doc.]
+|*{2x-release-version}* | {website}{2x-release-version}[Website] | {website}{2x-release-version}/api/index.html[API Doc.]
+|*{2x-snapshot-version}* | {website}{2x-snapshot-version}[Website] | {website}{2x-snapshot-version}/api/index.html[API Doc.]
 |=======
 
 NOTE: The http://maven.apache.org[Apache Maven]-based snapshots and releases for this project are published to
@@ -50,8 +74,9 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |===
 |Coherence Hibernate       | Java | Coherence CE | Jakarta EE | Git Branch/Tag
 
-|*{main-snapshot-version}* | `17` | `23.03`      | ✅ | `main`
-|*{2x-release-version}*    | `11` | `22.06`      |            | `2.3.2`
+|*{main-release-version}*  | `17` | `23.03`      | ✅         | `main`
+|*{main-snapshot-version}* | `17` | `23.03`      | ✅         | `main`
+|*{2x-release-version}*    | `11` | `22.06`      |            | `2.3.3`
 |*{2x-snapshot-version}*   | `11` | `22.06`      |            | `2.3.x`
 |===
 
@@ -61,14 +86,14 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |===
 |Hibernate| Coherence Hibernate 2.3.x | Coherence Hibernate 3.0.x
 
-|`4.3.x`  | ✅                         | 
-|`5.0`    | ✅                         | 
-|`5.1`    | ✅                         | 
-|`5.2`    | ✅                         |
-|`5.3`    | ✅                         |
-|`5.4`    | ✅                         |
-|`5.5`    | ✅                         |
-|`5.6`    | ✅                         | ✅
+|`4.3.x`  | ✅                        |
+|`5.0`    | ✅                        |
+|`5.1`    | ✅                        |
+|`5.2`    | ✅                        |
+|`5.3`    | ✅                        |
+|`5.4`    | ✅                        |
+|`5.5`    | ✅                        |
+|`5.6`    | ✅                        | ✅
 |`6.0`    |                           | ✅
 |`6.1`    |                           | ✅
 |`6.2`    |                           | ✅
@@ -83,13 +108,10 @@ repository, and you can find those in the https://github.com/coherence-community
 
 === Requirements
 
-In order to build Coherence Hibernate, you need to have installed:
+In order to build Coherence Hibernate (main branch), you need to have installed:
 
-- https://www.oracle.com/java/technologies/javase-jdk11-downloads.html[JDK 11]
+- https://www.oracle.com/java/technologies/downloads/#java17[JDK 17]
 - https://help.github.com/set-up-git-redirect[Git]
-
-NOTE: When using Coherence Hibernate merely as a dependency in a project, without intending to build the project from
-source code, then an installed _JDK 8_ version is sufficient.
 
 === Check out sources
 

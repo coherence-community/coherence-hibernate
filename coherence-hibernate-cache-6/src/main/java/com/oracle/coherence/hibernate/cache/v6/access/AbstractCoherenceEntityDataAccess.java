@@ -148,7 +148,7 @@ public abstract class AbstractCoherenceEntityDataAccess {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("putFromLoad({}, {}, {})", key, value, version);
         }
-        return putFromLoad(session, key, value, version, this.getCoherenceRegion().getRegionFactory().isMinimalPutsEnabledByDefault()); //TODO
+        return putFromLoad(session, key, value, version, this.getCoherenceRegion().getRegionFactory().isMinimalPutsEnabledByDefault());
     }
 
     public boolean putFromLoad(SharedSessionContractImplementor session, Object key, Object value, Object version, boolean minimalPutOverride)

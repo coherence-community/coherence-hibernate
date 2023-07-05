@@ -27,27 +27,20 @@ are supported:
 |===
 |Module Name |Supported Hibernate Versions
 
-|coherence-hibernate-cache-4
-|`4.3.x`
-
-|coherence-hibernate-cache-5
-|`5.0.x`, `5.1.x`
-
-|coherence-hibernate-cache-52
-|`5.2.x`
+|coherence-hibernate-cache-6
+|`6.1.x`, `6.2.x`
 
 |coherence-hibernate-cache-53
-|`5.3.x`, `5.4.x`, `5.5.x`, `5.6.x`
+|`5.6.x`
 |===
 
-IMPORTANT: Active development (new features) focuses on the `coherence-hibernate-cache-53` module. This module also
-supports the latest stable release version of Hibernate `5.6.x`.
+IMPORTANT: Active development (new features) focuses on the `coherence-hibernate-cache-6` module. This module also
+supports the latest stable release version of Hibernate `6.2.x`.
 
 === Supported Coherence Versions
 
-The minimum Coherence version that is supported by Coherence Hibernate is `12.2.1.1` (Commercial). You can of course also
-use the open-source versions of Coherence, such as Coherence CE `14.1.1.0.10`. We do recommended using the latest version if
-possible.
+The minimum Coherence version that is supported by Coherence Hibernate is `23.03` (CE). We do recommend using the
+latest version of Coherence if possible.
 
 === Overview
 
@@ -76,12 +69,12 @@ to your application's `pom.xml`:
 ----
 <dependency>
     <groupId>com.oracle.coherence.hibernate</groupId>
-    <artifactId>coherence-hibernate-cache-53</artifactId>
+    <artifactId>coherence-hibernate-cache-6</artifactId>
     <version>{version-coherence-hibernate}</version>
 </dependency>
 ----
 
-Alternatively, you can download `coherence-hibernate-cache-53-{version-coherence-hibernate}.jar` from a Maven repository
+Alternatively, you can download `coherence-hibernate-cache-6-{version-coherence-hibernate}.jar` from a Maven repository
 (e.g. https://repo1.maven.org/maven2/) and use it in JVM classpaths. Or you can xref:dev/03_build-instructions.adoc[build]
 the Coherence Hibernate second-level cache implementation from sources.
 
@@ -93,7 +86,7 @@ declaration may look like the following:
 ----
 <dependency>
     <groupId>com.oracle.coherence.hibernate</groupId>
-    <artifactId>coherence-hibernate-cache-53</artifactId>
+    <artifactId>coherence-hibernate-cache-6</artifactId>
     <version>{version-coherence-hibernate}</version>
 </dependency>
 <dependency>
