@@ -104,24 +104,24 @@
         <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <versions-maven-plugin>2.13.0</versions-maven-plugin>
 
         <checkstyle.version>9.3</checkstyle.version>
         <spring-javaformat-checkstyle.version>0.0.39</spring-javaformat-checkstyle.version>
 
         <!-- dependency versions (alphabetically) -->
-        <assertj.version>3.23.1</assertj.version>
+        <assertj.version>3.24.2</assertj.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
         <coherence.version>23.03</coherence.version>
-        <hibernate6.version>6.2.1.Final</hibernate6.version>
+        <hibernate6.version>6.2.6.Final</hibernate6.version>
         <hibernate53.version>5.6.12.Final</hibernate53.version>
-        <hsqldb.version>2.7.1</hsqldb.version>
+        <hsqldb.version>2.7.2</hsqldb.version>
         <junit.version>4.13.2</junit.version>
-        <junit5.version>5.9.1</junit5.version>
-        <logback.version>1.4.7</logback.version>
+        <junit5.version>5.9.3</junit5.version>
+        <logback.version>1.4.8</logback.version>
         <mockito.version>4.8.1</mockito.version>
-        <slf4j.version>2.0.4</slf4j.version>
+        <slf4j.version>2.0.7</slf4j.version>
     </properties>
 
     <distributionManagement>
