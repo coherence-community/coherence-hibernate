@@ -86,5 +86,11 @@
         file name: dom4j-2.1.1.jar
         ]]></notes>
         <cve>CVE-2023-45960</cve>
-     </suppress>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        Waiting for updated Spring / Spring Boot releases.
+        ]]></notes>
+        <vulnerabilityName>CVE-2023-6378</vulnerabilityName>
+    </suppress>
 </suppressions>
