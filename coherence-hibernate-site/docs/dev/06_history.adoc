@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-    Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+    Copyright (c) 2013, 2024, Oracle and/or its affiliates.
 
     Licensed under the Universal Permissive License v 1.0 as shown at
     https://oss.oracle.com/licenses/upl.
@@ -16,6 +16,18 @@
 
 The following sections outline Oracle Coherence Hibernate Integration changes in
 reverse chronological order.
+
+=== Version 2.3.4 (January 26, 2024)
+
+https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.3.4
+
+=== Version 2.3.3 (July 6, 2023)
+
+https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.3.3
+
+=== Version 2.3.2 (January 26, 2023)
+
+https://github.com/coherence-community/coherence-hibernate/releases/tag/v2.3.2
 
 === Version 2.3.1 (November 3, 2022)
 
