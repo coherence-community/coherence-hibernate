@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2022, 2023, Oracle and/or its affiliates.
+  Copyright (c) 2022, 2024, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -28,7 +28,7 @@
 		<hibernate.version>5.6.15.Final</hibernate.version>
 		<hibernate-micrometer.version>5.6.15.Final</hibernate-micrometer.version>
 		<spring-boot.version>2.7.18</spring-boot.version>
-		<tomcat.version>9.0.83</tomcat.version>
+		<tomcat.version>9.0.85</tomcat.version>
 		<jackson-bom.version>2.15.2</jackson-bom.version>
 	</properties>
 
