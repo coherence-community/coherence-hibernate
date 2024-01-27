@@ -81,12 +81,7 @@
        ]]></notes>
         <cve>CVE-2023-35116</cve>
     </suppress>
-    <suppress>
-        <notes><![CDATA[
-        file name: dom4j-2.1.1.jar
-        ]]></notes>
-        <cve>CVE-2023-45960</cve>
-    </suppress>
+
     <suppress>
         <notes><![CDATA[
         Waiting for updated Spring / Spring Boot releases.
