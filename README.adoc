@@ -1,7 +1,7 @@
-:main-release-version: 3.0.0
-:main-snapshot-version: 3.0.1-SNAPSHOT
-:2x-release-version: 2.3.3
-:2x-snapshot-version: 2.3.4-SNAPSHOT
+:main-release-version: 3.0.1
+:main-snapshot-version: 3.0.2-SNAPSHOT
+:2x-release-version: 2.3.4
+:2x-snapshot-version: 2.3.5-SNAPSHOT
 :hibernate-docs: https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html
 :website: https://hibernate.coherence.community/
 
@@ -74,10 +74,10 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |===
 |Coherence Hibernate       | Java | Coherence CE | Jakarta EE | Git Branch/Tag
 
-|*{main-release-version}*  | `17` | `23.03`      | ✅         | `main`
-|*{main-snapshot-version}* | `17` | `23.03`      | ✅         | `main`
-|*{2x-release-version}*    | `11` | `22.06`      |            | `2.3.3`
-|*{2x-snapshot-version}*   | `11` | `22.06`      |            | `2.3.x`
+|*{main-release-version}*  | `17` | `23.09.2`      | ✅         | `v{main-release-version}`
+|*{main-snapshot-version}* | `17` | `23.09.2`      | ✅         | `main`
+|*{2x-release-version}*    | `11` | `22.06.7`      |            | `v{2x-release-version}`
+|*{2x-snapshot-version}*   | `11` | `22.06.7`      |            | `2.3.x`
 |===
 
 == Supported Hibernate Versions
@@ -97,6 +97,7 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |`6.0`    |                           | ✅
 |`6.1`    |                           | ✅
 |`6.2`    |                           | ✅
+|`6.4`    |                           | ✅
 |===
 
 == Samples

@@ -17,6 +17,10 @@
 The following sections outline Oracle Coherence Hibernate Integration changes in
 reverse chronological order.
 
+=== Version 3.0.1 (January 27, 2024)
+
+https://github.com/coherence-community/coherence-hibernate/releases/tag/v3.0.1
+
 === Version 3.0.0 (July 4, 2023)
 
 https://github.com/coherence-community/coherence-hibernate/releases/tag/v3.0.0
