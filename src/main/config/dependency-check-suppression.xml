@@ -1,9 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-    <suppress>
-        <notes><![CDATA[
-        Waiting for updated Spring / Spring Boot releases.
-        ]]></notes>
-        <vulnerabilityName>CVE-2023-6378</vulnerabilityName>
-    </suppress>
 </suppressions>

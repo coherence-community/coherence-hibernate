@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+  Copyright (c) 2013, 2024, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -27,8 +27,8 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <coherence.hibernate.root>${basedir}/..</coherence.hibernate.root>
         <helidon.sitegen.version>2.2.3</helidon.sitegen.version>
-        <asciidoctor-diagram.version>2.2.1</asciidoctor-diagram.version>
-        <doxia.version>1.10</doxia.version>
+        <asciidoctor-diagram.version>2.2.14</asciidoctor-diagram.version>
+        <doxia.version>1.11.1</doxia.version>
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
     </properties>
     <distributionManagement>
