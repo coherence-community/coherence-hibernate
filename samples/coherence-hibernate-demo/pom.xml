@@ -25,7 +25,7 @@
 
 	<properties>
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
-		<spring-boot.version>3.1.8</spring-boot.version>
+		<spring-boot.version>3.2.2</spring-boot.version>
 	</properties>
 
 	<modules>
