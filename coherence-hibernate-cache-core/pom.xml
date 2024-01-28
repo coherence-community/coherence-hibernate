@@ -13,7 +13,7 @@
     <parent>
         <artifactId>coherence-hibernate-parent</artifactId>
         <groupId>com.oracle.coherence.hibernate</groupId>
-        <version>3.0.1</version>
+        <version>3.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>coherence-hibernate-cache-core</artifactId>
