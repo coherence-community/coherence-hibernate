@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CoherenceHibernateSystemPropertyResolver.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-6</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v6.configuration.support</a> &gt; <span class="el_source">CoherenceHibernateSystemPropertyResolver.java</span></div><h1>CoherenceHibernateSystemPropertyResolver.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2022, 2023, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v6.configuration.support;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * A helper class that makes Coherence-bound configuration properties available as System property.
+ * &lt;p&gt;
+ * This class needs to be eagerly instantiated by Coherence Hibernate before any Coherence class that might need properties.
+ *
+ * @author Gunnar Hillert
+ * @since 2.1
+ */
+public class CoherenceHibernateSystemPropertyResolver {
+
+<span class="nc" id="L25">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceHibernateSystemPropertyResolver.class);</span>
+
+    /**
+     * The Coherence properties to be used.
+     */
+<span class="nc" id="L30">    private Map&lt;String, Object&gt; coherenceProperties = new ConcurrentHashMap&lt;&gt;(0);</span>
+
+    /**
+     * This constructor is required so that Coherence can discover
+     * and instantiate this class using the Java ServiceLoader.
+     */
+<span class="nc" id="L36">    public CoherenceHibernateSystemPropertyResolver() {</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L38">            LOGGER.debug(&quot;Constructing CoherenceHibernateSystemPropertyResolver.&quot;);</span>
+        }
+<span class="nc" id="L40">    }</span>
+
+    /**
+     * This constructor will be called by Coherence Hibernate to instantiate the
+     * singleton bean and set the {@link #coherenceProperties}.
+     * @param coherenceProperties the Coherence properties. Must not be null.
+     */
+    public CoherenceHibernateSystemPropertyResolver(Map&lt;String, Object&gt; coherenceProperties) {
+<span class="nc" id="L48">        this();</span>
+<span class="nc" id="L49">        Assert.notNull(coherenceProperties, &quot;coherenceProperties must not be null.&quot;);</span>
+<span class="nc" id="L50">        this.coherenceProperties = coherenceProperties;</span>
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L53">            LOGGER.debug(&quot;Providing the following coherenceProperties: {}&quot;, coherenceProperties);</span>
+        }
+<span class="nc" id="L55">    }</span>
+
+    public String getProperty(String coherenceProperty) {
+<span class="nc" id="L58">        Assert.notNull(coherenceProperty, &quot;coherenceProperty must not be null.&quot;);</span>
+<span class="nc bnc" id="L59" title="All 4 branches missed.">        if (this.coherenceProperties != null &amp;&amp; !this.coherenceProperties.isEmpty()) {</span>
+<span class="nc" id="L60">            final Object propertyValue = this.coherenceProperties.get(coherenceProperty);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            if (propertyValue == null) {</span>
+<span class="nc" id="L62">                return null;</span>
+            }
+
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            if (propertyValue instanceof String) {</span>
+<span class="nc" id="L66">                return (String) propertyValue;</span>
+            }
+            else {
+<span class="nc" id="L69">                throw new IllegalStateException(</span>
+<span class="nc" id="L70">                        String.format(&quot;Coherence property '%s' must be an instance of String.&quot;, coherenceProperty));</span>
+            }
+        }
+        else {
+<span class="nc" id="L74">            return null;</span>
+        }
+    }
+    public void unset() {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        for (String propertyKey : this.coherenceProperties.keySet()) {</span>
+<span class="nc" id="L79">            System.clearProperty(propertyKey);</span>
+<span class="nc" id="L80">        }</span>
+<span class="nc" id="L81">    }</span>
+
+    public synchronized void addCoherenceProperty(String key, String value) {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L85">            LOGGER.debug(&quot;Adding Coherence Property - key: {}, value: {}.&quot;, key, value);</span>
+        }
+<span class="nc" id="L87">        this.coherenceProperties.put(key, value);</span>
+<span class="nc" id="L88">    }</span>
+
+    public void initialize() {
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        for (String propertyKey : this.coherenceProperties.keySet()) {</span>
+<span class="nc" id="L92">            System.setProperty(propertyKey, this.getProperty(propertyKey));</span>
+<span class="nc" id="L93">        }</span>
+<span class="nc" id="L94">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
