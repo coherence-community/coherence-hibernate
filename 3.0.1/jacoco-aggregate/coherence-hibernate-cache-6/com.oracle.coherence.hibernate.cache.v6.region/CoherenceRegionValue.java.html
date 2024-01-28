@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CoherenceRegionValue.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-6</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v6.region</a> &gt; <span class="el_source">CoherenceRegionValue.java</span></div><h1>CoherenceRegionValue.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v6.region;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * A CoherenceRegion.CoherenceRegionValue is an object representing a value in Hibernate's second-level cache.
+ * It holds the &quot;actual&quot; cache value, as well as a &quot;version&quot; object and a timestamp (i.e. a long)
+ * used by Hibernate.
+ *
+ * It further keeps track of its state with respect to soft-locked-ness, and the number of
+ * soft locks currently in effect on it.
+ *
+ * @author Randy Stafford
+ * @author Gunnar Hillert
+ */
+public class CoherenceRegionValue implements Serializable {
+
+    /**
+     * An identifier of this class's version for serialization purposes.
+     */
+    private static final long serialVersionUID = 3748411110362855303L;
+
+    /**
+     * A List of SoftLocks added to this cache value.
+     */
+<span class="nc" id="L36">    private List&lt;CoherenceRegionValue.SoftLock&gt; softLocks = new ArrayList&lt;CoherenceRegionValue.SoftLock&gt;();</span>
+
+    /**
+     * The time at which all soft locks in effect on this cache value will have expired.
+     */
+<span class="nc" id="L41">    private long timeOfSoftLockExpiration = 0L;</span>
+
+    /**
+     * The time at which the last soft lock in effect on this cache value was released.
+     */
+<span class="nc" id="L46">    private long timeOfSoftLockRelease = 0L;</span>
+
+    /**
+     * The &quot;timestamp&quot; of the actual cache value.
+     */
+    private long timestamp;
+
+    /**
+     * The &quot;actual&quot; value in the cache.
+     */
+    private Object value;
+
+    /**
+     * The &quot;version&quot; of the actual cache value.
+     */
+    private Object version;
+
+    /**
+     * Complete constructor.
+     * @param value the actual value in this cache value
+     * @param version the version of the actual value in this cache value
+     * @param timestamp the timestamp of the actual value in this cache value
+     */
+<span class="nc" id="L69">    public CoherenceRegionValue(Object value, Object version, long timestamp) {</span>
+<span class="nc" id="L70">        this.value = value;</span>
+<span class="nc" id="L71">        this.version = version;</span>
+<span class="nc" id="L72">        this.timestamp = timestamp;</span>
+<span class="nc" id="L73">    }</span>
+
+    /**
+     * Returns the &quot;actual&quot; value in this cache value.
+     * @return the Object that is the &quot;actual&quot; value in this cache value
+     */
+    public Object getValue()  {
+<span class="nc" id="L80">        return this.value;</span>
+    }
+
+
+    /**
+     * Returns the &quot;version&quot; of the &quot;actual&quot; value in this cache value.
+     * @return the Object that is the &quot;version&quot; of the &quot;actual&quot; value in this cache value
+     */
+    public Object getVersion() {
+<span class="nc" id="L89">        return this.version;</span>
+    }
+
+
+    /**
+     * Returns the &quot;timestamp&quot; of the &quot;actual&quot; value in this cache value.
+     * @return the long &quot;timestamp&quot; of the &quot;actual&quot; value in this cache value
+     */
+    public long getTimestamp() {
+<span class="nc" id="L98">        return this.timestamp;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object someObject) {
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (this == someObject) {</span>
+<span class="nc" id="L107">            return true;</span>
+        }
+<span class="nc bnc" id="L109" title="All 4 branches missed.">        if (someObject == null || getClass() != someObject.getClass()) {</span>
+<span class="nc" id="L110">            return false;</span>
+        }
+
+<span class="nc" id="L113">        final CoherenceRegionValue value1 = (CoherenceRegionValue) someObject;</span>
+
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (this.timestamp != value1.timestamp) {</span>
+<span class="nc" id="L116">            return false;</span>
+        }
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (!this.value.equals(value1.value)) {</span>
+<span class="nc" id="L119">            return false;</span>
+        }
+<span class="nc bnc" id="L121" title="All 6 branches missed.">        if ((this.version != null) ? !this.version.equals(value1.version) : value1.version != null) {</span>
+<span class="nc" id="L122">            return false;</span>
+        }
+<span class="nc" id="L124">        return true;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+<span class="nc" id="L132">        int result = (int) (this.timestamp ^ (this.timestamp &gt;&gt;&gt; 32));</span>
+<span class="nc" id="L133">        result = 31 * result + this.value.hashCode();</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        result = 31 * result + ((this.version != null) ? this.version.hashCode() : 0);</span>
+<span class="nc" id="L135">        return result;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L143">        final StringBuilder stringBuilder = new StringBuilder(getClass().getName());</span>
+<span class="nc" id="L144">        stringBuilder.append(&quot;(value=&quot;).append(this.value);</span>
+<span class="nc" id="L145">        stringBuilder.append(&quot;, version=&quot;).append(this.version);</span>
+<span class="nc" id="L146">        stringBuilder.append(&quot;, timestamp=&quot;).append(this.timestamp);</span>
+<span class="nc" id="L147">        stringBuilder.append(&quot;, timeOfSoftLockExpiration=&quot;).append(this.timeOfSoftLockExpiration);</span>
+<span class="nc" id="L148">        stringBuilder.append(&quot;, timeOfSoftLockRelease=&quot;).append(this.timeOfSoftLockRelease);</span>
+<span class="nc" id="L149">        stringBuilder.append(&quot;, softLocks=(&quot;);</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        for (CoherenceRegionValue.SoftLock softLock : this.softLocks) {</span>
+<span class="nc" id="L151">            stringBuilder.append(softLock).append(&quot;, &quot;);</span>
+<span class="nc" id="L152">        }</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (this.softLocks.size() &gt; 0) {</span>
+<span class="nc" id="L154">            stringBuilder.setLength(stringBuilder.length() - 2);</span>
+        }
+<span class="nc" id="L156">        stringBuilder.append(&quot;))&quot;);</span>
+<span class="nc" id="L157">        return stringBuilder.toString();</span>
+    }
+
+    /**
+     * Adds a SoftLock to this cache value.
+     * @param softLock the SoftLock to add
+     */
+    public void addSoftLock(CoherenceRegionValue.SoftLock softLock) {
+<span class="nc" id="L165">        this.softLocks.add(softLock);</span>
+        //it stands to reason that the most recently-added SoftLock will have the farthest expiration time
+<span class="nc" id="L167">        this.timeOfSoftLockExpiration = softLock.getExpirationTime();</span>
+<span class="nc" id="L168">    }</span>
+
+    /**
+     * Returns a boolean indicating whether this cache value is replaceable from database load.
+     * @param txTimestamp from Hibernate javadoc, &quot;a timestamp prior to the transaction start time&quot; [where &quot;the transaction&quot; loaded the potential replacement value from database]
+     * @param replacementVersion the version of the would-be replacement
+     * @param versionComparator a Comparator for comparing entity versions
+     * @return a boolean indicating whether this cache value is replaceable from database load
+     */
+    public boolean isReplaceableFromLoad(long txTimestamp, Object replacementVersion, Comparator&lt;Object&gt; versionComparator) {
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        return isSoftLocked() ?</span>
+<span class="nc" id="L179">                wereSoftLocksExpiredBefore(txTimestamp) :</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">                (this.version == null) ?</span>
+<span class="nc" id="L181">                        wereSoftLocksReleasedBefore(txTimestamp) :</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                        versionComparator.compare(this.version, replacementVersion) &lt; 0;</span>
+    }
+
+    /**
+     * Returns a boolean indicating whether this cache value is not currently soft-locked.
+     * @return a boolean indicating whether this cache value is not currently soft-locked
+     */
+    public boolean isNotSoftLocked() {
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        return !isSoftLocked();</span>
+    }
+
+    /**
+     * Returns a boolean indicating whether this cache value is currently soft-locked.
+     * @return a boolean indicating whether this cache value is currently soft-locked
+     */
+    public boolean isSoftLocked() {
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        return this.softLocks.size() &gt; 0;</span>
+    }
+
+    /**
+     * Attempts to release the argument SoftLock on this cache value.
+     * Has no effect if soft locks are not released in the same order in which they were acquired.
+     * @param softLock the SoftLock whose release to attempt
+     * @param timeOfRelease the time at which the SoftLock was released
+     */
+    public void releaseSoftLock(org.hibernate.cache.spi.access.SoftLock softLock, long timeOfRelease) {
+<span class="nc" id="L208">        this.softLocks.remove(softLock);</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (isNotSoftLocked()) {</span>
+<span class="nc" id="L210">            this.timeOfSoftLockRelease = timeOfRelease;</span>
+        }
+<span class="nc" id="L212">    }</span>
+
+
+    // ---- Internal
+
+    /**
+     * Returns a boolean indicating whether all soft locks on this cache value were expired before the argument time.
+     * @param someTime the time before which it is asked whether all soft locks were expired
+     * @return a boolean indicating whether all soft locks on this cache value were expired before the argument time
+     */
+    private boolean wereSoftLocksExpiredBefore(long someTime) {
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        return this.timeOfSoftLockExpiration &lt; someTime;</span>
+    }
+
+    /**
+     * Returns a boolean indicating whether all soft locks on this cache value were released before the argument time.
+     * @param someTime the time before which it is asked whether all soft locks were released
+     * @return a boolean indicating whether all soft locks on this cache value were released before the argument time
+     */
+    private boolean wereSoftLocksReleasedBefore(long someTime) {
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        return this.timeOfSoftLockRelease &lt; someTime;</span>
+    }
+
+    /**
+     * A CoherenceRegion.CoherenceRegionValue.SoftLock is an object representing a &quot;soft lock&quot; on an entry in second-level cache.
+     * @author Randy Stafford
+     */
+    public static class SoftLock implements Serializable, org.hibernate.cache.spi.access.SoftLock {
+
+        /**
+         * An identifier of this class's version for serialization purposes.
+         */
+        private static final long serialVersionUID = -1171771458206273933L;
+
+        /**
+         * A unique identifier for the component that acquired this SoftLock.  A SoftLock may only be released
+         * by the component that acquired it.  In practice this component appears to be a RegionAccessStrategy,
+         * which appears to have the same lifecycle as a Hibernate SessionFactory.
+         */
+        private UUID acquirerId;
+
+        /**
+         * The time at which this SoftLock expires.
+         */
+        private long expirationTime;
+
+        /**
+         * The sequence number of this SoftLock with respect to its acquirer.  The same acquirer may acquire
+         * multiple SoftLocks over time or &quot;concurrently&quot;, even on the same cache key, so a sequence number *and*
+         * acquirer ID are needed to equate two SoftLocks.
+         */
+        private long sequenceNumber;
+
+        /**
+         * Complete constructor.
+         *
+         * @param acquirerId a unique identifier of the component that acquired this SoftLock
+         * @param sequenceNumber the sequenceNumber of this SoftLock with respect to its acquirer
+         * @param expirationTime the time at which this SoftLock expires
+         */
+<span class="nc" id="L272">        public SoftLock(UUID acquirerId, long sequenceNumber, long expirationTime) {</span>
+<span class="nc" id="L273">            this.acquirerId = acquirerId;</span>
+<span class="nc" id="L274">            this.expirationTime = expirationTime;</span>
+<span class="nc" id="L275">            this.sequenceNumber = sequenceNumber;</span>
+<span class="nc" id="L276">        }</span>
+
+        /**
+         * Returns this SoftLock's expiration time.
+         * @return the long that is this SoftLock's expiration time
+         */
+        public long getExpirationTime() {
+<span class="nc" id="L283">            return this.expirationTime;</span>
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean equals(Object someObject) {
+<span class="nc bnc" id="L291" title="All 2 branches missed.">            if (this == someObject) {</span>
+<span class="nc" id="L292">                return true;</span>
+            }
+<span class="nc bnc" id="L294" title="All 4 branches missed.">            if (someObject == null || getClass() != someObject.getClass()) {</span>
+<span class="nc" id="L295">                return false;</span>
+            }
+
+<span class="nc" id="L298">            final CoherenceRegionValue.SoftLock softLock = (CoherenceRegionValue.SoftLock) someObject;</span>
+
+<span class="nc bnc" id="L300" title="All 2 branches missed.">            if (this.sequenceNumber != softLock.sequenceNumber) {</span>
+<span class="nc" id="L301">                return false;</span>
+            }
+<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (!this.acquirerId.equals(softLock.acquirerId)) {</span>
+<span class="nc" id="L304">                return false;</span>
+            }
+
+<span class="nc" id="L307">            return true;</span>
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int hashCode() {
+<span class="nc" id="L315">            int result = this.acquirerId.hashCode();</span>
+<span class="nc" id="L316">            result = 31 * result + (int) (this.sequenceNumber ^ (this.sequenceNumber &gt;&gt;&gt; 32));</span>
+<span class="nc" id="L317">            return result;</span>
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+<span class="nc" id="L325">            final StringBuilder stringBuilder = new StringBuilder(getClass().getName());</span>
+<span class="nc" id="L326">            stringBuilder.append(&quot;(acquirerId=&quot;).append(this.acquirerId);</span>
+<span class="nc" id="L327">            stringBuilder.append(&quot;, sequenceNumber=&quot;).append(this.sequenceNumber);</span>
+<span class="nc" id="L328">            stringBuilder.append(&quot;, expirationTime=&quot;).append(this.expirationTime);</span>
+<span class="nc" id="L329">            return stringBuilder.toString();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
