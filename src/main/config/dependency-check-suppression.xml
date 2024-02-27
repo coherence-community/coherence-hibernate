@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2022, 2023, Oracle and/or its affiliates.
+  Copyright (c) 2022, 2024, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -88,7 +88,12 @@
         ]]></notes>
         <vulnerabilityName>CVE-2023-6378</vulnerabilityName>
     </suppress>
-
+    <suppress>
+        <notes><![CDATA[
+        Spring / Spring Boot (Sample).
+        ]]></notes>
+        <vulnerabilityName>CVE-2024-22243</vulnerabilityName>
+    </suppress>
     <suppress>
         <notes><![CDATA[
         logback-core-1.2.12.jar, should be addressed with next Spring Boot release (Dec 21, 2023)
