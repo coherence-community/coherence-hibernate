@@ -32,6 +32,7 @@ import org.hibernate.cache.spi.DomainDataRegion;
 import org.hibernate.cache.spi.access.AccessType;
 import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.cache.spi.support.RegionFactoryTemplate;
+import org.hibernate.cache.spi.support.RegionNameQualifier;
 import org.hibernate.cache.spi.support.StorageAccess;
 import org.hibernate.cfg.Environment;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -272,7 +273,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
      * @return a NamedCache for the argument name
      */
     protected NamedCache<?, ?> ensureNamedCache(String cacheName) {
-        return this.coherenceSession.getCache(cacheName);
+        return this.coherenceSession.getCache(RegionNameQualifier.INSTANCE.qualify(cacheName, getOptions()));
     }
 
     @Override

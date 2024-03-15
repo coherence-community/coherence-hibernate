@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2024, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -48,13 +48,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CoherenceHibernateDemoApplicationTests {
 
-    private static final String EVENT_ENTITY_CACHE_NAME = "com.oracle.coherence.hibernate.demo.model.Event";
-    private static final String PERSON_ENTITY_CACHE_NAME = "com.oracle.coherence.hibernate.demo.model.Person";
+    private static final String CACHE_PREFIX = "foobar.";
+    private static final String EVENT_ENTITY_CACHE_NAME = CACHE_PREFIX + "com.oracle.coherence.hibernate.demo.model.Event";
+    private static final String PERSON_ENTITY_CACHE_NAME = CACHE_PREFIX + "com.oracle.coherence.hibernate.demo.model.Person";
 
-    private static final String EVENT_PARTICIPANTS_COLLECTION_CACHE_NAME = "com.oracle.coherence.hibernate.demo.model.Event.participants";
-    private static final String PERSON_EVENTS_COLLECTION_CACHE_NAME = "com.oracle.coherence.hibernate.demo.model.Person.events";
+    private static final String EVENT_PARTICIPANTS_COLLECTION_CACHE_NAME = CACHE_PREFIX + "com.oracle.coherence.hibernate.demo.model.Event.participants";
+    private static final String PERSON_EVENTS_COLLECTION_CACHE_NAME = CACHE_PREFIX + "com.oracle.coherence.hibernate.demo.model.Person.events";
 
-    private static final String DEFAULT_QUERY_RESULTS_REGION = "default-query-results-region";
+    private static final String DEFAULT_QUERY_RESULTS_REGION = CACHE_PREFIX + "default-query-results-region";
 
     @Autowired
     private MockMvc mvc;
@@ -135,6 +136,9 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(cacheValue).isInstanceOf(CoherenceRegionValue.class);
         assertThat(((CoherenceRegionValue) cacheValue).getValue()).isInstanceOf(StandardCacheEntryImpl.class);
 
+        final NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache(CACHE_PREFIX + "com.oracle.coherence.hibernate.demo.model.Event");
+        assertThat(namedCache).hasSize(1);
+
         assertThat(this.testStats.getCoherenceEventCacheSize()).isEqualTo(1);
         assertThat(this.testStats.getCoherencePersonCacheSize()).isZero();
         assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
@@ -180,6 +184,9 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isZero();
         assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isZero();
         assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        final NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache(CACHE_PREFIX + "com.oracle.coherence.hibernate.demo.model.Event");
+        assertThat(namedCache).hasSize(1);
 
         assertThat(this.testStats.getCacheHitCount()).isEqualTo(1);
         assertThat(this.testStats.getCacheMissCount()).isZero();
@@ -378,6 +385,9 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(this.testStats.getCoherenceDefaultQueryResultsRegionCacheSize()).isEqualTo(1);
         assertThat(this.testStats.getCoherenceEventParticipantsCollectionCacheSize()).isEqualTo(1);
         assertThat(this.testStats.getCoherencePersonEventsCollectionCacheSize()).isZero();
+
+        final NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache(CACHE_PREFIX + "com.oracle.coherence.hibernate.demo.model.Event");
+        assertThat(namedCache).hasSize(1);
 
         assertThat(this.testStats.getCacheHitCount()).isEqualTo(2);
         assertThat(this.testStats.getCacheMissCount()).isEqualTo(1);
