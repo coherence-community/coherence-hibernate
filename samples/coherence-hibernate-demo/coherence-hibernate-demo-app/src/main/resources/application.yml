@@ -15,6 +15,7 @@ spring:
       hibernate.cache.use_second_level_cache: true
       hibernate.cache.region.factory_class: com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory
       hibernate.cache.use_query_cache: true
+      hibernate.cache.region_prefix: foobar
       com.oracle.coherence.hibernate.cache.cache_config_file_path: hibernate-second-level-cache-config.xml
 management:
   endpoints:
