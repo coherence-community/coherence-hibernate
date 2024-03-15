@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2024, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -117,7 +117,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
      * Returns the Coherence {@link Session} used by this {@link CoherenceRegionFactory}.
      * @return the Coherence {@link Session}
      */
-    protected Session getCoherenceSession() {
+    public Session getCoherenceSession() {
         return this.coherenceSession;
     }
 
