@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2024, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -81,7 +81,7 @@ class CoherenceHibernateDemoApplicationTests {
         System.out.println(this.eventId);
         assertThat(this.eventId).containsOnlyDigits();
 
-        NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache("com.oracle.coherence.hibernate.demo.model.Event");
+        NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache("foobar.com.oracle.coherence.hibernate.demo.model.Event");
         assertThat(namedCache).hasSize(1);
 
         CoherenceRegionValue cacheValue = namedCache.values().iterator().next();
@@ -108,7 +108,7 @@ class CoherenceHibernateDemoApplicationTests {
         assertThat(event.getDate()).isEqualTo(LocalDate.of(2020, 11, 30));
         assertThat(event.getTitle()).isEqualTo("My Event");
 
-        NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache("com.oracle.coherence.hibernate.demo.model.Event");
+        NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache("foobar.com.oracle.coherence.hibernate.demo.model.Event");
         assertThat(namedCache).hasSize(1);
 
         Statistics statistics = em.unwrap(Session.class).getSessionFactory().getStatistics();
@@ -135,7 +135,7 @@ class CoherenceHibernateDemoApplicationTests {
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
 
-        NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache("com.oracle.coherence.hibernate.demo.model.Event");
+        NamedCache<Object, CoherenceRegionValue> namedCache = CacheFactory.getCache("foobar.com.oracle.coherence.hibernate.demo.model.Event");
         assertThat(namedCache).hasSize(1);
 
         Statistics statistics = em.unwrap(Session.class).getSessionFactory().getStatistics();
