@@ -1,0 +1,7 @@
+com.oracle.coherence.hibernate.cache.v53
+com.oracle.coherence.hibernate.cache.v53.access
+com.oracle.coherence.hibernate.cache.v53.access.processor
+com.oracle.coherence.hibernate.cache.v53.configuration.session
+com.oracle.coherence.hibernate.cache.v53.configuration.support
+com.oracle.coherence.hibernate.cache.v53.region
+com.oracle.coherence.hibernate.cachestore
