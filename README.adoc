@@ -1,7 +1,7 @@
-:main-release-version: 3.0.1
-:main-snapshot-version: 3.0.2-SNAPSHOT
-:2x-release-version: 2.3.4
-:2x-snapshot-version: 2.3.5-SNAPSHOT
+:main-release-version: 3.0.2
+:main-snapshot-version: 3.0.3-SNAPSHOT
+:2x-release-version: 2.3.5
+:2x-snapshot-version: 2.3.6-SNAPSHOT
 :hibernate-docs: https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html
 :website: https://hibernate.coherence.community/
 
