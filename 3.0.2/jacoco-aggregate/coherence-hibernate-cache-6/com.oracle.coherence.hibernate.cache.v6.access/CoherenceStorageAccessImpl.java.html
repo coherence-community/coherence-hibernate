@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CoherenceStorageAccessImpl.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-6</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v6.access</a> &gt; <span class="el_source">CoherenceStorageAccessImpl.java</span></div><h1>CoherenceStorageAccessImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v6.access;
+
+import com.oracle.coherence.hibernate.cache.v6.region.CoherenceRegion;
+import org.hibernate.cache.spi.access.SoftLock;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+
+/**
+ * Implementation of {@link CoherenceStorageAccess}. Will delegation operations to {@link CoherenceRegion}.
+ *
+ * @author Gunnar Hillert
+ *
+ */
+public class CoherenceStorageAccessImpl implements CoherenceStorageAccess {
+
+    private final CoherenceRegion delegate;
+
+    public CoherenceStorageAccessImpl(CoherenceRegion delegate) {
+<span class="nc" id="L24">        super();</span>
+<span class="nc" id="L25">        this.delegate = delegate;</span>
+<span class="nc" id="L26">    }</span>
+
+    @Override
+    public Object getFromCache(Object key, SharedSessionContractImplementor session) {
+<span class="nc" id="L30">        return this.delegate.getValue(key);</span>
+    }
+
+    @Override
+    public void putIntoCache(Object key, Object value, SharedSessionContractImplementor session) {
+<span class="nc" id="L35">        this.delegate.putValue(key, value);</span>
+<span class="nc" id="L36">    }</span>
+
+    @Override
+    public boolean contains(Object key) {
+<span class="nc" id="L40">        return this.delegate.contains(key);</span>
+    }
+
+    @Override
+    public void evictData() {
+<span class="nc" id="L45">        this.delegate.evictAll();</span>
+<span class="nc" id="L46">    }</span>
+
+    @Override
+    public void evictData(Object key) {
+<span class="nc" id="L50">        this.delegate.evict(key);</span>
+
+<span class="nc" id="L52">    }</span>
+
+    @Override
+    public void release() {
+<span class="nc" id="L56">        this.delegate.destroy();</span>
+
+<span class="nc" id="L58">    }</span>
+
+    @Override
+    public void afterUpdate(Object key, Object newValue, Object newVersion) {
+        //this.delegate. //TODO
+<span class="nc" id="L63">    }</span>
+
+    @Override
+    public void unlockItem(Object key, SoftLock lock) {
+        // TODO Auto-generated method stub
+<span class="nc" id="L68">    }</span>
+
+    public CoherenceRegion getDelegate() {
+<span class="nc" id="L71">        return this.delegate;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

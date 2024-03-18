@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>CoherenceRegion.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-6</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v6.region</a> &gt; <span class="el_source">CoherenceRegion.java</span></div><h1>CoherenceRegion.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v6.region;
+
+import java.util.Map;
+
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.Assert;
+import com.oracle.coherence.hibernate.cache.v6.configuration.support.CoherenceHibernateProperties;
+import com.tangosol.net.NamedCache;
+import com.tangosol.util.Base;
+import com.tangosol.util.InvocableMap;
+import com.tangosol.util.InvocableMapHelper;
+import com.tangosol.util.extractor.IdentityExtractor;
+import com.tangosol.util.filter.AlwaysFilter;
+import com.tangosol.util.processor.ConditionalPut;
+import com.tangosol.util.processor.ConditionalRemove;
+import com.tangosol.util.processor.ExtractorProcessor;
+import org.hibernate.cache.CacheException;
+import org.hibernate.cache.spi.ExtendedStatisticsSupport;
+import org.hibernate.cache.spi.Region;
+import org.hibernate.cache.spi.RegionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * CoherenceRegion is an abstract superclass for classes representing different kinds of &quot;region&quot; in the Hibernate
+ * second-level cache.  It abstracts behavior (and state) common to all types of Hibernate second-level cache region.
+ *
+ * Note that there is a concept (and therefore terminology) mapping between the Hibernate world and the Coherence world.
+ * Hibernate uses &quot;cache&quot; to mean the whole, and &quot;region&quot; to mean a part of the whole.  Coherence uses &quot;data grid&quot; to
+ * mean the whole, and &quot;NamedCache&quot; to mean a part of the whole.  So a &quot;region&quot; to Hibernate is a NamedCache to
+ * Coherence.  Therefore, CoherenceRegion is basically an Adapter, adapting the Region SPI to the NamedCache API by
+ * encapsulating and delegating to a NamedCache.
+ *
+ * @author Randy Stafford
+ * @author Gunnar Hillert
+ */
+public class CoherenceRegion implements Region, ExtendedStatisticsSupport {
+
+<span class="nc" id="L44">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceRegion.class);</span>
+
+    /**
+     * The prefix of the names of all properties specific to this SPI implementation.
+     */
+    private static final String PROPERTY_NAME_PREFIX = CoherenceHibernateProperties.PROPERTY_NAME_PREFIX;
+
+    /**
+     * The name of the  property specifying the lock lease duration.
+     */
+    public static final String LOCK_LEASE_DURATION_PROPERTY_NAME = PROPERTY_NAME_PREFIX + &quot;lock_lease_duration&quot;;
+
+    /**
+     * The default lock lease duration in milliseconds.
+     */
+    public static final int DEFAULT_LOCK_LEASE_DURATION = 60 * 1000;
+
+    /**
+     * The lock lease timeout in milliseconds.
+     */
+    private final int lockLeaseDuration;
+
+    /**
+     * The NamedCache implementing this CoherenceRegion.
+     */
+    private NamedCache namedCache;
+
+    private final RegionFactory regionFactory;
+
+    /**
+     * Complete constructor.
+     * @param regionFactory the region factory
+     * @param namedCache the Coherence NamedCache
+     * @param properties the properties
+     */
+<span class="nc" id="L79">    public CoherenceRegion(RegionFactory regionFactory, NamedCache namedCache, Map&lt;String, Object&gt; properties) {</span>
+<span class="nc" id="L80">        Assert.notNull(regionFactory, &quot;regionFactory must not be null.&quot;);</span>
+<span class="nc" id="L81">        Assert.notNull(namedCache, &quot;namedCache must not be null.&quot;);</span>
+
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L84">            LOGGER.debug(&quot;Constructing CoherenceRegion for NamedCache '{}'.&quot;, namedCache.getCacheName());</span>
+        }
+<span class="nc" id="L86">        this.lockLeaseDuration = (int) getDurationProperty(</span>
+                properties,
+                LOCK_LEASE_DURATION_PROPERTY_NAME,
+                DEFAULT_LOCK_LEASE_DURATION,
+                Integer.MAX_VALUE);
+<span class="nc" id="L91">        this.namedCache = namedCache;</span>
+<span class="nc" id="L92">        this.regionFactory = regionFactory;</span>
+<span class="nc" id="L93">    }</span>
+
+    /**
+     * Returns the NamedCache implementing this CoherenceRegion.
+     * @return the NamedCache implementing this CoherenceRegion
+     */
+    protected NamedCache getNamedCache() {
+<span class="nc" id="L100">        return this.namedCache;</span>
+    }
+
+    @Override
+    public RegionFactory getRegionFactory() {
+<span class="nc" id="L105">        return this.regionFactory;</span>
+    }
+
+    /**
+     * {@inheritDoc}}
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L113">        final StringBuilder stringBuilder = new StringBuilder(getClass().getName());</span>
+<span class="nc" id="L114">        stringBuilder.append(&quot;(&quot;);</span>
+<span class="nc" id="L115">        stringBuilder.append(this.namedCache.getCacheName());</span>
+<span class="nc" id="L116">        stringBuilder.append(&quot;)&quot;);</span>
+<span class="nc" id="L117">        return stringBuilder.toString();</span>
+    }
+
+    /**
+     * Computes and returns the expiration time for a new soft lock.
+     * @return a long representing the expiration time for a new soft lock
+     */
+    public long newSoftLockExpirationTime() {
+<span class="nc" id="L125">        return nextTimestamp() + getTimeout();</span>
+    }
+
+    /**
+     * Returns the object at the argument key in this CoherenceRegion.
+     * @param key the key of the sought object
+     * @return the CoherenceRegionValue at the argument key in this CoherenceRegion
+     */
+    public Object getValue(Object key) {
+        //don't use an EntryProcessor here, because that precludes near cache hits.
+        //access strategies with more strict concurrency control requirements call invoke() not getValue().
+<span class="nc" id="L136">        final Object value = getNamedCache().get(key);</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        return (value != null) ? value : null;</span>
+    }
+
+    /**
+     * Put the argument value into this CoherenceRegion at the argument key.
+     * @param key the key at which to put the value
+     * @param value the value to put
+     */
+    public void putValue(Object key, Object value) {
+<span class="nc" id="L146">        getNamedCache().invoke(key, new ConditionalPut(AlwaysFilter.INSTANCE, value));</span>
+<span class="nc" id="L147">    }</span>
+
+    /**
+     * Evicts from this CoherenceRegion the entry at the argument key.
+     * @param key the key of the entry to remove
+     */
+    public void evict(Object key) {
+<span class="nc" id="L154">        getNamedCache().invoke(key, new ConditionalRemove(AlwaysFilter.INSTANCE));</span>
+<span class="nc" id="L155">    }</span>
+
+    /**
+     * Evicts all entries from this CoherenceRegion.
+     */
+    public void evictAll() {
+<span class="nc" id="L161">        getNamedCache().clear();</span>
+<span class="nc" id="L162">    }</span>
+
+    /**
+     * Locks the entire cache.
+     */
+    public void lockCache() {
+        // will only work as imagined with caches of replicated topology
+<span class="nc" id="L169">        InvocableMapHelper.lockAll(getNamedCache(), getNamedCache().keySet(), 0);</span>
+<span class="nc" id="L170">    }</span>
+
+    /**
+     * Unlocks the entire cache.
+     */
+    public void unlockCache() {
+        // will only work as imagined with caches of replicated topology
+<span class="nc" id="L177">        InvocableMapHelper.unlockAll(getNamedCache(), getNamedCache().keySet());</span>
+<span class="nc" id="L178">    }</span>
+
+    /**
+     * Invoke the argument EntryProcessor on the argument key and return the result of the invocation.
+     * @param key the key on which to invoke the EntryProcessor
+     * @param entryProcessor the EntryProcessor to invoke.
+     * @return the Object resulting from the EntryProcessor invocation
+     */
+    public Object invoke(Object key, InvocableMap.EntryProcessor entryProcessor) {
+<span class="nc" id="L187">        return getNamedCache().invoke(key, entryProcessor);</span>
+    }
+
+
+    // ---- interface org.hibernate.spi.cache.Region
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName() {
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L199">            LOGGER.debug(&quot;getName()&quot;);</span>
+        }
+<span class="nc" id="L201">        return getNamedCache().getCacheName();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void destroy() throws CacheException {
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (!getNamedCache().isReleased()) {</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L211">                LOGGER.debug(&quot;destroy()&quot;);</span>
+            }
+<span class="nc" id="L213">            getNamedCache().release();</span>
+        }
+<span class="nc" id="L215">    }</span>
+
+    public boolean contains(Object key) {
+<span class="nc bnc" id="L218" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L219">            LOGGER.debug(&quot;contains({})&quot;, key);</span>
+        }
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        return getNamedCache().invoke(key, new ExtractorProcessor(IdentityExtractor.INSTANCE)) != null;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getSizeInMemory() {
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L230">            LOGGER.debug(&quot;getSizeInMemory()&quot;);</span>
+        }
+<span class="nc" id="L232">        return -1;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getElementCountInMemory() {
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L241">            LOGGER.debug(&quot;getElementCountInMemory()&quot;);</span>
+        }
+<span class="nc" id="L243">        return getNamedCache().size();</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public long getElementCountOnDisk() {
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L252">            LOGGER.debug(&quot;getElementCountOnDisk()&quot;);</span>
+        }
+<span class="nc" id="L254">        return -1;</span>
+    }
+
+    /**
+     * This method is undocumented in Hibernate javadoc, but seems intended to return the &quot;current&quot; time.
+     * @return a millisecond clock value
+     */
+    //@Override
+    public long nextTimestamp() {
+<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L264">            LOGGER.debug(&quot;nextTimestamp()&quot;);</span>
+        }
+<span class="nc" id="L266">        return getRegionFactory().nextTimestamp();</span>
+    }
+
+    /**
+     * This method is undocumented in Hibernate javadoc.  Comments in the Coherence-based implementation of the
+     * Hibernate 2.1 second-level cache SPI suggest the returned value is used as a lock lease duration.
+     * @return an int lock lease duration
+     */
+    public int getTimeout() {
+<span class="nc bnc" id="L275" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L276">            LOGGER.debug(&quot;getTimeout()&quot;);</span>
+        }
+        // Note that this must be the same time units as getTimestamp
+<span class="nc" id="L279">        return this.lockLeaseDuration;</span>
+    }
+
+
+    // ---- Internal
+
+    /**
+     * Get a duration value in milliseconds from the argument properties or defaults, capped at a maximum value.
+     * @param properties the property set containing the property
+     * @param propertyName the name of the property
+     * @param defaultValue the default value (in milliseconds)
+     * @param maxValue the maximum value (saturating, in milliseconds)
+     * @return a long duration value in milliseconds
+     */
+    protected long getDurationProperty(Map&lt;String, Object&gt; properties, String propertyName, long defaultValue, long maxValue) {
+<span class="nc bnc" id="L294" title="All 2 branches missed.">        Base.azzert(maxValue &gt;= defaultValue);</span>
+<span class="nc bnc" id="L295" title="All 2 branches missed.">        Base.azzert(defaultValue &gt;= 0);</span>
+
+<span class="nc" id="L297">        final String propertyValue = (String) properties.get(propertyName);</span>
+        long duration;
+        try {
+<span class="nc" id="L300">            duration = Base.parseTime(propertyValue);</span>
+        }
+<span class="nc" id="L302">        catch (Exception ex) {</span>
+<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (LOGGER.isErrorEnabled()) {</span>
+<span class="nc" id="L304">                LOGGER.error(&quot;Error parsing duration property {}; provided value was &quot; +</span>
+<span class="nc" id="L305">                        &quot;{}; using default of {} milliseconds.&quot;, propertyName, propertyValue, defaultValue);</span>
+            }
+<span class="nc" id="L307">            duration = defaultValue;</span>
+<span class="nc" id="L308">        }</span>
+
+<span class="nc bnc" id="L310" title="All 2 branches missed.">        if (duration &gt; maxValue) {</span>
+<span class="nc bnc" id="L311" title="All 2 branches missed.">            if (LOGGER.isDebugEnabled()) {</span>
+<span class="nc" id="L312">                LOGGER.debug(&quot;Capping {} at {} milliseconds.&quot;, propertyName, maxValue);</span>
+            }
+<span class="nc" id="L314">            duration = maxValue;</span>
+        }
+
+<span class="nc" id="L317">        return duration;</span>
+    }
+
+    @Override
+    public void clear() {
+<span class="nc" id="L322">        this.namedCache.clear();</span>
+<span class="nc" id="L323">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
