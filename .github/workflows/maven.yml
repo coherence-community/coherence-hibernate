@@ -39,6 +39,7 @@ jobs:
         MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         SONAR_TOKEN: "${{secrets.SONAR_TOKEN}}"
+        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
     - name: Build - Hibernate 6.x
       if: "github.event_name == 'pull_request'"
       run: mvn clean install -B -Powasp -Phibernate6
@@ -60,6 +61,7 @@ jobs:
         MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         MAVEN_SONATYPE_USERNAME: "${{secrets.MAVEN_SONATYPE_USERNAME}}"
         MAVEN_SONATYPE_TOKEN: "${{secrets.MAVEN_SONATYPE_TOKEN}}"
+        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
     - name: Clean Maven cache
       run: |
         find ~/.m2/repository -type d -name '*SNAPSHOT' | xargs rm -fr
