@@ -395,6 +395,8 @@
                             <skipRuntimeScope>true</skipRuntimeScope>
                             <skipTestScope>true</skipTestScope>
                             <cveValidForHours>24</cveValidForHours>
+                            <nvdValidForHours>96</nvdValidForHours>
+                            <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
                             <suppressionFiles>
                                 <suppressionFile>${basedir}/src/main/config/dependency-check-suppression.xml</suppressionFile>
                             </suppressionFiles>
