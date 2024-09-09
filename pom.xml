@@ -112,7 +112,7 @@
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.25.2</assertj.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
-        <coherence.version>23.09.2</coherence.version>
+        <coherence.version>24.03.1</coherence.version>
         <hibernate6.version>6.4.2.Final</hibernate6.version>
         <hibernate53.version>5.6.15.Final</hibernate53.version>
         <hsqldb.version>2.7.2</hsqldb.version>
