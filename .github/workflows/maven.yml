@@ -30,11 +30,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-m2-
     - name: Build - Hibernate 5.3.x
-      run: mvn clean install -B -Powasp -Phibernate53
+      run: mvn clean install -B -Phibernate53
     - name: Build - Hibernate 5.4.x
-      run: mvn clean install -B -Powasp -Phibernate54
+      run: mvn clean install -B -Phibernate54
     - name: Build - Hibernate 5.5.x
-      run: mvn clean install -B -Powasp -Phibernate55
+      run: mvn clean install -B -Phibernate55
     - name: Build with Coherence ${{ matrix.coherence-version }}
       if: "matrix.coherence-version == '14_1_1'"
       run: |
