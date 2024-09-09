@@ -94,4 +94,10 @@
         ]]></notes>
         <vulnerabilityName>CVE-2023-6481</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+        xmlunit-core, used by sample via Spring Boot
+        ]]></notes>
+        <vulnerabilityName>CVE-2024-31573</vulnerabilityName>
+    </suppress>
 </suppressions>
