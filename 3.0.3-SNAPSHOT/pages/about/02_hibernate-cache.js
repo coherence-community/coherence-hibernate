@@ -114,7 +114,7 @@ lang="xml"
 &lt;dependency&gt;
     &lt;groupId&gt;com.oracle.coherence.ce&lt;/groupId&gt;
     &lt;artifactId&gt;coherence&lt;/artifactId&gt;
-    &lt;version&gt;24.03.1&lt;/version&gt;
+    &lt;version&gt;24.09&lt;/version&gt;
 &lt;/dependency&gt;</markup>
 
 <div class="admonition tip">
