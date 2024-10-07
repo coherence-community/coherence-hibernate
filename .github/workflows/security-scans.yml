@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.2.0
+        uses: actions/checkout@v4.2.1
       - name: Run static analysis
         uses: aquasecurity/trivy-action@0.24.0
         with:
