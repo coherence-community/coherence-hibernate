@@ -12,7 +12,7 @@
     <parent>
         <artifactId>coherence-hibernate-parent</artifactId>
         <groupId>com.oracle.coherence.hibernate</groupId>
-        <version>3.0.3</version>
+        <version>3.0.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>coherence-hibernate-site</artifactId>
@@ -42,22 +42,22 @@
         <dependency>
             <artifactId>coherence-hibernate-cache-core</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.3</version>
+            <version>3.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>coherence-hibernate-cache-53</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.3</version>
+            <version>3.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>coherence-hibernate-cache-6</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.3</version>
+            <version>3.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>coherence-hibernate-cache-store</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.3</version>
+            <version>3.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>

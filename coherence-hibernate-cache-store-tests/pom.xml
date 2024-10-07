@@ -19,7 +19,7 @@
     <parent>
         <artifactId>coherence-hibernate-parent</artifactId>
         <groupId>com.oracle.coherence.hibernate</groupId>
-        <version>3.0.3</version>
+        <version>3.0.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>coherence-hibernate-cache-store-tests</artifactId>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>com.oracle.coherence.hibernate</groupId>
             <artifactId>coherence-hibernate-cache-store</artifactId>
-            <version>3.0.3</version>
+            <version>3.0.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
