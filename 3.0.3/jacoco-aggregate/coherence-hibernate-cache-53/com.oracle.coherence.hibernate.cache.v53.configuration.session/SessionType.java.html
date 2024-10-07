@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>SessionType.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Coherence Hibernate Website</a> &gt; <a href="../index.html" class="el_bundle">coherence-hibernate-cache-53</a> &gt; <a href="index.source.html" class="el_package">com.oracle.coherence.hibernate.cache.v53.configuration.session</a> &gt; <span class="el_source">SessionType.java</span></div><h1>SessionType.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2022, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v53.configuration.session;
+
+/**
+ * An enum representing the different types of Coherence instances we are dealing with. Depending on whether we configure
+ * the Coherence Hibernate application to be a Cluster member itself ({@link SessionType#SERVER}) or if we connect to
+ * the cluster via Coherence*Extend ({@link SessionType#CLIENT}), we need to set the correct {@link SessionType}.
+ *
+ * @author Gunnar Hillert
+ * @since 2.1
+ */
+<span class="nc" id="L17">public enum SessionType {</span>
+
+	/**
+	 * The session is a client session, that is it expects to be a Coherence*Extend client.
+	 */
+<span class="nc" id="L22">	CLIENT,</span>
+
+	/**
+	 * The session is a server session, that is it expects to be a Coherence cluster member. This is the default type if
+	 * none is specified for a configuration.
+	 */
+<span class="nc" id="L28">	SERVER</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
