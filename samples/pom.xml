@@ -28,6 +28,7 @@
 
 	<modules>
 		<module>coherence-hibernate-demo</module>
+		<module>coherence-hibernate-cache-store-demo</module>
 	</modules>
 
 	<build>
