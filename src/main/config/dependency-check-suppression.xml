@@ -106,4 +106,10 @@
         ]]></notes>
         <vulnerabilityName>CVE-2024-38816</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+        spring-web-5.3.39.jar
+        ]]></notes>
+        <vulnerabilityName>CVE-2024-38828</vulnerabilityName>
+    </suppress>
 </suppressions>
