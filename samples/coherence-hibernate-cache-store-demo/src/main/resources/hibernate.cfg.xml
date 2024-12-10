@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hibernate-configuration xmlns="http://www.hibernate.org/xsd/orm/cfg"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xsi:schemaLocation="http://www.hibernate.org/xsd/orm/cfg
+                                             http://www.hibernate.org/xsd/orm/cfg/hibernate-configuration-4.0.xsd">
+    <session-factory>
+
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.url">jdbc:hsqldb:hsql://localhost:9001/maindb</property>
+        <property name="hibernate.connection.username">sa</property>
+        <property name="hibernate.connection.password"></property>
+
+        <!-- Echo all executed SQL to console -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.highlight_sql">true</property>
+
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="hibernate.current_session_context_class">thread</property>
+
+        <!-- Disable second-level cache -->
+        <property name="hibernate.cache.use_second_level_cache">false</property>
+        <property name="hibernate.cache.use_query_cache">false</property>
+
+        <!-- Automatically create/drop tables based on entities -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Entity class mappings -->
+        <mapping class="com.oracle.coherence.hibernate.demo.cachestore.Book"/>
+
+    </session-factory>
+</hibernate-configuration>
