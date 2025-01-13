@@ -116,7 +116,7 @@
         <coherence.version>24.09</coherence.version>
         <hibernate6.version>6.6.4.Final</hibernate6.version>
         <hibernate53.version>5.6.15.Final</hibernate53.version>
-        <hsqldb.version>2.7.3</hsqldb.version>
+        <hsqldb.version>2.7.4</hsqldb.version>
         <junit.version>4.13.2</junit.version>
         <junit5.version>5.10.5</junit5.version>
         <junit-platform-launcher.version>1.11.4</junit-platform-launcher.version>
