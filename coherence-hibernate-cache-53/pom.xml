@@ -39,6 +39,12 @@
             <artifactId>hibernate-core-jakarta</artifactId>
             <version>${hibernate53.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.oracle.coherence.hibernate</groupId>
