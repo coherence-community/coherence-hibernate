@@ -103,7 +103,7 @@
         <dependency>
             <groupId>com.oracle.tools</groupId>
             <artifactId>oracle-tools-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.2.2</version>
             <scope>test</scope>
         </dependency>
 
