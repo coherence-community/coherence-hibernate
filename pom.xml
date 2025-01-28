@@ -110,7 +110,7 @@
         <spring-javaformat-checkstyle.version>0.0.43</spring-javaformat-checkstyle.version>
 
         <!-- dependency versions (alphabetically) -->
-        <assertj.version>3.26.3</assertj.version>
+        <assertj.version>3.27.3</assertj.version>
         <checker-qual.version>3.48.0</checker-qual.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
         <coherence.version>24.09</coherence.version>
