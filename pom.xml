@@ -86,17 +86,17 @@
         </sonar.coverage.jacoco.xmlReportPaths>
 
         <!-- plugin dependency versions (alphabetically) -->
-        <dependency-check-maven.version>12.0.2</dependency-check-maven.version>
+        <dependency-check-maven.version>12.1.0</dependency-check-maven.version>
         <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
+        <maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
         <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <maven-install-plugin.version>3.1.3</maven-install-plugin.version>
         <maven-jacoco-plugin.version>0.8.12</maven-jacoco-plugin.version>
-        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
@@ -106,15 +106,15 @@
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
         <versions-maven-plugin>2.18.0</versions-maven-plugin>
 
-        <checkstyle.version>10.17.0</checkstyle.version>
+        <checkstyle.version>10.21.2</checkstyle.version>
         <spring-javaformat-checkstyle.version>0.0.43</spring-javaformat-checkstyle.version>
 
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.27.3</assertj.version>
         <checker-qual.version>3.49.0</checker-qual.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
-        <coherence.version>24.09.2</coherence.version>
-        <hibernate6.version>6.6.4.Final</hibernate6.version>
+        <coherence.version>24.09.3</coherence.version>
+        <hibernate6.version>6.6.8.Final</hibernate6.version>
         <hibernate53.version>5.6.15.Final</hibernate53.version>
         <hsqldb.version>2.7.4</hsqldb.version>
         <junit.version>4.13.2</junit.version>
@@ -338,7 +338,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.4.2</version>
             </plugin>
 
             <plugin>
