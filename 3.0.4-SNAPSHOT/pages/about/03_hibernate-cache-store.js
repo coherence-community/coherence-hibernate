@@ -4,7 +4,7 @@
 <div class="section">
 <p>This page describes how you can use Hibernate as the implementation of a Coherence <code>CacheStore</code>.</p>
 
-<p>Using <a id="" title="" target="_blank" href="https://hibernate.org/orm/">Hibernate</a> as the implementation of a Coherence <code>CacheStore</code> may be a good fit for Java applications that use
+<p>Using <a target="_blank" href="https://hibernate.org/orm/">Hibernate</a> as the implementation of a Coherence <code>CacheStore</code> may be a good fit for Java applications that use
 Coherence APIs for data access and management, whose cache entries are objects or graphs appropriate for mapping
 to relational tables via Hibernate, and that have simple transactional requirements (e.g. transactions affecting a
 single cache entry at a time).</p>
@@ -13,7 +13,7 @@ single cache entry at a time).</p>
 <h3 id="_installing_the_coherence_hibernate_cachestore">Installing the Coherence Hibernate CacheStore</h3>
 <div class="section">
 <p>Installing the Coherence Hibernate CacheStore implementation amounts to obtaining a distribution of
-<code>coherence-hibernate-cache-store-3.0.4-SNAPSHOT.jar</code> and making it available to JVM ClassLoaders.  The easiest way to do
+<code>coherence-hibernate-cache-store-${project.version}.jar</code> and making it available to JVM ClassLoaders.  The easiest way to do
 so is to build and execute your Hibernate application with Maven, and add the following dependency to your application&#8217;s
 <code>pom.xml</code>:</p>
 
@@ -23,23 +23,26 @@ lang="xml"
 >&lt;dependency&gt;
     &lt;groupId&gt;com.oracle.coherence.hibernate&lt;/groupId&gt;
     &lt;artifactId&gt;coherence-hibernate-cache-store&lt;/artifactId&gt;
-    &lt;version&gt;3.0.4-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;${project.version}&lt;/version&gt;
 &lt;/dependency&gt;</markup>
 
-<p>Alternatively, you can download <code>coherence-hibernate-cache-store-3.0.4-SNAPSHOT.jar</code> from a Maven repository
-(e.g. <a id="" title="" target="_blank" href="https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/coherence-hibernate-cache-store/">https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/coherence-hibernate-cache-store/</a>) and use the respective
+<p>Alternatively, you can download <code>coherence-hibernate-cache-store-${project.version}.jar</code> from a Maven repository
+(e.g. <a target="_blank" href="https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/coherence-hibernate-cache-store/" class="bare">https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/coherence-hibernate-cache-store/</a>) and use the respective
 jars manually in your application&#8217;s JVM classpath.</p>
 
 <div class="admonition tip">
 <p class="admonition-inline">If you prefer building the project from source, please check out the
-<a id="" title="" target="_blank" href="../dev/03_build-instructions.adoc">build instructions</a>.</p>
+<a target="_blank" href="../dev/03_build-instructions.adoc">build instructions</a>.</p>
 </div>
+
 <div class="admonition important">
 <p class="admonition-inline">The Coherence Hibernate CacheStore implementation depends at runtime on Oracle
 Coherence and Hibernate. These dependencies are most easily managed using Maven (Or Gradle), but you must explicitly
 declare those dependencies as do not transitively include them.</p>
 </div>
+
 </div>
+
 
 <h3 id="_hibernate_configuration_requirements">Hibernate Configuration Requirements</h3>
 <div class="section">
@@ -50,6 +53,7 @@ in Hibernate, and also have a defined ID property.</p>
 to avoid excessive schema updates and possible deadlocks when starting a Coherence cluster with multiple storage members.</p>
 
 </div>
+
 
 <h3 id="_configuring_a_hibernatecachestore_constructor">Configuring a HibernateCacheStore Constructor</h3>
 <div class="section">
@@ -206,6 +210,7 @@ lang="xml"
 
 </div>
 
+
 <h3 id="_creating_a_custom_hibernate_based_cachestore">Creating a Custom Hibernate-Based CacheStore</h3>
 <div class="section">
 <p>While the provided <code>HibernateCacheStore</code> module provides a solution for most entity-based caches, there may be cases where
@@ -225,6 +230,7 @@ instance. But note that it is possible to inject a pre-configured <code>SessionF
 
 </div>
 
+
 <h3 id="_jdbc_isolation_level">JDBC Isolation Level</h3>
 <div class="section">
 <p>In cases where all access to a database is through Coherence, cache store modules naturally enforce ANSI-style repeatable
@@ -235,6 +241,7 @@ database isolation levels below the repeatable read level does not result in une
 processing load on the database server.</p>
 
 </div>
+
 
 <h3 id="_fault_tolerance_for_hibernate_cache_store_operations">Fault-Tolerance for Hibernate Cache Store Operations</h3>
 <div class="section">
@@ -251,6 +258,7 @@ transaction manager. In many cases, it is possible to design the database schema
 database behavior (and the underlying issues have been addressed earlier in the design process).</p>
 
 </div>
+
 
 <h3 id="_using_fully_cached_data_sets">Using Fully Cached Data Sets</h3>
 <div class="section">
@@ -278,6 +286,7 @@ updates are queued in Coherence until the connection is restored. At this point,
 
 </div>
 
+
 <h3 id="_api_for_hibernatecachestore_and_hibernatecacheloader">API for HibernateCacheStore and HibernateCacheLoader</h3>
 <div class="section">
 <p>The Oracle Coherence Hibernate Integration project includes a default entity-based <code>CacheStore</code> implementation,
@@ -285,7 +294,7 @@ updates are queued in Coherence until the connection is restored. At this point,
 <code>com.oracle.coherence.hibernate.cachestore</code> package.</p>
 
 <p>The following table describes the different constructors for the <code>HibernateCacheStore</code> and <code>HibernateCacheLoader</code>
-classes. For more detailed technical information, see the <a id="" title="" target="_blank" href="https://hibernate.coherence.community/3.0.4-SNAPSHOT/api/com/oracle/coherence/hibernate/cachestore/package-summary.html">Javadoc</a> for these classes:</p>
+classes. For more detailed technical information, see the <a target="_blank" href="https://hibernate.coherence.community/${project.version}/api/com/oracle/coherence/hibernate/cachestore/package-summary.html">Javadoc</a> for these classes:</p>
 
 
 <div class="table__overflow elevation-1  ">
@@ -324,8 +333,11 @@ classes. For more detailed technical information, see the <a id="" title="" targ
 </tbody>
 </table>
 </div>
+
 </div>
+
 </div>
+
 
 <h2 id="_sample">Sample</h2>
 <div class="section">
@@ -333,9 +345,11 @@ classes. For more detailed technical information, see the <a id="" title="" targ
 
 <ul class="ulist">
 <li>
-<p><a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-spring/tree/main/samples/cachestore-demo">https://github.com/coherence-community/coherence-spring/tree/main/samples/cachestore-demo</a></p>
+<p><a target="_blank" href="https://github.com/coherence-community/coherence-spring/tree/main/samples/cachestore-demo" class="bare">https://github.com/coherence-community/coherence-spring/tree/main/samples/cachestore-demo</a></p>
 
 </li>
 </ul>
+
 </div>
+
 </doc-view>

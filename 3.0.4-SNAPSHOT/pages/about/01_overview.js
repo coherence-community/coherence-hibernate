@@ -2,9 +2,9 @@
 
 <h2 id="_overview">Overview</h2>
 <div class="section">
-<p>The <a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate">Oracle Coherence Hibernate project</a>
-encompasses the code of integration points between <a id="" title="" target="_blank" href="http://hibernate.org/">Hibernate</a>
-and <a id="" title="" target="_blank" href="https://coherence.community/">Oracle Coherence</a>. Currently, the set of integration points consists of the following
+<p>The <a target="_blank" href="https://github.com/coherence-community/coherence-hibernate">Oracle Coherence Hibernate project</a>
+encompasses the code of integration points between <a target="_blank" href="http://hibernate.org/">Hibernate</a>
+and <a target="_blank" href="https://coherence.community/">Oracle Coherence</a>. Currently, the set of integration points consists of the following
 modules:</p>
 
 <ul class="ulist">
@@ -17,9 +17,11 @@ modules:</p>
 
 </li>
 </ul>
-<p>Complete source code together with documentation is provided via the GitHub repository at <a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate">https://github.com/coherence-community/coherence-hibernate</a>.</p>
+
+<p>Complete source code together with documentation is provided via the GitHub repository at <a target="_blank" href="https://github.com/coherence-community/coherence-hibernate" class="bare">https://github.com/coherence-community/coherence-hibernate</a>.</p>
 
 </div>
+
 
 <h2 id="_documentation">Documentation</h2>
 <div class="section">
@@ -71,7 +73,7 @@ modules:</p>
 </v-flex>
 <v-flex xs12 sm4 lg3>
 <v-card>
-<a id="" title="" target="_blank" href="https://github.com/coherence-community/coherence-hibernate/tree/main/samples"><div class="card__link-hover"/>
+<a target="_blank" href="https://github.com/coherence-community/coherence-hibernate/tree/main/samples"><div class="card__link-hover"/>
 </a>
 <v-layout align-center justify-center class="">
 <v-avatar size="150px">
@@ -92,7 +94,7 @@ modules:</p>
 </v-flex>
 <v-flex xs12 sm4 lg3>
 <v-card>
-<a id="" title="" target="_blank" href="api/index.html"><div class="card__link-hover"/>
+<a target="_blank" href="/api/index.html"><div class="card__link-hover"/>
 </a>
 <v-layout align-center justify-center class="">
 <v-avatar size="150px">
@@ -115,5 +117,7 @@ modules:</p>
 </v-container>
 </v-flex>
 </v-layout>
+
 </div>
+
 </doc-view>
