@@ -106,7 +106,7 @@
         <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
         <versions-maven-plugin>2.18.0</versions-maven-plugin>
 
-        <checkstyle.version>10.21.2</checkstyle.version>
+        <checkstyle.version>10.21.3</checkstyle.version>
         <spring-javaformat-checkstyle.version>0.0.43</spring-javaformat-checkstyle.version>
 
         <!-- dependency versions (alphabetically) -->
