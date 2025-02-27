@@ -50,8 +50,8 @@ Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hib
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceReadWriteNaturalIdAccess,91,0,8,0,19,0,14,0,10,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceNonstrictReadWriteNaturalIdAccess,85,0,8,0,20,0,13,0,9,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceReadWriteEntityAccess,142,0,8,0,19,0,14,0,10,0
-Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceReadOnlyNaturalIdAccess,90,0,8,0,19,0,13,0,9,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceReadOnlyEntityAccess,143,0,8,0,20,0,14,0,10,0
+Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceReadOnlyNaturalIdAccess,90,0,8,0,19,0,13,0,9,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,AbstractReadWriteCoherenceEntityDataAccess,172,0,8,0,30,0,13,0,9,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceDomainDataRegionImpl,148,0,13,0,25,0,19,0,11,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceReadWriteCollectionAccess,21,0,0,0,5,0,4,0,4,0
