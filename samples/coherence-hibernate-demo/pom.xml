@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2022, 2024, Oracle and/or its affiliates.
+  Copyright (c) 2022, 2025, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -28,7 +28,7 @@
 		<hibernate.version>5.6.15.Final</hibernate.version>
 		<hibernate-micrometer.version>5.6.15.Final</hibernate-micrometer.version>
 		<spring-boot.version>2.7.18</spring-boot.version>
-		<tomcat.version>9.0.87</tomcat.version>
+		<tomcat.version>9.0.102</tomcat.version>
 		<jackson-bom.version>2.15.2</jackson-bom.version>
 	</properties>
 
@@ -46,6 +46,17 @@
 				<version>${spring-boot.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-logging</artifactId>
+				<version>${spring-boot.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.tomcat.embed</groupId>
@@ -86,6 +97,17 @@
 				<groupId>com.jayway.jsonpath</groupId>
 				<artifactId>json-path</artifactId>
 				<version>2.9.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>net.minidev</groupId>
+						<artifactId>json-smart</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>net.minidev</groupId>
+				<artifactId>json-smart</artifactId>
+				<version>2.5.2</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
