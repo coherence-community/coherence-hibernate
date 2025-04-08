@@ -111,7 +111,7 @@
 
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.27.3</assertj.version>
-        <checker-qual.version>3.49.1</checker-qual.version>
+        <checker-qual.version>3.49.2</checker-qual.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
         <coherence.version>25.03</coherence.version>
         <hibernate6.version>6.6.13.Final</hibernate6.version>
