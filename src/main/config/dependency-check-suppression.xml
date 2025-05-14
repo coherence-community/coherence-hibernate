@@ -112,4 +112,46 @@
         ]]></notes>
         <vulnerabilityName>CVE-2024-38828</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+        spring-boot-actuator-autoconfigure-2.7.18.jar
+        ]]></notes>
+        <vulnerabilityName>CVE-2025-22235</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        spring-core-5.3.31.jar
+        ]]></notes>
+        <vulnerabilityName>CVE-2024-38820</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        spring-expression-5.3.31.jar
+        ]]></notes>
+        <vulnerabilityName>CVE-2024-38808</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        spring-expression-5.3.31.jar
+        ]]></notes>
+        <vulnerabilityName>CVE-2024-38820</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        spring-web-5.3.39.jar
+        ]]></notes>
+        <vulnerabilityName>CVE-2024-38820</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        tomcat-embed-core-9.0.102.jar
+        ]]></notes>
+        <vulnerabilityName>CVE-2025-31651</vulnerabilityName>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+        tomcat-embed-core-9.0.102.jar
+        ]]></notes>
+        <vulnerabilityName>CVE-2025-31650</vulnerabilityName>
+    </suppress>
 </suppressions>
