@@ -25,7 +25,7 @@
 
 	<properties>
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
-		<hibernate-validator.version>8.0.2.Final</hibernate-validator.version>
+		<hibernate-validator.version>9.0.0.Final</hibernate-validator.version>
 		<mainClass>com.oracle.coherence.hibernate.demo.cachestore.Main</mainClass>
 	</properties>
 
