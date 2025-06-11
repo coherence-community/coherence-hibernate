@@ -3,7 +3,8 @@
 :2x-release-version: 2.3.5
 :2x-snapshot-version: 2.3.6-SNAPSHOT
 :hibernate-docs: https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html
-:website: https://hibernate.coherence.community/
+:website: https://docs.coherence.community/
+:website-old: https://hibernate.coherence.community/
 
 = Welcome to the Oracle Coherence Hibernate Project
 
@@ -59,10 +60,10 @@ as well as extensive JavaDoc for the Coherence Hibernate source code.
 
 [width="75%"]
 |=======
-|*{main-release-version}* | https://docs.coherence.community/coherence-hibernate/docs/latest/[Website] | https://docs.coherence.community/coherence-hibernate/docs/latest/api/index.html[API Doc.]
-|*{main-snapshot-version}* | {website}{main-snapshot-version}[Website] | {website}{main-snapshot-version}/api/index.html[API Doc.]
-|*{2x-release-version}* | {website}{2x-release-version}[Website] | {website}{2x-release-version}/api/index.html[API Doc.]
-|*{2x-snapshot-version}* | {website}{2x-snapshot-version}[Website] | {website}{2x-snapshot-version}/api/index.html[API Doc.]
+|*{main-release-version}* | {website}/coherence-hibernate/docs/latest/[Website] | https://docs.coherence.community/coherence-hibernate/docs/latest/api/index.html[API Doc.]
+|*{main-snapshot-version}* | {website-old}{main-snapshot-version}[Website] | {website-old}{main-snapshot-version}/api/index.html[API Doc.]
+|*{2x-release-version}* | {website-old}{2x-release-version}[Website] | {website-old}{2x-release-version}/api/index.html[API Doc.]
+|*{2x-snapshot-version}* | {website-old}{2x-snapshot-version}[Website] | {website-old}{2x-snapshot-version}/api/index.html[API Doc.]
 |=======
 
 NOTE: The http://maven.apache.org[Apache Maven]-based snapshots and releases for this project are published to
