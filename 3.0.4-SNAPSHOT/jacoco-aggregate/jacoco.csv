@@ -11,8 +11,8 @@ Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hi
 Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hibernate.cache.v53.access,CoherenceNonstrictReadWriteCollectionAccess,21,0,0,0,5,0,4,0,4,0
 Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hibernate.cache.v53.access,CoherenceReadOnlyNaturalIdAccess,90,0,8,0,19,0,13,0,9,0
 Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hibernate.cache.v53.access,CoherenceNonstrictReadWriteEntityAccess,138,0,8,0,21,0,14,0,10,0
-Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hibernate.cache.v53.access,CoherenceNonstrictReadWriteNaturalIdAccess,85,0,8,0,20,0,13,0,9,0
 Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hibernate.cache.v53.access,AbstractCoherenceEntityDataAccess,294,0,26,0,70,0,36,0,23,0
+Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hibernate.cache.v53.access,CoherenceNonstrictReadWriteNaturalIdAccess,85,0,8,0,20,0,13,0,9,0
 Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hibernate.cache.v53.access,CoherenceStorageAccessImpl,40,0,0,0,16,0,10,0,10,0
 Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hibernate.cache.v53.access,CoherenceReadOnlyCollectionAccess,21,0,0,0,5,0,4,0,4,0
 Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hibernate.cache.v53,CoherenceRegionFactory,317,0,32,0,83,0,35,0,19,0
@@ -32,8 +32,8 @@ Coherence Hibernate Website/coherence-hibernate-cache-53,com.oracle.coherence.hi
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.configuration.session,SessionType,15,0,0,0,3,0,1,0,1,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6,CoherenceRegionFactory,327,0,32,0,85,0,35,0,19,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access.processor,AfterInsertProcessor,20,0,2,0,7,0,3,0,2,0
-Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access.processor,AfterUpdateProcessor,46,0,4,0,14,0,4,0,2,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access.processor,ReadWritePutFromLoadProcessor,50,0,6,0,15,0,5,0,2,0
+Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access.processor,AfterUpdateProcessor,46,0,4,0,14,0,4,0,2,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access.processor,PutFromLoadProcessor,26,0,4,0,8,0,4,0,2,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access.processor,SoftLockItemProcessor,29,0,2,0,10,0,3,0,2,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access.processor,GetProcessor,20,0,4,0,7,0,4,0,2,0
@@ -57,7 +57,7 @@ Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hib
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceReadWriteCollectionAccess,21,0,0,0,5,0,4,0,4,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceReadOnlyCollectionAccess,21,0,0,0,5,0,4,0,4,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,AbstractCoherenceEntityDataAccess,294,0,26,0,70,0,36,0,23,0
-Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceStorageAccessImpl,40,0,0,0,16,0,10,0,10,0
 Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceNonstrictReadWriteEntityAccess,138,0,8,0,21,0,14,0,10,0
+Coherence Hibernate Website/coherence-hibernate-cache-6,com.oracle.coherence.hibernate.cache.v6.access,CoherenceStorageAccessImpl,40,0,0,0,16,0,10,0,10,0
 Coherence Hibernate Website/coherence-hibernate-cache-store,com.oracle.coherence.hibernate.cachestore,HibernateCacheLoader,373,0,28,0,120,0,35,0,21,0
 Coherence Hibernate Website/coherence-hibernate-cache-store,com.oracle.coherence.hibernate.cachestore,HibernateCacheStore,192,0,16,0,72,0,17,0,9,0
