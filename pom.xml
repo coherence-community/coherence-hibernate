@@ -114,7 +114,7 @@
         <checker-qual.version>3.49.5</checker-qual.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
         <coherence.version>25.03.1</coherence.version>
-        <hibernate6.version>6.6.18.Final</hibernate6.version>
+        <hibernate6.version>6.6.19.Final</hibernate6.version>
         <hibernate53.version>5.6.15.Final</hibernate53.version>
         <hsqldb.version>2.7.4</hsqldb.version>
         <junit.version>4.13.2</junit.version>
