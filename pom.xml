@@ -107,7 +107,7 @@
         <versions-maven-plugin>2.18.0</versions-maven-plugin>
 
         <checkstyle.version>10.21.4</checkstyle.version>
-        <spring-javaformat-checkstyle.version>0.0.43</spring-javaformat-checkstyle.version>
+        <spring-javaformat-checkstyle.version>0.0.47</spring-javaformat-checkstyle.version>
 
         <!-- dependency versions (alphabetically) -->
         <assertj.version>3.27.3</assertj.version>
