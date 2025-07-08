@@ -11,7 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
       - name: Run static analysis
-        uses: aquasecurity/trivy-action@0.31.0
+        uses: aquasecurity/trivy-action@0.32.0
         with:
           scan-type: 'fs'
           security-checks: 'vuln,secret,config'
