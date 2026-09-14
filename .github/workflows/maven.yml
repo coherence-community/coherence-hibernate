@@ -7,61 +7,95 @@ on:
     branches:
       - main
       - '[1-9]+.[0-9]+.x'
+  pull_request:
+    branches:
+      - main
+      - '[1-9]+.[0-9]+.x'
   workflow_dispatch:
 jobs:
   build:
-    if: github.repository_owner == 'coherence-community'
     strategy:
       matrix:
-        coherence-version: [ 'LATEST' ]
+        java-version: [ '17', '21', '25' ]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4.2.2
+    - name: Set up JDK ${{ matrix.java-version }}
+      uses: actions/setup-java@v4.7.1
+      with:
+        distribution: 'temurin'
+        java-version: ${{ matrix.java-version }}
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-jdk-${{ matrix.java-version }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-m2-
+    - name: Build - Hibernate 7.4.x on Java ${{ matrix.java-version }}
+      run: ./mvnw clean verify -B -Pcoverage
+    - name: Verify Java 17 bytecode baseline
+      run: |
+        javap -verbose coherence-hibernate-cache-7/target/classes/com/oracle/coherence/hibernate/cache/v7/CoherenceRegionFactory.class | grep -q 'major version: 61'
+    - name: Run cache-store demo on Java ${{ matrix.java-version }}
+      run: java -jar samples/coherence-hibernate-cache-store-demo/target/coherence-hibernate-cache-store-demo.jar
+    - name: Analyze Hibernate 7.4.x build with Sonar
+      if: "github.repository == 'coherence-community/coherence-hibernate' && github.event_name != 'pull_request' && matrix.java-version == '17'"
+      run: |
+        git config --global user.email "github-action@users.noreply.github.com"
+        git config --global user.name "GitHub Action"
+        ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=coherence-community_coherence-hibernate -Dsonar.branch.name=${{ env.GITHUB_REF_NAME }} -B
+      env:
+        MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
+        GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
+        SONAR_TOKEN: "${{secrets.SONAR_TOKEN}}"
+    - name: Check dependencies for known vulnerabilities
+      if: "github.event_name != 'pull_request' && matrix.java-version == '17'"
+      run: ./mvnw verify -B -DskipTests -Powasp
+      env:
+        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
+    - name: Build and deploy website and snapshots
+      if: "github.repository == 'coherence-community/coherence-hibernate' && github.event_name != 'pull_request' && matrix.java-version == '17'"
+      run: |
+          git config --global user.email "github-action@users.noreply.github.com"
+          git config --global user.name "GitHub Action"
+          ./mvnw deploy -B -DskipTests --settings .mvn/settings.xml
+      env:
+        MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
+        MAVEN_SONATYPE_USERNAME: "${{secrets.MAVEN_SONATYPE_USERNAME}}"
+        MAVEN_SONATYPE_TOKEN: "${{secrets.MAVEN_SONATYPE_TOKEN}}"
+    - name: Clean Maven cache
+      run: |
+        find ~/.m2/repository -type d -name '*SNAPSHOT' | xargs rm -fr
+
+  compatibility:
+    name: Hibernate ${{ matrix.hibernate-version }} / Coherence ${{ matrix.coherence-version }} / Java 17
+    if: github.ref_name == 'main' || github.base_ref == 'main'
+    strategy:
+      fail-fast: false
+      matrix:
+        hibernate-version: [ '7.4.1.Final', '7.4.5.Final' ]
+        coherence-version: [ '15.1.1-0-4', '26.04' ]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4.2.2
     - name: Set up JDK 17
       uses: actions/setup-java@v4.7.1
       with:
-        distribution: 'adopt'
+        distribution: 'temurin'
         java-version: '17'
     - name: Cache Maven packages
       uses: actions/cache@v4
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        key: ${{ runner.os }}-jdk-17-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-m2-
-    - name: Build - Hibernate 6.x with Maven + Sonar
-      if: "github.event_name != 'pull_request'"
-      run: |
-        git config --global user.email "github-action@users.noreply.github.com"
-        git config --global user.name "GitHub Action"
-        ./mvnw clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=coherence-community_coherence-hibernate -Dsonar.branch.name=${{ env.GITHUB_REF_NAME }} -B -Phibernate6 -Powasp -Pcoverage
-      env:
-        MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
-        GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
-        SONAR_TOKEN: "${{secrets.SONAR_TOKEN}}"
-        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
-    - name: Build - Hibernate 6.x
-      if: "github.event_name == 'pull_request'"
-      run: mvn clean install -B -Powasp -Phibernate6
-    - name: Build - Hibernate 5.6.x
-      run: mvn clean install -B -Powasp -Phibernate53
-    - name: Build with Coherence ${{ matrix.coherence-version }}
-      if: "matrix.coherence-version == '14_1_1'"
-      run: |
-        git config --global user.email "github-action@users.noreply.github.com"
-        git config --global user.name "GitHub Action"
-        mvn clean install -B --settings .mvn/settings.xml -Pcoherence14_1_1
-    - name: Build + deploy with Maven (Website + Snapshots) - ${{ matrix.coherence-version }}
-      if: "matrix.coherence-version == 'LATEST'"
-      run: |
-          git config --global user.email "github-action@users.noreply.github.com"
-          git config --global user.name "GitHub Action"
-          mvn clean deploy -B -Powasp --settings .mvn/settings.xml
-      env:
-        MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
-        MAVEN_SONATYPE_USERNAME: "${{secrets.MAVEN_SONATYPE_USERNAME}}"
-        MAVEN_SONATYPE_TOKEN: "${{secrets.MAVEN_SONATYPE_TOKEN}}"
-        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
-    - name: Clean Maven cache
-      run: |
-        find ~/.m2/repository -type d -name '*SNAPSHOT' | xargs rm -fr
+    - name: Test Hibernate ${{ matrix.hibernate-version }} with Coherence ${{ matrix.coherence-version }}
+      run: >
+        ./mvnw -B
+        -pl coherence-hibernate-cache-7,coherence-hibernate-cache-store-tests
+        -am
+        -Dhibernate7.version=${{ matrix.hibernate-version }}
+        -Dcoherence.version=${{ matrix.coherence-version }}
+        test

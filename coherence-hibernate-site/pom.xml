@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2013, 2025, Oracle and/or its affiliates.
+  Copyright (c) 2013, 2026, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -55,6 +55,12 @@
             <version>4.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <artifactId>coherence-hibernate-cache-store-tests</artifactId>
+            <groupId>com.oracle.coherence.hibernate</groupId>
+            <version>4.0.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate7.version}</version>
@@ -90,10 +96,10 @@
                             <quiet>true</quiet>
                             <links>
                                 <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
-                                <link>https://jakarta.ee/specifications/platform/10/apidocs/</link>
+                                <link>https://jakarta.ee/specifications/platform/11/apidocs/</link>
                             </links>
                             <bottom>
-                                Copyright © 2013, 2024, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0.
+                                Copyright © 2013, 2026, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0.
                             </bottom>
                         </configuration>
                     </execution>

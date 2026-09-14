@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2013, 2024, Oracle and/or its affiliates.
+  Copyright (c) 2013, 2026, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -70,8 +70,8 @@
         <!-- project options -->
         <java.version>17</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
-        <java.version.enforcer>${java.version}</java.version.enforcer>
-        <maven.minimum.version>3.6.0</maven.minimum.version>
+        <java.version.enforcer>[17,)</java.version.enforcer>
+        <maven.minimum.version>3.9.0</maven.minimum.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skip-sign-artifacts>true</skip-sign-artifacts>
         <coherence.hibernate.root>${basedir}</coherence.hibernate.root>
@@ -112,7 +112,7 @@
         <assertj.version>3.27.3</assertj.version>
         <checker-qual.version>3.49.5</checker-qual.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
-        <coherence.version>25.03.1</coherence.version>
+        <coherence.version>15.1.1-0-2</coherence.version>
         <hibernate7.junit-platform-launcher.version>6.0.1</hibernate7.junit-platform-launcher.version>
         <hibernate7.junit.version>6.0.1</hibernate7.junit.version>
         <hibernate7.mockito.version>5.20.0</hibernate7.mockito.version>
@@ -123,9 +123,22 @@
         <junit5.version>5.10.5</junit5.version>
         <junit-platform-launcher.version>1.11.4</junit-platform-launcher.version>
         <logback.version>1.5.18</logback.version>
+        <log4j.version>2.25.5</log4j.version>
         <mockito.version>5.14.1</mockito.version>
         <slf4j.version>2.0.17</slf4j.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-bom</artifactId>
+                <version>${log4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <distributionManagement>
         <snapshotRepository>
@@ -383,18 +396,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>jdk17</id>
-            <properties>
-                <java.version>17</java.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>jdk21</id>
-            <properties>
-                <java.version>21</java.version>
-            </properties>
-        </profile>
         <profile>
             <id>sign</id>
             <build>
