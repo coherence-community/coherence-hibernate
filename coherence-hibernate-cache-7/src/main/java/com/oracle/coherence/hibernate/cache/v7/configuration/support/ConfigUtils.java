@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -30,11 +30,14 @@ public abstract class ConfigUtils {
     }
 
     /**
-     * The {@link Session} name can only be specified using Coherence CE 21.12 and higher. Specifying a sessionNames for
-     * older Coherence versions will result in an {@link IllegalArgumentException} to be thrown.
+     * The {@link Session} name can be specified using Coherence CE 15.1.1. A Coherence version without named-session
+     * support will result in an {@link IllegalArgumentException} being thrown. The legacy option return type is retained
+     * because the replacement {@code SessionConfiguration} API is unavailable in the retained Coherence 14.1.1
+     * compatibility profile.
      * @param sessionName must not be null
      * @return the Session.Option
      */
+    @SuppressWarnings("deprecation")
     public static Session.Option getSessionNameOption(String sessionName) {
         Assert.notNull(sessionName, "The sessionName must not be null.");
         try {
@@ -44,8 +47,8 @@ public abstract class ConfigUtils {
             return sessionNameOption;
         }
         catch (ClassNotFoundException ex) {
-            final String errorMessage = String.format("The required Class '%s' was not found. Most likely you are using a Coherence version" +
-                    "older than '21.12' which does not support specifying a session name.", WITH_NAME_CLASS_NAME);
+            final String errorMessage = String.format("The required Class '%s' was not found. The configured Coherence " +
+                    "version does not support specifying a session name.", WITH_NAME_CLASS_NAME);
             if (LOGGER.isErrorEnabled()) {
                 LOGGER.error(errorMessage);
             }

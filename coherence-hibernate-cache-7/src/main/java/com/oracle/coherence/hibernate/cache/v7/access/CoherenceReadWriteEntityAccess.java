@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -120,12 +120,4 @@ public class CoherenceReadWriteEntityAccess extends AbstractReadWriteCoherenceEn
     public AccessType getAccessType() {
         return AccessType.READ_WRITE;
     }
-
-
-    @Override
-    public boolean contains(Object key) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
 }

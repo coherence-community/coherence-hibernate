@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -87,7 +87,9 @@ public class CoherenceRegionFactoryTests extends AbstractCoherenceRegionFactoryT
     @Order(4)
     public void testNextTimestamp() {
         final long currentTime = this.coherenceRegionFactory.nextTimestamp();
+        final long nextTime = this.coherenceRegionFactory.nextTimestamp();
         assertTrue(currentTime > 0, "Expect positive current time value");
+        assertTrue(nextTime > currentTime, "Expect strictly increasing time values");
         this.coherenceRegionFactory.stop();
     }
 

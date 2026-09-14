@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -39,7 +39,8 @@ public abstract class AbstractCoherenceEntityDataAccess {
      * The log message indicating lack of support for the transactional cache concurrency strategy.
      */
     public static final String TRANSACTIONAL_STRATEGY_NOT_SUPPORTED_MESSAGE =
-            "The transactional cache concurrency strategy is not supported.";
+            "The transactional cache concurrency strategy is not supported by Coherence Hibernate. "
+                    + "Supported strategies: READ_ONLY, READ_WRITE, NONSTRICT_READ_WRITE.";
 
     /**
      * A message indicating write operations are not supported in the read-only cache concurrency strategy.

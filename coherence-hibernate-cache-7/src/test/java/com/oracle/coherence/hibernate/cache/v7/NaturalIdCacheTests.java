@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -11,6 +11,7 @@ import com.oracle.coherence.hibernate.cache.v7.access.CoherenceStorageAccessImpl
 import com.oracle.coherence.hibernate.cache.v7.support.Book;
 import com.tangosol.net.CacheFactory;
 import org.assertj.core.api.Assertions;
+import org.hibernate.KeyType;
 import org.hibernate.Session;
 import org.hibernate.stat.CacheRegionStatistics;
 import org.hibernate.stat.NaturalIdStatistics;
@@ -110,9 +111,7 @@ public class NaturalIdCacheTests {
 		final Session session = scope.getSessionFactory().openSession();
 		session.beginTransaction();
 
-		final Book book = session.byNaturalId(Book.class)
-				.using("isbn10", "0061146668")
-				.load();
+		final Book book = session.find(Book.class, "0061146668", KeyType.NATURAL);
 
 		assertThat(book.getId()).isSameAs(this.idOfBook1);
 

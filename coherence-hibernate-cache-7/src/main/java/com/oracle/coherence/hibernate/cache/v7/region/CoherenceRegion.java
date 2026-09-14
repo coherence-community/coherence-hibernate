@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2021, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -23,6 +23,7 @@ import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.ExtendedStatisticsSupport;
 import org.hibernate.cache.spi.Region;
 import org.hibernate.cache.spi.RegionFactory;
+import org.hibernate.cache.spi.support.SimpleTimestamper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -256,7 +257,7 @@ public class CoherenceRegion implements Region, ExtendedStatisticsSupport {
 
     /**
      * This method is undocumented in Hibernate javadoc, but seems intended to return the "current" time.
-     * @return a millisecond clock value
+     * @return a clock value in Hibernate timestamp units
      */
     //@Override
     public long nextTimestamp() {
@@ -269,14 +270,14 @@ public class CoherenceRegion implements Region, ExtendedStatisticsSupport {
     /**
      * This method is undocumented in Hibernate javadoc.  Comments in the Coherence-based implementation of the
      * Hibernate 2.1 second-level cache SPI suggest the returned value is used as a lock lease duration.
-     * @return an int lock lease duration
+     * @return the lock lease duration in Hibernate timestamp units
      */
-    public int getTimeout() {
+    public long getTimeout() {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("getTimeout()");
         }
-        // Note that this must be the same time units as getTimestamp
-        return this.lockLeaseDuration;
+        // Configuration remains in milliseconds; expiry comparisons use nextTimestamp() units.
+        return (long) this.lockLeaseDuration * SimpleTimestamper.ONE_MS;
     }
 
 
@@ -295,6 +296,10 @@ public class CoherenceRegion implements Region, ExtendedStatisticsSupport {
         Base.azzert(defaultValue >= 0);
 
         final String propertyValue = (String) properties.get(propertyName);
+        if (propertyValue == null) {
+            return defaultValue;
+        }
+
         long duration;
         try {
             duration = Base.parseTime(propertyValue);

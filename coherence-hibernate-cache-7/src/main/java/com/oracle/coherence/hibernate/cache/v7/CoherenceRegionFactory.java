@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2024, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -19,7 +19,6 @@ import com.oracle.coherence.hibernate.cache.v7.configuration.support.CoherenceHi
 import com.oracle.coherence.hibernate.cache.v7.configuration.support.ConfigUtils;
 import com.oracle.coherence.hibernate.cache.v7.region.CoherenceRegion;
 import com.tangosol.net.CacheFactory;
-import com.tangosol.net.Cluster;
 import com.tangosol.net.DefaultCacheServer;
 import com.tangosol.net.ExtensibleConfigurableCacheFactory;
 import com.tangosol.net.NamedCache;
@@ -43,6 +42,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A CoherenceRegionFactory is a factory for regions of Hibernate second-level cache implemented with Oracle Coherence.
+ * Timestamp generation and invalidation timeouts use Hibernate's inherited bounded timestamp scheme;
+ * {@link CoherenceRegion} converts configured lock durations to the same units.
  *
  * @author Randy Stafford
  * @author Gunnar Hillert
@@ -60,8 +61,6 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
     private final boolean requiresShutDown;
 
     private transient DefaultCacheServer defaultCacheServer;
-
-    private Cluster cluster = null;
 
     /**
      * Default constructor. Any Coherence instances created will implicitly require a shutdown of Coherence when
@@ -130,6 +129,11 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
     protected void prepareForUse(SessionFactoryOptions settings, Map configValues) {
         this.sessionFactoryOptions = settings;
 
+        if (configValues.containsKey("hibernate.cache.keys_factory")) {
+            LOGGER.warn("Ignoring hibernate.cache.keys_factory: Coherence Hibernate 4.x always uses "
+                    + "DefaultCacheKeysFactory. Remove this setting from your configuration.");
+        }
+
         final CoherenceHibernateProperties coherenceHibernateProperties = new CoherenceHibernateProperties(configValues);
 
         final Map<String, Object> coherenceProperties = coherenceHibernateProperties.getCoherenceProperties();
@@ -164,21 +168,27 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
 
             }
 
-            final List<Session.Option> sessionOptions = new ArrayList<>();
-
-            if (coherenceHibernateProperties.getSessionName() != null) {
-                sessionOptions.add(ConfigUtils.getSessionNameOption(coherenceHibernateProperties.getSessionName()));
-            }
-
-            final Session.Option cacheConfigFilePathOption = WithConfiguration.using(coherenceHibernateProperties.getCacheConfigFilePath());
-            final Session.Option classLoaderOption = WithClassLoader.using(getClass().getClassLoader());
-
-            sessionOptions.add(cacheConfigFilePathOption);
-            sessionOptions.add(classLoaderOption);
-
-            final Session sessionToSet = Session.create(sessionOptions.toArray(new Session.Option[0]));
-            this.setCoherenceSession(sessionToSet);
+            this.setCoherenceSession(createCoherenceSession(coherenceHibernateProperties));
         }
+    }
+
+    // SessionConfiguration is unavailable in the retained Coherence 14.1.1 compatibility profile. Keep the
+    // legacy option-based API until that profile can be removed without breaking existing deployments.
+    @SuppressWarnings("deprecation")
+    private Session createCoherenceSession(CoherenceHibernateProperties coherenceHibernateProperties) {
+        final List<Session.Option> sessionOptions = new ArrayList<>();
+
+        if (coherenceHibernateProperties.getSessionName() != null) {
+            sessionOptions.add(ConfigUtils.getSessionNameOption(coherenceHibernateProperties.getSessionName()));
+        }
+
+        final Session.Option cacheConfigFilePathOption = WithConfiguration.using(coherenceHibernateProperties.getCacheConfigFilePath());
+        final Session.Option classLoaderOption = WithClassLoader.using(getClass().getClassLoader());
+
+        sessionOptions.add(cacheConfigFilePathOption);
+        sessionOptions.add(classLoaderOption);
+
+        return Session.create(sessionOptions.toArray(new Session.Option[0]));
     }
 
     @Override
@@ -234,19 +244,6 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
     @Override
     public AccessType getDefaultAccessType() {
         return AccessType.READ_WRITE;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public long nextTimestamp() {
-        if (this.cluster == null) {
-            return System.currentTimeMillis();
-        }
-        else {
-            return CacheFactory.ensureCluster().getTimeMillis();
-        }
     }
 
     // ---- Internal
