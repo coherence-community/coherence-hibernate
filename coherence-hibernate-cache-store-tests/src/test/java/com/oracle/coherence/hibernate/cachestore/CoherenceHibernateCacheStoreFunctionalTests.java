@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -7,6 +7,9 @@
 package com.oracle.coherence.hibernate.cachestore;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -136,9 +139,13 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
     @AfterAll
     public static void tearDownSuite() {
         leaveCluster();
-        cluster.destroy();
+        if (cluster != null) {
+            cluster.destroy();
+        }
         closeConnection();
-        hsqldbProcess.destroy();
+        if (hsqldbProcess != null) {
+            hsqldbProcess.destroy();
+        }
     }
 
     /**
@@ -353,6 +360,13 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         final long deadline = System.currentTimeMillis() + 60_000L;
         RuntimeException lastFailure = null;
         while (System.currentTimeMillis() < deadline) {
+            final Integer exitCode = getCacheServerExitCode();
+            if (exitCode != null) {
+                throw new IllegalStateException(
+                        "Cache server exited with code " + exitCode + " before joining its cluster.\n"
+                                + cacheServerLogTail(),
+                        lastFailure);
+            }
             try {
                 if (cluster.getClusterSize() == 1) {
                     return;
@@ -363,7 +377,45 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
             }
             Thread.sleep(250L);
         }
-        throw new IllegalStateException("Cache server did not join the cluster within 60 seconds", lastFailure);
+        throw new IllegalStateException(
+                "Cache server did not join the cluster within 60 seconds.\n" + cacheServerLogTail(),
+                lastFailure);
+    }
+
+    /**
+     * Returns the exit code of a cache-server process that terminated before joining, or {@code null} while all
+     * processes are still running.
+     * @return an early cache-server exit code, or {@code null}
+     */
+    private static Integer getCacheServerExitCode() {
+        if (cluster == null) {
+            return null;
+        }
+        for (ClusterMember member : cluster) {
+            try {
+                return member.exitValue();
+            }
+            catch (IllegalThreadStateException ignored) {
+                // The member is still running.
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the last forty cache-server log lines for startup diagnostics.
+     * @return a labeled cache-server log tail, or an explanation when the log is unavailable
+     */
+    private static String cacheServerLogTail() {
+        final Path logPath = Path.of("dcs.log");
+        try {
+            final List<String> lines = Files.readAllLines(logPath, StandardCharsets.UTF_8);
+            final int firstLine = Math.max(0, lines.size() - 40);
+            return "Last dcs.log lines:\n" + String.join(System.lineSeparator(), lines.subList(firstLine, lines.size()));
+        }
+        catch (IOException exception) {
+            return "dcs.log was unavailable: " + exception.getMessage();
+        }
     }
 
     /**

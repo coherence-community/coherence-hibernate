@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -320,8 +320,19 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
                 query.setParameterList(PARAM_IDS, keys);
                 result = query.list();
             }
+            else if (Map.class.equals(entityPersister.getMappedClass())) {
+                result = session.findMultiple(getSessionFactory().createGraphForDynamicEntity(getEntityName()),
+                        keys, CacheMode.IGNORE);
+            }
             else {
-                result = session.findMultiple(entityPersister.getMappedClass(), keys, CacheMode.IGNORE);
+                final MappingMetamodel metamodel = (MappingMetamodel) getSessionFactory().getMetamodel();
+                // A Java class may have multiple entity names. Use class lookup only for the same mapping.
+                if (metamodel.findEntityDescriptor(entityPersister.getMappedClass()) == entityPersister) {
+                    result = session.findMultiple(entityPersister.getMappedClass(), keys, CacheMode.IGNORE);
+                }
+                else {
+                    result = loadAllByEntityName(session, keys);
+                }
             }
 
             // Need a way to extract the key from an entity that we know
@@ -360,6 +371,12 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
     }
 
     // ----- Helper methods -------------------------------------------------
+
+    @SuppressWarnings("removal")
+    private List<?> loadAllByEntityName(Session session, List<?> keys) {
+        // The graph/class-based replacement resolves POJOs by class, losing distinct entity-name mappings.
+        return session.byMultipleIds(getEntityName()).with(CacheMode.IGNORE).multiLoad(keys);
+    }
 
     /**
      * Open a Hibernate Session.
@@ -411,11 +428,20 @@ public class HibernateCacheLoader extends Base implements CacheLoader {
     }
 
     /**
-     * Create a transient entity instance given an entity id.
+     * Create an entity instance with the given identifier using the configured entity mapping.
+     * Other persistent attributes are not populated from the database. This method does not load an existing
+     * entity or obtain a managed reference to one. The loader must be initialized before calling this method.
+     * <p>
+     * Standard loader and store operations no longer invoke this method. Overriding it does not customize
+     * their behavior, including {@code erase} and {@code eraseAll}.
      * @param id the Hibernate entity id
      * @param sessionImplementor the Hibernate SessionImplementor
      * @return the Hibernate entity (may return null)
+     * @deprecated Since 4.0, retained for compatibility with custom subclasses. Custom implementations should
+     * choose whether to load an existing entity, obtain a reference, or construct a new entity according to
+     * the operation. Use entity-name-aware operations when a Java class has multiple entity mappings.
      */
+    @Deprecated(since = "4.0")
     protected Object createEntityFromId(Object id, SharedSessionContractImplementor sessionImplementor) {
         final EntityPersister cmd = getEntityClassMetadata();
         final Object o = cmd.instantiate(id, sessionImplementor);
