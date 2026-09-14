@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-    Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+    Copyright (c) 2013, 2026, Oracle and/or its affiliates.
 
     Licensed under the Universal Permissive License v 1.0 as shown at
     https://oss.oracle.com/licenses/upl.
@@ -16,6 +16,15 @@
 
 The following sections outline Oracle Coherence Hibernate Integration changes in
 reverse chronological order.
+
+=== Version 4.0.0 (in development)
+
+* Require Java 17 and validate the project on Java 17, 21, and 25.
+* Upgrade the current integration baseline to Hibernate ORM `7.4.x` and Jakarta Persistence `3.2`.
+* Publish `coherence-hibernate-cache-7` as the sole 4.x second-level cache adapter.
+* Keep Hibernate `5.6.x` and `6.x` support on the Coherence Hibernate `3.x` maintenance line.
+* Compatibility-test Hibernate `7.4.1.Final` and `7.4.5.Final` with Coherence CE `15.1.1-0-2` and `25.03.1` on the
+  Java 17 bytecode baseline, in addition to the complete default-version reactor on Java 17, 21, and 25.
 
 === Version 3.0.3 (October 6, 2024)
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2025, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2013, 2026, Oracle and/or its affiliates. All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at
 # https://oss.oracle.com/licenses/upl.
 
@@ -19,10 +19,10 @@ engine:
       version-hibernate: "${hibernate7.version}"
       timestamp: "${timestamp}"
       github-repository: "https://github.com/coherence-community/coherence-hibernate"
-      coherence-docs: "https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/"
-      coherence-ce-docs: https://coherence.community/latest/21.12/docs/#/docs/
+      coherence-docs: "https://docs.oracle.com/en/middleware/standalone/coherence/15.1.1/"
+      coherence-ce-docs: https://coherence.community/latest/docs/
       hibernate-website: "https://hibernate.org/orm/"
-      hibernate-docs: "https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single"
+      hibernate-docs: "https://docs.hibernate.org/orm/7.4/userguide/html_single/"
 assets:
   - target: "/"
     includes:
