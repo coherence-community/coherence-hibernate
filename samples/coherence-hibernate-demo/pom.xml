@@ -12,12 +12,12 @@
 	<parent>
 		<groupId>com.oracle.coherence.hibernate</groupId>
 		<artifactId>samples</artifactId>
-		<version>3.0.4-SNAPSHOT</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.oracle.coherence.hibernate</groupId>
 	<artifactId>coherence-hibernate-demo-parent</artifactId>
-	<version>3.0.4-SNAPSHOT</version>
+	<version>4.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Samples - Coherence Hibernate Demo</name>
@@ -25,7 +25,8 @@
 
 	<properties>
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
-		<spring-boot.version>3.3.13</spring-boot.version>
+		<spring-boot.version>4.1.0</spring-boot.version>
+		<hibernate-validator.version>9.1.2.Final</hibernate-validator.version>
 	</properties>
 
 	<modules>
@@ -47,6 +48,21 @@
 				<groupId>org.hsqldb</groupId>
 				<artifactId>hsqldb</artifactId>
 				<version>${hsqldb.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate.orm</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>${hibernate7.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate.orm</groupId>
+				<artifactId>hibernate-micrometer</artifactId>
+				<version>${hibernate7.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate-validator.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

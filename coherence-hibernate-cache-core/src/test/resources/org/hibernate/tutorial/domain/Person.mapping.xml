@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2013, 2026, Oracle and/or its affiliates.
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+
+<entity-mappings xmlns="http://www.hibernate.org/xsd/orm/mapping">
+    <package>org.hibernate.tutorial.domain</package>
+    <attribute-accessor>property</attribute-accessor>
+    <default-cascade>none</default-cascade>
+    <default-lazy>true</default-lazy>
+    <entity class="Person" metadata-complete="true">
+        <table name="PERSON"/>
+        <dynamic-insert>false</dynamic-insert>
+        <dynamic-update>false</dynamic-update>
+        <select-before-update>false</select-before-update>
+        <caching access="READ_WRITE" includeLazy="true"/>
+        <batch-size>-1</batch-size>
+        <mutable>true</mutable>
+        <optimistic-locking>VERSION</optimistic-locking>
+        <attributes>
+            <id name="id">
+                <column insertable="true" name="PERSON_ID" nullable="false" unique="false" updatable="false"/>
+                <generated-value generator="id-id-generator"/>
+                <generic-generator class="native" name="id-id-generator"/>
+                <java-type>org.hibernate.type.descriptor.java.LongJavaType</java-type>
+                <jdbc-type>org.hibernate.type.descriptor.jdbc.BigIntJdbcType</jdbc-type>
+            </id>
+            <basic fetch="EAGER" name="age" optimistic-lock="true" optional="true">
+                <java-type>org.hibernate.type.descriptor.java.IntegerJavaType</java-type>
+                <jdbc-type>org.hibernate.type.descriptor.jdbc.IntegerJdbcType</jdbc-type>
+            </basic>
+            <basic fetch="EAGER" name="firstname" optimistic-lock="true" optional="true">
+                <java-type>org.hibernate.type.descriptor.java.StringJavaType</java-type>
+                <jdbc-type>org.hibernate.type.descriptor.jdbc.VarcharJdbcType</jdbc-type>
+            </basic>
+            <basic fetch="EAGER" name="lastname" optimistic-lock="true" optional="true">
+                <java-type>org.hibernate.type.descriptor.java.StringJavaType</java-type>
+                <jdbc-type>org.hibernate.type.descriptor.jdbc.VarcharJdbcType</jdbc-type>
+            </basic>
+            <many-to-many classification="SET" fetch="LAZY" name="events" target-entity="Event">
+                <join-table name="PERSON_EVENT">
+                    <join-column insertable="true" name="PERSON_ID" nullable="true" table="PERSON_EVENT" unique="false" updatable="true"/>
+                    <inverse-join-column insertable="true" name="EVENT_ID" nullable="true" table="PERSON_EVENT" unique="false" updatable="true"/>
+                </join-table>
+                <cascade/>
+            </many-to-many>
+            <element-collection classification="SET" fetch="LAZY" name="emailAddresses" target-class="java.lang.String">
+                <column insertable="true" name="EMAIL_ADDR" nullable="true" unique="false" updatable="true"/>
+                <java-type>org.hibernate.type.descriptor.java.StringJavaType</java-type>
+                <jdbc-type>org.hibernate.type.descriptor.jdbc.VarcharJdbcType</jdbc-type>
+                <collection-table name="PERSON_EMAIL_ADDR">
+                    <join-column insertable="true" name="PERSON_ID" nullable="true" unique="false" updatable="true"/>
+                </collection-table>
+            </element-collection>
+        </attributes>
+    </entity>
+</entity-mappings>

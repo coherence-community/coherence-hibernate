@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Oracle and/or its affiliates.
+ * Copyright (c) 2024, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -21,9 +21,13 @@ public class Main {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) {
+		System.setProperty("coherence.localhost", "127.0.0.1");
+		System.setProperty("coherence.ttl", "0");
+		System.setProperty("coherence.wka", "127.0.0.1");
+		System.setProperty("java.net.preferIPv4Stack", "true");
 
 		final Server hsqldbServer = new Server();
-		hsqldbServer.setAddress("localhost");
+		hsqldbServer.setAddress("127.0.0.1");
 		hsqldbServer.setPort(9001);
 		hsqldbServer.setSilent(true);
 		hsqldbServer.setDatabaseName(0, "mainDb");
@@ -47,7 +51,7 @@ public class Main {
 					.buildSessionFactory();
 
 			sessionFactory.inSession((session) -> {
-				final Book coherenceBook = session.get(Book.class, "9781847196125");
+				final Book coherenceBook = session.find(Book.class, "9781847196125");
 				LOGGER.info("Book: {}", coherenceBook);
 			});
 
@@ -58,7 +62,7 @@ public class Main {
 			// Let's query the database for all books
 
 			sessionFactory.inSession((session) ->
-					session.createQuery("from Book", Book.class)
+					session.createSelectionQuery("from Book", Book.class)
 						.getResultList().forEach((book) -> LOGGER.info("Book: {}", book)));
 
 			// At this point the size of the Coherence Map should only be 1

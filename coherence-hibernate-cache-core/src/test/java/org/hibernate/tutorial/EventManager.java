@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.query.Query;
+import org.hibernate.query.SelectionQuery;
 import org.hibernate.tutorial.domain.Event;
 import org.hibernate.tutorial.domain.Person;
 import org.hibernate.tutorial.util.HibernateUtil;
@@ -59,31 +59,29 @@ public class EventManager {
         final Event theEvent = new Event();
         theEvent.setTitle(title);
         theEvent.setDate(theDate);
-        session.save(theEvent);
+        session.persist(theEvent);
 
         session.getTransaction().commit();
 
         return theEvent.getId();
     }
 
-    @SuppressWarnings("unchecked")
 	public List<Event> listEvents() {
         final Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        final Query query = session.createQuery("from Event");
+        final SelectionQuery<Event> query = session.createSelectionQuery("from Event", Event.class);
         query.setCacheable(true);
-        final List<Event> result = query.list();
+        final List<Event> result = query.getResultList();
         session.getTransaction().commit();
         return result;
     }
 
-    @SuppressWarnings("unchecked")
 	public List<Person> listPersons() {
         final Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
-        final Query query = session.createQuery("from Person");
+        final SelectionQuery<Person> query = session.createSelectionQuery("from Person", Person.class);
         query.setCacheable(true);
-        final List<Person> result = query.list();
+        final List<Person> result = query.getResultList();
         session.getTransaction().commit();
         return result;
     }
@@ -96,7 +94,7 @@ public class EventManager {
         thePerson.setFirstname(firstName);
         thePerson.setLastname(lastName);
         thePerson.setAge(age);
-        session.save(thePerson);
+        session.persist(thePerson);
 
         session.getTransaction().commit();
 
@@ -107,12 +105,12 @@ public class EventManager {
         final Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
-        final Query query = session
-                .createQuery("select p from Person p left join fetch p.events where p.id = :pid")
+        final SelectionQuery<Person> query = session
+                .createSelectionQuery("select p from Person p left join fetch p.events where p.id = :pid", Person.class)
                 .setParameter("pid", personId);
         query.setCacheable(true);
-        final Person aPerson = (Person) query.uniqueResult(); // Eager fetch the collection so we can use it detached
-        final Event anEvent = session.load(Event.class, eventId);
+        final Person aPerson = query.uniqueResult(); // Eager fetch the collection so we can use it detached
+        final Event anEvent = session.getReference(Event.class, eventId);
 
         session.getTransaction().commit();
 
@@ -124,7 +122,7 @@ public class EventManager {
 
         final Session session2 = HibernateUtil.getSessionFactory().getCurrentSession();
         session2.beginTransaction();
-        session2.update(aPerson); // Reattachment of aPerson
+        session2.merge(aPerson); // Reattachment of aPerson
 
         session2.getTransaction().commit();
     }
@@ -133,7 +131,7 @@ public class EventManager {
         final Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
-        final Person aPerson = session.load(Person.class, personId);
+        final Person aPerson = session.getReference(Person.class, personId);
         // adding to the emailAddress collection might trigger a lazy load of the collection
         aPerson.getEmailAddresses().add(emailAddress);
 

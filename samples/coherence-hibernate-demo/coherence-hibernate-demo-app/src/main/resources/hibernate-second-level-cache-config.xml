@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
-  Copyright (c) 2020, 2021, Oracle and/or its affiliates.
+  Copyright (c) 2020, 2026, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -16,16 +16,16 @@
              are "GeneralDataRegions" in the Hibernate second-level cache design, as opposed to "TransactionalDataRegions",
              and are therefore not subject to the more strict concurrency control and transaction isolation requirements
              of the "read-write" "cache concurrency strategy" that can be used with TransactionalDataRegions (see
-             http://docs.jboss.org/hibernate/orm/4.2/manual/en-US/html/ch20.html#performance-cache).
+             https://docs.hibernate.org/orm/7.4/userguide/html_single/#caching).
              Therefore the near scheme is the best choice for this cache, whose entries are never updated but only inserted,
              read, and removed.  Hibernate removes query cache entries aggressively, so expiry is not necessary.  The cache
              value in a query cache is an array of identifiers of the entities in the query result set (not the entities
              themselves).  So as a precaution size limits should be used in both tiers.  Hibernate users can provide a name
              for the query result cache on a per-query basis; by convention these names should begin with "query.".
-             Otherwise the name used is "org.hibernate.cache.internal.StandardQueryCache".
+             Otherwise the name used is "default-query-results-region".
         -->
         <cache-mapping>
-            <cache-name>org.hibernate.cache.internal.StandardQueryCache</cache-name>
+            <cache-name>default-query-results-region</cache-name>
             <scheme-name>hibernate-second-level-cache-near-scheme</scheme-name>
             <init-params>
                 <init-param>
@@ -81,7 +81,7 @@
 
              An optimization is possible for entities or collections that can tolerate a more relaxed cache concurrency
              strategy, e.g. the nonstrict-read-write strategy or read-only strategy as defined by Hibernate (see
-             https://docs.jboss.org/hibernate/orm/5.2/userguide/html_single/Hibernate_User_Guide.html#caching).  Namely, a near scheme
+             https://docs.hibernate.org/orm/7.4/userguide/html_single/#caching). Namely, a near scheme
              can be used for those entity or collection caches.  Using a near scheme enables lower-latency cache reads
              for data with less strict concurrency control requirements.  Even so, the default read-write strategy and
              distributed scheme -based implementation uses Coherence EntryProcessors not pessimistic locking for concurrency

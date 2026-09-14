@@ -4,7 +4,7 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <!--
-  Copyright (c) 2013, 2024, Oracle and/or its affiliates.
+  Copyright (c) 2013, 2026, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -37,8 +37,8 @@
         <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">update</property>
 
-        <mapping resource="org/hibernate/tutorial/domain/Event.hbm.xml"/>
-        <mapping resource="org/hibernate/tutorial/domain/Person.hbm.xml"/>
+        <mapping resource="org/hibernate/tutorial/domain/Event.mapping.xml"/>
+        <mapping resource="org/hibernate/tutorial/domain/Person.mapping.xml"/>
 
     </session-factory>
 

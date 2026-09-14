@@ -1,0 +1,125 @@
+/*
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ * https://oss.oracle.com/licenses/upl.
+ */
+package com.oracle.coherence.hibernate.cache.v7;
+
+import com.oracle.coherence.hibernate.cache.v7.access.CoherenceDomainDataRegionImpl;
+import com.oracle.coherence.hibernate.cache.v7.access.CoherenceStorageAccessImpl;
+import com.oracle.coherence.hibernate.cache.v7.support.Foo;
+import com.tangosol.net.CacheFactory;
+import org.hibernate.Session;
+import org.hibernate.stat.CacheRegionStatistics;
+import org.hibernate.stat.Statistics;
+import org.hibernate.testing.orm.junit.DomainModel;
+import org.hibernate.testing.orm.junit.ServiceRegistry;
+import org.hibernate.testing.orm.junit.SessionFactoryScope;
+import org.hibernate.testing.orm.junit.Setting;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+/**
+ * @author Gunnar Hillert
+ */
+@ServiceRegistry(settings = {
+		@Setting(name = "hibernate.cache.use_second_level_cache", value = "true"),
+		@Setting(name = "hibernate.cache.use_query_cache", value = "true"),
+		@Setting(name = "hibernate.cache.region.factory_class", value = "com.oracle.coherence.hibernate.cache.v7.CoherenceRegionFactory"),
+		@Setting(name = "com.oracle.coherence.hibernate.cache.cache_config_file_path", value = "tests-expiring-hibernate-second-level-cache-config.xml")
+})
+@org.hibernate.testing.orm.junit.SessionFactory(generateStatistics = true)
+@DomainModel(annotatedClasses = Foo.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class ReadWriteCacheExpirationTests {
+
+	private Long idOfSavedItem = null;
+
+	@AfterAll
+	public static void after() {
+		CacheFactory.shutdown();
+	}
+
+	@Test
+	@Order(1)
+	public void addExpiringItem(SessionFactoryScope scope) {
+		final Statistics statistics = scope.getSessionFactory().getStatistics();
+
+		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) scope.getSessionFactory().getCache().getRegion("foo");
+		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
+
+		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
+
+		final Session session = scope.getSessionFactory().openSession();
+		session.beginTransaction();
+		final Foo itemToSave = new Foo("bar");
+		session.persist(itemToSave);
+		this.idOfSavedItem = itemToSave.getId();
+		session.flush();
+		session.getTransaction().commit();
+
+		final CacheRegionStatistics itemStatistics = statistics.getDomainDataRegionStatistics("foo");
+
+		assertThat(itemStatistics.getPutCount()).isEqualTo(1);
+		assertThat(itemStatistics.getHitCount()).isEqualTo(0);
+		assertThat(itemStatistics.getMissCount()).isEqualTo(0);
+	}
+
+	@Test
+	@Order(2)
+	public void retrieveUnExpiredItem(SessionFactoryScope scope) {
+		final Statistics statistics = scope.getSessionFactory().getStatistics();
+		final CacheRegionStatistics itemStatistics = statistics.getDomainDataRegionStatistics("foo");
+
+		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) scope.getSessionFactory().getCache().getRegion("foo");
+		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
+
+		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(1);
+
+		final Session session = scope.getSessionFactory().openSession();
+		session.beginTransaction();
+		final Foo foo = session.find(Foo.class, this.idOfSavedItem);
+		session.getTransaction().commit();
+
+		assertThat(foo).isNotNull();
+
+		assertThat(itemStatistics.getPutCount()).isEqualTo(1);
+		assertThat(itemStatistics.getHitCount()).isEqualTo(1);
+		assertThat(itemStatistics.getMissCount()).isEqualTo(0);
+	}
+
+	@Test
+	@Order(3)
+	public void retrieveExpiredItem(SessionFactoryScope scope) throws InterruptedException {
+
+		final Statistics statistics = scope.getSessionFactory().getStatistics();
+		final CacheRegionStatistics itemStatistics = statistics.getDomainDataRegionStatistics("foo");
+
+		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) scope.getSessionFactory().getCache().getRegion("foo");
+		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
+
+		Thread.sleep(1500);
+
+		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
+
+		final Session session = scope.getSessionFactory().openSession();
+		session.beginTransaction();
+		final Foo foo = session.find(Foo.class, this.idOfSavedItem);
+		session.getTransaction().commit();
+
+		assertThat(foo).isNotNull();
+
+		assertThat(itemStatistics.getPutCount()).isEqualTo(2);
+		assertThat(itemStatistics.getHitCount()).isEqualTo(1);
+		assertThat(itemStatistics.getMissCount()).isEqualTo(1);
+
+	}
+}

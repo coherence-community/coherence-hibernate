@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
-  Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+  Copyright (c) 2013, 2026, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -22,10 +22,10 @@
              value in a query cache is an array of identifiers of the entities in the query result set (not the entities
              themselves).  So as a precaution size limits should be used in both tiers.  Hibernate users can provide a name
              for the query result cache on a per-query basis; by convention these names should begin with "query.".
-             Otherwise the name used is "org.hibernate.cache.internal.StandardQueryCache".
+             Otherwise the name used is "default-query-results-region".
         -->
         <cache-mapping>
-            <cache-name>org.hibernate.cache.internal.StandardQueryCache</cache-name>
+            <cache-name>default-query-results-region</cache-name>
             <scheme-name>hibernate-second-level-cache-near-scheme</scheme-name>
             <init-params>
                 <init-param>
@@ -63,7 +63,7 @@
              in each client.
         -->
         <cache-mapping>
-            <cache-name>org.hibernate.cache.spi.UpdateTimestampsCache</cache-name>
+            <cache-name>default-update-timestamps-region</cache-name>
             <scheme-name>hibernate-second-level-cache-near-scheme</scheme-name>
         </cache-mapping>
 

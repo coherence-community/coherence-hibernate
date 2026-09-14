@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2022, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * http://oss.oracle.com/licenses/upl.
@@ -8,7 +8,7 @@ package com.oracle.coherence.hibernate.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -34,7 +34,7 @@ public class CoherenceHibernateDemoApplication {
     }
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer addCustomBigDecimalDeserialization() {
+    public JsonMapperBuilderCustomizer addCustomBigDecimalDeserialization() {
         return (builder) -> {
             // Customize if needed
         };

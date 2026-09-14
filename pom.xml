@@ -11,7 +11,7 @@
 
     <groupId>com.oracle.coherence.hibernate</groupId>
     <artifactId>coherence-hibernate-parent</artifactId>
-    <version>3.0.4-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Coherence Hibernate Project</name>
@@ -61,8 +61,7 @@
         <module>coherence-hibernate-cache-store</module>
         <module>coherence-hibernate-cache-store-tests</module>
         <module>coherence-hibernate-cache-core</module>
-        <module>coherence-hibernate-cache-53</module>
-        <module>coherence-hibernate-cache-6</module>
+        <module>coherence-hibernate-cache-7</module>
         <module>samples</module>
         <module>coherence-hibernate-site</module>
     </modules>
@@ -114,9 +113,12 @@
         <checker-qual.version>3.49.5</checker-qual.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
         <coherence.version>25.03.1</coherence.version>
-        <hibernate6.version>6.6.19.Final</hibernate6.version>
-        <hibernate53.version>5.6.15.Final</hibernate53.version>
+        <hibernate7.junit-platform-launcher.version>6.0.1</hibernate7.junit-platform-launcher.version>
+        <hibernate7.junit.version>6.0.1</hibernate7.junit.version>
+        <hibernate7.mockito.version>5.20.0</hibernate7.mockito.version>
+        <hibernate7.version>7.4.5.Final</hibernate7.version>
         <hsqldb.version>2.7.4</hsqldb.version>
+        <jakarta.persistence.version>3.2.0</jakarta.persistence.version>
         <junit.version>4.13.2</junit.version>
         <junit5.version>5.10.5</junit5.version>
         <junit-platform-launcher.version>1.11.4</junit-platform-launcher.version>
@@ -422,18 +424,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <id>hibernate60</id>
-            <properties>
-                <hibernate6.version>6.0.2.Final</hibernate6.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>hibernate64</id>
-            <properties>
-                <hibernate6.version>6.4.10.Final</hibernate6.version>
-            </properties>
         </profile>
         <profile>
             <id>coherence14_1_1</id>

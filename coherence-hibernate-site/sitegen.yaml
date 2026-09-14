@@ -16,7 +16,7 @@ engine:
       version-coherence-maven: "${project.version}"
       version-coherence-hibernate: "${project.version}"
       version-coherence: "${coherence.version}"
-      version-hibernate: "${hibernate53.version}"
+      version-hibernate: "${hibernate7.version}"
       timestamp: "${timestamp}"
       github-repository: "https://github.com/coherence-community/coherence-hibernate"
       coherence-docs: "https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/"

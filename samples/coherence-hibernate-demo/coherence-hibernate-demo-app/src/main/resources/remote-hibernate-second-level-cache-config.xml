@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
-  Copyright (c) 2020, Oracle and/or its affiliates.
+  Copyright (c) 2020, 2026, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -12,7 +12,7 @@
 
     <caching-scheme-mapping>
         <cache-mapping>
-            <cache-name>org.hibernate.cache.internal.StandardQueryCache</cache-name>
+            <cache-name>default-query-results-region</cache-name>
             <scheme-name>remote</scheme-name>
         </cache-mapping>
 
@@ -22,7 +22,7 @@
         </cache-mapping>
 
         <cache-mapping>
-            <cache-name>org.hibernate.cache.spi.UpdateTimestampsCache</cache-name>
+            <cache-name>default-update-timestamps-region</cache-name>
             <scheme-name>remote</scheme-name>
         </cache-mapping>
 
