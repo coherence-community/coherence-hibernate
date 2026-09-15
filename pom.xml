@@ -112,7 +112,7 @@
         <assertj.version>3.27.3</assertj.version>
         <checker-qual.version>3.49.5</checker-qual.version>
         <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
-        <coherence.version>15.1.1-0-2</coherence.version>
+        <coherence.version>15.1.1-0-5</coherence.version>
         <hibernate7.junit-platform-launcher.version>6.0.1</hibernate7.junit-platform-launcher.version>
         <hibernate7.junit.version>6.0.1</hibernate7.junit.version>
         <hibernate7.mockito.version>5.20.0</hibernate7.mockito.version>

@@ -25,8 +25,8 @@
 
 	<properties>
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
-		<spring-boot.version>4.1.0</spring-boot.version>
-		<tomcat.version>11.0.24</tomcat.version>
+		<spring-boot.version>4.1.1</spring-boot.version>
+		<tomcat.version>11.0.25</tomcat.version>
 		<hibernate-validator.version>9.1.2.Final</hibernate-validator.version>
 	</properties>
 
