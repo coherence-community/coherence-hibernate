@@ -14,6 +14,11 @@ on:
   workflow_dispatch:
 jobs:
   build:
+    # The Java 17 non-PR leg also updates NVD; use the same group as PRs and warm-up.
+    concurrency:
+      group: ${{ github.event_name != 'pull_request' && matrix.java-version == '17' && 'dependency-check-nvd' || format('build-{0}-{1}-{2}', github.run_id, github.run_attempt, matrix.java-version) }}
+      queue: max
+      cancel-in-progress: false
     strategy:
       matrix:
         java-version: [ '17', '21', '25' ]
@@ -49,11 +54,14 @@ jobs:
         MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         SONAR_TOKEN: "${{secrets.SONAR_TOKEN}}"
+    - name: Prepare vulnerability database
+      if: "github.event_name != 'pull_request' && matrix.java-version == '17'"
+      uses: ./.github/actions/dependency-check-data
+      with:
+        nvd-api-key: ${{ secrets.NVD_API_KEY }}
     - name: Check dependencies for known vulnerabilities
       if: "github.event_name != 'pull_request' && matrix.java-version == '17'"
-      run: ./mvnw verify -B -DskipTests -Powasp
-      env:
-        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
+      run: ./mvnw verify -B -DskipTests -Powasp -DdataDirectory="$HOME/.cache/dependency-check" -DautoUpdate=false
     - name: Build and deploy website and snapshots
       if: "github.repository == 'coherence-community/coherence-hibernate' && github.event_name != 'pull_request' && matrix.java-version == '17'"
       run: |

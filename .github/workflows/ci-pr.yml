@@ -58,6 +58,10 @@ jobs:
   dependency-check:
     name: Dependency-Check
     runs-on: ubuntu-latest
+    concurrency:
+      group: dependency-check-nvd
+      queue: max
+      cancel-in-progress: false
     permissions:
       contents: read
     steps:
@@ -67,19 +71,19 @@ jobs:
         with:
           distribution: 'oracle'
           java-version: '17.0.12'
-      - name: Cache Maven packages and vulnerability data
+      - name: Cache Maven packages
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-dependency-check-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-dependency-check-${{ hashFiles('**/pom.xml') }}-
-            ${{ runner.os }}-dependency-check-
             ${{ runner.os }}-m2-
+      - name: Prepare vulnerability database
+        uses: ./.github/actions/dependency-check-data
+        with:
+          nvd-api-key: ${{ secrets.NVD_API_KEY }}
       - name: Check dependencies for known vulnerabilities
-        run: ./mvnw -B -Powasp dependency-check:aggregate
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        run: ./mvnw -B -Powasp dependency-check:aggregate -DdataDirectory="$HOME/.cache/dependency-check" -DautoUpdate=false
       - name: Upload Dependency-Check report
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
