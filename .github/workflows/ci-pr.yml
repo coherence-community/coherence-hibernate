@@ -13,17 +13,17 @@ jobs:
       issues: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         name: 📥 Checkout repository
         with:
           fetch-depth: 0
       - name: 🔧 Set up JDK ${{ matrix.java-version }}
-        uses: actions/setup-java@v4.7.1
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: 'oracle'
           java-version: ${{ matrix.java-version }}
       - name: 🫙 Cache Maven packages
-        uses: actions/cache@v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -39,14 +39,14 @@ jobs:
           HEAD_BRANCH: ${{github.event.workflow_run.head_branch}}
       - name: 📊 Publish Test Report
         if: always()
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@a9170d5795813c01ab4901ffb045b52bab4ab09d # v6.5.0
         with:
           check_name: Java CI / Test Report (${{ matrix.java-version }})
           report_paths: '**/target/surefire-reports/TEST-*.xml'
           check_retries: 'true'
       - name: Upload cache server log
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: dcs-log-java-${{ matrix.java-version }}-attempt-${{ github.run_attempt }}
           path: coherence-hibernate-cache-store-tests/dcs.log
@@ -61,14 +61,14 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set up JDK 17
-        uses: actions/setup-java@v4.7.1
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: 'oracle'
           java-version: '17.0.12'
       - name: Cache Maven packages and vulnerability data
-        uses: actions/cache@v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-dependency-check-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}-${{ github.run_attempt }}
@@ -82,7 +82,7 @@ jobs:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
       - name: Upload Dependency-Check report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: dependency-check-report
           path: target/dependency-check-report.*
