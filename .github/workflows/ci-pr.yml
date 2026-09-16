@@ -5,7 +5,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java-version: [ 17, 21, 25 ]
+        java-version: [ '17.0.12', 21, 25 ]
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -33,7 +33,7 @@ jobs:
         run: |
           git config --global user.email "github-action@users.noreply.github.com"
           git config --global user.name "GitHub Action"
-          ./mvnw clean install -B -Powasp
+          ./mvnw clean install -B
         env:
           GIT_COMMIT: ${{github.event.workflow_run.head_commit.id}}
           HEAD_BRANCH: ${{github.event.workflow_run.head_branch}}
@@ -44,6 +44,46 @@ jobs:
           check_name: Java CI / Test Report (${{ matrix.java-version }})
           report_paths: '**/target/surefire-reports/TEST-*.xml'
           check_retries: 'true'
+      - name: Upload cache server log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dcs-log-java-${{ matrix.java-version }}-attempt-${{ github.run_attempt }}
+          path: coherence-hibernate-cache-store-tests/dcs.log
+          if-no-files-found: warn
       - name: 🧹 Clean Maven cache
         run: |
           find ~/.m2/repository -type d -name '*SNAPSHOT' | xargs rm -fr
+
+  dependency-check:
+    name: Dependency-Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4.7.1
+        with:
+          distribution: 'oracle'
+          java-version: '17.0.12'
+      - name: Cache Maven packages and vulnerability data
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-dependency-check-${{ hashFiles('**/pom.xml') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            ${{ runner.os }}-dependency-check-${{ hashFiles('**/pom.xml') }}-
+            ${{ runner.os }}-dependency-check-
+            ${{ runner.os }}-m2-
+      - name: Check dependencies for known vulnerabilities
+        run: ./mvnw -B -Powasp dependency-check:aggregate
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+      - name: Upload Dependency-Check report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: target/dependency-check-report.*
+          if-no-files-found: warn
