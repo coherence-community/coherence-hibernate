@@ -10,7 +10,7 @@ event.
 The demo is split into multiple Maven modules in order to show-case `2` use-cases:
 
 * Embedded Coherence
-* Use a remote Coherence cache using https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/develop-remote-clients/introduction-coherenceextend.html[Coherence*Extend]
+* Use a remote Coherence cache using https://docs.oracle.com/en/middleware/standalone/coherence/15.1.1/develop-remote-clients/introduction-coherenceextend.html[Coherence*Extend]
 
 The Maven Project is structured as follows:
 
@@ -33,7 +33,7 @@ Run the demo:
 
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
-java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-app/target/coherence-hibernate-demo-app-2.1.0-SNAPSHOT.jar
+java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-app/target/coherence-hibernate-demo-app-4.0.0-SNAPSHOT.jar
 ----
 
 == Run the remote Coherence demo
@@ -42,14 +42,14 @@ First, start the remote Coherence server:
 
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
-java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-server/target/coherence-hibernate-demo-server-2.1.0-SNAPSHOT.jar
+java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-server/target/coherence-hibernate-demo-server-4.0.0-SNAPSHOT.jar
 ----
 
 Next, start the demo:
 
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
-java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-app/target/coherence-hibernate-demo-app-2.1.0-SNAPSHOT.jar --spring.profiles.active=remote
+java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-app/target/coherence-hibernate-demo-app-4.0.0-SNAPSHOT.jar --spring.profiles.active=remote
 ----
 
 We will use the exact same application as used for the embedded Coherence demo. However, by activating the `remote`
@@ -98,13 +98,7 @@ You can also see statistics via the Spring Boot metrics endpoint `+http://localh
 
 == More Details
 
-The Spring Boot application was created via https://start.spring.io. This is generally a good starting if you are new
-to Spring Boot:
-
-[source,bash,indent=1,subs="verbatim,quotes,attributes"]
-----
-wget https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.4.0.M4&packaging=jar&jvmVersion=11&groupId=com.oracle.coherence.hibernate&artifactId=spring-demo&name=spring-demo&description=Demo%20project%20for%20Coherence%20Hibernate&packageName=com.oracle.coherence.hibernate.demo&dependencies=data-jpa,web,hsql
-----
+The application uses Spring Boot `4.1`, Hibernate ORM `7.4`, and Jakarta Persistence `3.2` on Java 17, 21, or 25.
 
 We have added 2 domain objects to the application:
 
@@ -115,15 +109,19 @@ We have added 2 domain objects to the application:
 
 === Add Required Dependencies
 
-First, please add the respective dependency to your `pom.xml`. In our case, we are using Hibernate version `5.6.3.final`.
-Therefore, the dependency to add is:
+Add the Hibernate 7 adapter to your `pom.xml`:
 
 [source,xml,indent=1,subs="verbatim,quotes,attributes"]
 ----
 <dependency>
     <groupId>com.oracle.coherence.hibernate</groupId>
-    <artifactId>coherence-hibernate-cache-53</artifactId>
-    <version>2.1.1</version>
+    <artifactId>coherence-hibernate-cache-7</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
+</dependency>
+<dependency>
+    <groupId>org.hibernate.orm</groupId>
+    <artifactId>hibernate-core</artifactId>
+    <version>7.4.5.Final</version>
 </dependency>
 ----
 
@@ -134,7 +132,7 @@ You will also need to add a specific version of Coherence, e.g.:
 <dependency>
     <groupId>com.oracle.coherence.ce</groupId>
     <artifactId>coherence</artifactId>
-    <version>21.12</version>
+    <version>15.1.1-0-5</version>
 </dependency>
 ----
 
@@ -152,7 +150,7 @@ In order to configure Hibernate, we will set the following Hibernate properties:
 [source,properties,indent=1,subs="verbatim,quotes,attributes"]
 ----
 hibernate.cache.use_second_level_cache=true
-hibernate.cache.region.factory_class=com.oracle.coherence.hibernate.cache.v6.CoherenceRegionFactory
+hibernate.cache.region.factory_class=com.oracle.coherence.hibernate.cache.v7.CoherenceRegionFactory
 hibernate.cache.use_query_cache=true
 ----
 
@@ -163,16 +161,15 @@ For our Spring Boot based application, we can set those properties in
 ----
 spring:
   jpa:
-    hibernate:
-        properties:
-          hibernate.cache.use_second_level_cache: true
-          hibernate.cache.region.factory_class: com.oracle.coherence.hibernate.cache.v6.CoherenceRegionFactory
-          hibernate.cache.use_query_cache: true
-          com.oracle.coherence.hibernate.cache.cache_config_file_path: test-hibernate-second-level-cache-config.xml
+    properties:
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.region.factory_class: com.oracle.coherence.hibernate.cache.v7.CoherenceRegionFactory
+      hibernate.cache.use_query_cache: true
+      com.oracle.coherence.hibernate.cache.cache_config_file_path: hibernate-second-level-cache-config.xml
 ----
 
 In order to support the remote Coherence cache server use-case, we have also added a profile-specific yaml file that
-only is active when the `remote` profile is activated - `application-Remote.yml`:
+only is active when the `remote` profile is activated - `application-remote.yml`:
 
 [source,yaml,indent=1,subs="verbatim,quotes,attributes"]
 ----
@@ -250,7 +247,7 @@ First, start the remote Coherence server:
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
 java -DauthenticationToken=my_secret_token  \
--jar coherence-hibernate-demo-server/target/coherence-hibernate-demo-server-1.0.0-SNAPSHOT.jar
+-jar coherence-hibernate-demo-server/target/coherence-hibernate-demo-server-4.0.0-SNAPSHOT.jar
 ----
 
 Next, start the client application:
@@ -258,9 +255,9 @@ Next, start the client application:
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
 java -DauthenticationToken=my_secret_token  \
--jar coherence-hibernate-demo-app/target/coherence-hibernate-demo-app-1.0.0-SNAPSHOT.jar \
+-jar coherence-hibernate-demo-app/target/coherence-hibernate-demo-app-4.0.0-SNAPSHOT.jar \
 --spring.profiles.active=remote
 ----
 
 For more information, please consult the reference documentation on
-https://docs.oracle.com/en/middleware/standalone/coherence/14.1.1.0/secure/securing-extend-client-connections.html#GUID-CB345CC0-9F83-44D6-A3E4-7A1ADF67426A[Using Identity Tokens to Restrict Client Connections]
+https://docs.oracle.com/en/middleware/standalone/coherence/15.1.1/secure/securing-extend-client-connections.html[Using Identity Tokens to Restrict Client Connections]

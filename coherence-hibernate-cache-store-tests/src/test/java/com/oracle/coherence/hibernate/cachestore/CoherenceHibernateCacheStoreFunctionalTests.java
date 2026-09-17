@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -7,6 +7,9 @@
 package com.oracle.coherence.hibernate.cachestore;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -34,15 +37,13 @@ import com.tangosol.util.processor.ConditionalRemove;
 import org.hibernate.Session;
 import org.hibernate.tutorial.domain.Person;
 import org.hibernate.tutorial.util.HibernateUtil;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * A CoherenceHibernateCacheStoreFunctionalTest is a functional test of the Hibernate-based implementation
@@ -59,7 +60,6 @@ import static org.junit.Assert.assertNotNull;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-@RunWith(JUnit4.class)
 public class CoherenceHibernateCacheStoreFunctionalTests {
 
     /**
@@ -85,7 +85,7 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
     /**
      * The Coherence WKA host used in the test fixture.
      */
-    private static String WKA_HOST = "localhost";
+    private static String WKA_HOST = "127.0.0.1";
 
     /**
      * The Coherence WKA port used in the test fixture.
@@ -121,11 +121,11 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
      * @throws InterruptedException if the calling thread is interrupted while sleeping for fixture startup
      * @throws IOException if files could not be opened for redirecting process output
      */
-    @BeforeClass
+    @BeforeAll
     public static void setupSuite() throws InterruptedException, IOException {
         startDatabase();
         startCacheServer();
-        Thread.currentThread().sleep(5 * 1000);
+        awaitCacheServer();
         initializeSchema();
         joinCluster();
     }
@@ -136,18 +136,22 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
      * These processes are not restarted between test cases for efficiency.
      * Test method independence is maintained by restoring initial cache state in normal tearDown.
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownSuite() {
         leaveCluster();
-        cluster.destroy();
+        if (cluster != null) {
+            cluster.destroy();
+        }
         closeConnection();
-        hsqldbProcess.destroy();
+        if (hsqldbProcess != null) {
+            hsqldbProcess.destroy();
+        }
     }
 
     /**
      * Resets all second-level cache contents to initial (cold, empty) state.
      */
-    @After
+    @AfterEach
     public void resetCacheContents() {
         getPersonCache().clear();
     }
@@ -156,7 +160,7 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
      * Resets all database contents to initial (cold, empty) state.
      * @throws SQLException if there was some problem interacting with the database
      */
-    @After
+    @AfterEach
     public void resetDatabaseContents() throws SQLException {
         truncatePersonTable();
     }
@@ -171,8 +175,8 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         final Person person = newPerson();
         getPersonCache().put(person.getId(), person);
 
-        assertEquals("Expect person cache size of one", 1, getPersonCache().size());
-        assertEquals("Expect PERSON table count of one", 1, getPersonTableCount());
+        assertEquals(1, getPersonCache().size(), "Expect person cache size of one");
+        assertEquals(1, getPersonTableCount(), "Expect PERSON table count of one");
     }
 
     /**
@@ -189,8 +193,8 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         hashMap.put(person2.getId(), person2);
         getPersonCache().putAll(hashMap);
 
-        assertEquals("Expect person cache size of two", 2, getPersonCache().size());
-        assertEquals("Expect PERSON table count of two", 2, getPersonTableCount());
+        assertEquals(2, getPersonCache().size(), "Expect person cache size of two");
+        assertEquals(2, getPersonTableCount(), "Expect PERSON table count of two");
     }
 
     /**
@@ -206,9 +210,9 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
 
         final Person gottenPerson = (Person) getPersonCache().get(savedPerson.getId());
 
-        assertNotNull("Expect non-null gotten person", gottenPerson);
-        assertEquals("Expect gotten person equal to saved person", gottenPerson, savedPerson);
-        assertEquals("Expect person cache size of one", 1, getPersonCache().size());
+        assertNotNull(gottenPerson, "Expect non-null gotten person");
+        assertEquals(gottenPerson, savedPerson, "Expect gotten person equal to saved person");
+        assertEquals(1, getPersonCache().size(), "Expect person cache size of one");
     }
 
     /**
@@ -225,16 +229,16 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         session.getTransaction().commit();
 
         final Map gottenPersons = getPersonCache().getAll(Arrays.asList(new Long[] {savedPerson1.getId(), savedPerson2.getId()}));
-        assertEquals("Expect two gotten persons", 2, gottenPersons.size());
+        assertEquals(2, gottenPersons.size(), "Expect two gotten persons");
 
         final Person gottenPerson1 = (Person) gottenPersons.get(savedPerson1.getId());
         final Person gottenPerson2 = (Person) gottenPersons.get(savedPerson2.getId());
 
-        assertNotNull("Expect non-null gotten person 1", gottenPerson1);
-        assertNotNull("Expect non-null gotten person 2", gottenPerson2);
-        assertEquals("Expect gotten person 1 equal to saved person 1", gottenPerson1, savedPerson1);
-        assertEquals("Expect gotten person 2 equal to saved person 2", gottenPerson2, savedPerson2);
-        assertEquals("Expect person cache size of two", 2, getPersonCache().size());
+        assertNotNull(gottenPerson1, "Expect non-null gotten person 1");
+        assertNotNull(gottenPerson2, "Expect non-null gotten person 2");
+        assertEquals(gottenPerson1, savedPerson1, "Expect gotten person 1 equal to saved person 1");
+        assertEquals(gottenPerson2, savedPerson2, "Expect gotten person 2 equal to saved person 2");
+        assertEquals(2, getPersonCache().size(), "Expect person cache size of two");
     }
 
     /**
@@ -252,8 +256,8 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         getPersonCache().get(savedPerson.getId());
         getPersonCache().remove(savedPerson.getId());
 
-        assertEquals("Expect person cache size of zero", 0, getPersonCache().size());
-        assertEquals("Expect PERSON table count of zero", 0, getPersonTableCount());
+        assertEquals(0, getPersonCache().size(), "Expect person cache size of zero");
+        assertEquals(0, getPersonTableCount(), "Expect PERSON table count of zero");
     }
 
     /**
@@ -274,8 +278,8 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         getPersonCache().getAll(keyList);
         getPersonCache().invokeAll(keyList, new ConditionalRemove(new AlwaysFilter()));
 
-        assertEquals("Expect person cache size of zero", 0, getPersonCache().size());
-        assertEquals("Expect PERSON table count of zero", 0, getPersonTableCount());
+        assertEquals(0, getPersonCache().size(), "Expect person cache size of zero");
+        assertEquals(0, getPersonTableCount(), "Expect PERSON table count of zero");
     }
 
     // ---- Internal
@@ -345,6 +349,73 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
         final ClusterBuilder clusterBuilder = new ClusterBuilder();
         clusterBuilder.addBuilder(dcsBuilder, dcsSchema, "dcs", 1);
         cluster = clusterBuilder.realize(dcsConsole);
+    }
+
+    /**
+     * Waits until the storage-enabled cache server has joined its cluster.
+     *
+     * @throws InterruptedException if the calling thread is interrupted while waiting
+     */
+    private static void awaitCacheServer() throws InterruptedException {
+        final long deadline = System.currentTimeMillis() + 60_000L;
+        RuntimeException lastFailure = null;
+        while (System.currentTimeMillis() < deadline) {
+            final Integer exitCode = getCacheServerExitCode();
+            if (exitCode != null) {
+                throw new IllegalStateException(
+                        "Cache server exited with code " + exitCode + " before joining its cluster.\n"
+                                + cacheServerLogTail(),
+                        lastFailure);
+            }
+            try {
+                if (cluster.getClusterSize() == 1) {
+                    return;
+                }
+            }
+            catch (RuntimeException exception) {
+                lastFailure = exception;
+            }
+            Thread.sleep(250L);
+        }
+        throw new IllegalStateException(
+                "Cache server did not join the cluster within 60 seconds.\n" + cacheServerLogTail(),
+                lastFailure);
+    }
+
+    /**
+     * Returns the exit code of a cache-server process that terminated before joining, or {@code null} while all
+     * processes are still running.
+     * @return an early cache-server exit code, or {@code null}
+     */
+    private static Integer getCacheServerExitCode() {
+        if (cluster == null) {
+            return null;
+        }
+        for (ClusterMember member : cluster) {
+            try {
+                return member.exitValue();
+            }
+            catch (IllegalThreadStateException ignored) {
+                // The member is still running.
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the last forty cache-server log lines for startup diagnostics.
+     * @return a labeled cache-server log tail, or an explanation when the log is unavailable
+     */
+    private static String cacheServerLogTail() {
+        final Path logPath = Path.of("dcs.log");
+        try {
+            final List<String> lines = Files.readAllLines(logPath, StandardCharsets.UTF_8);
+            final int firstLine = Math.max(0, lines.size() - 40);
+            return "Last dcs.log lines:\n" + String.join(System.lineSeparator(), lines.subList(firstLine, lines.size()));
+        }
+        catch (IOException exception) {
+            return "dcs.log was unavailable: " + exception.getMessage();
+        }
     }
 
     /**

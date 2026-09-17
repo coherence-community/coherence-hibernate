@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2024, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -8,8 +8,8 @@ package com.oracle.coherence.hibernate.demo;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oracle.coherence.hibernate.cache.v53.region.CoherenceRegionValue;
+import com.oracle.coherence.hibernate.cache.v7.region.CoherenceRegionValue;
+import com.oracle.coherence.hibernate.demo.controller.dto.EventDto;
 import com.oracle.coherence.hibernate.demo.controller.dto.PersonDto;
 import com.oracle.coherence.hibernate.demo.model.Event;
 import com.oracle.coherence.hibernate.demo.model.Person;
@@ -25,10 +25,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import tools.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -171,7 +172,7 @@ class CoherenceHibernateDemoApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
-        final Event event = this.objectMapper.readValue(eventResponse, Event.class);
+        final EventDto event = this.objectMapper.readValue(eventResponse, EventDto.class);
 
         assertThat(event.getId()).isEqualTo(1L);
         assertThat(event.getParticipants()).isEmpty();
@@ -228,7 +229,7 @@ class CoherenceHibernateDemoApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
-        final Event event = this.objectMapper.readValue(eventResponse, Event.class);
+        final EventDto event = this.objectMapper.readValue(eventResponse, EventDto.class);
 
         assertThat(event.getId()).isEqualTo(1L);
         assertThat(event.getParticipants()).isEmpty();
@@ -279,7 +280,7 @@ class CoherenceHibernateDemoApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
-        final Event event = this.objectMapper.readValue(eventResponse, Event.class);
+        final EventDto event = this.objectMapper.readValue(eventResponse, EventDto.class);
 
         assertThat(event.getId()).isEqualTo(1L);
         assertThat(event.getParticipants()).isEmpty();
@@ -311,7 +312,7 @@ class CoherenceHibernateDemoApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
-        final Event event = this.objectMapper.readValue(eventResponse, Event.class);
+        final EventDto event = this.objectMapper.readValue(eventResponse, EventDto.class);
 
         assertThat(event.getId()).isEqualTo(1L);
         assertThat(event.getParticipants()).isEmpty();
@@ -494,7 +495,7 @@ class CoherenceHibernateDemoApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
-        final Event event = this.objectMapper.readValue(eventResponse, Event.class);
+        final EventDto event = this.objectMapper.readValue(eventResponse, EventDto.class);
 
         assertThat(event.getId()).isEqualTo(1L);
         assertThat(event.getParticipants()).hasSize(2);
@@ -526,7 +527,7 @@ class CoherenceHibernateDemoApplicationTests {
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
                 .andReturn().getResponse().getContentAsString();
-        final Event event = this.objectMapper.readValue(eventResponse, Event.class);
+        final EventDto event = this.objectMapper.readValue(eventResponse, EventDto.class);
 
         assertThat(event.getId()).isEqualTo(1L);
         assertThat(event.getParticipants()).hasSize(2);

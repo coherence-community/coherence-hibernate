@@ -6,6 +6,6 @@ logging:
     com.oracle.coherence: DEBUG
 spring:
   datasource:
-    url: jdbc:hsqldb:hsql://localhost:9001/maindb
+    url: jdbc:hsqldb:hsql://127.0.0.1:9001/maindb
     username: coherence
     password: rocks

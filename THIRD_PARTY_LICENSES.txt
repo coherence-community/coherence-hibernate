@@ -7,11 +7,81 @@ described below. The disclaimers and copyright notices provided are
 based on information made available to Oracle by the third party
 licensors listed.
 
+====================================
+Coherence Hibernate 4.x Dependencies
+====================================
+
+The following inventory reflects the compile and provided dependency graph of
+the Coherence Hibernate 4.x distributable library modules. Dependencies marked
+as provided are not bundled inside the library jars, but are listed because
+applications must supply them at runtime.
+
+Hibernate ORM 7.4.5.Final (org.hibernate.orm:hibernate-core)
+Copyright Red Hat and Hibernate contributors
+Apache License, Version 2.0
+
+Hibernate Models 1.1.1 (org.hibernate.models:hibernate-models)
+Copyright Red Hat and Hibernate contributors
+Apache License, Version 2.0
+
+JBoss Logging 3.6.1.Final (org.jboss.logging:jboss-logging)
+Apache License, Version 2.0
+
+Byte Buddy 1.18.8 (net.bytebuddy:byte-buddy)
+Copyright 2014-present Rafael Winterhalter
+Apache License, Version 2.0
+Includes ASM 9.9.1 under the BSD 3-Clause License.
+
+ANTLR 4 Runtime 4.13.2 (org.antlr:antlr4-runtime)
+Copyright the ANTLR Project and contributors
+BSD 3-Clause License
+
+Jakarta Persistence API 3.2.0 (jakarta.persistence:jakarta.persistence-api)
+Eclipse Public License 2.0 and Eclipse Distribution License 1.0
+
+Jakarta Transactions API 2.0.1 (jakarta.transaction:jakarta.transaction-api)
+Eclipse Public License 2.0 and GPL 2.0 with the Classpath Exception
+
+Jakarta XML Binding API 4.0.4 (jakarta.xml.bind:jakarta.xml.bind-api)
+JAXB Runtime, Core, and TXW2 4.0.7 (org.glassfish.jaxb)
+Copyright Oracle, Eclipse Foundation, and contributors
+BSD 3-Clause License
+
+Jakarta Activation API 2.1.4 (jakarta.activation:jakarta.activation-api)
+Eclipse Distribution License 1.0
+
+Angus Activation 2.0.3 (org.eclipse.angus:angus-activation)
+Copyright Eclipse Foundation and contributors
+Eclipse Distribution License 1.0 and Eclipse Public License 2.0
+
+istack-commons-runtime 4.1.2 (com.sun.istack:istack-commons-runtime)
+Copyright Oracle and contributors
+Eclipse Distribution License 1.0
+
+Jakarta Inject API 2.0.1 (jakarta.inject:jakarta.inject-api)
+Apache License, Version 2.0
+
+Jakarta Expression Language API 5.0.1 (jakarta.el:jakarta.el-api)
+Eclipse Public License 2.0 and GPL 2.0 with the Classpath Exception
+
+SLF4J API 2.0.17 (org.slf4j:slf4j-api)
+Copyright QOS.ch and contributors
+MIT License
+
+The license identifiers above are taken from the resolved artifacts and their
+published Maven metadata. Distributed third-party artifact jars retain their
+upstream META-INF license and notice files. Additional license texts and notices
+maintained by this project follow.
+
 ***********************
-Hibernate
+Historical Hibernate Attribution
 ***********************
 
-Hibernate ORM - hibernate-core (org.hibernate:hibernate-core)
+The following Hibernate LGPL attribution and fourth-party list applied to
+pre-7 Coherence Hibernate lines. It is retained for historical distributions
+and is not the active dependency inventory for Coherence Hibernate 4.x.
+
+Hibernate ORM - hibernate-core (legacy org.hibernate:hibernate-core releases)
 Copyright (c) 2008, Red Hat Middleware LLC or third-party contributors
 Copyright (c) 2010, Red Hat Middleware LLC or third-party contributors
 Copyright (c) 2013, Red Hat Middleware LLC or third-party contributors
@@ -521,7 +591,7 @@ necessary.  Here is a sample; alter the names:
 That's all there is to it!
 
 =========================
-Fourth Party Dependencies
+Historical Fourth Party Dependencies
 =========================
 
 "Hibernate Commons Annotations" (org.hibernate.common:hibernate-commons-annotations)
@@ -1404,7 +1474,7 @@ Coherence CE
 ***********************
 # Coherence CE
 
-Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
 
 The Universal Permissive License (UPL), Version 1.0
 

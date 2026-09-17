@@ -5,7 +5,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java-version: [ 17, 21 ]
+        java-version: [ '17.0.12', 21, 25 ]
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -13,17 +13,17 @@ jobs:
       issues: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         name: 📥 Checkout repository
         with:
           fetch-depth: 0
       - name: 🔧 Set up JDK ${{ matrix.java-version }}
-        uses: actions/setup-java@v4.7.1
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: 'oracle'
           java-version: ${{ matrix.java-version }}
       - name: 🫙 Cache Maven packages
-        uses: actions/cache@v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -33,17 +33,61 @@ jobs:
         run: |
           git config --global user.email "github-action@users.noreply.github.com"
           git config --global user.name "GitHub Action"
-          ./mvnw clean install -B -Powasp -Pjdk${{ matrix.java-version }}
+          ./mvnw clean install -B
         env:
           GIT_COMMIT: ${{github.event.workflow_run.head_commit.id}}
           HEAD_BRANCH: ${{github.event.workflow_run.head_branch}}
       - name: 📊 Publish Test Report
         if: always()
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@a9170d5795813c01ab4901ffb045b52bab4ab09d # v6.5.0
         with:
           check_name: Java CI / Test Report (${{ matrix.java-version }})
           report_paths: '**/target/surefire-reports/TEST-*.xml'
           check_retries: 'true'
+      - name: Upload cache server log
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dcs-log-java-${{ matrix.java-version }}-attempt-${{ github.run_attempt }}
+          path: coherence-hibernate-cache-store-tests/dcs.log
+          if-no-files-found: warn
       - name: 🧹 Clean Maven cache
         run: |
           find ~/.m2/repository -type d -name '*SNAPSHOT' | xargs rm -fr
+
+  dependency-check:
+    name: Dependency-Check
+    runs-on: ubuntu-latest
+    concurrency:
+      group: dependency-check-nvd
+      queue: max
+      cancel-in-progress: false
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up JDK 17
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: 'oracle'
+          java-version: '17.0.12'
+      - name: Cache Maven packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
+      - name: Prepare vulnerability database
+        uses: ./.github/actions/dependency-check-data
+        with:
+          nvd-api-key: ${{ secrets.NVD_API_KEY }}
+      - name: Check dependencies for known vulnerabilities
+        run: ./mvnw -B -Powasp dependency-check:aggregate -DdataDirectory="$HOME/.cache/dependency-check" -DautoUpdate=false
+      - name: Upload Dependency-Check report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dependency-check-report
+          path: target/dependency-check-report.*
+          if-no-files-found: warn

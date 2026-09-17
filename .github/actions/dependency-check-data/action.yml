@@ -1,0 +1,36 @@
+name: Prepare Dependency-Check data
+description: Restore, update, and save the vulnerability database before scanning
+inputs:
+  nvd-api-key:
+    description: Optional NVD API key; unavailable to fork pull requests
+    required: false
+runs:
+  using: composite
+  steps:
+    - name: Determine database cache key
+      id: key
+      shell: bash
+      run: |
+        version=$(sed -n 's:.*<dependency-check-maven.version>\([^<]*\)</dependency-check-maven.version>.*:\1:p' pom.xml)
+        test -n "$version"
+        echo "prefix=${RUNNER_OS}-dependency-check-data-${version}-" >> "$GITHUB_OUTPUT"
+        echo "key=${RUNNER_OS}-dependency-check-data-${version}-$(date -u +%Y%m%d)-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+    - name: Restore vulnerability database
+      id: restore
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.cache/dependency-check
+        key: ${{ steps.key.outputs.key }}
+        restore-keys: ${{ steps.key.outputs.prefix }}
+    - name: Update vulnerability database
+      shell: bash
+      run: ./mvnw -B -N -Powasp dependency-check:update-only -DdataDirectory="$HOME/.cache/dependency-check"
+      env:
+        NVD_API_KEY: ${{ inputs.nvd-api-key }}
+    # Each run gets an immutable snapshot, including updates to restored data.
+    # Save only after a successful update, before the CVSS gate can fail.
+    - name: Save vulnerability database
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.cache/dependency-check
+        key: ${{ steps.key.outputs.key }}

@@ -1,0 +1,27 @@
+name: Warm Dependency-Check database
+on:
+  schedule:
+    - cron: '23 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: dependency-check-nvd
+      queue: max
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up JDK 17
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: oracle
+          java-version: '17.0.12'
+          cache: maven
+      # Scheduled runs publish on the default branch so PRs can restore the cache.
+      - name: Prepare vulnerability database
+        uses: ./.github/actions/dependency-check-data
+        with:
+          nvd-api-key: ${{ secrets.NVD_API_KEY }}

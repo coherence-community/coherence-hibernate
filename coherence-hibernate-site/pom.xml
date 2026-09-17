@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2013, 2025, Oracle and/or its affiliates.
+  Copyright (c) 2013, 2026, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -12,7 +12,7 @@
     <parent>
         <artifactId>coherence-hibernate-parent</artifactId>
         <groupId>com.oracle.coherence.hibernate</groupId>
-        <version>3.0.4-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>coherence-hibernate-site</artifactId>
@@ -42,27 +42,28 @@
         <dependency>
             <artifactId>coherence-hibernate-cache-core</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.4-SNAPSHOT</version>
+            <version>4.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <artifactId>coherence-hibernate-cache-53</artifactId>
+            <artifactId>coherence-hibernate-cache-7</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.4-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <artifactId>coherence-hibernate-cache-6</artifactId>
-            <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.4-SNAPSHOT</version>
+            <version>4.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>coherence-hibernate-cache-store</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.4-SNAPSHOT</version>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>coherence-hibernate-cache-store-tests</artifactId>
+            <groupId>com.oracle.coherence.hibernate</groupId>
+            <version>4.0.0-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${hibernate6.version}</version>
+            <version>${hibernate7.version}</version>
         </dependency>
         <dependency>
             <groupId>${coherence.groupId}</groupId>
@@ -95,10 +96,10 @@
                             <quiet>true</quiet>
                             <links>
                                 <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
-                                <link>https://jakarta.ee/specifications/platform/10/apidocs/</link>
+                                <link>https://jakarta.ee/specifications/platform/11/apidocs/</link>
                             </links>
                             <bottom>
-                                Copyright © 2013, 2024, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0.
+                                Copyright © 2013, 2026, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0.
                             </bottom>
                         </configuration>
                     </execution>

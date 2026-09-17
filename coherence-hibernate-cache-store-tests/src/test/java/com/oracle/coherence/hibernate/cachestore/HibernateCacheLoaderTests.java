@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2023, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -8,6 +8,7 @@ package com.oracle.coherence.hibernate.cachestore;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +42,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 )
 @DomainModel(
 		xmlMappings = {
-				"org/hibernate/tutorial/domain/Event.hbm.xml",
-				"org/hibernate/tutorial/domain/Person.hbm.xml"
+				"org/hibernate/tutorial/domain/Event.mapping.xml",
+				"org/hibernate/tutorial/domain/Person.mapping.xml"
 		}
 )
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -73,14 +74,18 @@ public class HibernateCacheLoaderTests {
 		final HibernateCacheLoader hibernateCacheLoader = new HibernateCacheLoader(
 				"org.hibernate.tutorial.domain.Event", scope.getSessionFactory());
 
-		final List listOfEventIds = new ArrayList();
-		listOfEventIds.add(1L);
-		listOfEventIds.add(2L);
-		final Map events = hibernateCacheLoader.loadAll(listOfEventIds);
+        final long missingEventId = eventIds.get(1) + 100L;
+        final List<Long> listOfEventIds = List.of(eventIds.get(1), missingEventId, eventIds.get(0));
+        final Map events = hibernateCacheLoader.loadAll(listOfEventIds);
 
-		assertThat(events).size().isEqualTo(2);
-		assertThat(events).containsKey(1L);
-		assertThat(events).containsKey(2L);
+        assertThat(events).size().isEqualTo(2);
+        assertThat(events).containsKey(eventIds.get(0));
+        assertThat(events).containsKey(eventIds.get(1));
+        assertThat(events).doesNotContainKey(missingEventId);
+
+        final Iterator<?> loadedIds = events.keySet().iterator();
+        assertThat(loadedIds.next()).isEqualTo(eventIds.get(1));
+        assertThat(loadedIds.next()).isEqualTo(eventIds.get(0));
 
 		for (Object entry : events.values()) {
 			assertThat(entry).isInstanceOf(Event.class);

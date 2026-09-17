@@ -2,11 +2,10 @@ package com.oracle.coherence.hibernate.demo;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.oracle.coherence.hibernate.demo.controller.dto.EventDto;
 import org.junit.jupiter.api.Test;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,9 +18,8 @@ public class JacksonSerializationTests {
 			"}";
 
 	@Test
-	void deserializationTest() throws JsonProcessingException {
+	void deserializationTest() throws JacksonException {
 		final ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.registerModule(new JavaTimeModule());
 		final EventDto event = objectMapper.readValue(this.test, EventDto.class);
 		assertThat(event.getId()).isEqualTo(1L);
 		assertThat(event.getTitle()).isEqualTo("My Event");

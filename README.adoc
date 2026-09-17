@@ -1,8 +1,8 @@
 :main-release-version: 3.0.3
-:main-snapshot-version: 3.0.4-SNAPSHOT
+:main-snapshot-version: 4.0.0-SNAPSHOT
 :2x-release-version: 2.3.5
 :2x-snapshot-version: 2.3.6-SNAPSHOT
-:hibernate-docs: https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html
+:hibernate-docs: https://docs.hibernate.org/orm/7.4/userguide/html_single/
 :website: https://docs.coherence.community/
 :website-old: https://hibernate.coherence.community/
 
@@ -27,21 +27,29 @@ Two primary integration points are covered currently:
 Starting with Coherence Hibernate `3.x`, we support https://jakarta.ee/[Jakarta EE]. Coherence Hibernate `2.x` will
 continue to support Java EE.
 
-[width="75%", cols="1,1,1,1,^1,1"]
+[width="85%", cols="1,1,1,1,^1,1"]
 |===
 |Coherence Hibernate | Java | Coherence CE | Hibernate     | Jakarta | Git Branch/Tag
 
-|*3.0.x*             | `17` | `24.09`      | `5.6`, `6.x`  | ✔       | `main`
+|*4.0.x*             | `17`, `21`, `25` | `15.1.1-0-5`, `26.07` | `7.4.x`       | ✔       | `main`
+|*3.0.x*             | `17` | `24.09`      | `5.6`, `6.x`  | ✔       | `3.0.x`
 |*2.3.x*             | `11` | `22.06`      | `4.3` - `5.6` |         | `2.3.x`
 |===
 
-=== Coherence Hibernate {main-release-version}
+=== Coherence Hibernate 4.0.x
 
-Due to Hibernate Cache API changes, Coherence Hibernate `{main-release-version}` provides dedicated Maven modules targeting
-those Hibernate versions:
+Coherence Hibernate `4.0.x` supports Hibernate ORM `7.4.x` only. Use the following second-level cache adapter:
 
-* `coherence-hibernate-cache-53` supports Hibernate `5.6.x`
-* `coherence-hibernate-cache-6` supports Hibernate `6.x`
+* `coherence-hibernate-cache-7`, with region factory
+  `com.oracle.coherence.hibernate.cache.v7.CoherenceRegionFactory`
+
+Applications on Hibernate `5.6.x` or `6.x` must remain on the Coherence Hibernate `3.x` maintenance line. The `3.x`
+line provides `coherence-hibernate-cache-53` for Hibernate `5.6.x` and `coherence-hibernate-cache-6` for Hibernate `6.x`.
+
+The default `4.x` build uses Hibernate ORM `7.4.5.Final` and Coherence CE `15.1.1-0-5`. The Java 17 compatibility
+matrix additionally tests Hibernate `7.4.1.Final` and `7.4.5.Final` with both Coherence `15.1.1-0-5` and `26.07`.
+The complete default-version reactor is tested separately on Java 17, 21, and 25. Hibernate and Coherence are provided
+dependencies, so applications must declare the versions appropriate for their tested deployment combination.
 
 === Coherence Hibernate {2x-release-version}
 
@@ -75,32 +83,33 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |===
 |Coherence Hibernate       | Java | Coherence CE | Jakarta EE | Git Branch/Tag
 
+|*{main-snapshot-version}* | `17`, `21`, `25` | `15.1.1-0-5`, `26.07` | ✅       | `main`
 |*{main-release-version}*  | `17` | `24.09`      | ✅         | `v{main-release-version}`
-|*{main-snapshot-version}* | `17` | `24.09`      | ✅         | `main`
 |*{2x-release-version}*    | `11` | `22.06.7`    |            | `v{2x-release-version}`
 |*{2x-snapshot-version}*   | `11` | `22.06.7`    |            | `2.3.x`
 |===
 
 == Supported Hibernate Versions
 
-[width="75%", cols="1,1,1"]
+[width="85%", cols="1,1,1,1"]
 |===
-|Hibernate| Coherence Hibernate 2.3.x | Coherence Hibernate 3.0.x
+|Hibernate| Coherence Hibernate 2.3.x | Coherence Hibernate 3.0.x | Coherence Hibernate 4.0.x
 
-|`4.3.x`  | ✅                        |
-|`5.0`    | ✅                        |
-|`5.1`    | ✅                        |
-|`5.2`    | ✅                        |
-|`5.3`    | ✅                        |
-|`5.4`    | ✅                        |
-|`5.5`    | ✅                        |
-|`5.6`    | ✅                        | ✅
-|`6.0`    |                           | ✅
-|`6.1`    |                           | ✅
-|`6.2`    |                           | ✅
-|`6.4`    |                           | ✅
-|`6.6`    |                           | ✅
+|`4.3.x`  | ✅                        |                           |
+|`5.0`    | ✅                        |                           |
+|`5.1`    | ✅                        |                           |
+|`5.2`    | ✅                        |                           |
+|`5.3`    | ✅                        |                           |
+|`5.4`    | ✅                        |                           |
+|`5.5`    | ✅                        |                           |
+|`5.6`    | ✅                        | ✅                        |
+|`6.x`    |                           | ✅                        |
+|`7.4.x`  |                           |                           | ✅
 |===
+
+Coherence Hibernate `4.x` CI brackets the supported Hibernate `7.4.x` line with `7.4.1.Final` and the current default
+`7.4.5.Final`. The default dependency combination is tested on every supported Java version; alternate dependency
+combinations are tested on Java 17, the project's bytecode baseline.
 
 == Samples
 
@@ -113,7 +122,7 @@ repository, and you can find those in the https://github.com/coherence-community
 
 In order to build Coherence Hibernate (main branch), you need to have installed:
 
-- https://www.oracle.com/java/technologies/downloads/#java17[JDK 17]
+- https://www.oracle.com/java/technologies/downloads/[JDK 17, 21, or 25]
 - https://help.github.com/set-up-git-redirect[Git]
 
 === Check out sources
@@ -127,7 +136,7 @@ cd coherence-hibernate
 ----
 
 Coherence Hibernate uses https://maven.apache.org/[Apache Maven] as build tool. You do not need to have Maven installed to
-build the project. Simply use the provided https://github.com/takari/maven-wrapper[Maven Wrapper], e.g.:
+build the project. Simply use the provided https://maven.apache.org/wrapper/[Apache Maven Wrapper], e.g.:
 
 - *Windows:* `mvnw.cmd clean package`
 - *Linux/Mac:* `./mvnw clean package`

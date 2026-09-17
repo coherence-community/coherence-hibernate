@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2026, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -142,7 +142,7 @@ public class HibernateCacheStore extends HibernateCacheLoader implements CacheSt
                 final Serializable id = (Serializable) entry.getKey();
                 final Object entity = entry.getValue();
                 validateIdentifier(id, entity, (SessionImplementor) session);
-                session.merge(entity);
+                session.merge(getEntityName(), entity);
             }
 
             tx.commit();
@@ -172,10 +172,8 @@ public class HibernateCacheStore extends HibernateCacheLoader implements CacheSt
         try {
             tx = session.beginTransaction();
 
-            // Hibernate deletes objects ... it has no "delete by key".
-            // So we need to load the objects before we delete them.
-            // We may be able to use an HQL delete instead.
-            final Object entity = createEntityFromId(key, (SessionImplementor) session);
+            // Load by entity name so removal uses the managed instance's exact mapping.
+            final Object entity = session.find(getEntityName(), key);
             if (entity != null) {
                 session.remove(entity);
             }
@@ -212,7 +210,7 @@ public class HibernateCacheStore extends HibernateCacheLoader implements CacheSt
             // Hibernate transaction so it may batch them.
             for (Iterator iter = keys.iterator(); iter.hasNext();) {
                 final Object key = iter.next();
-                final Object entity = createEntityFromId(key, (SessionImplementor) session);
+                final Object entity = session.find(getEntityName(), key);
                 if (entity != null) {
                     session.remove(entity);
                 }
