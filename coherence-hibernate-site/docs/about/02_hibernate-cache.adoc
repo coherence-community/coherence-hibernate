@@ -105,9 +105,9 @@ selected cache mode; Coherence must fully implement every provider SPI surface a
 
 === Supported Coherence Versions
 
-The default Coherence Hibernate `4.x` build uses Coherence CE `15.1.1-0-2`. CI also compatibility-tests Coherence CE
-`25.03.1`. Both versions are tested with Hibernate `7.4.1.Final` and `7.4.5.Final` on Java 17; the default
-`15.1.1-0-2` and Hibernate `7.4.5.Final` combination receives the complete Java 17, 21, and 25 reactor validation.
+The default Coherence Hibernate `4.x` build uses Coherence CE `15.1.1-0-5`. CI also compatibility-tests Coherence CE
+`26.07`. Both versions are tested with Hibernate `7.4.1.Final` and `7.4.5.Final` on Java 17; the default
+`15.1.1-0-5` and Hibernate `7.4.5.Final` combination receives the complete Java 17, 21, and 25 reactor validation.
 
 Coherence and Hibernate are provided dependencies and must be declared by the application. Use one of the tested
 combinations unless you independently validate a different patch level.

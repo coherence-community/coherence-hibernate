@@ -31,7 +31,7 @@ continue to support Java EE.
 |===
 |Coherence Hibernate | Java | Coherence CE | Hibernate     | Jakarta | Git Branch/Tag
 
-|*4.0.x*             | `17`, `21`, `25` | `15.1.1-0-2`, `25.03.1` | `7.4.x`       | ✔       | `main`
+|*4.0.x*             | `17`, `21`, `25` | `15.1.1-0-5`, `26.07` | `7.4.x`       | ✔       | `main`
 |*3.0.x*             | `17` | `24.09`      | `5.6`, `6.x`  | ✔       | `3.0.x`
 |*2.3.x*             | `11` | `22.06`      | `4.3` - `5.6` |         | `2.3.x`
 |===
@@ -46,8 +46,8 @@ Coherence Hibernate `4.0.x` supports Hibernate ORM `7.4.x` only. Use the followi
 Applications on Hibernate `5.6.x` or `6.x` must remain on the Coherence Hibernate `3.x` maintenance line. The `3.x`
 line provides `coherence-hibernate-cache-53` for Hibernate `5.6.x` and `coherence-hibernate-cache-6` for Hibernate `6.x`.
 
-The default `4.x` build uses Hibernate ORM `7.4.5.Final` and Coherence CE `15.1.1-0-2`. The Java 17 compatibility
-matrix additionally tests Hibernate `7.4.1.Final` and `7.4.5.Final` with both Coherence `15.1.1-0-2` and `25.03.1`.
+The default `4.x` build uses Hibernate ORM `7.4.5.Final` and Coherence CE `15.1.1-0-5`. The Java 17 compatibility
+matrix additionally tests Hibernate `7.4.1.Final` and `7.4.5.Final` with both Coherence `15.1.1-0-5` and `26.07`.
 The complete default-version reactor is tested separately on Java 17, 21, and 25. Hibernate and Coherence are provided
 dependencies, so applications must declare the versions appropriate for their tested deployment combination.
 
@@ -83,7 +83,7 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |===
 |Coherence Hibernate       | Java | Coherence CE | Jakarta EE | Git Branch/Tag
 
-|*{main-snapshot-version}* | `17`, `21`, `25` | `15.1.1-0-2`, `25.03.1` | ✅       | `main`
+|*{main-snapshot-version}* | `17`, `21`, `25` | `15.1.1-0-5`, `26.07` | ✅       | `main`
 |*{main-release-version}*  | `17` | `24.09`      | ✅         | `v{main-release-version}`
 |*{2x-release-version}*    | `11` | `22.06.7`    |            | `v{2x-release-version}`
 |*{2x-snapshot-version}*   | `11` | `22.06.7`    |            | `2.3.x`

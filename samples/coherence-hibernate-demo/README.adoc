@@ -132,7 +132,7 @@ You will also need to add a specific version of Coherence, e.g.:
 <dependency>
     <groupId>com.oracle.coherence.ce</groupId>
     <artifactId>coherence</artifactId>
-    <version>15.1.1-0-2</version>
+    <version>15.1.1-0-5</version>
 </dependency>
 ----
 

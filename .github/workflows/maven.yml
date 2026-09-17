@@ -83,7 +83,7 @@ jobs:
       fail-fast: false
       matrix:
         hibernate-version: [ '7.4.1.Final', '7.4.5.Final' ]
-        coherence-version: [ '15.1.1-0-4', '26.04' ]
+        coherence-version: [ '15.1.1-0-5', '26.07' ]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
