@@ -45,7 +45,7 @@ jobs:
     - name: Run cache-store demo on Java ${{ matrix.java-version }}
       run: java -jar samples/coherence-hibernate-cache-store-demo/target/coherence-hibernate-cache-store-demo.jar
     - name: Analyze Hibernate 7.4.x build with Sonar
-      if: "github.repository == 'coherence-community/coherence-hibernate' && github.event_name != 'pull_request' && matrix.java-version == '17'"
+      if: "vars.SONAR_ENABLED == 'true' && github.repository == 'coherence-community/coherence-hibernate' && github.event_name != 'pull_request' && matrix.java-version == '17'"
       run: |
         git config --global user.email "github-action@users.noreply.github.com"
         git config --global user.name "GitHub Action"
