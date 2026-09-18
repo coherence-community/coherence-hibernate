@@ -27,6 +27,8 @@ reverse chronological order.
   format, stop users of the affected cache regions and evict those regions before restarting, or use new isolated
   regions. Do not mix members using different key formats in the same regions.
 * Keep Hibernate `5.6.x` and `6.x` support on the Coherence Hibernate `3.x` maintenance line.
+* Remove the obsolete `coherence14_1_1` Maven profile and Coherence 14.1.1 compatibility code. Create sessions using
+  `SessionConfiguration`; Coherence 14.1.1 is not supported by the 4.x release.
 * Compatibility-test Hibernate `7.4.1.Final` and `7.4.5.Final` with Coherence CE `15.1.1-0-5` and `26.07` on the
   Java 17 bytecode baseline, in addition to the complete default-version reactor on Java 17, 21, and 25.
 

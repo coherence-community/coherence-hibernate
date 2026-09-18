@@ -6,8 +6,6 @@
  */
 package com.oracle.coherence.hibernate.cache.v7;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.oracle.coherence.hibernate.cache.v7.access.CoherenceDomainDataRegionImpl;
@@ -16,15 +14,14 @@ import com.oracle.coherence.hibernate.cache.v7.configuration.session.SessionType
 import com.oracle.coherence.hibernate.cache.v7.configuration.support.Assert;
 import com.oracle.coherence.hibernate.cache.v7.configuration.support.CoherenceHibernateProperties;
 import com.oracle.coherence.hibernate.cache.v7.configuration.support.CoherenceHibernateSystemPropertyResolver;
-import com.oracle.coherence.hibernate.cache.v7.configuration.support.ConfigUtils;
 import com.oracle.coherence.hibernate.cache.v7.region.CoherenceRegion;
 import com.tangosol.net.CacheFactory;
+import com.tangosol.net.Coherence;
 import com.tangosol.net.DefaultCacheServer;
 import com.tangosol.net.ExtensibleConfigurableCacheFactory;
 import com.tangosol.net.NamedCache;
 import com.tangosol.net.Session;
-import com.tangosol.net.options.WithClassLoader;
-import com.tangosol.net.options.WithConfiguration;
+import com.tangosol.net.SessionConfiguration;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.selector.spi.StrategySelector;
 import org.hibernate.boot.spi.SessionFactoryOptions;
@@ -196,23 +193,18 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
         }
     }
 
-    // SessionConfiguration is unavailable in the retained Coherence 14.1.1 compatibility profile. Keep the
-    // legacy option-based API until that profile can be removed without breaking existing deployments.
-    @SuppressWarnings("deprecation")
     private Session createCoherenceSession(CoherenceHibernateProperties coherenceHibernateProperties) {
-        final List<Session.Option> sessionOptions = new ArrayList<>();
+        final SessionConfiguration.Builder sessionConfiguration = SessionConfiguration.builder()
+                .withConfigUri(coherenceHibernateProperties.getCacheConfigFilePath())
+                .withClassLoader(getClass().getClassLoader());
 
         if (coherenceHibernateProperties.getSessionName() != null) {
-            sessionOptions.add(ConfigUtils.getSessionNameOption(coherenceHibernateProperties.getSessionName()));
+            sessionConfiguration.named(coherenceHibernateProperties.getSessionName());
         }
 
-        final Session.Option cacheConfigFilePathOption = WithConfiguration.using(coherenceHibernateProperties.getCacheConfigFilePath());
-        final Session.Option classLoaderOption = WithClassLoader.using(getClass().getClassLoader());
-
-        sessionOptions.add(cacheConfigFilePathOption);
-        sessionOptions.add(classLoaderOption);
-
-        return Session.create(sessionOptions.toArray(new Session.Option[0]));
+        final Coherence.Mode mode = SessionType.CLIENT.equals(coherenceHibernateProperties.getSessionType())
+                ? Coherence.Mode.Client : Coherence.Mode.ClusterMember;
+        return Session.ensure(sessionConfiguration.build(), mode);
     }
 
     @Override

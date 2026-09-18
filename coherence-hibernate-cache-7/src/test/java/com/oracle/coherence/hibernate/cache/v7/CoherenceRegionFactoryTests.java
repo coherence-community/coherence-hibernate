@@ -6,8 +6,13 @@
  */
 package com.oracle.coherence.hibernate.cache.v7;
 
+import java.util.Map;
+
 import com.oracle.coherence.hibernate.cache.v7.access.CoherenceStorageAccess;
+import com.oracle.coherence.hibernate.cache.v7.configuration.support.CoherenceHibernateProperties;
 import com.tangosol.net.CacheFactory;
+import com.tangosol.net.NamedCache;
+import com.tangosol.net.Session;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.BootstrapServiceRegistry;
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
@@ -50,6 +55,24 @@ public class CoherenceRegionFactoryTests extends AbstractCoherenceRegionFactoryT
         setUpAbstractCoherenceRegionFactoryTest();
         assertEquals(1, CacheFactory.getCluster().getMemberSet().size(), "Expect cluster of one after start");
         assertNotNull(this.coherenceRegionFactory.getCoherenceSession(), "Expect non-null coherence session");
+    }
+
+    @Test
+    @Order(1)
+    public void testNamedSessionWithCustomCacheConfiguration() {
+        this.coherenceRegionFactory.stop();
+        this.coherenceRegionFactory.start(getSessionFactoryOptions(), Map.of(
+                CoherenceHibernateProperties.COHERENCE_SESSION_NAME_PROPERTY_NAME, "named-hibernate-session",
+                CoherenceHibernateProperties.CACHE_CONFIG_FILE_PATH_PROPERTY_NAME, "tests-hibernate-second-level-cache-config.xml"));
+
+        final Session session = this.coherenceRegionFactory.getCoherenceSession();
+        assertNotNull(session);
+        assertEquals("named-hibernate-session", session.getName());
+
+        final NamedCache<String, String> cache = session.getCache("session-configuration");
+        assertTrue(cache.getCacheService().getInfo().getServiceName().endsWith("TestHibernateSecondLevelCache"));
+        cache.put("key", "value");
+        assertEquals("value", cache.get("key"));
     }
 
     /**
