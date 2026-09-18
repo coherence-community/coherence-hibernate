@@ -149,20 +149,30 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
     }
 
     /**
-     * Resets all second-level cache contents to initial (cold, empty) state.
-     */
-    @AfterEach
-    public void resetCacheContents() {
-        getPersonCache().clear();
-    }
-
-    /**
-     * Resets all database contents to initial (cold, empty) state.
+     * Resets all second-level cache and database contents to initial (cold, empty) state.
      * @throws SQLException if there was some problem interacting with the database
      */
     @AfterEach
-    public void resetDatabaseContents() throws SQLException {
-        truncatePersonTable();
+    public void resetContents() throws SQLException {
+        Throwable cacheFailure = null;
+        try {
+            getPersonCache().clear();
+        }
+        catch (RuntimeException | Error ex) {
+            cacheFailure = ex;
+            throw ex;
+        }
+        finally {
+            try {
+                truncatePersonTable();
+            }
+            catch (SQLException | RuntimeException | Error ex) {
+                if (cacheFailure == null) {
+                    throw ex;
+                }
+                cacheFailure.addSuppressed(ex);
+            }
+        }
     }
 
     /**
