@@ -22,6 +22,10 @@ reverse chronological order.
 * Require Java 17 and validate the project on Java 17, 21, and 25.
 * Upgrade the current integration baseline to Hibernate ORM `7.4.x` and Jakarta Persistence `3.2`.
 * Publish `coherence-hibernate-cache-7` as the sole 4.x second-level cache adapter.
+* Restore support for `hibernate.cache.keys_factory`. Earlier 4.0 snapshots ignored this setting and always used
+  the default factory. When upgrading from those snapshots with `simple` or a custom factory that changes the key
+  format, stop users of the affected cache regions and evict those regions before restarting, or use new isolated
+  regions. Do not mix members using different key formats in the same regions.
 * Keep Hibernate `5.6.x` and `6.x` support on the Coherence Hibernate `3.x` maintenance line.
 * Compatibility-test Hibernate `7.4.1.Final` and `7.4.5.Final` with Coherence CE `15.1.1-0-5` and `26.07` on the
   Java 17 bytecode baseline, in addition to the complete default-version reactor on Java 17, 21, and 25.

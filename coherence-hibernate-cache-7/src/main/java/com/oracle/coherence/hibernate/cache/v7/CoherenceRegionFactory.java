@@ -25,7 +25,10 @@ import com.tangosol.net.NamedCache;
 import com.tangosol.net.Session;
 import com.tangosol.net.options.WithClassLoader;
 import com.tangosol.net.options.WithConfiguration;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.selector.spi.StrategySelector;
 import org.hibernate.boot.spi.SessionFactoryOptions;
+import org.hibernate.cache.CacheException;
 import org.hibernate.cache.cfg.spi.DomainDataRegionBuildingContext;
 import org.hibernate.cache.cfg.spi.DomainDataRegionConfig;
 import org.hibernate.cache.internal.DefaultCacheKeysFactory;
@@ -36,6 +39,7 @@ import org.hibernate.cache.spi.support.DomainDataStorageAccess;
 import org.hibernate.cache.spi.support.RegionFactoryTemplate;
 import org.hibernate.cache.spi.support.RegionNameQualifier;
 import org.hibernate.cache.spi.support.StorageAccess;
+import org.hibernate.cfg.CacheSettings;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,9 +97,14 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
      */
     private transient SessionFactoryOptions sessionFactoryOptions;
 
+    /**
+     * The configured cache-key factory, or Hibernate's default when none is supplied.
+     */
+    private transient CacheKeysFactory cacheKeysFactory = DefaultCacheKeysFactory.INSTANCE;
+
     @Override
     protected CacheKeysFactory getImplicitCacheKeysFactory() {
-        return DefaultCacheKeysFactory.INSTANCE;
+        return this.cacheKeysFactory;
     }
 
     /**
@@ -129,9 +138,24 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
     protected void prepareForUse(SessionFactoryOptions settings, Map configValues) {
         this.sessionFactoryOptions = settings;
 
-        if (configValues.containsKey("hibernate.cache.keys_factory")) {
-            LOGGER.warn("Ignoring hibernate.cache.keys_factory: Coherence Hibernate 4.x always uses "
-                    + "DefaultCacheKeysFactory. Remove this setting from your configuration.");
+        @SuppressWarnings("deprecation") // Coherence continues to support this provider-specific Hibernate setting.
+        final Object configuredKeysFactory = configValues.get(CacheSettings.CACHE_KEYS_FACTORY);
+        this.cacheKeysFactory = DefaultCacheKeysFactory.INSTANCE;
+        if (configuredKeysFactory != null) {
+            try {
+                final StandardServiceRegistry registry = settings.getServiceRegistry();
+                if (registry == null) {
+                    throw new CacheException("A Hibernate service registry is required to configure hibernate.cache.keys_factory");
+                }
+                final StrategySelector selector = registry.requireService(StrategySelector.class);
+                this.cacheKeysFactory = selector.resolveDefaultableStrategy(CacheKeysFactory.class,
+                        configuredKeysFactory, DefaultCacheKeysFactory.INSTANCE);
+            }
+            catch (RuntimeException ex) {
+                // Hibernate's start() retains this failure for later region creation instead of throwing it.
+                LOGGER.error("Unable to configure hibernate.cache.keys_factory [{}].", configuredKeysFactory, ex);
+                throw ex;
+            }
         }
 
         final CoherenceHibernateProperties coherenceHibernateProperties = new CoherenceHibernateProperties(configValues);
@@ -285,6 +309,7 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
     @Override
     public DomainDataRegion buildDomainDataRegion(final DomainDataRegionConfig regionConfig,
                                                   final DomainDataRegionBuildingContext buildingContext) {
+        verifyStarted();
         return new CoherenceDomainDataRegionImpl(
                 regionConfig,
                 this,
