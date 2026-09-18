@@ -197,10 +197,27 @@ well.
 
 === Cache Keys
 
-Coherence Hibernate 4.x always uses Hibernate 7's `DefaultCacheKeysFactory`. The former
-`hibernate.cache.keys_factory` setting is deprecated in Hibernate 7 and is not configurable by this provider. This
-preserves tenant and entity metadata in cache keys and supports composite identifiers.
-If this setting is explicitly configured, the provider logs a warning at startup; remove it from your configuration.
+Coherence Hibernate uses Hibernate's `DefaultCacheKeysFactory` unless `hibernate.cache.keys_factory` is configured.
+The default preserves tenant and entity metadata in cache keys and supports composite identifiers.
+Although Hibernate deprecates this setting because support depends on the cache provider, Coherence Hibernate
+continues to honor it. No replacement property is required.
+
+The setting accepts `default`, `simple`, the fully qualified name of a class implementing
+`org.hibernate.cache.spi.CacheKeysFactory`, or (through programmatic configuration) a factory class or instance.
+For example, a custom factory with a public no-argument constructor can be configured in `hibernate.properties`:
+
+[source,properties]
+----
+hibernate.cache.keys_factory=com.example.CustomCacheKeysFactory
+----
+
+An invalid factory setting causes startup to fail. When no setting is supplied, the provider uses
+`DefaultCacheKeysFactory.INSTANCE`.
+Use `simple` only when cache regions separate entity types and collection roles and the application does not use
+multi-tenancy: simple entity and collection keys omit that identifying metadata.
+Custom factories must produce keys compatible with the configured Coherence serializer, with consistent equality
+and hash codes across cluster members. All applications sharing a cache region must use compatible key factories;
+evict existing entries when changing the key format.
 
 === Configuring Clients and Servers for Hibernate Second-Level Caching
 
