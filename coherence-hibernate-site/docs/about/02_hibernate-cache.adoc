@@ -46,21 +46,31 @@ interact with the second-level cache provider remain the responsibility of Hiber
 
 === Upgrading from Coherence Hibernate 3.x
 
-Upgrade the application and every storage-enabled cache server together so they use compatible Hibernate cache entry
-classes. Replace the 3.x adapter with `coherence-hibernate-cache-7`, upgrade Hibernate ORM to `7.4.x`, and configure
-`com.oracle.coherence.hibernate.cache.v7.CoherenceRegionFactory`.
+Replace the 3.x adapter with `coherence-hibernate-cache-7`, upgrade Hibernate ORM to `7.4.x`, and configure
+`com.oracle.coherence.hibernate.cache.v7.CoherenceRegionFactory`. The following constraints apply when upgrading
+from either the Hibernate 6 `cache-6` adapter or the Hibernate 5.6 `cache-53` adapter.
 
-Do not let Hibernate 6 and Hibernate 7 nodes read or write the same cache regions during a rolling deployment. Their
-cached entry representations are implementation details and are not a cross-version compatibility boundary. The
-preferred rolling procedure is:
-
-. Configure a new `hibernate.cache.region_prefix` for the Hibernate 7 deployment.
-. Deploy the Hibernate 7 nodes, warm and validate their isolated regions, and then switch application traffic.
-. Stop the Hibernate 6 nodes and destroy the old prefixed regions after rollback is no longer required.
-
-For a maintenance-window upgrade, stop every old application and cache-server node, clear all Hibernate entity,
-collection, natural-id, query-result, and update-timestamp regions, and only then start the Hibernate 7 deployment.
-Database data is authoritative; never copy serialized cache entries from an old region into a Hibernate 7 region.
+* *Database compatibility:* The upgraded application can use the existing database, provided its mappings and schema
+  expectations remain compatible. This cache-provider upgrade does not itself require a separate database. Check the
+  Hibernate migration guides for changes affecting your application; rollback also requires compatibility with the
+  old application's mappings and schema expectations.
+* *Cache format compatibility:* Old and new Hibernate versions must not share physical Hibernate cache regions or
+  reuse each other's serialized entries. Use a different `hibernate.cache.region_prefix`, or empty existing regions
+  before reusing them with the new version. Rebuild cache contents from the database.
+* *Cache-server dependencies:* A region prefix separates cache names; it does not isolate Java classpaths. Storage
+  members need compatible libraries to deserialize entries in every region they host. Separate storage or a
+  coordinated storage upgrade may be required. Loading both Hibernate and adapter versions into one JVM does not
+  establish compatibility.
+* *Cache consistency:* Separate prefixes do not share invalidations. A database write through either deployment can
+  leave the other's cached data stale. Prefix isolation alone therefore does not make concurrent operation or a
+  rolling upgrade safe.
+* *Stale caches at handover:* Warmed, retained, or persistently restored caches may be stale after the other deployment
+  has written to the database.
+* *Cutover and rollback:* Unless a separately validated mechanism keeps caches consistent, stop and drain the outgoing
+  deployment's traffic and background work. Also stop and drain incoming validation or warming that could refill its
+  caches. Clear all incoming Hibernate entity, collection, natural-ID, query-result, and update-timestamp regions
+  before enabling incoming traffic or background work. Keep activity paused throughout clearing. Apply the same
+  sequence when rolling back.
 
 === Stateless-Session Cache Modes in Hibernate 7
 
@@ -423,8 +433,8 @@ considered if the underlying database can be written by clients other than the H
 ==== Session Name
 
 Property `com.oracle.coherence.hibernate.cache.session_name` allows to specify a name for the
-underlying Coherence session. If not specified, the default session name will be used. Named sessions are supported by
-Coherence `15.1.1`.
+underlying Coherence session. If not specified, the default session name will be used. Named sessions are available on
+all supported Coherence versions.
 
 ==== Session Type
 
@@ -432,6 +442,10 @@ Using property `com.oracle.coherence.hibernate.cache.session_type` you can speci
 the session type is `server` which means that the Coherence Hibernate application becomes a node in the Coherence cluster
 using the Tangosol Cluster Management Protocol (TCMP). Please see the chapter Introduction to Coherence Clusters of
 the Coherence reference guide for more details.
+
+The session is created with Coherence's `ClusterMember` mode for `server` (or an unspecified type), and `Client` mode
+for `client`. This also supplies the corresponding `coherence.client` parameter to cache configurations that use it
+to select their cache schemes.
 
 - Client
 - Server (default)

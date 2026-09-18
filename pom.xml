@@ -427,12 +427,6 @@
             </build>
         </profile>
         <profile>
-            <id>coherence14_1_1</id>
-            <properties>
-                <coherence.version>14.1.1-0-10</coherence.version>
-            </properties>
-        </profile>
-        <profile>
             <id>owasp</id>
             <build>
                 <plugins>
