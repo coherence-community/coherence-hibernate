@@ -116,7 +116,7 @@
         <hibernate7.junit-platform-launcher.version>6.0.1</hibernate7.junit-platform-launcher.version>
         <hibernate7.junit.version>6.0.1</hibernate7.junit.version>
         <hibernate7.mockito.version>5.20.0</hibernate7.mockito.version>
-        <hibernate7.version>7.4.5.Final</hibernate7.version>
+        <hibernate7.version>7.4.9.Final</hibernate7.version>
         <hsqldb.version>2.7.4</hsqldb.version>
         <jakarta.persistence.version>3.2.0</jakarta.persistence.version>
         <junit.version>4.13.2</junit.version>
