@@ -121,7 +121,7 @@ Add the Hibernate 7 adapter to your `pom.xml`:
 <dependency>
     <groupId>org.hibernate.orm</groupId>
     <artifactId>hibernate-core</artifactId>
-    <version>7.4.5.Final</version>
+    <version>7.4.9.Final</version>
 </dependency>
 ----
 

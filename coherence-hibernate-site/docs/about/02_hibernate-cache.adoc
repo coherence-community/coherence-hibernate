@@ -31,8 +31,8 @@ are supported:
 |`7.4.x`
 |===
 
-The default `4.x` build uses Hibernate ORM `7.4.5.Final`. CI brackets the supported `7.4.x` line by testing
-`7.4.1.Final` and `7.4.5.Final` against each compatibility-tested Coherence version on Java 17. The complete default
+The default `4.x` build uses Hibernate ORM `7.4.9.Final`. CI tests the supported `7.4.x` line with `7.4.1.Final`,
+`7.4.5.Final`, and `7.4.9.Final` against each compatibility-tested Coherence version on Java 17. The complete default
 dependency combination is tested separately on Java 17, 21, and 25.
 
 IMPORTANT: Coherence Hibernate `4.x` supports Hibernate ORM `7.4.x` only. Hibernate `5.6.x` and `6.x` applications
@@ -116,8 +116,8 @@ selected cache mode; Coherence must fully implement every provider SPI surface a
 === Supported Coherence Versions
 
 The default Coherence Hibernate `4.x` build uses Coherence CE `15.1.1-0-5`. CI also compatibility-tests Coherence CE
-`26.07`. Both versions are tested with Hibernate `7.4.1.Final` and `7.4.5.Final` on Java 17; the default
-`15.1.1-0-5` and Hibernate `7.4.5.Final` combination receives the complete Java 17, 21, and 25 reactor validation.
+`26.07`. Both versions are tested with Hibernate `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` on Java 17; the default
+`15.1.1-0-5` and Hibernate `7.4.9.Final` combination receives the complete Java 17, 21, and 25 reactor validation.
 
 Coherence and Hibernate are provided dependencies and must be declared by the application. Use one of the tested
 combinations unless you independently validate a different patch level.

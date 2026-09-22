@@ -82,7 +82,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        hibernate-version: [ '7.4.1.Final', '7.4.5.Final' ]
+        hibernate-version: [ '7.4.1.Final', '7.4.5.Final', '7.4.9.Final' ]
         coherence-version: [ '15.1.1-0-5', '26.07' ]
     runs-on: ubuntu-latest
     steps:
