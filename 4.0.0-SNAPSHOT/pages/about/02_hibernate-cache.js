@@ -39,8 +39,8 @@ are supported:</p>
 </table>
 </div>
 
-<p>The default <code>4.x</code> build uses Hibernate ORM <code>7.4.5.Final</code>. CI brackets the supported <code>7.4.x</code> line by testing
-<code>7.4.1.Final</code> and <code>7.4.5.Final</code> against each compatibility-tested Coherence version on Java 17. The complete default
+<p>The default <code>4.x</code> build uses Hibernate ORM <code>7.4.9.Final</code>. CI tests the supported <code>7.4.x</code> line with <code>7.4.1.Final</code>,
+<code>7.4.5.Final</code>, and <code>7.4.9.Final</code> against each compatibility-tested Coherence version on Java 17. The complete default
 dependency combination is tested separately on Java 17, 21, and 25.</p>
 
 <div class="admonition important">
@@ -59,32 +59,51 @@ interact with the second-level cache provider remain the responsibility of Hiber
 
 <h3 id="_upgrading_from_coherence_hibernate_3_x">Upgrading from Coherence Hibernate 3.x</h3>
 <div class="section">
-<p>Upgrade the application and every storage-enabled cache server together so they use compatible Hibernate cache entry
-classes. Replace the 3.x adapter with <code>coherence-hibernate-cache-7</code>, upgrade Hibernate ORM to <code>7.4.x</code>, and configure
-<code>com.oracle.coherence.hibernate.cache.v7.CoherenceRegionFactory</code>.</p>
+<p>Replace the 3.x adapter with <code>coherence-hibernate-cache-7</code>, upgrade Hibernate ORM to <code>7.4.x</code>, and configure
+<code>com.oracle.coherence.hibernate.cache.v7.CoherenceRegionFactory</code>. The following constraints apply when upgrading
+from either the Hibernate 6 <code>cache-6</code> adapter or the Hibernate 5.6 <code>cache-53</code> adapter.</p>
 
-<p>Do not let Hibernate 6 and Hibernate 7 nodes read or write the same cache regions during a rolling deployment. Their
-cached entry representations are implementation details and are not a cross-version compatibility boundary. The
-preferred rolling procedure is:</p>
-
-<ol style="margin-left: 15px;">
+<ul class="ulist">
 <li>
-Configure a new <code>hibernate.cache.region_prefix</code> for the Hibernate 7 deployment.
+<p><strong>Database compatibility:</strong> The upgraded application can use the existing database, provided its mappings and schema
+expectations remain compatible. This cache-provider upgrade does not itself require a separate database. Check the
+Hibernate migration guides for changes affecting your application; rollback also requires compatibility with the
+old application&#8217;s mappings and schema expectations.</p>
 
 </li>
 <li>
-Deploy the Hibernate 7 nodes, warm and validate their isolated regions, and then switch application traffic.
+<p><strong>Cache format compatibility:</strong> Old and new Hibernate versions must not share physical Hibernate cache regions or
+reuse each other&#8217;s serialized entries. Use a different <code>hibernate.cache.region_prefix</code>, or empty existing regions
+before reusing them with the new version. Rebuild cache contents from the database.</p>
 
 </li>
 <li>
-Stop the Hibernate 6 nodes and destroy the old prefixed regions after rollback is no longer required.
+<p><strong>Cache-server dependencies:</strong> A region prefix separates cache names; it does not isolate Java classpaths. Storage
+members need compatible libraries to deserialize entries in every region they host. Separate storage or a
+coordinated storage upgrade may be required. Loading both Hibernate and adapter versions into one JVM does not
+establish compatibility.</p>
 
 </li>
-</ol>
+<li>
+<p><strong>Cache consistency:</strong> Separate prefixes do not share invalidations. A database write through either deployment can
+leave the other&#8217;s cached data stale. Prefix isolation alone therefore does not make concurrent operation or a
+rolling upgrade safe.</p>
 
-<p>For a maintenance-window upgrade, stop every old application and cache-server node, clear all Hibernate entity,
-collection, natural-id, query-result, and update-timestamp regions, and only then start the Hibernate 7 deployment.
-Database data is authoritative; never copy serialized cache entries from an old region into a Hibernate 7 region.</p>
+</li>
+<li>
+<p><strong>Stale caches at handover:</strong> Warmed, retained, or persistently restored caches may be stale after the other deployment
+has written to the database.</p>
+
+</li>
+<li>
+<p><strong>Cutover and rollback:</strong> Unless a separately validated mechanism keeps caches consistent, stop and drain the outgoing
+deployment&#8217;s traffic and background work. Also stop and drain incoming validation or warming that could refill its
+caches. Clear all incoming Hibernate entity, collection, natural-ID, query-result, and update-timestamp regions
+before enabling incoming traffic or background work. Keep activity paused throughout clearing. Apply the same
+sequence when rolling back.</p>
+
+</li>
+</ul>
 
 </div>
 
@@ -154,8 +173,8 @@ selected cache mode; Coherence must fully implement every provider SPI surface a
 <h3 id="_supported_coherence_versions">Supported Coherence Versions</h3>
 <div class="section">
 <p>The default Coherence Hibernate <code>4.x</code> build uses Coherence CE <code>15.1.1-0-5</code>. CI also compatibility-tests Coherence CE
-<code>26.07</code>. Both versions are tested with Hibernate <code>7.4.1.Final</code> and <code>7.4.5.Final</code> on Java 17; the default
-<code>15.1.1-0-5</code> and Hibernate <code>7.4.5.Final</code> combination receives the complete Java 17, 21, and 25 reactor validation.</p>
+<code>26.07</code>. Both versions are tested with Hibernate <code>7.4.1.Final</code>, <code>7.4.5.Final</code>, and <code>7.4.9.Final</code> on Java 17; the default
+<code>15.1.1-0-5</code> and Hibernate <code>7.4.9.Final</code> combination receives the complete Java 17, 21, and 25 reactor validation.</p>
 
 <p>Coherence and Hibernate are provided dependencies and must be declared by the application. Use one of the tested
 combinations unless you independently validate a different patch level.</p>
@@ -269,10 +288,27 @@ well.</p>
 
 <h3 id="_cache_keys">Cache Keys</h3>
 <div class="section">
-<p>Coherence Hibernate 4.x always uses Hibernate 7&#8217;s <code>DefaultCacheKeysFactory</code>. The former
-<code>hibernate.cache.keys_factory</code> setting is deprecated in Hibernate 7 and is not configurable by this provider. This
-preserves tenant and entity metadata in cache keys and supports composite identifiers.
-If this setting is explicitly configured, the provider logs a warning at startup; remove it from your configuration.</p>
+<p>Coherence Hibernate uses Hibernate&#8217;s <code>DefaultCacheKeysFactory</code> unless <code>hibernate.cache.keys_factory</code> is configured.
+The default preserves tenant and entity metadata in cache keys and supports composite identifiers.
+Although Hibernate deprecates this setting because support depends on the cache provider, Coherence Hibernate
+continues to honor it. No replacement property is required.</p>
+
+<p>The setting accepts <code>default</code>, <code>simple</code>, the fully qualified name of a class implementing
+<code>org.hibernate.cache.spi.CacheKeysFactory</code>, or (through programmatic configuration) a factory class or instance.
+For example, a custom factory with a public no-argument constructor can be configured in <code>hibernate.properties</code>:</p>
+
+<markup
+lang="properties"
+
+>hibernate.cache.keys_factory=com.example.CustomCacheKeysFactory</markup>
+
+<p>An invalid factory setting causes startup to fail. When no setting is supplied, the provider uses
+<code>DefaultCacheKeysFactory.INSTANCE</code>.
+Use <code>simple</code> only when cache regions separate entity types and collection roles and the application does not use
+multi-tenancy: simple entity and collection keys omit that identifying metadata.
+Custom factories must produce keys compatible with the configured Coherence serializer, with consistent equality
+and hash codes across cluster members. All applications sharing a cache region must use compatible key factories;
+evict existing entries when changing the key format.</p>
 
 </div>
 
@@ -555,8 +591,8 @@ considered if the underlying database can be written by clients other than the H
 <h4 id="_session_name">Session Name</h4>
 <div class="section">
 <p>Property <code>com.oracle.coherence.hibernate.cache.session_name</code> allows to specify a name for the
-underlying Coherence session. If not specified, the default session name will be used. Named sessions are supported by
-Coherence <code>15.1.1</code>.</p>
+underlying Coherence session. If not specified, the default session name will be used. Named sessions are available on
+all supported Coherence versions.</p>
 
 </div>
 
@@ -567,6 +603,10 @@ Coherence <code>15.1.1</code>.</p>
 the session type is <code>server</code> which means that the Coherence Hibernate application becomes a node in the Coherence cluster
 using the Tangosol Cluster Management Protocol (TCMP). Please see the chapter Introduction to Coherence Clusters of
 the Coherence reference guide for more details.</p>
+
+<p>The session is created with Coherence&#8217;s <code>ClusterMember</code> mode for <code>server</code> (or an unspecified type), and <code>Client</code> mode
+for <code>client</code>. This also supplies the corresponding <code>coherence.client</code> parameter to cache configurations that use it
+to select their cache schemes.</p>
 
 <ul class="ulist">
 <li>

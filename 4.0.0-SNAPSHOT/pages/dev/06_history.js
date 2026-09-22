@@ -22,12 +22,24 @@ reverse chronological order.</p>
 
 </li>
 <li>
+<p>Restore support for <code>hibernate.cache.keys_factory</code>. Earlier 4.0 snapshots ignored this setting and always used
+the default factory. When upgrading from those snapshots with <code>simple</code> or a custom factory that changes the key
+format, stop users of the affected cache regions and evict those regions before restarting, or use new isolated
+regions. Do not mix members using different key formats in the same regions.</p>
+
+</li>
+<li>
 <p>Keep Hibernate <code>5.6.x</code> and <code>6.x</code> support on the Coherence Hibernate <code>3.x</code> maintenance line.</p>
 
 </li>
 <li>
-<p>Compatibility-test Hibernate <code>7.4.1.Final</code> and <code>7.4.5.Final</code> with Coherence CE <code>15.1.1-0-5</code> and <code>26.07</code> on the
-Java 17 bytecode baseline, in addition to the complete default-version reactor on Java 17, 21, and 25.</p>
+<p>Remove the obsolete <code>coherence14_1_1</code> Maven profile and Coherence 14.1.1 compatibility code. Create sessions using
+<code>SessionConfiguration</code>; Coherence 14.1.1 is not supported by the 4.x release.</p>
+
+</li>
+<li>
+<p>Compatibility-test Hibernate <code>7.4.1.Final</code>, <code>7.4.5.Final</code>, and <code>7.4.9.Final</code> with Coherence CE <code>15.1.1-0-5</code> and
+<code>26.07</code> on the Java 17 bytecode baseline, in addition to the complete default-version reactor on Java 17, 21, and 25.</p>
 
 </li>
 </ul>
