@@ -46,6 +46,20 @@
                             <goal>test-jar</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <!-- This module has no Java sources, so maven-javadoc-plugin
+                             generates nothing. Maven Central requires a Javadoc JAR for
+                             every artifact whose packaging is not pom. -->
+                        <id>placeholder-javadoc-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>javadoc</classifier>
+                            <classesDirectory>${basedir}/src/main/javadoc</classesDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

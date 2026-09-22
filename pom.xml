@@ -268,7 +268,7 @@
                 <configuration>
                     <source>${java.version}</source>
                     <detectJavaApiLink>false</detectJavaApiLink>
-                    <failOnError>false</failOnError>
+                    <failOnError>true</failOnError>
                 </configuration>
                 <executions>
                     <execution>
@@ -323,6 +323,7 @@
                             <flattenMode>oss</flattenMode>
                             <pomElements>
                                 <parent>expand</parent>
+                                <build>remove</build>
                                 <distributionManagement>remove</distributionManagement>
                                 <repositories>remove</repositories>
                                 <profiles>remove</profiles>
