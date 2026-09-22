@@ -16,11 +16,11 @@ the Coherence Hibernate 4.x distributable library modules. Dependencies marked
 as provided are not bundled inside the library jars, but are listed because
 applications must supply them at runtime.
 
-Hibernate ORM 7.4.5.Final (org.hibernate.orm:hibernate-core)
+Hibernate ORM 7.4.9.Final (org.hibernate.orm:hibernate-core)
 Copyright Red Hat and Hibernate contributors
 Apache License, Version 2.0
 
-Hibernate Models 1.1.1 (org.hibernate.models:hibernate-models)
+Hibernate Models 1.1.2 (org.hibernate.models:hibernate-models)
 Copyright Red Hat and Hibernate contributors
 Apache License, Version 2.0
 
