@@ -6,8 +6,10 @@
 reverse chronological order.</p>
 
 
-<h3 id="_version_4_0_0_in_development">Version 4.0.0 (in development)</h3>
+<h3 id="_version_4_0_0_september_23_2026">Version 4.0.0 (September 23, 2026)</h3>
 <div class="section">
+<p><a target="_blank" href="https://github.com/coherence-community/coherence-hibernate/releases/tag/v4.0.0" class="bare">https://github.com/coherence-community/coherence-hibernate/releases/tag/v4.0.0</a></p>
+
 <ul class="ulist">
 <li>
 <p>Require Java 17 and validate the project on Java 17, 21, and 25.</p>
