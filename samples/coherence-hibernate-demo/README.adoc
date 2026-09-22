@@ -24,8 +24,11 @@ Build the demo using https://maven.apache.org/[Maven] from the root of the Git r
 
 [source,shell,indent=1,subs="verbatim,quotes,attributes"]
 ----
-./mvnw clean package -pl samples/coherence-hibernate-demo
+DEMO_MODULES=samples/coherence-hibernate-demo/coherence-hibernate-demo-app,samples/coherence-hibernate-demo/coherence-hibernate-demo-server
+./mvnw clean package -DskipTests -pl "$DEMO_MODULES" -am
 ----
+
+The executable JARs use stable names, so the commands below work unchanged from development checkouts and release tags.
 
 == Run the embedded Coherence demo
 
@@ -33,7 +36,7 @@ Run the demo:
 
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
-java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-app/target/coherence-hibernate-demo-app-4.0.0-SNAPSHOT.jar
+java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-app/target/coherence-hibernate-demo-app.jar
 ----
 
 == Run the remote Coherence demo
@@ -42,14 +45,14 @@ First, start the remote Coherence server:
 
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
-java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-server/target/coherence-hibernate-demo-server-4.0.0-SNAPSHOT.jar
+java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-server/target/coherence-hibernate-demo-server.jar
 ----
 
 Next, start the demo:
 
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
-java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-app/target/coherence-hibernate-demo-app-4.0.0-SNAPSHOT.jar --spring.profiles.active=remote
+java -jar samples/coherence-hibernate-demo/coherence-hibernate-demo-app/target/coherence-hibernate-demo-app.jar --spring.profiles.active=remote
 ----
 
 We will use the exact same application as used for the embedded Coherence demo. However, by activating the `remote`
@@ -73,7 +76,7 @@ If you query for the event at `http://localhost:8080/api/events/1` you will be a
 first time you will see an SQL query being executed but subsequent queries will retrieve
 the result from the second level cache.
 
-In the console you should some basic statistics being printed:
+In the console you should see some basic statistics being printed:
 
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
@@ -116,7 +119,7 @@ Add the Hibernate 7 adapter to your `pom.xml`:
 <dependency>
     <groupId>com.oracle.coherence.hibernate</groupId>
     <artifactId>coherence-hibernate-cache-7</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.0.0</version>
 </dependency>
 <dependency>
     <groupId>org.hibernate.orm</groupId>
@@ -189,17 +192,19 @@ annotation:
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 ----
 
-Furthermore, we have `3` REST controllers.
+Furthermore, we have `2` REST controllers.
 
 == EventController
 
 * GET `/api/events` Gets a paginated list of events
-* POST `/api/events?title=foo&data=2020-10-30` Create a single event
+* POST `/api/events?title=foo&date=2020-10-30` Create a single event
+* GET `+/api/events/{id}+` Gets a single event; optional `usingJpaQuery` and `withParticipants` parameters control how it is loaded
 
 == PersonController
 
-* GET `/api/people` Gets a paginated list of events
-* POST `/api/people?firstname=Eric&lastname=Cartman&age=10` Create a single person
+* GET `/api/people` Gets a paginated list of people
+* POST `/api/people?firstName=Eric&lastName=Cartman&age=10` Create a single person
+* GET `+/api/people/{personId}+` Gets a single person
 * POST `+/api/people/{personId}/add-to-event/{eventId}+` Add a person to an event
 
 == Running Client + Server using Identity Tokens (Optional)
@@ -215,7 +220,7 @@ For this demo we use the following classes:
 
 These need to be configured in `tangosol-coherence-override.xml`.
 
-Un-comment the following sections for the server and the client module:
+Uncomment the following sections for the server and the client module:
 
 Under module _coherence-hibernate-demo-app_ in `tangosol-coherence-override.xml`:
 
@@ -247,7 +252,7 @@ First, start the remote Coherence server:
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
 java -DauthenticationToken=my_secret_token  \
--jar coherence-hibernate-demo-server/target/coherence-hibernate-demo-server-4.0.0-SNAPSHOT.jar
+-jar samples/coherence-hibernate-demo/coherence-hibernate-demo-server/target/coherence-hibernate-demo-server.jar
 ----
 
 Next, start the client application:
@@ -255,7 +260,7 @@ Next, start the client application:
 [source,bash,indent=1,subs="verbatim,quotes,attributes"]
 ----
 java -DauthenticationToken=my_secret_token  \
--jar coherence-hibernate-demo-app/target/coherence-hibernate-demo-app-4.0.0-SNAPSHOT.jar \
+-jar samples/coherence-hibernate-demo/coherence-hibernate-demo-app/target/coherence-hibernate-demo-app.jar \
 --spring.profiles.active=remote
 ----
 

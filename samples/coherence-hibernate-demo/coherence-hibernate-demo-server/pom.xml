@@ -24,6 +24,7 @@
 	</properties>
 
 	<build>
+		<finalName>coherence-hibernate-demo-server</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

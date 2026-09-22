@@ -1,5 +1,5 @@
-:main-release-version: 3.0.3
-:main-snapshot-version: 4.0.0-SNAPSHOT
+:main-release-version: 4.0.0
+:main-snapshot-version: 4.0.1-SNAPSHOT
 :2x-release-version: 2.3.5
 :2x-snapshot-version: 2.3.6-SNAPSHOT
 :hibernate-docs: https://docs.hibernate.org/orm/7.4/userguide/html_single/
@@ -84,7 +84,7 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |Coherence Hibernate       | Java | Coherence CE | Jakarta EE | Git Branch/Tag
 
 |*{main-snapshot-version}* | `17`, `21`, `25` | `15.1.1-0-5`, `26.07` | ✅       | `main`
-|*{main-release-version}*  | `17` | `24.09`      | ✅         | `v{main-release-version}`
+|*{main-release-version}*  | `17`, `21`, `25` | `15.1.1-0-5`, `26.07` | ✅ | `v{main-release-version}`
 |*{2x-release-version}*    | `11` | `22.06.7`    |            | `v{2x-release-version}`
 |*{2x-snapshot-version}*   | `11` | `22.06.7`    |            | `2.3.x`
 |===

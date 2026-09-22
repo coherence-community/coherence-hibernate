@@ -17,7 +17,9 @@
 The following sections outline Oracle Coherence Hibernate Integration changes in
 reverse chronological order.
 
-=== Version 4.0.0 (in development)
+=== Version 4.0.0 (September 23, 2026)
+
+https://github.com/coherence-community/coherence-hibernate/releases/tag/v4.0.0
 
 * Require Java 17 and validate the project on Java 17, 21, and 25.
 * Upgrade the current integration baseline to Hibernate ORM `7.4.x` and Jakarta Persistence `3.2`.
