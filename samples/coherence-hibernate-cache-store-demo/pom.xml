@@ -12,12 +12,12 @@
 	<parent>
 		<groupId>com.oracle.coherence.hibernate</groupId>
 		<artifactId>samples</artifactId>
-		<version>4.0.0</version>
+		<version>4.0.1-SNAPSHOT</version>
 	</parent>
 
 	<groupId>com.oracle.coherence.hibernate</groupId>
 	<artifactId>coherence-hibernate-cache-store-demo-parent</artifactId>
-	<version>4.0.0</version>
+	<version>4.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Samples - Coherence Hibernate Cache Store Demo</name>
