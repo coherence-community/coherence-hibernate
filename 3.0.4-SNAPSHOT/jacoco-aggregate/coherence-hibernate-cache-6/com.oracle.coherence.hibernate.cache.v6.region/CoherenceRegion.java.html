@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CoherenceRegion implements Region, ExtendedStatisticsSupport {
 
-<span class="nc" id="L44">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceRegion.class);</span>
+<span class="fc" id="L44">    private static final Logger LOGGER = LoggerFactory.getLogger(CoherenceRegion.class);</span>
 
     /**
      * The prefix of the names of all properties specific to this SPI implementation.
@@ -76,21 +76,21 @@ public class CoherenceRegion implements Region, ExtendedStatisticsSupport {
      * @param namedCache the Coherence NamedCache
      * @param properties the properties
      */
-<span class="nc" id="L79">    public CoherenceRegion(RegionFactory regionFactory, NamedCache namedCache, Map&lt;String, Object&gt; properties) {</span>
-<span class="nc" id="L80">        Assert.notNull(regionFactory, &quot;regionFactory must not be null.&quot;);</span>
-<span class="nc" id="L81">        Assert.notNull(namedCache, &quot;namedCache must not be null.&quot;);</span>
+<span class="fc" id="L79">    public CoherenceRegion(RegionFactory regionFactory, NamedCache namedCache, Map&lt;String, Object&gt; properties) {</span>
+<span class="fc" id="L80">        Assert.notNull(regionFactory, &quot;regionFactory must not be null.&quot;);</span>
+<span class="fc" id="L81">        Assert.notNull(namedCache, &quot;namedCache must not be null.&quot;);</span>
 
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
-<span class="nc" id="L84">            LOGGER.debug(&quot;Constructing CoherenceRegion for NamedCache '{}'.&quot;, namedCache.getCacheName());</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (LOGGER.isDebugEnabled()) {</span>
+<span class="fc" id="L84">            LOGGER.debug(&quot;Constructing CoherenceRegion for NamedCache '{}'.&quot;, namedCache.getCacheName());</span>
         }
-<span class="nc" id="L86">        this.lockLeaseDuration = (int) getDurationProperty(</span>
+<span class="fc" id="L86">        this.lockLeaseDuration = (int) getDurationProperty(</span>
                 properties,
                 LOCK_LEASE_DURATION_PROPERTY_NAME,
                 DEFAULT_LOCK_LEASE_DURATION,
                 Integer.MAX_VALUE);
-<span class="nc" id="L91">        this.namedCache = namedCache;</span>
-<span class="nc" id="L92">        this.regionFactory = regionFactory;</span>
-<span class="nc" id="L93">    }</span>
+<span class="fc" id="L91">        this.namedCache = namedCache;</span>
+<span class="fc" id="L92">        this.regionFactory = regionFactory;</span>
+<span class="fc" id="L93">    }</span>
 
     /**
      * Returns the NamedCache implementing this CoherenceRegion.
@@ -291,30 +291,30 @@ public class CoherenceRegion implements Region, ExtendedStatisticsSupport {
      * @return a long duration value in milliseconds
      */
     protected long getDurationProperty(Map&lt;String, Object&gt; properties, String propertyName, long defaultValue, long maxValue) {
-<span class="nc bnc" id="L294" title="All 2 branches missed.">        Base.azzert(maxValue &gt;= defaultValue);</span>
-<span class="nc bnc" id="L295" title="All 2 branches missed.">        Base.azzert(defaultValue &gt;= 0);</span>
+<span class="pc bpc" id="L294" title="1 of 2 branches missed.">        Base.azzert(maxValue &gt;= defaultValue);</span>
+<span class="pc bpc" id="L295" title="1 of 2 branches missed.">        Base.azzert(defaultValue &gt;= 0);</span>
 
-<span class="nc" id="L297">        final String propertyValue = (String) properties.get(propertyName);</span>
+<span class="fc" id="L297">        final String propertyValue = (String) properties.get(propertyName);</span>
         long duration;
         try {
 <span class="nc" id="L300">            duration = Base.parseTime(propertyValue);</span>
         }
-<span class="nc" id="L302">        catch (Exception ex) {</span>
-<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (LOGGER.isErrorEnabled()) {</span>
-<span class="nc" id="L304">                LOGGER.error(&quot;Error parsing duration property {}; provided value was &quot; +</span>
-<span class="nc" id="L305">                        &quot;{}; using default of {} milliseconds.&quot;, propertyName, propertyValue, defaultValue);</span>
+<span class="fc" id="L302">        catch (Exception ex) {</span>
+<span class="pc bpc" id="L303" title="1 of 2 branches missed.">            if (LOGGER.isErrorEnabled()) {</span>
+<span class="fc" id="L304">                LOGGER.error(&quot;Error parsing duration property {}; provided value was &quot; +</span>
+<span class="fc" id="L305">                        &quot;{}; using default of {} milliseconds.&quot;, propertyName, propertyValue, defaultValue);</span>
             }
-<span class="nc" id="L307">            duration = defaultValue;</span>
+<span class="fc" id="L307">            duration = defaultValue;</span>
 <span class="nc" id="L308">        }</span>
 
-<span class="nc bnc" id="L310" title="All 2 branches missed.">        if (duration &gt; maxValue) {</span>
+<span class="pc bpc" id="L310" title="1 of 2 branches missed.">        if (duration &gt; maxValue) {</span>
 <span class="nc bnc" id="L311" title="All 2 branches missed.">            if (LOGGER.isDebugEnabled()) {</span>
 <span class="nc" id="L312">                LOGGER.debug(&quot;Capping {} at {} milliseconds.&quot;, propertyName, maxValue);</span>
             }
 <span class="nc" id="L314">            duration = maxValue;</span>
         }
 
-<span class="nc" id="L317">        return duration;</span>
+<span class="fc" id="L317">        return duration;</span>
     }
 
     @Override

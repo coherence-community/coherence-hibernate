@@ -18,15 +18,15 @@ public abstract class Assert {
     }
 
     public static void hasText(String text, String message) {
-<span class="nc bnc" id="L21" title="All 2 branches missed.">        if (!StringUtils.hasText(text)) {</span>
-<span class="nc" id="L22">            throw new IllegalArgumentException(message);</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (!StringUtils.hasText(text)) {</span>
+<span class="fc" id="L22">            throw new IllegalArgumentException(message);</span>
         }
-<span class="nc" id="L24">    }</span>
+<span class="fc" id="L24">    }</span>
 
     public static void notNull(Object object, String message) {
-<span class="nc bnc" id="L27" title="All 2 branches missed.">        if (object == null) {</span>
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">        if (object == null) {</span>
 <span class="nc" id="L28">            throw new IllegalArgumentException(message);</span>
         }
-<span class="nc" id="L30">    }</span>
+<span class="fc" id="L30">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

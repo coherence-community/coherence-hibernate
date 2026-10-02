@@ -43,22 +43,22 @@ public class SoftLockItemProcessor extends AbstractProcessor implements Serializ
      * @param valueIfAbsent the cache value to soft lock in case there is no cache value already present
      * @param softLock the SoftLock to be added to the cache value
      */
-<span class="nc" id="L46">    public SoftLockItemProcessor(CoherenceRegionValue valueIfAbsent, CoherenceRegionValue.SoftLock softLock) {</span>
-<span class="nc" id="L47">        this.valueIfAbsent = valueIfAbsent;</span>
-<span class="nc" id="L48">        this.softLock = softLock;</span>
-<span class="nc" id="L49">    }</span>
+<span class="fc" id="L46">    public SoftLockItemProcessor(CoherenceRegionValue valueIfAbsent, CoherenceRegionValue.SoftLock softLock) {</span>
+<span class="fc" id="L47">        this.valueIfAbsent = valueIfAbsent;</span>
+<span class="fc" id="L48">        this.softLock = softLock;</span>
+<span class="fc" id="L49">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Object process(InvocableMap.Entry entry) {
-<span class="nc bnc" id="L56" title="All 2 branches missed.">        final CoherenceRegionValue cacheValue = entry.isPresent() ?</span>
-<span class="nc" id="L57">                (CoherenceRegionValue) entry.getValue() :</span>
-<span class="nc" id="L58">                this.valueIfAbsent;</span>
-<span class="nc" id="L59">        cacheValue.addSoftLock(this.softLock);</span>
-<span class="nc" id="L60">        entry.setValue(cacheValue);</span>
-<span class="nc" id="L61">        return null;</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        final CoherenceRegionValue cacheValue = entry.isPresent() ?</span>
+<span class="fc" id="L57">                (CoherenceRegionValue) entry.getValue() :</span>
+<span class="pc" id="L58">                this.valueIfAbsent;</span>
+<span class="fc" id="L59">        cacheValue.addSoftLock(this.softLock);</span>
+<span class="fc" id="L60">        entry.setValue(cacheValue);</span>
+<span class="fc" id="L61">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

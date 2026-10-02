@@ -32,8 +32,8 @@ public class CoherenceDomainDataRegionImpl extends DomainDataRegionImpl {
     public CoherenceDomainDataRegionImpl(DomainDataRegionConfig regionConfig, RegionFactoryTemplate regionFactory,
             DomainDataStorageAccess domainDataStorageAccess, CacheKeysFactory defaultKeysFactory,
             DomainDataRegionBuildingContext buildingContext) {
-<span class="nc" id="L35">        super(regionConfig, regionFactory, domainDataStorageAccess, defaultKeysFactory, buildingContext);</span>
-<span class="nc" id="L36">    }</span>
+<span class="fc" id="L35">        super(regionConfig, regionFactory, domainDataStorageAccess, defaultKeysFactory, buildingContext);</span>
+<span class="fc" id="L36">    }</span>
 
     @Override
     protected EntityDataAccess generateTransactionalEntityDataAccess(EntityDataCachingConfig entityAccessConfig) {
@@ -60,10 +60,10 @@ public class CoherenceDomainDataRegionImpl extends DomainDataRegionImpl {
 
     @Override
     protected EntityDataAccess generateReadWriteEntityAccess(EntityDataCachingConfig accessConfig) {
-<span class="nc bnc" id="L63" title="All 2 branches missed.">        final Comparator&lt;?&gt; versionComparator = (accessConfig.getVersionComparatorAccess() != null)</span>
-<span class="nc" id="L64">                ? accessConfig.getVersionComparatorAccess().get() : null;</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        final Comparator&lt;?&gt; versionComparator = (accessConfig.getVersionComparatorAccess() != null)</span>
+<span class="pc" id="L64">                ? accessConfig.getVersionComparatorAccess().get() : null;</span>
 
-<span class="nc" id="L66">        return new CoherenceReadWriteEntityAccess(this, this.getCacheStorageAccess(), versionComparator);</span>
+<span class="fc" id="L66">        return new CoherenceReadWriteEntityAccess(this, this.getCacheStorageAccess(), versionComparator);</span>
     }
 
     @Override
@@ -83,7 +83,7 @@ public class CoherenceDomainDataRegionImpl extends DomainDataRegionImpl {
 
     @Override
     protected NaturalIdDataAccess generateReadWriteNaturalIdAccess(NaturalIdDataCachingConfig accessConfig) {
-<span class="nc" id="L86">        return new CoherenceReadWriteNaturalIdAccess(this, getCacheStorageAccess());</span>
+<span class="fc" id="L86">        return new CoherenceReadWriteNaturalIdAccess(this, getCacheStorageAccess());</span>
     }
 
     @Override
