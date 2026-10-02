@@ -1,1 +1,0 @@
-package com.oracle.coherence.hibernate.demo.configuration;

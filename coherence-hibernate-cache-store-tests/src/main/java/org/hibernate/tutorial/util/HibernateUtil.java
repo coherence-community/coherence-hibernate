@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2013, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
@@ -12,9 +12,9 @@ import org.hibernate.cfg.Configuration;
 /**
  * Source copied from http://docs.jboss.org/hibernate/orm/4.2/manual/en-US/html/ch01.html
  * and adapted for functional testing of coherence-hibernate-second-level-cache.
+ * @author Randy Stafford
  */
-public class HibernateUtil
-{
+public class HibernateUtil {
 
     private static final SessionFactory sessionFactory = buildSessionFactory();
 

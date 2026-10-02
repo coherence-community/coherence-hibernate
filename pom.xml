@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+  Copyright (c) 2013, 2024, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -11,7 +11,7 @@
 
     <groupId>com.oracle.coherence.hibernate</groupId>
     <artifactId>coherence-hibernate-parent</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Coherence Hibernate Project</name>
@@ -61,72 +61,88 @@
         <module>coherence-hibernate-cache-store</module>
         <module>coherence-hibernate-cache-store-tests</module>
         <module>coherence-hibernate-cache-core</module>
-        <module>coherence-hibernate-cache-4</module>
-        <module>coherence-hibernate-cache-5</module>
-        <module>coherence-hibernate-cache-52</module>
         <module>coherence-hibernate-cache-53</module>
+        <module>coherence-hibernate-cache-6</module>
         <module>samples</module>
         <module>coherence-hibernate-site</module>
     </modules>
 
     <properties>
         <!-- project options -->
-        <java.version>8</java.version>
+        <java.version>17</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
-        <java.version.enforcer>1.8</java.version.enforcer>
+        <java.version.enforcer>${java.version}</java.version.enforcer>
         <maven.minimum.version>3.6.0</maven.minimum.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skip-sign-artifacts>true</skip-sign-artifacts>
         <coherence.hibernate.root>${basedir}</coherence.hibernate.root>
+
+        <argLine />
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+        <sonar.organization>coherence-community</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ${coherence.hibernate.root}/coherence-hibernate-site/target/site/jacoco-aggregate/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
+
         <!-- plugin dependency versions (alphabetically) -->
-        <dependency-check-maven.version>7.1.2</dependency-check-maven.version>
-        <doxia-module-markdown.version>1.0</doxia-module-markdown.version>
-        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-        <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
-        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
-        <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
-        <versions-maven-plugin>2.8.1</versions-maven-plugin>
+        <dependency-check-maven.version>12.1.3</dependency-check-maven.version>
+        <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
+        <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
+        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <maven-enforcer-plugin.version>3.6.1</maven-enforcer-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
+        <maven-jacoco-plugin.version>0.8.13</maven-jacoco-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <versions-maven-plugin>2.18.0</versions-maven-plugin>
+
+        <checkstyle.version>10.21.4</checkstyle.version>
+        <spring-javaformat-checkstyle.version>0.0.43</spring-javaformat-checkstyle.version>
 
         <!-- dependency versions (alphabetically) -->
-        <assertj.version>3.11.1</assertj.version>
-        <coherence.version>22.06.1</coherence.version>
-        <hibernate4.version>4.3.11.Final</hibernate4.version>
-        <hibernate5.version>5.1.17.Final</hibernate5.version>
-        <hibernate52.version>5.2.18.Final</hibernate52.version>
-        <hibernate53.version>5.6.10.Final</hibernate53.version>
-        <hsqldb.version>2.2.9</hsqldb.version>
-        <hsqldb.version>2.2.9</hsqldb.version>
+        <assertj.version>3.27.3</assertj.version>
+        <checker-qual.version>3.49.5</checker-qual.version>
+        <coherence.groupId>com.oracle.coherence.ce</coherence.groupId>
+        <coherence.version>25.03.1</coherence.version>
+        <hibernate6.version>6.6.19.Final</hibernate6.version>
+        <hibernate53.version>5.6.15.Final</hibernate53.version>
+        <hsqldb.version>2.7.4</hsqldb.version>
         <junit.version>4.13.2</junit.version>
-        <junit5.version>5.8.2</junit5.version>
-        <logback.version>1.2.10</logback.version>
-        <mockito.version>4.0.0</mockito.version>
-        <slf4j.version>1.7.32</slf4j.version>
+        <junit5.version>5.10.5</junit5.version>
+        <junit-platform-launcher.version>1.11.4</junit-platform-launcher.version>
+        <logback.version>1.5.18</logback.version>
+        <mockito.version>5.14.1</mockito.version>
+        <slf4j.version>2.0.17</slf4j.version>
     </properties>
 
     <distributionManagement>
         <snapshotRepository>
             <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>sonatype</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://central.sonatype.com/</url>
         </repository>
     </distributionManagement>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+                <version>1.2.2.Final</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -158,6 +174,9 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+<!--                    <compilerArgument>-Xlint:all</compilerArgument>-->
+<!--                    <showWarnings>true</showWarnings>-->
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
             <plugin>
@@ -165,7 +184,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>-Xms800m -Xmx800m</argLine>
+                    <argLine>@{argLine} -Xms800m -Xmx800m -XX:+EnableDynamicAgentLoading</argLine>
                     <includes>
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
@@ -227,13 +246,13 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
+                    <detectJavaApiLink>false</detectJavaApiLink>
                     <failOnError>false</failOnError>
                 </configuration>
                 <executions>
@@ -246,7 +265,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
@@ -320,12 +338,61 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.4.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>io.spring.javaformat</groupId>
+                <artifactId>spring-javaformat-maven-plugin</artifactId>
+                <version>${spring-javaformat-checkstyle.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.spring.javaformat</groupId>
+                        <artifactId>spring-javaformat-checkstyle</artifactId>
+                        <version>${spring-javaformat-checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>checkstyle-validation</id>
+                        <phase>validate</phase>
+                        <inherited>true</inherited>
+                        <configuration>
+                            <configLocation>${coherence.hibernate.root}/src/main/config/checkstyle.xml</configLocation>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
     <profiles>
+        <profile>
+            <id>jdk17</id>
+            <properties>
+                <java.version>17</java.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>jdk21</id>
+            <properties>
+                <java.version>21</java.version>
+            </properties>
+        </profile>
         <profile>
             <id>sign</id>
             <build>
@@ -357,21 +424,21 @@
             </build>
         </profile>
         <profile>
-            <id>hibernate53</id>
+            <id>hibernate60</id>
             <properties>
-                <hibernate53.version>5.3.23.Final</hibernate53.version>
+                <hibernate6.version>6.0.2.Final</hibernate6.version>
             </properties>
         </profile>
         <profile>
-            <id>hibernate54</id>
+            <id>hibernate64</id>
             <properties>
-                <hibernate53.version>5.4.32.Final</hibernate53.version>
+                <hibernate6.version>6.4.10.Final</hibernate6.version>
             </properties>
         </profile>
         <profile>
-            <id>hibernate55</id>
+            <id>coherence14_1_1</id>
             <properties>
-                <hibernate53.version>5.5.8.Final</hibernate53.version>
+                <coherence.version>14.1.1-0-10</coherence.version>
             </properties>
         </profile>
         <profile>
@@ -389,6 +456,8 @@
                             <skipRuntimeScope>true</skipRuntimeScope>
                             <skipTestScope>true</skipTestScope>
                             <cveValidForHours>24</cveValidForHours>
+                          	<nvdValidForHours>96</nvdValidForHours>
+							              <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
                             <suppressionFiles>
                                 <suppressionFile>${basedir}/src/main/config/dependency-check-suppression.xml</suppressionFile>
                             </suppressionFiles>
@@ -436,6 +505,42 @@
                                 <goals>
                                     <goal>display-property-updates</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${maven-jacoco-plugin.version}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*com.oracle.coherence.hibernate.test**</exclude>
+                            </excludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <formats>
+                                        <format>XML</format>
+                                    </formats>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

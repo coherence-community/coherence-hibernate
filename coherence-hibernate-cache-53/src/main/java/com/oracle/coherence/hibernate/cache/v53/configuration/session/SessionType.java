@@ -7,8 +7,9 @@
 package com.oracle.coherence.hibernate.cache.v53.configuration.session;
 
 /**
- * An enum representing the different types of {@link com.tangosol.net.SessionConfiguration}
- * that can be configured in the Coherence Hibernate configuration.
+ * An enum representing the different types of Coherence instances we are dealing with. Depending on whether we configure
+ * the Coherence Hibernate application to be a Cluster member itself ({@link SessionType#SERVER}) or if we connect to
+ * the cluster via Coherence*Extend ({@link SessionType#CLIENT}), we need to set the correct {@link SessionType}.
  *
  * @author Gunnar Hillert
  * @since 2.1
@@ -21,13 +22,8 @@ public enum SessionType {
 	CLIENT,
 
 	/**
-	 * The session is a gRPC client session.
-	 */
-	GRPC,
-
-	/**
-	 * The session is a server session, that is it expects to be a Coherence cluster member.
-	 * <p>This is the default type if none is specified for a configuration.
+	 * The session is a server session, that is it expects to be a Coherence cluster member. This is the default type if
+	 * none is specified for a configuration.
 	 */
 	SERVER
 

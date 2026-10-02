@@ -37,14 +37,6 @@
             <scheme-name>remote</scheme-name>
             <service-name>ExtendTcpCacheService</service-name>
             <initiator-config>
-                <tcp-initiator>
-                    <name-service-addresses>
-                        <socket-address>
-                            <address>127.0.0.1</address>
-                            <port>7574</port>
-                        </socket-address>
-                    </name-service-addresses>
-                </tcp-initiator>
                 <outgoing-message-handler>
                     <request-timeout>5s</request-timeout>
                 </outgoing-message-handler>

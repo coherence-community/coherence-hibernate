@@ -1,12 +1,15 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2023 Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.demo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.oracle.coherence.hibernate.demo.controller.dto.PersonDto;
+import com.oracle.coherence.hibernate.demo.model.Person;
+import com.oracle.coherence.hibernate.demo.service.PersonService;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oracle.coherence.hibernate.demo.model.Person;
-import com.oracle.coherence.hibernate.demo.service.PersonService;
-
 /**
  * Explicit controller for retrieving People.
  *
@@ -27,16 +27,20 @@ import com.oracle.coherence.hibernate.demo.service.PersonService;
  *
  */
 @RestController
-@RequestMapping(path="/api/people")
-@Transactional()
+@RequestMapping(path = "/api/people")
+@Transactional
 public class PersonController {
 
-	@Autowired
-	private PersonService personService;
+	private final PersonService personService;
+
+	public PersonController(PersonService personService) {
+		this.personService = personService;
+	}
 
 	@GetMapping
-	public Page<Person> getPeople(Pageable pageable) {
-		return personService.listPeople(pageable);
+	public Page<PersonDto> getPeople(Pageable pageable) {
+		return this.personService.listPeople(pageable).map((person) ->
+			new PersonDto(person.getId(), person.getFirstname(), person.getLastname(), person.getAge()));
 	}
 
 	@PostMapping
@@ -44,13 +48,19 @@ public class PersonController {
 		@RequestParam("firstName") String firstName,
 		@RequestParam("lastName") String lastName,
 		@RequestParam("age") int age) {
-		return personService.createAndStorePerson(firstName, lastName, age);
+		return this.personService.createAndStorePerson(firstName, lastName, age);
+	}
+
+	@GetMapping("/{personId}")
+	public PersonDto getSinglePerson(@PathVariable("personId") Long personId) {
+		final Person person = this.personService.getPerson(personId);
+		return new PersonDto(person.getId(), person.getFirstname(), person.getLastname(), person.getAge());
 	}
 
 	@PostMapping("/{personId}/add-to-event/{eventId}")
 	public void addPersonToEvent(
 		@PathVariable("personId") Long personId,
 		@PathVariable("eventId") Long eventId) {
-		personService.addPersonToEvent(personId, eventId);
+		this.personService.addPersonToEvent(personId, eventId);
 	}
 }

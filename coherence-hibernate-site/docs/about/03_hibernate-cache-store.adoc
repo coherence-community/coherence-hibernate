@@ -300,4 +300,4 @@ classes. For more detailed technical information, see the link:{javadoc-root}com
 
 For an example please see take a look at the Coherence Spring JPA Repository CacheStore Demo.
 
-- https://github.com/coherence-community/coherence-spring/tree/master/samples/cachestore-demo
+- https://github.com/coherence-community/coherence-spring/tree/main/samples/cachestore-demo

@@ -12,3 +12,4 @@ hsqldb.log
 .DS_Store
 .flattened-pom.xml
 .vscode/
+.java-version

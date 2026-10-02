@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (c) 2013, 2020, Oracle and/or its affiliates.
+  Copyright (c) 2013, 2025, Oracle and/or its affiliates.
   Licensed under the Universal Permissive License v 1.0 as shown at
   https://oss.oracle.com/licenses/upl.
 -->
@@ -12,7 +12,7 @@
     <parent>
         <artifactId>coherence-hibernate-parent</artifactId>
         <groupId>com.oracle.coherence.hibernate</groupId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>coherence-hibernate-site</artifactId>
@@ -26,9 +26,9 @@
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
         <coherence.hibernate.root>${basedir}/..</coherence.hibernate.root>
-        <helidon.sitegen.version>2.2.3</helidon.sitegen.version>
-        <asciidoctor-diagram.version>2.2.1</asciidoctor-diagram.version>
-        <doxia.version>1.10</doxia.version>
+        <helidon.sitegen.version>3.0.10</helidon.sitegen.version>
+        <asciidoctor-diagram.version>3.0.1</asciidoctor-diagram.version>
+        <doxia.version>2.0.0</doxia.version>
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
     </properties>
     <distributionManagement>
@@ -42,25 +42,30 @@
         <dependency>
             <artifactId>coherence-hibernate-cache-core</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>coherence-hibernate-cache-53</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>coherence-hibernate-cache-6</artifactId>
+            <groupId>com.oracle.coherence.hibernate</groupId>
+            <version>3.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>coherence-hibernate-cache-store</artifactId>
             <groupId>com.oracle.coherence.hibernate</groupId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${hibernate53.version}</version>
+            <version>${hibernate6.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.oracle.coherence.ce</groupId>
+            <groupId>${coherence.groupId}</groupId>
             <artifactId>coherence</artifactId>
             <version>${coherence.version}</version>
         </dependency>
@@ -79,7 +84,7 @@
                         </goals>
                         <phase>prepare-package</phase>
                         <configuration>
-                            <source>8</source>
+                            <source>17</source>
                             <outputDirectory>${project.build.directory}/site/api</outputDirectory>
                             <includeDependencySources>true</includeDependencySources>
                             <dependencySourceIncludes>
@@ -89,12 +94,11 @@
                             <attach>false</attach>
                             <quiet>true</quiet>
                             <links>
-                                <link>https://docs.oracle.com/javase/8/docs/api/</link>
-                                <link>https://docs.oracle.com/javaee/7/api/</link>
+                                <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
+                                <link>https://jakarta.ee/specifications/platform/10/apidocs/</link>
                             </links>
-                            <additionalJOption>--no-module-directories</additionalJOption>
                             <bottom>
-                                Copyright © 2013, 2022, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0.
+                                Copyright © 2013, 2024, Oracle and/or its affiliates. Licensed under the Universal Permissive License v 1.0.
                             </bottom>
                         </configuration>
                     </execution>
@@ -153,7 +157,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.9.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -219,6 +223,20 @@
                     </arguments>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven-jacoco-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -232,7 +250,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-scm-publish-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.3.0</version>
                         <configuration>
                             <serverId>github-pages</serverId>
                             <checkinComment>${project.version} Site</checkinComment>

@@ -1,46 +1,57 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.demo;
 
-import java.util.Map;
+import com.tangosol.net.CacheFactory;
+import com.tangosol.net.ConfigurableCacheFactory;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.tangosol.net.Coherence;
-import com.tangosol.net.CoherenceConfiguration;
-import com.tangosol.net.NamedMap;
-import com.tangosol.net.SessionConfiguration;
-
 /**
- *
+ * Starts Coherence as well as an embedded Hsql Server instance.
  * @author Gunnar Hillert
- *
  */
 @SpringBootApplication
 public class CoherenceServerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CoherenceServerApplication.class, args);
-	}
+    /**
+     * Starts the Spring Boot application.
+     * @param args program arguments
+     */
+    public static void main(String[] args) {
 
-	@Bean(destroyMethod = "close")
-	public Coherence coherenceServer() {
-		final SessionConfiguration sessionConfiguration = SessionConfiguration.builder()
-				.withConfigUri("coherence-cache-config.xml")
-				.build();
+        /*
+         * Usually when testing Coherence locally, where the whole Coherence cluster runs on e.g. a laptop,
+         * restricting the cluster formation to loopback (127.0.0.1) is often useful. The same properties are also
+         * set by the Maven pom.xml for the JUnit tests.
+         */
+        System.setProperty("coherence.localhost", "127.0.0.1");
+        System.setProperty("coherence.ttl", "0");
+        System.setProperty("java.net.preferIPv4Stack", "true");
+        System.setProperty("coherence.wka", "127.0.0.1");
 
-		final CoherenceConfiguration cfg = CoherenceConfiguration.builder()
-				.withSessions(sessionConfiguration)
-				.build();
-		final Coherence coherence = Coherence.clusterMember(cfg);
-		coherence.start().join();
+        SpringApplication.run(CoherenceServerApplication.class, args);
+    }
 
-		return coherence;
-	}
+    /**
+     * Spring bean that ensure that the Coherence instance is available.
+     * @return the ConfigurableCacheFactory
+     */
+    @Bean(destroyMethod = "dispose")
+    public ConfigurableCacheFactory coherenceServer() {
+        CacheFactory.ensureCluster();
+
+        final ConfigurableCacheFactory factory = CacheFactory.getCacheFactoryBuilder().getConfigurableCacheFactory(
+                "coherence-cache-config.xml",
+                getClass().getClassLoader());
+
+        factory.activate();
+        return factory;
+    }
 }

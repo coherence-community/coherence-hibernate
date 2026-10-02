@@ -1,115 +1,107 @@
 /*
- * Copyright (c) 2020, Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2023, Oracle and/or its affiliates.
  *
  * Licensed under the Universal Permissive License v 1.0 as shown at
  * https://oss.oracle.com/licenses/upl.
  */
 package com.oracle.coherence.hibernate.demo.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
- *
+ * The Person Model class.
  * @author Gunnar Hillert
  *
  */
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name="PEOPLE")
-public class Person {
+@Table(name = "PEOPLE")
+public class Person implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	private int age;
-	private String firstname;
-	private String lastname;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private int age;
+    private String firstname;
+    private String lastname;
 
-	@ManyToMany(targetEntity = Event.class)
-	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	private Set<Event> events = new HashSet<>();
+    @ManyToMany(mappedBy = "participants")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Event> events = new HashSet<>();
 
-	@ElementCollection(fetch = FetchType.LAZY)
-	@CollectionTable(name = "PERSON_EMAIL_ADDR", joinColumns = @JoinColumn(name = "PERSON_ID"))
-	@Column(name = "EMAIL_ADDR")
-	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-	private Set<String> emailAddresses = new HashSet<>();
+    public Person() {
+    }
 
-	public Person() {
-	}
+    public Person(Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public int getAge() {
-		return age;
-	}
+    public int getAge() {
+        return this.age;
+    }
 
-	public void setAge(int age) {
-		this.age = age;
-	}
+    public void setAge(int age) {
+        this.age = age;
+    }
 
-	public String getFirstname() {
-		return firstname;
-	}
+    public String getFirstname() {
+        return this.firstname;
+    }
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
 
-	public String getLastname() {
-		return lastname;
-	}
+    public String getLastname() {
+        return this.lastname;
+    }
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
 
-	public Set<Event> getEvents() {
-		return events;
-	}
+    public Set<Event> getEvents() {
+        return this.events;
+    }
 
-	protected void setEvents(Set<Event> events) {
-		this.events = events;
-	}
+    protected void setEvents(Set<Event> events) {
+        this.events = events;
+    }
 
-	public void addToEvent(Event event) {
-		this.getEvents().add(event);
-		event.getParticipants().add(this);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Person person = (Person) o;
+        return Objects.equals(this.id, person.id);
+    }
 
-	public void removeFromEvent(Event event) {
-		this.getEvents().remove(event);
-		event.getParticipants().remove(this);
-	}
-
-	public Set<String> getEmailAddresses() {
-		return emailAddresses;
-	}
-
-	public void setEmailAddresses(Set<String> emailAddresses) {
-		this.emailAddresses = emailAddresses;
-	}
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id);
+    }
 }

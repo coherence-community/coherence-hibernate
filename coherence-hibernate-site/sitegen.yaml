@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2022, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2013, 2025, Oracle and/or its affiliates. All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at
 # https://oss.oracle.com/licenses/upl.
 
@@ -48,67 +48,90 @@ backend:
     releases:
         - "${project.version}"
     navigation:
+      type: "ROOT"
       title: "Oracle Coherence Hibernate"
       glyph:
         type: "image"
         value: "images/logo.png"
       items:
-        - title: "Project Website"
-          pathprefix: "/about"
+        - type: "GROUPS"
           items:
-            - title: "Getting Started"
+            - type: "GROUP"
+              title: "Project Website"
               pathprefix: "/about"
-              glyph:
-                type: "icon"
-                value: "assistant"
               items:
-                - includes:
-                    - "about/*.adoc"
-            - title: "Development"
-              pathprefix: "/dev"
-              glyph:
-                type: "icon"
-                value: "fa-code"
+                - type: "MENU"
+                  title: "Getting Started"
+                  dir: "about"
+                  pathprefix: "/about"
+                  glyph:
+                    type: "icon"
+                    value: "assistant"
+                  sources:
+                    - 01_overview.adoc
+                    - 02_hibernate-cache.adoc
+                    - 03_hibernate-cache-store.adoc
+                - type: "MENU"
+                  title: "Development"
+                  dir: "dev"
+                  pathprefix: "/dev"
+                  glyph:
+                    type: "icon"
+                    value: "fa-code"
+                  sources:
+                    - 01_license.adoc
+                    - 02_source-code.adoc
+                    - 03_build-instructions.adoc
+                    - 04_issue-tracking.adoc
+                    - 05_contributions.adoc
+                    - 06_history.adoc
+                    - 07_getting-help.adoc
+            - type: "GROUP"
+              title: "Reference Documentation"
+              pathprefix: "/docs"
               items:
-                - includes:
-                    - "dev/*.adoc"
-        - title: "Reference Documentation"
-          pathprefix: "/docs"
-          items:
-            - title: "Javadocs"
-              glyph:
-                type: "icon"
-                value: "code"
-              href: "api/index.html"
-        - title: "Additional Resources"
-          items:
-            - title: "Slack"
-              glyph:
-                type: "icon"
-                value: "fa-slack"
-              href: "https://join.slack.com/t/oraclecoherence/shared_invite/enQtNzcxNTQwMTAzNjE4LTJkZWI5ZDkzNGEzOTllZDgwZDU3NGM2YjY5YWYwMzM3ODdkNTU2NmNmNDFhOWIxMDZlNjg2MzE3NmMxZWMxMWE"
-            - title: "Coherence Web Site"
-              glyph:
-                type: "icon"
-                value: "fa-globe"
-              href: "https://coherence.community/"
-            - title: "Coherence Spring"
-              glyph:
-                type: "icon"
-                value: "fa-globe"
-              href: "https://spring.coherence.community/"
-            - title: "Micronaut Coherence"
-              glyph:
-                type: "icon"
-                value: "fa-globe"
-              href: "https://github.com/micronaut-projects/micronaut-coherence/"
-            - title: "GitHub"
-              glyph:
-                type: "icon"
-                value: "fa-github-square"
-              href: "https://github.com/coherence-community/coherence-hibernate/"
-            - title: "Twitter"
-              glyph:
-                type: "icon"
-                value: "fa-twitter-square"
-              href: "https://twitter.com/OracleCoherence/"
+                - type: "LINK"
+                  title: "Javadocs"
+                  glyph:
+                    type: "icon"
+                    value: "code"
+                  href: "api/index.html"
+            - type: "GROUP"
+              title: "Additional Resources"
+              items:
+                - type: "LINK"
+                  title: "Slack"
+                  glyph:
+                    type: "icon"
+                    value: "fa-slack"
+                  href: "https://join.slack.com/t/oraclecoherence/shared_invite/enQtNzcxNTQwMTAzNjE4LTJkZWI5ZDkzNGEzOTllZDgwZDU3NGM2YjY5YWYwMzM3ODdkNTU2NmNmNDFhOWIxMDZlNjg2MzE3NmMxZWMxMWE"
+                - type: "LINK"
+                  title: "Coherence Web Site"
+                  glyph:
+                    type: "icon"
+                    value: "fa-globe"
+                  href: "https://coherence.community/"
+                - type: "LINK"
+                  title: "Coherence Spring"
+                  glyph:
+                    type: "icon"
+                    value: "fa-globe"
+                  href: "https://spring.coherence.community/"
+                - type: "LINK"
+                  title: "Micronaut Coherence"
+                  glyph:
+                    type: "icon"
+                    value: "fa-globe"
+                  href: "https://github.com/micronaut-projects/micronaut-coherence/"
+                - type: "LINK"
+                  title: "GitHub"
+                  glyph:
+                    type: "icon"
+                    value: "fa-github-square"
+                  href: "https://github.com/coherence-community/coherence-hibernate/"
+                - type: "LINK"
+                  title: "Twitter"
+                  glyph:
+                    type: "icon"
+                    value: "fa-twitter-square"
+                  href: "https://twitter.com/OracleCoherence/"

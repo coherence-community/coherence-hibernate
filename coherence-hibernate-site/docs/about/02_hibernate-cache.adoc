@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-    Copyright (c) 2013, 2022, Oracle and/or its affiliates.
+    Copyright (c) 2013, 2025, Oracle and/or its affiliates.
 
     Licensed under the Universal Permissive License v 1.0 as shown at
     https://oss.oracle.com/licenses/upl.
@@ -17,7 +17,7 @@ Provider Interface (SPI) to be configured. In Hibernate version 3.3 (released
 September 11th 2008) the second-level cache SPI was significantly redesigned. Over
 the next couple of versions the SPI was further refined leading to breaking changes.
 
-=== Supported Versions
+=== Supported Hibernate Versions
 
 We provide dedicated releases of the Hibernate Second-Level Cache implementations
 for Oracle Coherence depending on the Hibernate versions. The following versions
@@ -27,21 +27,20 @@ are supported:
 |===
 |Module Name |Supported Hibernate Versions
 
-|coherence-hibernate-cache-4
-|`4.3.x`
-
-|coherence-hibernate-cache-5
-|`5.0.x`, `5.1.x`
-
-|coherence-hibernate-cache-52
-|`5.2.x`
+|coherence-hibernate-cache-6
+|`6.1.x`, `6.2.x`
 
 |coherence-hibernate-cache-53
-|`5.3.x`, `5.4.x`, `5.5.x`, `5.6.x`
+|`5.6.x`
 |===
 
-IMPORTANT: Active development (new features) focuses on the `coherence-hibernate-cache-53` module. This module also
-supports the latest stable release version of Hibernate `5.6.x`.
+IMPORTANT: Active development (new features) focuses on the `coherence-hibernate-cache-6` module. This module also
+supports the latest stable release version of Hibernate `6.2.x`.
+
+=== Supported Coherence Versions
+
+The minimum Coherence version that is supported by Coherence Hibernate is `23.03` (CE). We do recommend using the
+latest version of Coherence if possible.
 
 === Overview
 
@@ -58,9 +57,56 @@ Hibernate for data access and management, and that run in a cluster of applicati
 NOTE: Before you use the Coherence Hibernate Cache support, please also consider other caching strategies. Ultimately,
 you should make a decision that is most applicable to the needs of your application.
 
-=== Configuration and Serialization Requirements
+=== Getting Started
 
-==== Serialization
+Installing the Coherence Hibernate second-level cache implementation amounts to obtaining a distribution of
+`coherence-hibernate-cache-xx-{version-coherence-hibernate}.jar` for the respective Hibernate version of your application.
+
+The easiest way to do so is to build and execute your Hibernate application with Maven, and add the following dependency
+to your application's `pom.xml`:
+
+[source,xml,indent=0,subs="verbatim,quotes,attributes"]
+----
+<dependency>
+    <groupId>com.oracle.coherence.hibernate</groupId>
+    <artifactId>coherence-hibernate-cache-6</artifactId>
+    <version>{version-coherence-hibernate}</version>
+</dependency>
+----
+
+Alternatively, you can download `coherence-hibernate-cache-6-{version-coherence-hibernate}.jar` from a Maven repository
+(e.g. https://repo1.maven.org/maven2/) and use it in JVM classpaths. Or you can 
+link:../dev/03_build-instructions.adoc[build]
+the Coherence Hibernate second-level cache implementation from sources.
+
+Coherence Hibernate depends on Oracle Coherence (E.g. https://coherence.community/[Coherence CE] (Community Edition))
+and Hibernate. These dependencies must be declared explicitly as we do not include them transitively. A full dependency
+declaration may look like the following:
+
+[source,xml,indent=0,subs="verbatim,quotes,attributes"]
+----
+<dependency>
+    <groupId>com.oracle.coherence.hibernate</groupId>
+    <artifactId>coherence-hibernate-cache-6</artifactId>
+    <version>{version-coherence-hibernate}</version>
+</dependency>
+<dependency>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-core</artifactId>
+    <version>{version-hibernate}</version>
+</dependency>
+<dependency>
+    <groupId>com.oracle.coherence.ce</groupId>
+    <artifactId>coherence</artifactId>
+    <version>{version-coherence}</version>
+</dependency>
+----
+
+TIP: In the GitHub repository under samples, you will find a Spring Boot-based application that using Coherence Hibernate.
+Please see the respective
+https://github.com/coherence-community/coherence-hibernate/blob/main/samples/coherence-hibernate-demo/README.adoc[README] for details.
+
+=== Serialization Requirements
 
 Familiarize yourself with the Coherence Documentation, especially the chapter on
 link:{coherence-docs}develop-applications/performing-basic-cache-operations.html#GUID-F9BCA574-ABFC-4F0D-94EA-949E5B7621E7[Performing Basic Cache Operations]
@@ -79,7 +125,7 @@ built-in Java types, such as `String`, `Integer` and `Date`, meet this requireme
 keys for which `equals()` returns `true` must serialize identically. Most built-in Java types meet this requirement as
 well.
 
-==== Cache Keys
+=== Cache Keys
 
 By default, Coherence Hibernate uses the `DefaultCacheKeysFactory`. When using Hibernate `5.2` or later, you can customize
 the used `CacheKeysFactory` using the Hibernate property:
@@ -95,7 +141,7 @@ You can specify the following values:
 NOTE: Hibernate versions before `5.3.0` have issues with composite keys, when using the `DefaultCacheKeysFactory`.
 If you need to use composite keys, please consider using the `SimpleCacheKeysFactory` instead.
 
-==== Configuring Clients and Servers for Hibernate Second-Level Caching
+=== Configuring Clients and Servers for Hibernate Second-Level Caching
 
 Both the clients of the Coherence Hibernate second-level caches -- e.g. application server JVMs running Hibernate-based
 applications -- and the Coherence cache server JVMs actually holding the cache contents need to have a common set of
@@ -133,50 +179,6 @@ link:{coherence-docs}develop-applications/understanding-configuration.html#GUID-
 in the reference documentation. Coherence provides default operational configuration, but it is a best practice to
 override communication parameters and cluster name to make them unique for each separate application environment.
 
-=== Installing the Coherence Hibernate Second-Level Cache
-
-Installing the Coherence Hibernate second-level cache implementation amounts to obtaining a distribution of
-`coherence-hibernate-cache-xx-{version-coherence-hibernate}.jar` for the respective Hibernate version of your application.
-
-The easiest way to do so is to build and execute your Hibernate application with Maven, and add the following dependency
-to your application's `pom.xml`:
-
-[source,xml,indent=0,subs="verbatim,quotes,attributes"]
-----
-<dependency>
-    <groupId>com.oracle.coherence.hibernate</groupId>
-    <artifactId>coherence-hibernate-cache-53</artifactId>
-    <version>{version-coherence-hibernate}</version>
-</dependency>
-----
-
-Alternatively, you can download `coherence-hibernate-cache-53-{version-coherence-hibernate}.jar` from a Maven repository
-(e.g. https://repo1.maven.org/maven2/) and use it in JVM classpaths. Or you can xref:dev/03_build-instructions.adoc[build]
-the Coherence Hibernate second-level cache implementation from sources.
-
-Coherence Hibernate depends on Oracle Coherence (E.g. https://coherence.community/[Coherence CE] (Community Edition))
-and Hibernate. These dependencies must be declared explicitly as we do not include them transitively. A full dependency
-declaration may look like the following:
-
-[source,xml,indent=0,subs="verbatim,quotes,attributes"]
-----
-<dependency>
-    <groupId>com.oracle.coherence.hibernate</groupId>
-    <artifactId>coherence-hibernate-cache-53</artifactId>
-    <version>{version-coherence-hibernate}</version>
-</dependency>
-<dependency>
-    <groupId>org.hibernate</groupId>
-    <artifactId>hibernate-core</artifactId>
-    <version>{version-hibernate}</version>
-</dependency>
-<dependency>
-    <groupId>com.oracle.coherence.ce</groupId>
-    <artifactId>coherence</artifactId>
-    <version>{version-coherence}</version>
-</dependency>
-----
-
 === Configuring Hibernate Second-Level and Query Caching
 
 Hibernate uses three forms of caching:
@@ -204,11 +206,9 @@ include the following property setting in `hibernate.cfg.xml`:
 [source,xml,indent=0,subs="verbatim,quotes,attributes"]
 ----
 <property name="hibernate.cache.region.factory_class">
-    com.oracle.coherence.hibernate.cache.v53.CoherenceRegionFactory
+    com.oracle.coherence.hibernate.cache.v6.CoherenceRegionFactory
 </property>
 ----
-
-NOTE: Coherence Hibernate Cache `5.3+` uses the link:{coherence-ce-docs}core/02_bootstrap[Coherence Bootstrap API].
 
 In addition to setting the `hibernate.cache.region.factory_class` property, you must also configure Hibernate to use
 second-level caching by setting the appropriate Hibernate configuration property to `true`, as follows:
@@ -357,7 +357,7 @@ equivalent annotation.
 
 IMPORTANT: The Coherence Hibernate second-level cache implementation does not support the transactional cache concurrency strategy.
 
-=== Configuring Coherence Caches for Hibernate Second-Level Caching
+=== Coherence Cache Configuration
 
 By default, the Coherence Hibernate second-level cache implementation uses a cache configuration file named
 `hibernate-second-level-cache-config.xml` at the root level in `coherence-hibernate-cache-53-{version-coherence-hibernate}.jar`.
@@ -386,16 +386,34 @@ considered if the underlying database can be written by clients other than the H
 ==== Session Name `5.3+`
 
 Property `com.oracle.coherence.hibernate.cache.session_name` allows to specify a name for the
-underlying Coherence session. If not specified, the default session name will be used.
+underlying Coherence session. If not specified, the default session name will be used. Requires Coherence `21.12` or higher.
 
 ==== Session Type `5.3+`
 
-Property `com.oracle.coherence.hibernate.cache.session_type` can take the following values:
+Using property `com.oracle.coherence.hibernate.cache.session_type` you can specify the type of the session. By default,
+the session type is `server` which means that the Coherence Hibernate application becomes a node in the Coherence cluster
+using the Tangosol Cluster Management Protocol (TCMP). Please see the chapter Introduction to Coherence Clusters of
+the Coherence reference guide for more details.
 
-- CLIENT - The session is a client session, that is it expects to be a Coherence*Extend client.
-- GRPC   - The session is a gRPC client session.
-- SERVER - The session is a server session, that is it expects to be a Coherence cluster member.
-This is the *default* type if no value is specified.
+- Client
+- Server (default)
+
+If, on the other hand, you would like to connect to Coherence in strict client mode using either Coherence*Extend or
+gRPC, you will need to set the session type to `client`. In that case, the Coherence Hibernate application will not use
+TCMP.
+
+TIP: When using Coherence Hibernate in pure client mode, please also set the Coherence property
+`coherence.tcmp.enabled` to `false`, either via System property of the custom Hibernate property:
+`com.oracle.coherence.hibernate.cache.coherence_properties.coherence.tcmp.enabled: false`.
+
+==== Start full Cache Server 5.3+
+
+By default, Coherence Hibernate starts a minimal Coherence cluster node without starting any additional services. Since
+Coherence Hibernate `5.3.1`, we also provide an option to start Coherence using the `DefaultCacheServer`. That way a
+fully featured Coherence Cluster node is started, allowing for the configuration of e.g. Management over REST, which
+allows for the convenient introspection of the Cluster node and its caches using the https://github.com/oracle/coherence-cli[Coherence CLI].
+
+NOTE: This option is ignored if you set `com.oracle.coherence.hibernate.cache.session_type` to `client`.
 
 ==== Minimal Puts
 
@@ -424,8 +442,6 @@ and setting the log level to maximum, you could specify:
 com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log=/path/to/coherence.log
 com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log.level: 9
 ----
-
-Under the covers, Coherence Hibernate is configured using a custom implementation of a Coherence `SystemPropertyResolver`.
 
 ==== Logging `5.3+`
 

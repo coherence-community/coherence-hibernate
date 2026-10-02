@@ -58,9 +58,8 @@ public class NaturalIdCacheTests extends BaseCoreFunctionalTestCase {
 	@Test
 	public void test_01_persistSeveralBooks() {
 		final Statistics statistics = this.sessionFactory().getStatistics();
-
-		CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("book");
-		CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
+		final CoherenceDomainDataRegionImpl region = (CoherenceDomainDataRegionImpl) this.sessionFactory().getCache().getRegion("book");
+		final CoherenceStorageAccessImpl coherenceStorageAccess = (CoherenceStorageAccessImpl) region.getCacheStorageAccess();
 
 		assertThat(coherenceStorageAccess.getDelegate().getElementCountInMemory()).isEqualTo(0);
 
