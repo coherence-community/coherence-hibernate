@@ -7,4 +7,195 @@
         <packageUrl regex="true">^pkg:maven/org\.xmlunit/xmlunit-core@.*$</packageUrl>
         <vulnerabilityName>CVE-2024-31573</vulnerabilityName>
     </suppress>
+    <!--
+        Reviewed 2026-10-02 against the application and server in
+        samples/coherence-hibernate-demo and the report from Actions run 36995237529.
+        These sample dependencies are not used by the Coherence Hibernate library modules.
+        Dependency-Check bundles the listed Framework JARs under spring-core in its report,
+        so the rules enumerate that bundle's artifacts and pin their exact version.
+        Each rule excludes only the named CVE whose prerequisites are absent in the demo.
+        Reassess when sample code/configuration or dependency versions change, and before
+        the review expiry on 2027-01-01. Do not reuse these rules for consuming applications.
+    -->
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47883: not applicable to the current Coherence Hibernate demo.
+        The demo does not register UrlHandlerFilter or broad redirect filter patterns.
+        EventController and PersonController expose explicit /api/events and /api/people routes.
+        Advisory: https://spring.io/security/cve-2026-47883/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47883</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47884: not applicable to the current Coherence Hibernate demo.
+        The demo uses RestController methods that serialize DTOs, pages, IDs, or void.
+        It has no XsltView configuration or catch-all mapping that renders an inferred view.
+        Advisory: https://spring.io/security/cve-2026-47884/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47884</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47885: not applicable to the current Coherence Hibernate demo.
+        The demo uses servlet Spring MVC with Tomcat, without Spring WebFlux.
+        It has no PartEventHttpMessageReader or RequestBody Flux<PartEvent> endpoint.
+        Advisory: https://spring.io/security/cve-2026-47885/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47885</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47886: not applicable to the current Coherence Hibernate demo.
+        The demo does not parse or evaluate user-supplied SpEL expressions.
+        Request parameters are scalar values or Pageable, not expression source.
+        Advisory: https://spring.io/security/cve-2026-47886/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47886</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47887: not applicable to the current Coherence Hibernate demo.
+        The demo does not configure UrlFileNameViewController or infer view names
+        from request paths; its RestController methods serialize response bodies.
+        Advisory: https://spring.io/security/cve-2026-47887/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47887</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47888: not applicable to the current Coherence Hibernate demo.
+        The demo has no RSocket dependency, server, or SETUP frame handler.
+        Advisory: https://spring.io/security/cve-2026-47888/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47888</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47889: not applicable to the current Coherence Hibernate demo.
+        The demo uses servlet Spring MVC with embedded Tomcat, not WebFlux
+        with the Jetty 12 Core reactive adapter required by this issue.
+        Advisory: https://spring.io/security/cve-2026-47889/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47889</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47890: not applicable to the current Coherence Hibernate demo.
+        The demo returns ordinary response bodies; it has no SSE endpoints,
+        view fragments, SseEmitter, or reactive streaming views.
+        Advisory: https://spring.io/security/cve-2026-47890/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47890</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47891: not applicable to the current Coherence Hibernate demo.
+        The demo does not use Spring WebFlux or the Aalto XML processor
+        to read XML request bodies; controllers accept scalar request parameters.
+        Advisory: https://spring.io/security/cve-2026-47891/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47891</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47892: not applicable to the current Coherence Hibernate demo.
+        The demo uses annotated servlet MVC controllers, without WebFlux functional
+        endpoints or header predicates on a WebFlux-to-DispatcherServlet bridge.
+        Advisory: https://spring.io/security/cve-2026-47892/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47892</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47893: not applicable to the current Coherence Hibernate demo.
+        The demo does not use Spring WebFlux or register WebSocket endpoints.
+        Tomcat's transitive websocket JAR does not configure a WebFlux endpoint.
+        Advisory: https://spring.io/security/cve-2026-47893/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47893</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-59280: not applicable to the current Coherence Hibernate demo.
+        The demo has no FreeMarker dependency, SpringTemplateLoader, or template views.
+        Its controllers return response bodies rather than user-derived view names.
+        Advisory: https://spring.io/security/cve-2026-59280/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59280</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-59281: not applicable to the current Coherence Hibernate demo.
+        The demo does not obtain HTML-escaped Errors objects or render field errors
+        through getFieldError()/getFieldErrors(); its endpoints return response bodies.
+        Advisory: https://spring.io/security/cve-2026-59281/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59281</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-59282: not applicable to the current Coherence Hibernate demo.
+        The demo does not bind request property paths onto objects with self-populating
+        List properties. Controllers accept scalar parameters and Pageable; Event and
+        Person relationships use HashSet, and response DTOs are not binding targets.
+        Advisory: https://spring.io/security/cve-2026-59282/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59282</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-59283: not applicable to the current Coherence Hibernate demo.
+        The demo does not create SimpleEvaluationContext or a compiled SpEL parser,
+        and its configuration does not enable IMMEDIATE or MIXED SpEL compilation.
+        Advisory: https://spring.io/security/cve-2026-59283/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59283</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-59313: not applicable to the current Coherence Hibernate demo.
+        The demo has no MVC functional RouterFunction or ServerResponse.sse() endpoint.
+        Its annotated controllers return ordinary response bodies without SSE streams.
+        Advisory: https://spring.io/security/cve-2026-59313/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59313</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-59314: not applicable to the current Coherence Hibernate demo.
+        The demo does not construct Content-Disposition headers from user input or
+        build outbound multipart requests; it uses the supported Tomcat connector.
+        Advisory: https://spring.io/security/cve-2026-59314/
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|aspects|beans|context|core|expression|jcl|jdbc|orm|tx|web|webmvc)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59314</cve>
+    </suppress>
+    <suppress until="2027-01-01Z">
+        <notes><![CDATA[
+        CVE-2026-47834: not applicable to the current Coherence Hibernate demo.
+        The demo's Pageable inputs are passed to JpaRepository.findAll(), not native SQL.
+        EventRepository's only Query is fixed JPQL and accepts an event ID, without Sort
+        or Pageable. Neither repository declares NativeQuery or Query(nativeQuery=true).
+        Advisory: https://spring.io/security/cve-2026-47834/
+        ]]></notes>
+        <packageUrl>pkg:maven/org.springframework.data/spring-data-jpa@3.5.13</packageUrl>
+        <cve>CVE-2026-47834</cve>
+    </suppress>
 </suppressions>
