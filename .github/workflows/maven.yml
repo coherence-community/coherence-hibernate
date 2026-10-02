@@ -29,39 +29,45 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-m2-
-    - name: Build - Hibernate 6.x with Maven + Sonar
-      if: "github.event_name != 'pull_request'"
+    - name: Build and test Hibernate 5.6 and 6.x
+      run: ./mvnw clean verify -B -Pcoverage
+    - name: Check dependencies for known vulnerabilities
+      run: ./mvnw verify -B -DskipTests -Powasp
+      env:
+        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
+    - name: Publish dependency-check reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: dependency-check-reports
+        path: target/dependency-check-report.*
+        if-no-files-found: ignore
+    - name: Analyze with Sonar
+      if: "vars.SONAR_ENABLED == 'true' && github.event_name != 'pull_request'"
       run: |
         git config --global user.email "github-action@users.noreply.github.com"
         git config --global user.name "GitHub Action"
-        ./mvnw clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=coherence-community_coherence-hibernate -Dsonar.branch.name=${{ env.GITHUB_REF_NAME }} -B -Phibernate6 -Powasp -Pcoverage
+        ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=coherence-community_coherence-hibernate -Dsonar.branch.name=${{ github.ref_name }} -B
       env:
         MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         SONAR_TOKEN: "${{secrets.SONAR_TOKEN}}"
-        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
-    - name: Build - Hibernate 6.x
-      if: "github.event_name == 'pull_request'"
-      run: mvn clean install -B -Powasp -Phibernate6
-    - name: Build - Hibernate 5.6.x
-      run: mvn clean install -B -Powasp -Phibernate53
     - name: Build with Coherence ${{ matrix.coherence-version }}
       if: "matrix.coherence-version == '14_1_1'"
       run: |
         git config --global user.email "github-action@users.noreply.github.com"
         git config --global user.name "GitHub Action"
-        mvn clean install -B --settings .mvn/settings.xml -Pcoherence14_1_1
+        ./mvnw clean install -B --settings .mvn/settings.xml -Pcoherence14_1_1
     - name: Build + deploy with Maven (Website + Snapshots) - ${{ matrix.coherence-version }}
       if: "matrix.coherence-version == 'LATEST'"
       run: |
           git config --global user.email "github-action@users.noreply.github.com"
           git config --global user.name "GitHub Action"
-          mvn clean deploy -B -Powasp --settings .mvn/settings.xml
+          ./mvnw deploy -B -DskipTests --settings .mvn/settings.xml
       env:
         MAVEN_GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
         MAVEN_SONATYPE_USERNAME: "${{secrets.MAVEN_SONATYPE_USERNAME}}"
         MAVEN_SONATYPE_TOKEN: "${{secrets.MAVEN_SONATYPE_TOKEN}}"
-        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
     - name: Clean Maven cache
       run: |
-        find ~/.m2/repository -type d -name '*SNAPSHOT' | xargs rm -fr
+        find ~/.m2/repository -type d -name '*SNAPSHOT' -prune -exec rm -rf {} +
