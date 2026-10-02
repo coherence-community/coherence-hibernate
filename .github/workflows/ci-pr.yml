@@ -33,10 +33,22 @@ jobs:
         run: |
           git config --global user.email "github-action@users.noreply.github.com"
           git config --global user.name "GitHub Action"
-          ./mvnw clean install -B -Powasp -Pjdk${{ matrix.java-version }}
+          ./mvnw clean install -B -Pjdk${{ matrix.java-version }}
         env:
-          GIT_COMMIT: ${{github.event.workflow_run.head_commit.id}}
-          HEAD_BRANCH: ${{github.event.workflow_run.head_branch}}
+          GIT_COMMIT: ${{ github.sha }}
+          HEAD_BRANCH: ${{ github.head_ref }}
+      - name: Check dependencies for known vulnerabilities
+        if: matrix.java-version == 17
+        run: ./mvnw verify -B -DskipTests -Powasp
+        env:
+          NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
+      - name: Publish dependency-check reports
+        if: always() && matrix.java-version == 17
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-reports-java-17
+          path: target/dependency-check-report.*
+          if-no-files-found: ignore
       - name: 📊 Publish Test Report
         if: always()
         uses: mikepenz/action-junit-report@v5
@@ -46,4 +58,4 @@ jobs:
           check_retries: 'true'
       - name: 🧹 Clean Maven cache
         run: |
-          find ~/.m2/repository -type d -name '*SNAPSHOT' | xargs rm -fr
+          find ~/.m2/repository -type d -name '*SNAPSHOT' -prune -exec rm -rf {} +
