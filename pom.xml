@@ -468,7 +468,7 @@
                             <skipProvidedScope>true</skipProvidedScope>
                             <skipRuntimeScope>true</skipRuntimeScope>
                             <skipTestScope>true</skipTestScope>
-                            <nvdValidForHours>96</nvdValidForHours>
+                            <nvdValidForHours>24</nvdValidForHours>
                             <nvdApiKeyEnvironmentVariable>NVD_API_KEY</nvdApiKeyEnvironmentVariable>
                             <formats>
                                 <format>HTML</format>
