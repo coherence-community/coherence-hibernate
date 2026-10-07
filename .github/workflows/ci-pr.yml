@@ -3,6 +3,11 @@ on:
   pull_request:
 jobs:
   build:
+    # The Java 17 leg updates NVD; serialize it with main's daily warm-up.
+    concurrency:
+      group: ${{ matrix.java-version == 17 && 'dependency-check-nvd' || format('build-{0}-{1}-{2}', github.run_id, github.run_attempt, matrix.java-version) }}
+      queue: max
+      cancel-in-progress: false
     strategy:
       matrix:
         java-version: [ 17, 21 ]
@@ -37,11 +42,14 @@ jobs:
         env:
           GIT_COMMIT: ${{ github.sha }}
           HEAD_BRANCH: ${{ github.head_ref }}
+      - name: Prepare vulnerability database
+        if: matrix.java-version == 17
+        uses: ./.github/actions/dependency-check-data
+        with:
+          nvd-api-key: ${{ secrets.NVD_API_KEY }}
       - name: Check dependencies for known vulnerabilities
         if: matrix.java-version == 17
-        run: ./mvnw verify -B -DskipTests -Powasp
-        env:
-          NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
+        run: ./mvnw verify -B -DskipTests -Powasp -DdataDirectory="$HOME/.cache/dependency-check" -DautoUpdate=false
       - name: Publish dependency-check reports
         if: always() && matrix.java-version == 17
         uses: actions/upload-artifact@v4

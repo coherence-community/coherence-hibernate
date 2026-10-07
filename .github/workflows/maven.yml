@@ -11,6 +11,10 @@ on:
 jobs:
   build:
     if: github.repository_owner == 'coherence-community'
+    concurrency:
+      group: dependency-check-nvd
+      queue: max
+      cancel-in-progress: false
     strategy:
       matrix:
         coherence-version: [ 'LATEST' ]
@@ -31,10 +35,12 @@ jobs:
           ${{ runner.os }}-m2-
     - name: Build and test Hibernate 5.6 and 6.x
       run: ./mvnw clean verify -B -Pcoverage
+    - name: Prepare vulnerability database
+      uses: ./.github/actions/dependency-check-data
+      with:
+        nvd-api-key: ${{ secrets.NVD_API_KEY }}
     - name: Check dependencies for known vulnerabilities
-      run: ./mvnw verify -B -DskipTests -Powasp
-      env:
-        NVD_API_KEY: "${{secrets.NVD_API_KEY}}"
+      run: ./mvnw verify -B -DskipTests -Powasp -DdataDirectory="$HOME/.cache/dependency-check" -DautoUpdate=false
     - name: Publish dependency-check reports
       if: always()
       uses: actions/upload-artifact@v4
