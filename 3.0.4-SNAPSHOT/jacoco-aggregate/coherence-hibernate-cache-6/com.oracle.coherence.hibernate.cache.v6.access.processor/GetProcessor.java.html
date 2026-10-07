@@ -20,7 +20,7 @@ import com.tangosol.util.processor.AbstractProcessor;
  * @author Randy Stafford
  * @author Gunnar Hillert
  */
-<span class="nc" id="L23">public class GetProcessor extends AbstractProcessor implements Serializable {</span>
+<span class="fc" id="L23">public class GetProcessor extends AbstractProcessor implements Serializable {</span>
 
     /**
      * An identifier of this class's version for serialization purposes.
@@ -32,14 +32,14 @@ import com.tangosol.util.processor.AbstractProcessor;
      */
     @Override
     public Object process(InvocableMap.Entry entry) {
-<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (!entry.isPresent()) {</span>
-<span class="nc" id="L36">            return null;</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (!entry.isPresent()) {</span>
+<span class="fc" id="L36">            return null;</span>
         }
-<span class="nc" id="L38">        final CoherenceRegionValue cacheValue = (CoherenceRegionValue) entry.getValue();</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (cacheValue.isSoftLocked()) {</span>
+<span class="fc" id="L38">        final CoherenceRegionValue cacheValue = (CoherenceRegionValue) entry.getValue();</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (cacheValue.isSoftLocked()) {</span>
 <span class="nc" id="L40">            return null;</span>
         }
-<span class="nc" id="L42">        return cacheValue.getValue();</span>
+<span class="fc" id="L42">        return cacheValue.getValue();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -44,22 +44,22 @@ public class SoftUnlockItemProcessor extends AbstractProcessor implements Serial
      * @param softLock the SoftLock which is being released
      * @param timeOfRelease the time at which the SoftLock was released
      */
-<span class="nc" id="L47">    public SoftUnlockItemProcessor(SoftLock softLock, long timeOfRelease) {</span>
-<span class="nc" id="L48">        this.softLock = softLock;</span>
-<span class="nc" id="L49">        this.timeOfRelease = timeOfRelease;</span>
-<span class="nc" id="L50">    }</span>
+<span class="fc" id="L47">    public SoftUnlockItemProcessor(SoftLock softLock, long timeOfRelease) {</span>
+<span class="fc" id="L48">        this.softLock = softLock;</span>
+<span class="fc" id="L49">        this.timeOfRelease = timeOfRelease;</span>
+<span class="fc" id="L50">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Object process(InvocableMap.Entry entry) {
-<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (entry.isPresent()) {</span>
-<span class="nc" id="L58">            final CoherenceRegionValue cacheValue = (CoherenceRegionValue) entry.getValue();</span>
-<span class="nc" id="L59">            cacheValue.releaseSoftLock(this.softLock, this.timeOfRelease);</span>
-<span class="nc" id="L60">            entry.setValue(cacheValue);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (entry.isPresent()) {</span>
+<span class="fc" id="L58">            final CoherenceRegionValue cacheValue = (CoherenceRegionValue) entry.getValue();</span>
+<span class="fc" id="L59">            cacheValue.releaseSoftLock(this.softLock, this.timeOfRelease);</span>
+<span class="fc" id="L60">            entry.setValue(cacheValue);</span>
         }
-<span class="nc" id="L62">        return null;</span>
+<span class="fc" id="L62">        return null;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -41,21 +41,21 @@ public class AfterInsertProcessor&lt;K&gt; extends AbstractProcessor&lt;K, Coher
      * Complete constructor.
      * @param cacheValue the cache value for use by this AfterInsertProcessor
      */
-<span class="nc" id="L44">    public AfterInsertProcessor(CoherenceRegionValue cacheValue) {</span>
-<span class="nc" id="L45">        this.cacheValue = cacheValue;</span>
-<span class="nc" id="L46">    }</span>
+<span class="fc" id="L44">    public AfterInsertProcessor(CoherenceRegionValue cacheValue) {</span>
+<span class="fc" id="L45">        this.cacheValue = cacheValue;</span>
+<span class="fc" id="L46">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Boolean process(InvocableMap.Entry entry) {
-<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (entry.isPresent()) {</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (entry.isPresent()) {</span>
 <span class="nc" id="L54">            return false;</span>
         }
         else {
-<span class="nc" id="L57">            entry.setValue(this.cacheValue);</span>
-<span class="nc" id="L58">            return true;</span>
+<span class="fc" id="L57">            entry.setValue(this.cacheValue);</span>
+<span class="fc" id="L58">            return true;</span>
         }
     }
 }

@@ -287,8 +287,8 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
     @Override
     protected DomainDataStorageAccess createDomainDataStorageAccess(DomainDataRegionConfig regionConfig,
                                                                     DomainDataRegionBuildingContext buildingContext) {
-<span class="nc" id="L290">        return new CoherenceStorageAccessImpl(</span>
-<span class="nc" id="L291">                this.createCoherenceRegion(regionConfig.getRegionName(), buildingContext.getSessionFactory())</span>
+<span class="fc" id="L290">        return new CoherenceStorageAccessImpl(</span>
+<span class="fc" id="L291">                this.createCoherenceRegion(regionConfig.getRegionName(), buildingContext.getSessionFactory())</span>
         );
     }
 
@@ -312,10 +312,10 @@ public class CoherenceRegionFactory extends RegionFactoryTemplate {
     @Override
     public DomainDataRegion buildDomainDataRegion(final DomainDataRegionConfig regionConfig,
                                                   final DomainDataRegionBuildingContext buildingContext) {
-<span class="nc" id="L315">        return new CoherenceDomainDataRegionImpl(</span>
+<span class="fc" id="L315">        return new CoherenceDomainDataRegionImpl(</span>
                 regionConfig,
                 this,
-<span class="nc" id="L318">                createDomainDataStorageAccess(regionConfig, buildingContext),</span>
+<span class="fc" id="L318">                createDomainDataStorageAccess(regionConfig, buildingContext),</span>
                 this.cacheKeysFactory,
                 buildingContext
         );

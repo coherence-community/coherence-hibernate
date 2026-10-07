@@ -58,30 +58,30 @@ public class ReadWritePutFromLoadProcessor extends AbstractProcessor implements 
      * @param replacementValue the replacement cache value in this ReadWritePutFromLoadProcessor
      * @param versionComparator a Comparator for comparing actual value versions
      */
-<span class="nc" id="L61">    public ReadWritePutFromLoadProcessor(boolean minimalPutsInEffect, long txTimestamp, CoherenceRegionValue replacementValue, Comparator versionComparator) {</span>
-<span class="nc" id="L62">        this.minimalPutsInEffect = minimalPutsInEffect;</span>
-<span class="nc" id="L63">        this.txTimestamp = txTimestamp;</span>
-<span class="nc" id="L64">        this.replacementValue = replacementValue;</span>
-<span class="nc" id="L65">        this.versionComparator = versionComparator;</span>
-<span class="nc" id="L66">    }</span>
+<span class="fc" id="L61">    public ReadWritePutFromLoadProcessor(boolean minimalPutsInEffect, long txTimestamp, CoherenceRegionValue replacementValue, Comparator versionComparator) {</span>
+<span class="fc" id="L62">        this.minimalPutsInEffect = minimalPutsInEffect;</span>
+<span class="fc" id="L63">        this.txTimestamp = txTimestamp;</span>
+<span class="fc" id="L64">        this.replacementValue = replacementValue;</span>
+<span class="fc" id="L65">        this.versionComparator = versionComparator;</span>
+<span class="fc" id="L66">    }</span>
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Object process(InvocableMap.Entry entry) {
-<span class="nc" id="L73">        boolean isReplaceable = true;</span>
-<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (entry.isPresent()) {</span>
-<span class="nc bnc" id="L75" title="All 2 branches missed.">            if (this.minimalPutsInEffect) {</span>
+<span class="fc" id="L73">        boolean isReplaceable = true;</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (entry.isPresent()) {</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">            if (this.minimalPutsInEffect) {</span>
 <span class="nc" id="L76">                return false;</span>
             }
-<span class="nc" id="L78">            final CoherenceRegionValue presentValue = (CoherenceRegionValue) entry.getValue();</span>
-<span class="nc" id="L79">            isReplaceable = presentValue.isReplaceableFromLoad(this.txTimestamp, this.replacementValue.getVersion(), this.versionComparator);</span>
+<span class="fc" id="L78">            final CoherenceRegionValue presentValue = (CoherenceRegionValue) entry.getValue();</span>
+<span class="fc" id="L79">            isReplaceable = presentValue.isReplaceableFromLoad(this.txTimestamp, this.replacementValue.getVersion(), this.versionComparator);</span>
         }
-<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (isReplaceable) {</span>
-<span class="nc" id="L82">            entry.setValue(this.replacementValue);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (isReplaceable) {</span>
+<span class="fc" id="L82">            entry.setValue(this.replacementValue);</span>
         }
-<span class="nc" id="L84">        return isReplaceable;</span>
+<span class="fc" id="L84">        return isReplaceable;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

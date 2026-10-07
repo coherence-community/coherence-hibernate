@@ -27,13 +27,13 @@ public class CoherenceStorageAccessImpl implements CoherenceStorageAccess {
 
     @Override
     public Object getFromCache(Object key, SharedSessionContractImplementor session) {
-<span class="nc" id="L30">        return this.delegate.getValue(key);</span>
+<span class="fc" id="L30">        return this.delegate.getValue(key);</span>
     }
 
     @Override
     public void putIntoCache(Object key, Object value, SharedSessionContractImplementor session) {
-<span class="nc" id="L35">        this.delegate.putValue(key, value);</span>
-<span class="nc" id="L36">    }</span>
+<span class="fc" id="L35">        this.delegate.putValue(key, value);</span>
+<span class="fc" id="L36">    }</span>
 
     @Override
     public boolean contains(Object key) {
@@ -53,9 +53,9 @@ public class CoherenceStorageAccessImpl implements CoherenceStorageAccess {
 
     @Override
     public void release() {
-<span class="nc" id="L56">        this.delegate.destroy();</span>
+<span class="fc" id="L56">        this.delegate.destroy();</span>
 
-<span class="nc" id="L58">    }</span>
+<span class="fc" id="L58">    }</span>
 
     @Override
     public void afterUpdate(Object key, Object newValue, Object newVersion) {
@@ -68,7 +68,7 @@ public class CoherenceStorageAccessImpl implements CoherenceStorageAccess {
 <span class="nc" id="L68">    }</span>
 
     public CoherenceRegion getDelegate() {
-<span class="nc" id="L71">        return this.delegate;</span>
+<span class="fc" id="L71">        return this.delegate;</span>
     }
 
 }
