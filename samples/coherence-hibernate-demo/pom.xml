@@ -27,7 +27,7 @@
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
 		<spring-boot.version>3.5.16</spring-boot.version>
 		<tomcat.version>10.1.60</tomcat.version>
-		<jackson-bom.version>2.21.7</jackson-bom.version>
+		<jackson-bom.version>2.22.3</jackson-bom.version>
 	</properties>
 
 	<modules>
