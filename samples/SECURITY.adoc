@@ -1,0 +1,135 @@
+= Sample security policy
+
+These samples retain Spring Boot 2.7.18 and Spring Framework 5.3.39 for compatibility.
+Known vulnerabilities remain. The security scan contains documented exceptions for specific findings.
+A passing scan does not mean these versions are free of known vulnerabilities.
+Production deployments require a separate security assessment and appropriate patched dependencies.
+
+== Compatible versions
+
+As checked on 2026-10-09, Maven Central lists 2.7.18 as the latest public Spring Boot 2.7 release
+and 5.3.39 as the latest public Spring Framework 5.3 release.
+The Hibernate, Java and `javax` baseline stays the same.
+https://docs.spring.io/spring-boot/docs/2.7.18/reference/html/getting-started.html#getting-started.system-requirements[Spring Boot 2.7.18 supports Java 8 and later].
+The repository's separate Java 8 build limits still apply; these updates do not certify Java 8 operation.
+
+https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-dependencies/maven-metadata.xml[Boot BOM metadata]
+and https://repo.maven.apache.org/maven2/org/springframework/spring-framework-bom/maven-metadata.xml[Framework BOM metadata]
+provide the public version lists.
+
+Spring lists enterprise fixes within these lines:
+
+* https://spring.io/security/cve-2026-22733/[Boot 2.7.32] for CVE-2026-22733;
+  https://spring.io/security/cve-2026-40972/[2.7.33] for the reported April Boot findings;
+  https://spring.io/security/cve-2026-41001/[2.7.34] for CVE-2026-41001.
+* https://spring.io/security/cve-2026-41855/[Framework 5.3.49] for the reported June findings;
+  https://spring.io/security/cve-2026-47884/[5.3.50] for the reported August findings.
+
+Boot 2.7.34 and Framework 5.3.50 are minimum fixes for the reported 2026 set,
+not a claim about the latest enterprise releases or all known vulnerabilities.
+These BOM versions were absent from Maven Central when checked.
+An enterprise upgrade needs authorized repository access and a separate qualification.
+
+== Scan policy
+
+Run the normal Maven build with `-Powasp`. It runs Dependency-Check `check` for each module
+at `verify`. Each module writes its own report under `target`.
+The CVSS failure threshold remains 7. The existing provided, runtime and test scope exclusions remain.
+The profile uses Dependency-Check 12.2.2 with its normal analyzer and automatic update settings.
+This version automatically disables the Sonatype OSS Index analyzer when credentials are missing.
+The gate can then pass without OSS Index results. A complete scan with OSS Index coverage still requires working credentials.
+
+Library modules use only link:../src/main/config/dependency-check-suppression.xml[the shared suppression file].
+The `samples` parent adds link:src/main/config/dependency-check-suppression.xml[the sample exception file]
+for its descendants. Sample risk acceptance does not apply to released library modules.
+Use the configured `check` goal, not a manually invoked reactor-wide `aggregate` goal,
+to apply these two policies separately.
+
+Each sample rule names one CVE and a finite list of exact Maven packages at one exact version.
+The anchored package expressions list artifact names; they have no package or version wildcard.
+Dependency-Check can merge related JARs and report the same CPE against any member of that set.
+The rules list only packages identified in the resolved sample scans. They match NVD CVE IDs
+and named analyzer findings. No Spring library or CPE is excluded from scanning.
+New CVEs, other packages and changed versions stay visible.
+The rules expire at 00:00 UTC on 2027-01-07, 90 days after review.
+Review each advisory, dependencies, packaged JARs and application configuration before that date.
+Do not extend a rule without a new assessment. Reassess sooner if sample code or configuration changes.
+
+== Findings and decisions
+
+The inventory includes the Spring findings from Actions run
+https://github.com/coherence-community/coherence-hibernate/actions/runs/37776381152[37776381152],
+the retained cached scan, and the remaining historical Spring exceptions.
+The old `spring-core` finding was for 5.3.31; these rules use the resolved 5.3.39 version.
+Per-module scans can report these known CVEs against related JARs with the same CPE.
+The exception expressions name each such Maven artifact and its exact version.
+
+`Inapplicable` means an advisory condition is absent from the checked sample code,
+configuration or packaged JARs. It does not mean the dependency has been patched.
+`Accepted risk` means vulnerable code remains and applicability is possible or uncertain.
+No smoke test establishes security inapplicability. Deployments with different dependencies,
+configuration or code must repeat this assessment.
+The exact package list for each decision is in the sample exception file.
+
+[cols="2,1,5",options="header"]
+|===
+|Advisory |Decision |Reason
+|https://github.com/spring-projects/spring-framework/issues/24434[CVE-2016-1000027] |Inapplicable |No HttpInvokerServiceExporter endpoint is configured. The sample REST endpoints use JSON, not Java object deserialization.
+|https://spring.io/security/cve-2024-38816/[CVE-2024-38816] |Inapplicable |The samples use Tomcat, which the advisory lists as blocking the malicious requests. No functional filesystem resource route is configured.
+|https://spring.io/security/cve-2024-38820/[CVE-2024-38820] |Accepted risk |DataBinder code remains. The samples do not define disallowedFields, but all binding paths are not proved safe.
+|https://spring.io/security/cve-2024-38828/[CVE-2024-38828] |Inapplicable |No sample controller declares an @RequestBody byte[] parameter. The controllers use typed request parameters.
+|https://spring.io/security/cve-2025-22233/[CVE-2025-22233] |Accepted risk |DataBinder code remains. The samples do not define disallowedFields, but all binding paths are not proved safe.
+|https://spring.io/security/cve-2025-22235/[CVE-2025-22235] |Inapplicable |Both executable JARs lack Spring Security. No EndpointRequest security chain or /null application path is declared.
+|https://spring.io/security/cve-2026-22733/[CVE-2026-22733] |Inapplicable |Both executable JARs lack Spring Security. The controllers use /api paths, not /cloudfoundryapplication.
+|https://spring.io/security/cve-2026-22735/[CVE-2026-22735] |Inapplicable |The sample controllers return JSON data or scalar IDs. They do not produce Server-Sent Events.
+|https://spring.io/security/cve-2026-22737/[CVE-2026-22737] |Inapplicable |The samples have REST controllers and no script view templates or implicit /** view mapping.
+|https://spring.io/security/cve-2026-22740/[CVE-2026-22740] |Inapplicable |Both executable JARs lack spring-webflux. The samples use servlet MVC.
+|https://spring.io/security/cve-2026-22741/[CVE-2026-22741] |Accepted risk |MVC resource handling code remains. Encoded resource caching is not configured in source; deployment changes are not assessed.
+|https://spring.io/security/cve-2026-22745/[CVE-2026-22745] |Accepted risk |MVC resource handling code remains. Filesystem resource handling on Windows has not been qualified.
+|https://spring.io/security/cve-2026-40972/[CVE-2026-40972] |Inapplicable |Both executable JARs lack spring-boot-devtools. Remote DevTools is not configured.
+|https://spring.io/security/cve-2026-40973/[CVE-2026-40973] |Accepted risk |ApplicationTemp code remains. Persistent sessions are not configured, but local directory attacks are not ruled out.
+|https://spring.io/security/cve-2026-40974/[CVE-2026-40974] |Inapplicable |Both executable JARs lack the Cassandra driver. The samples use HSQLDB, not Cassandra.
+|https://spring.io/security/cve-2026-40975/[CVE-2026-40975] |Accepted risk |RandomValuePropertySource remains. No sample secret uses random.value, but external configuration can do so.
+|https://spring.io/security/cve-2026-40977/[CVE-2026-40977] |Accepted risk |ApplicationPidFileWriter remains. The sample entry points do not register it, but deployment settings can change.
+|https://spring.io/security/cve-2026-41001/[CVE-2026-41001] |Inapplicable |Both executable JARs lack the Artemis broker. Embedded Artemis auto-configuration cannot start.
+|https://spring.io/security/cve-2026-41838/[CVE-2026-41838] |Inapplicable |Both executable JARs lack spring-websocket. Tomcat WebSocket support alone does not supply the affected Spring module.
+|https://spring.io/security/cve-2026-41839/[CVE-2026-41839] |Inapplicable |Both executable JARs lack spring-webflux. The samples use servlet MVC.
+|https://spring.io/security/cve-2026-41840/[CVE-2026-41840] |Inapplicable |Both executable JARs lack spring-webflux. The samples use servlet MVC.
+|https://spring.io/security/cve-2026-41841/[CVE-2026-41841] |Accepted risk |MVC resource cache code remains. No shared protected/public resource cache is declared; all runtime configurations are not assessed.
+|https://spring.io/security/cve-2026-41842/[CVE-2026-41842] |Accepted risk |MVC resource handling code remains. Versioned filesystem resources are not declared; deployment changes are not assessed.
+|https://spring.io/security/cve-2026-41843/[CVE-2026-41843] |Accepted risk |MVC resource handling code remains. Versioned filesystem resources are not declared; deployment changes are not assessed.
+|https://spring.io/security/cve-2026-41844/[CVE-2026-41844] |Inapplicable |The sample REST controllers specify /api paths and return data. No implicit /** view mapping is declared.
+|https://spring.io/security/cve-2026-41845/[CVE-2026-41845] |Accepted risk |JavaScript escaping code remains. No direct sample call was found; all indirect uses are not proved safe.
+|https://spring.io/security/cve-2026-41846/[CVE-2026-41846] |Inapplicable |The executable samples contain no JSP pages or JSP form tags. Controllers return data.
+|https://spring.io/security/cve-2026-41847/[CVE-2026-41847] |Inapplicable |Both executable JARs lack spring-webflux. No Kotlin Router DSL is used.
+|https://spring.io/security/cve-2026-41848/[CVE-2026-41848] |Accepted risk |AntPathMatcher code remains. No user-supplied pattern evaluation is declared; all indirect paths are not proved safe.
+|https://spring.io/security/cve-2026-41849/[CVE-2026-41849] |Accepted risk |SpEL code remains. No direct evaluation of user expressions is declared; all indirect evaluations are not proved safe.
+|https://spring.io/security/cve-2026-41850/[CVE-2026-41850] |Accepted risk |SpEL code remains. No direct evaluation of user expressions is declared; all indirect evaluations are not proved safe.
+|https://spring.io/security/cve-2026-41851/[CVE-2026-41851] |Accepted risk |SpEL code remains. No cache of user expressions is declared; all indirect evaluations are not proved safe.
+|https://spring.io/security/cve-2026-41852/[CVE-2026-41852] |Accepted risk |SpEL code remains. No direct evaluation of user expressions is declared; all indirect evaluations are not proved safe.
+|https://spring.io/security/cve-2026-41853/[CVE-2026-41853] |Accepted risk |MVC multipart handling code remains. The samples have no WAF configuration; production proxy behavior is not assessed.
+|https://spring.io/security/cve-2026-41855/[CVE-2026-41855] |Inapplicable |Both executable JARs lack spring-jms and its MappingJackson2MessageConverter. No JMS broker is configured.
+|https://spring.io/security/cve-2026-47884/[CVE-2026-47884] |Inapplicable |No XSLT view configuration or implicit /** view mapping exists. The REST controllers return data.
+|https://spring.io/security/cve-2026-47886/[CVE-2026-47886] |Accepted risk |SpEL code remains. No direct evaluation of user expressions is declared; all indirect evaluations are not proved safe.
+|https://spring.io/security/cve-2026-47887/[CVE-2026-47887] |Inapplicable |The samples do not configure UrlFileNameViewController. The REST controllers return data.
+|https://spring.io/security/cve-2026-47888/[CVE-2026-47888] |Inapplicable |Both executable JARs lack spring-messaging and RSocket libraries. No RSocket handler is configured.
+|https://spring.io/security/cve-2026-47891/[CVE-2026-47891] |Inapplicable |Both executable JARs lack spring-webflux and the Aalto XML processor. The samples use servlet MVC.
+|https://spring.io/security/cve-2026-47892/[CVE-2026-47892] |Inapplicable |Both executable JARs lack spring-webflux. No WebFlux functional endpoints are declared.
+|https://spring.io/security/cve-2026-47893/[CVE-2026-47893] |Inapplicable |Both executable JARs lack spring-webflux. No WebFlux WebSocket service is configured.
+|https://spring.io/security/cve-2026-59280/[CVE-2026-59280] |Inapplicable |Both executable JARs lack FreeMarker. No SpringTemplateLoader or template view is configured.
+|https://spring.io/security/cve-2026-59281/[CVE-2026-59281] |Accepted risk |Data-binding and error handling code remains. No HTML error rendering is declared; all indirect uses are not proved safe.
+|https://spring.io/security/cve-2026-59282/[CVE-2026-59282] |Accepted risk |Data-binding code remains. No self-populating List target is declared; all binding paths are not proved safe.
+|https://spring.io/security/cve-2026-59283/[CVE-2026-59283] |Accepted risk |SpEL code remains. Expression compilation is not configured in source; external settings and indirect evaluations are not assessed.
+|https://spring.io/security/cve-2026-59313/[CVE-2026-59313] |Inapplicable |The sample controllers use annotations and return JSON data. They do not use RouterFunction or Server-Sent Events.
+|https://spring.io/security/cve-2026-59314/[CVE-2026-59314] |Accepted risk |ContentDisposition code remains. No untrusted filename construction is declared; all indirect and outbound uses are not proved safe.
+|===
+
+The historical global Spring rules were removed. CVE-2024-22259 was fixed in 5.3.33,
+and CVE-2024-38808 was fixed in 5.3.39; they need no exception for this baseline.
+The https://spring.io/security/cve-2025-41234/[CVE-2025-41234 advisory] lists affected 6.x versions,
+not 5.3.39, so its global exception was removed without replacement.
+Remaining historical Spring exceptions now have exact sample package and version limits.
+The shared Hibernate Validator exception for CVE-2025-15104 remains a documented product mismatch:
+the https://github.com/CVEProject/cvelistV5/blob/main/cves/2025/15xxx/CVE-2025-15104.json[CNA record]
+concerns Nu Html Checker. It also has a finite review date.
+Other historical non-Spring exceptions are unchanged and are outside this policy review.

@@ -30,6 +30,25 @@
 		<module>coherence-hibernate-demo</module>
 	</modules>
 
+	<profiles>
+		<profile>
+			<id>owasp</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.owasp</groupId>
+						<artifactId>dependency-check-maven</artifactId>
+						<configuration>
+							<suppressionFiles combine.children="append">
+								<suppressionFile>${coherence.hibernate.root}/samples/src/main/config/dependency-check-suppression.xml</suppressionFile>
+								</suppressionFiles>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>

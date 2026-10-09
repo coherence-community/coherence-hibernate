@@ -4,3 +4,6 @@ This module of Coherence Hibernate contains sample applications. Currently, the 
 example is available:
 
 * link:coherence-hibernate-demo/README.adoc[coherence-hibernate-demo]
+
+These compatibility samples retain known vulnerabilities.
+Read link:SECURITY.adoc[the sample security policy and exceptions] before use.

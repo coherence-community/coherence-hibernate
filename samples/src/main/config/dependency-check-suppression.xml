@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2026, Oracle and/or its affiliates.
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+
+  Sample-only exceptions. See samples/SECURITY.adoc.
+  Each rule matches one CVE and an enumerated set of exact Maven packages/versions.
+  Anchored alternatives contain no package or version wildcard.
+  Review before 2027-01-07; Dependency-Check stops applying rules at that UTC date.
+-->
+
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        No HttpInvokerServiceExporter endpoint is configured. The sample REST endpoints use JSON, not Java object deserialization.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://github.com/spring-projects/spring-framework/issues/24434
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-web)@5\.3\.39$</packageUrl>
+        <cve>CVE-2016-1000027</cve>
+        <vulnerabilityName>CVE-2016-1000027</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        The samples use Tomcat, which the advisory lists as blocking the malicious requests. No functional filesystem resource route is configured.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2024-38816/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2024-38816</cve>
+        <vulnerabilityName>CVE-2024-38816</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        DataBinder code remains. The samples do not define disallowedFields, but all binding paths are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2024-38820/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2024-38820</cve>
+        <vulnerabilityName>CVE-2024-38820</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        No sample controller declares an @RequestBody byte[] parameter. The controllers use typed request parameters.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2024-38828/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-web)@5\.3\.39$</packageUrl>
+        <cve>CVE-2024-38828</cve>
+        <vulnerabilityName>CVE-2024-38828</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        DataBinder code remains. The samples do not define disallowedFields, but all binding paths are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2025-22233/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-context)@5\.3\.39$</packageUrl>
+        <cve>CVE-2025-22233</cve>
+        <vulnerabilityName>CVE-2025-22233</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack Spring Security. No EndpointRequest security chain or /null application path is declared.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2025-22235/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework\.boot/(spring\-boot\-actuator\-autoconfigure)@2\.7\.18$</packageUrl>
+        <cve>CVE-2025-22235</cve>
+        <vulnerabilityName>CVE-2025-22235</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack Spring Security. The controllers use /api paths, not /cloudfoundryapplication.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-22733/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework\.boot/(spring\-boot\-actuator\-autoconfigure|spring\-boot\-actuator|spring\-boot\-autoconfigure|spring\-boot\-starter\-actuator|spring\-boot\-starter\-aop|spring\-boot\-starter\-data\-jpa|spring\-boot\-starter\-jdbc|spring\-boot\-starter\-json|spring\-boot\-starter\-logging|spring\-boot\-starter\-tomcat|spring\-boot\-starter\-validation|spring\-boot\-starter\-web|spring\-boot\-starter|spring\-boot)@2\.7\.18$</packageUrl>
+        <cve>CVE-2026-22733</cve>
+        <vulnerabilityName>CVE-2026-22733</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        The sample controllers return JSON data or scalar IDs. They do not produce Server-Sent Events.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-22735/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-22735</cve>
+        <vulnerabilityName>CVE-2026-22735</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        The samples have REST controllers and no script view templates or implicit /** view mapping.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-22737/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-22737</cve>
+        <vulnerabilityName>CVE-2026-22737</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-webflux. The samples use servlet MVC.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-22740/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-22740</cve>
+        <vulnerabilityName>CVE-2026-22740</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        MVC resource handling code remains. Encoded resource caching is not configured in source; deployment changes are not assessed.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-22741/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-22741</cve>
+        <vulnerabilityName>CVE-2026-22741</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        MVC resource handling code remains. Filesystem resource handling on Windows has not been qualified.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-22745/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-22745</cve>
+        <vulnerabilityName>CVE-2026-22745</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-boot-devtools. Remote DevTools is not configured.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-40972/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework\.boot/(spring\-boot\-actuator\-autoconfigure|spring\-boot\-actuator|spring\-boot\-autoconfigure|spring\-boot\-starter\-actuator|spring\-boot\-starter\-aop|spring\-boot\-starter\-data\-jpa|spring\-boot\-starter\-jdbc|spring\-boot\-starter\-json|spring\-boot\-starter\-logging|spring\-boot\-starter\-tomcat|spring\-boot\-starter\-validation|spring\-boot\-starter\-web|spring\-boot\-starter|spring\-boot)@2\.7\.18$</packageUrl>
+        <cve>CVE-2026-40972</cve>
+        <vulnerabilityName>CVE-2026-40972</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        ApplicationTemp code remains. Persistent sessions are not configured, but local directory attacks are not ruled out.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-40973/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework\.boot/(spring\-boot\-actuator\-autoconfigure|spring\-boot\-actuator|spring\-boot\-autoconfigure|spring\-boot\-starter\-actuator|spring\-boot\-starter\-aop|spring\-boot\-starter\-data\-jpa|spring\-boot\-starter\-jdbc|spring\-boot\-starter\-json|spring\-boot\-starter\-logging|spring\-boot\-starter\-tomcat|spring\-boot\-starter\-validation|spring\-boot\-starter\-web|spring\-boot\-starter|spring\-boot)@2\.7\.18$</packageUrl>
+        <cve>CVE-2026-40973</cve>
+        <vulnerabilityName>CVE-2026-40973</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack the Cassandra driver. The samples use HSQLDB, not Cassandra.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-40974/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework\.boot/(spring\-boot\-actuator\-autoconfigure|spring\-boot\-actuator|spring\-boot\-autoconfigure|spring\-boot\-starter\-actuator|spring\-boot\-starter\-aop|spring\-boot\-starter\-data\-jpa|spring\-boot\-starter\-jdbc|spring\-boot\-starter\-json|spring\-boot\-starter\-logging|spring\-boot\-starter\-tomcat|spring\-boot\-starter\-validation|spring\-boot\-starter\-web|spring\-boot\-starter|spring\-boot)@2\.7\.18$</packageUrl>
+        <cve>CVE-2026-40974</cve>
+        <vulnerabilityName>CVE-2026-40974</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        RandomValuePropertySource remains. No sample secret uses random.value, but external configuration can do so.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-40975/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework\.boot/(spring\-boot\-actuator\-autoconfigure|spring\-boot\-actuator|spring\-boot\-autoconfigure|spring\-boot\-starter\-actuator|spring\-boot\-starter\-aop|spring\-boot\-starter\-data\-jpa|spring\-boot\-starter\-jdbc|spring\-boot\-starter\-json|spring\-boot\-starter\-logging|spring\-boot\-starter\-tomcat|spring\-boot\-starter\-validation|spring\-boot\-starter\-web|spring\-boot\-starter|spring\-boot)@2\.7\.18$</packageUrl>
+        <cve>CVE-2026-40975</cve>
+        <vulnerabilityName>CVE-2026-40975</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        ApplicationPidFileWriter remains. The sample entry points do not register it, but deployment settings can change.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-40977/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework\.boot/(spring\-boot\-actuator\-autoconfigure|spring\-boot\-actuator|spring\-boot\-autoconfigure|spring\-boot\-starter\-actuator|spring\-boot\-starter\-aop|spring\-boot\-starter\-data\-jpa|spring\-boot\-starter\-jdbc|spring\-boot\-starter\-json|spring\-boot\-starter\-logging|spring\-boot\-starter\-tomcat|spring\-boot\-starter\-validation|spring\-boot\-starter\-web|spring\-boot\-starter|spring\-boot)@2\.7\.18$</packageUrl>
+        <cve>CVE-2026-40977</cve>
+        <vulnerabilityName>CVE-2026-40977</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack the Artemis broker. Embedded Artemis auto-configuration cannot start.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41001/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework\.boot/(spring\-boot\-actuator\-autoconfigure|spring\-boot\-actuator|spring\-boot\-autoconfigure|spring\-boot\-starter\-actuator|spring\-boot\-starter\-aop|spring\-boot\-starter\-data\-jpa|spring\-boot\-starter\-jdbc|spring\-boot\-starter\-json|spring\-boot\-starter\-logging|spring\-boot\-starter\-tomcat|spring\-boot\-starter\-validation|spring\-boot\-starter\-web|spring\-boot\-starter|spring\-boot)@2\.7\.18$</packageUrl>
+        <cve>CVE-2026-41001</cve>
+        <vulnerabilityName>CVE-2026-41001</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-websocket. Tomcat WebSocket support alone does not supply the affected Spring module.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41838/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41838</cve>
+        <vulnerabilityName>CVE-2026-41838</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-webflux. The samples use servlet MVC.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41839/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41839</cve>
+        <vulnerabilityName>CVE-2026-41839</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-webflux. The samples use servlet MVC.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41840/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41840</cve>
+        <vulnerabilityName>CVE-2026-41840</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        MVC resource cache code remains. No shared protected/public resource cache is declared; all runtime configurations are not assessed.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41841/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41841</cve>
+        <vulnerabilityName>CVE-2026-41841</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        MVC resource handling code remains. Versioned filesystem resources are not declared; deployment changes are not assessed.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41842/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41842</cve>
+        <vulnerabilityName>CVE-2026-41842</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        MVC resource handling code remains. Versioned filesystem resources are not declared; deployment changes are not assessed.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41843/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41843</cve>
+        <vulnerabilityName>CVE-2026-41843</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        The sample REST controllers specify /api paths and return data. No implicit /** view mapping is declared.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41844/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41844</cve>
+        <vulnerabilityName>CVE-2026-41844</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        JavaScript escaping code remains. No direct sample call was found; all indirect uses are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41845/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41845</cve>
+        <vulnerabilityName>CVE-2026-41845</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        The executable samples contain no JSP pages or JSP form tags. Controllers return data.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41846/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41846</cve>
+        <vulnerabilityName>CVE-2026-41846</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-webflux. No Kotlin Router DSL is used.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41847/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41847</cve>
+        <vulnerabilityName>CVE-2026-41847</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        AntPathMatcher code remains. No user-supplied pattern evaluation is declared; all indirect paths are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41848/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41848</cve>
+        <vulnerabilityName>CVE-2026-41848</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        SpEL code remains. No direct evaluation of user expressions is declared; all indirect evaluations are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41849/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41849</cve>
+        <vulnerabilityName>CVE-2026-41849</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        SpEL code remains. No direct evaluation of user expressions is declared; all indirect evaluations are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41850/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41850</cve>
+        <vulnerabilityName>CVE-2026-41850</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        SpEL code remains. No cache of user expressions is declared; all indirect evaluations are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41851/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41851</cve>
+        <vulnerabilityName>CVE-2026-41851</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        SpEL code remains. No direct evaluation of user expressions is declared; all indirect evaluations are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41852/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41852</cve>
+        <vulnerabilityName>CVE-2026-41852</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        MVC multipart handling code remains. The samples have no WAF configuration; production proxy behavior is not assessed.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41853/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41853</cve>
+        <vulnerabilityName>CVE-2026-41853</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-jms and its MappingJackson2MessageConverter. No JMS broker is configured.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-41855/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-41855</cve>
+        <vulnerabilityName>CVE-2026-41855</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        No XSLT view configuration or implicit /** view mapping exists. The REST controllers return data.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-47884/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-47884</cve>
+        <vulnerabilityName>CVE-2026-47884</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        SpEL code remains. No direct evaluation of user expressions is declared; all indirect evaluations are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-47886/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-47886</cve>
+        <vulnerabilityName>CVE-2026-47886</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        The samples do not configure UrlFileNameViewController. The REST controllers return data.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-47887/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-47887</cve>
+        <vulnerabilityName>CVE-2026-47887</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-messaging and RSocket libraries. No RSocket handler is configured.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-47888/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-47888</cve>
+        <vulnerabilityName>CVE-2026-47888</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-webflux and the Aalto XML processor. The samples use servlet MVC.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-47891/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-47891</cve>
+        <vulnerabilityName>CVE-2026-47891</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-webflux. No WebFlux functional endpoints are declared.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-47892/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-47892</cve>
+        <vulnerabilityName>CVE-2026-47892</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack spring-webflux. No WebFlux WebSocket service is configured.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-47893/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-47893</cve>
+        <vulnerabilityName>CVE-2026-47893</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        Both executable JARs lack FreeMarker. No SpringTemplateLoader or template view is configured.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-59280/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-59280</cve>
+        <vulnerabilityName>CVE-2026-59280</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        Data-binding and error handling code remains. No HTML error rendering is declared; all indirect uses are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-59281/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-59281</cve>
+        <vulnerabilityName>CVE-2026-59281</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        Data-binding code remains. No self-populating List target is declared; all binding paths are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-59282/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-59282</cve>
+        <vulnerabilityName>CVE-2026-59282</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        SpEL code remains. Expression compilation is not configured in source; external settings and indirect evaluations are not assessed.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-59283/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-59283</cve>
+        <vulnerabilityName>CVE-2026-59283</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Inapplicable to the checked sample configuration.
+        The sample controllers use annotations and return JSON data. They do not use RouterFunction or Server-Sent Events.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-59313/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-59313</cve>
+        <vulnerabilityName>CVE-2026-59313</vulnerabilityName>
+    </suppress>
+    <suppress until="2027-01-07Z">
+        <notes><![CDATA[
+        Accepted unresolved risk for compatibility samples; not a false positive.
+        ContentDisposition code remains. No untrusted filename construction is declared; all indirect and outbound uses are not proved safe.
+        Retained for the public Boot 2.7 / Framework 5.3 compatibility baseline.
+        Reviewed 2026-10-09; review before 2027-01-07. Reassess if sample code or configuration changes.
+        Advisory: https://spring.io/security/cve-2026-59314/
+        ]]></notes>
+        <packageUrl regex="true" caseSensitive="true">^pkg:maven/org\.springframework/(spring\-aop|spring\-aspects|spring\-beans|spring\-context|spring\-core|spring\-expression|spring\-jcl|spring\-jdbc|spring\-orm|spring\-tx|spring\-web|spring\-webmvc)@5\.3\.39$</packageUrl>
+        <cve>CVE-2026-59314</cve>
+        <vulnerabilityName>CVE-2026-59314</vulnerabilityName>
+    </suppress>
+</suppressions>

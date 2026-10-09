@@ -18,6 +18,14 @@ The Maven Project is structured as follows:
 * *coherence-hibernate-demo-server* Remote Coherence server
 * *coherence-hibernate-demo-core* Used to share serialization bits between local app and remote Coherence server
 
+== Security
+
+These samples retain Spring Boot 2.7.18 and Spring Framework 5.3.39 for compatibility.
+Known vulnerabilities remain. The security scan contains documented exceptions for specific findings.
+A passing scan does not mean these versions are free of known vulnerabilities.
+Production deployments require a separate security assessment and appropriate patched dependencies.
+See link:../SECURITY.adoc[the sample security policy and exceptions].
+
 == How to Run
 
 Build the demo using https://maven.apache.org/[Maven] from the root of the Git repository:

@@ -61,13 +61,6 @@
         <cve>CVE-2020-25638</cve>
     </suppress>
 
-    <!-- See https://github.com/spring-projects/spring-framework/issues/24434 -->
-    <suppress>
-        <notes><![CDATA[Ignored since we are not vulnerable]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-
     <suppress>
         <notes><![CDATA[ Sample coherence-hibernate-demo
        file name: snakeyaml-1.33.jar
@@ -100,55 +93,14 @@
         ]]></notes>
         <vulnerabilityName>CVE-2024-31573</vulnerabilityName>
     </suppress>
-    <suppress>
+    <suppress until="2027-01-07Z">
         <notes><![CDATA[
-        spring-webmvc-5.3.39.jar
+        Reviewed 2026-10-09; review before 2027-01-07.
+        CVE-2025-15104 affects Nu Html Checker (validator.nu), not Hibernate Validator.
+        The generic validator:validator CPE is an incorrect product match for this Maven package.
+        Source: https://github.com/CVEProject/cvelistV5/blob/main/cves/2025/15xxx/CVE-2025-15104.json
         ]]></notes>
-        <vulnerabilityName>CVE-2024-38816</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-        spring-web-5.3.39.jar
-        ]]></notes>
-        <vulnerabilityName>CVE-2024-38828</vulnerabilityName>
-        <vulnerabilityName>CVE-2025-41234</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-        spring-boot-actuator-autoconfigure-2.7.18.jar
-        ]]></notes>
-        <vulnerabilityName>CVE-2025-22235</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-        spring-context-5.3.3.1.jar
-        ]]></notes>
-        <vulnerabilityName> CVE-2024-22259</vulnerabilityName>
-        <vulnerabilityName>CVE-2025-22233</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-        spring-core-5.3.31.jar
-        ]]></notes>
-        <vulnerabilityName>CVE-2024-38820</vulnerabilityName>
-        <vulnerabilityName>CVE-2024-22259</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-        spring-expression-5.3.31.jar
-        ]]></notes>
-        <vulnerabilityName>CVE-2024-38808</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-        spring-expression-5.3.31.jar
-        ]]></notes>
-        <vulnerabilityName>CVE-2024-38820</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-        spring-web-5.3.39.jar
-        ]]></notes>
-        <vulnerabilityName>CVE-2024-38820</vulnerabilityName>
+        <packageUrl regex="true">^pkg:maven/org\.hibernate\.validator/hibernate-validator@.*$</packageUrl>
+        <cve>CVE-2025-15104</cve>
     </suppress>
 </suppressions>
