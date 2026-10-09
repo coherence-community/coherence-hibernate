@@ -43,7 +43,7 @@ jobs:
       run: ./mvnw verify -B -DskipTests -Powasp -DdataDirectory="$HOME/.cache/dependency-check" -DautoUpdate=false
     - name: Publish dependency-check reports
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: dependency-check-reports
         path: target/dependency-check-report.*

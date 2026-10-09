@@ -52,7 +52,7 @@ jobs:
         run: ./mvnw verify -B -DskipTests -Powasp -DdataDirectory="$HOME/.cache/dependency-check" -DautoUpdate=false
       - name: Publish dependency-check reports
         if: always() && matrix.java-version == 17
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: dependency-check-reports-java-17
           path: target/dependency-check-report.*
