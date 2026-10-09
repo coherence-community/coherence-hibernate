@@ -26,7 +26,7 @@
 	<properties>
 		<coherence.hibernate.root>${basedir}/../..</coherence.hibernate.root>
 		<hibernate.version>5.6.15.Final</hibernate.version>
-		<hibernate-micrometer.version>5.6.15.Final</hibernate-micrometer.version>
+		<hibernate-micrometer.version>7.4.12.Final</hibernate-micrometer.version>
 		<spring-boot.version>2.7.18</spring-boot.version>
 		<spring-framework.version>5.3.39</spring-framework.version>
 		<log4j2.version>2.25.5</log4j2.version>
