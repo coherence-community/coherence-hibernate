@@ -394,7 +394,7 @@
                             <skipRuntimeScope>true</skipRuntimeScope>
                             <skipTestScope>true</skipTestScope>
                             <nvdValidForHours>96</nvdValidForHours>
-                            <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+                            <nvdApiKeyEnvironmentVariable>NVD_API_KEY</nvdApiKeyEnvironmentVariable>
                             <suppressionFiles>
                                 <suppressionFile>${coherence.hibernate.root}/src/main/config/dependency-check-suppression.xml</suppressionFile>
                             </suppressionFiles>
