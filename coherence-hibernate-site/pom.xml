@@ -86,6 +86,9 @@
                         <phase>prepare-package</phase>
                         <configuration>
                             <source>17</source>
+                            <additionalJOptions>
+                                <additionalJOption>-J-Dfile.encoding=UTF-8</additionalJOption>
+                            </additionalJOptions>
                             <outputDirectory>${project.build.directory}/site/api</outputDirectory>
                             <includeDependencySources>true</includeDependencySources>
                             <dependencySourceIncludes>
