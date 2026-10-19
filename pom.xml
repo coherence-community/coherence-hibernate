@@ -63,6 +63,7 @@
         <module>coherence-hibernate-cache-core</module>
         <module>coherence-hibernate-cache-7</module>
         <module>samples</module>
+        <module>coherence-hibernate-packaging-tests</module>
         <module>coherence-hibernate-site</module>
     </modules>
 
