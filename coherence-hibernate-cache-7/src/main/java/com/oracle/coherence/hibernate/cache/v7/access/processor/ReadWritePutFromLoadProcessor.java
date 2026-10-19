@@ -7,11 +7,16 @@
 package com.oracle.coherence.hibernate.cache.v7.access.processor;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.util.Calendar;
 import java.util.Comparator;
 
 import com.oracle.coherence.hibernate.cache.v7.region.CoherenceRegionValue;
 import com.tangosol.util.InvocableMap;
 import com.tangosol.util.processor.AbstractProcessor;
+import org.hibernate.internal.util.compare.CalendarComparator;
+import org.hibernate.internal.util.compare.RowVersionComparator;
+import org.hibernate.type.descriptor.java.OffsetDateTimeJavaType;
 
 /**
  * A AbstractReadWriteCoherenceEntityDataAccess.PutFromLoadProcessor is an EntryProcessor
@@ -62,7 +67,20 @@ public class ReadWritePutFromLoadProcessor extends AbstractProcessor implements 
         this.minimalPutsInEffect = minimalPutsInEffect;
         this.txTimestamp = txTimestamp;
         this.replacementValue = replacementValue;
-        this.versionComparator = versionComparator;
+        // These built-in comparators are stateless but not Serializable. Resolve the exact
+        // Hibernate ordering on storage; application-owned serializable comparators travel intact.
+        if (versionComparator == RowVersionComparator.INSTANCE) {
+            this.versionComparator = SerializableRowVersionComparator.INSTANCE;
+        }
+        else if (versionComparator == OffsetDateTimeJavaType.INSTANCE.getComparator()) {
+            this.versionComparator = SerializableOffsetDateTimeComparator.INSTANCE;
+        }
+        else if (versionComparator == CalendarComparator.INSTANCE) {
+            this.versionComparator = SerializableCalendarComparator.INSTANCE;
+        }
+        else {
+            this.versionComparator = versionComparator;
+        }
     }
 
     /**
@@ -82,5 +100,33 @@ public class ReadWritePutFromLoadProcessor extends AbstractProcessor implements 
             entry.setValue(this.replacementValue);
         }
         return isReplaceable;
+    }
+
+    private enum SerializableCalendarComparator implements Comparator<Calendar> {
+        INSTANCE;
+
+        @Override
+        public int compare(Calendar first, Calendar second) {
+            return CalendarComparator.INSTANCE.compare(first, second);
+        }
+    }
+
+    private enum SerializableOffsetDateTimeComparator implements Comparator<OffsetDateTime> {
+        INSTANCE;
+
+        @Override
+        public int compare(OffsetDateTime first, OffsetDateTime second) {
+            // Hibernate orders by instant, including nanoseconds, ignoring the offset for ties.
+            return OffsetDateTimeJavaType.INSTANCE.getComparator().compare(first, second);
+        }
+    }
+
+    private enum SerializableRowVersionComparator implements Comparator<byte[]> {
+        INSTANCE;
+
+        @Override
+        public int compare(byte[] first, byte[] second) {
+            return RowVersionComparator.INSTANCE.compare(first, second);
+        }
     }
 }

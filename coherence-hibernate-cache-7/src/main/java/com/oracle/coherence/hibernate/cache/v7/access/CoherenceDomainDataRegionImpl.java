@@ -6,6 +6,7 @@
  */
 package com.oracle.coherence.hibernate.cache.v7.access;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.hibernate.cache.CacheException;
@@ -63,7 +64,16 @@ public class CoherenceDomainDataRegionImpl extends DomainDataRegionImpl {
         final Comparator<?> versionComparator = (accessConfig.getVersionComparatorAccess() != null)
                 ? accessConfig.getVersionComparatorAccess().get() : null;
 
-        return new CoherenceReadWriteEntityAccess(this, this.getCacheStorageAccess(), versionComparator);
+        final CoherenceReadWriteEntityAccess access = new CoherenceReadWriteEntityAccess(
+                this, this.getCacheStorageAccess(), versionComparator);
+        if (accessConfig.isVersioned() && !(versionComparator instanceof Serializable)) {
+            // Hibernate 7.4's supplied comparator is a non-serializable lambda capturing a BasicType.
+            // Resolve the JavaType comparator after the runtime metamodel has been initialized.
+            access.setVersionComparatorAccess(() -> getSessionFactory().getMappingMetamodel()
+                    .getEntityDescriptor(accessConfig.getNavigableRole().getFullPath())
+                    .getVersionType().getJavaTypeDescriptor().getComparator());
+        }
+        return access;
     }
 
     @Override
@@ -100,7 +110,14 @@ public class CoherenceDomainDataRegionImpl extends DomainDataRegionImpl {
             case READ_ONLY:
                 return new CoherenceReadOnlyCollectionAccess(this, getCacheStorageAccess(), versionComparator);
             case READ_WRITE:
-                return new CoherenceReadWriteCollectionAccess(this, getCacheStorageAccess(), versionComparator);
+                final CoherenceReadWriteCollectionAccess access = new CoherenceReadWriteCollectionAccess(
+                        this, getCacheStorageAccess(), versionComparator);
+                if (accessConfig.isVersioned() && !(versionComparator instanceof Serializable)) {
+                    access.setVersionComparatorAccess(() -> getSessionFactory().getMappingMetamodel()
+                            .getCollectionDescriptor(accessConfig.getNavigableRole().getFullPath())
+                            .getOwnerEntityPersister().getVersionType().getJavaTypeDescriptor().getComparator());
+                }
+                return access;
             case NONSTRICT_READ_WRITE:
                 return new CoherenceNonstrictReadWriteCollectionAccess(this, getCacheStorageAccess(), versionComparator);
             case TRANSACTIONAL:

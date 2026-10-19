@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2026, Oracle and/or its affiliates.
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+<security-config xmlns="http://xmlns.oracle.com/coherence/coherence-security-config" version="1.0">
+    <allowed-classes>
+        <!-- Adapter operations executed on storage members. -->
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.AfterInsertProcessor" source="manual" executable="true"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.AfterUpdateProcessor" source="manual" executable="true"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.GetProcessor" source="manual" executable="true"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.PutFromLoadProcessor" source="manual" executable="true"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.ReadWritePutFromLoadProcessor" source="manual" executable="true"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.SoftLockItemProcessor" source="manual" executable="true"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.SoftUnlockItemProcessor" source="manual" executable="true"/>
+        <!-- Adapter values and explicitly serialized nested lock state. -->
+        <class name="com.oracle.coherence.hibernate.cache.v7.region.CoherenceRegionValue" source="manual"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.region.CoherenceRegionValue$SoftLock" source="manual"/>
+        <!-- Hibernate 7.4 cache keys, disassembled entries and query results. -->
+        <!-- Hibernate disassembles entity state into Serializable[]; each element is checked separately. -->
+        <class name="java.io.Serializable" source="manual"/>
+        <class name="org.hibernate.cache.internal.CacheKeyImplementation" source="manual"/>
+        <class name="org.hibernate.cache.internal.BasicCacheKeyImplementation" source="manual"/>
+        <class name="org.hibernate.cache.internal.NaturalIdCacheKey" source="manual"/>
+        <class name="org.hibernate.cache.spi.QueryKey" source="manual"/>
+        <class name="org.hibernate.query.internal.QueryParameterBindingsImpl$ParameterBindingsMementoImpl" source="manual"/>
+        <class name="org.hibernate.cache.spi.entry.StandardCacheEntryImpl" source="manual"/>
+        <class name="org.hibernate.cache.spi.entry.CollectionCacheEntry" source="manual"/>
+        <class name="org.hibernate.cache.internal.QueryResultsCacheImpl$CacheItem" source="manual"/>
+        <!-- Captured by versioned read-write put-from-load operations. -->
+        <class name="org.hibernate.internal.util.compare.ComparableComparator" source="manual"/>
+        <class name="org.hibernate.internal.util.ZonedDateTimeComparator" source="manual"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.ReadWritePutFromLoadProcessor$SerializableRowVersionComparator" source="manual"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.ReadWritePutFromLoadProcessor$SerializableOffsetDateTimeComparator" source="manual"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.access.processor.ReadWritePutFromLoadProcessor$SerializableCalendarComparator" source="manual"/>
+    </allowed-classes>
+</security-config>

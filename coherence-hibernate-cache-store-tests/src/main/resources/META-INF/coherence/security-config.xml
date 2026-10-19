@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2026, Oracle and/or its affiliates.
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+<security-config xmlns="http://xmlns.oracle.com/coherence/coherence-security-config" version="1.0">
+    <allowed-classes>
+        <!-- Cache-store fixtures serialize entity instances on both client and storage server. -->
+        <class name="org.hibernate.tutorial.domain.Person" source="manual"/>
+        <class name="org.hibernate.tutorial.domain.Event" source="manual"/>
+        <!-- Hibernate replaces Person's two mapped sets when loading from the database. -->
+        <class name="org.hibernate.collection.spi.PersistentSet" source="manual"/>
+        <class name="org.hibernate.collection.spi.AbstractPersistentCollection" source="manual"/>
+    </allowed-classes>
+</security-config>

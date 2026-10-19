@@ -494,6 +494,42 @@ com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log=/path/to
 com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log.level: 9
 ----
 
+==== Serialization permissions
+
+The adapter JAR includes `META-INF/coherence/security-config.xml` with exact permissions for its entry processors,
+region values, and supported Hibernate cache keys, entries, query results, and serializable version comparator.
+When Coherence enforces serialization permissions, package application-owned permissions at the same resource path
+on every client and storage server. Include custom identifiers, custom `CacheKeysFactory` keys, disassembled values,
+and custom version types or comparators that actually cross a serialization boundary. Comparators captured by
+read-write put-from-load operations must also be serializable. A mapped entity normally contributes disassembled
+state to the second-level cache; cache-store applications serialize the entity and its reachable object graph directly.
+
+For example, an application with a custom cache key and value can supply:
+
+[source,xml]
+----
+<security-config xmlns="http://xmlns.oracle.com/coherence/coherence-security-config" version="1.0">
+    <allowed-classes>
+        <class name="com.example.ApplicationCacheKey" source="manual"/>
+        <class name="com.example.ApplicationCacheValue" source="manual"/>
+    </allowed-classes>
+</security-config>
+----
+
+Coherence unions these classpath descriptors. `coherence.serialization.allowed` can also grant data permissions.
+Custom entry processors need an additional `executable="true"` descriptor attribute; do not grant executable permission
+to ordinary data classes. An annotation on an entry processor interface does not authorize its implementations.
+
+For Maven Shade packages, add `com.oracle.coherence.maven.shade.SecurityConfigShadeTransformer` to the Shade
+transformers, with plugin dependency `com.oracle.coherence.ce:security-config-shade-transformer` matching the Coherence
+version. This preserves Coherence's own permissions together with adapter and application entries. Inspect the merged
+`META-INF/coherence/security-config.xml` in the final JAR. Spring Boot packages retain descriptors in their nested JARs;
+ensure the application descriptor is present too. See the cache-store sample POM for a Shade configuration.
+
+The serialization descriptor under `META-INF/coherence/` has a different purpose from the operational
+`<security-config>` elements configuring identity transformers and identity asserters. Those elements configure
+identity handling and do not grant serialization permissions.
+
 ==== Logging
 
 Without specifying any custom logging properties, Coherence Hibernate will set the logger of Coherence to

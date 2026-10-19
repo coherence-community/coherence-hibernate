@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import com.oracle.tools.runtime.java.NativeJavaApplicationBuilder;
 import com.oracle.tools.runtime.java.SimpleJavaApplication;
 import com.oracle.tools.runtime.java.SimpleJavaApplicationSchema;
 import com.tangosol.net.CacheFactory;
+import com.tangosol.net.DefaultCacheServer;
 import com.tangosol.net.NamedCache;
 import com.tangosol.util.filter.AlwaysFilter;
 import com.tangosol.util.processor.ConditionalRemove;
@@ -347,7 +349,17 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
      * @throws IOException if cache server process files could not be opened
      */
     private static void startCacheServer() throws IOException {
-        final ClusterMemberSchema dcsSchema = new ClusterMemberSchema();
+        final ClusterMemberSchema dcsSchema = new ClusterMemberSchema(StorageServer.class.getName()) {
+            @Override
+            public String getExecutableName() {
+                return Path.of(System.getProperty("java.home"), "bin", "java").toString();
+            }
+        };
+        dcsSchema.setSystemProperty("fixture.expected.java.home", System.getProperty("java.home"));
+        final String securityMode = System.getProperty("coherence.security.mode");
+        if (securityMode != null) {
+            dcsSchema.setSystemProperty("coherence.security.mode", securityMode);
+        }
         dcsSchema.setWellKnownAddress(WKA_HOST);
         dcsSchema.setWellKnownAddressPort(Integer.valueOf(WKA_PORT));
         dcsSchema.setCacheConfigURI(CACHE_CONFIG_FILE_PATH);
@@ -435,7 +447,12 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
     private static void startDatabase() throws IOException {
         final NativeJavaApplicationBuilder<SimpleJavaApplication, SimpleJavaApplicationSchema> hsqldbBuilder;
         hsqldbBuilder = new NativeJavaApplicationBuilder<>();
-        final SimpleJavaApplicationSchema hsqldbSchema = new SimpleJavaApplicationSchema("org.hsqldb.Server");
+        final SimpleJavaApplicationSchema hsqldbSchema = new SimpleJavaApplicationSchema("org.hsqldb.Server") {
+            @Override
+            public String getExecutableName() {
+                return Path.of(System.getProperty("java.home"), "bin", "java").toString();
+            }
+        };
         hsqldbSchema.addArgument("-database.0");
         hsqldbSchema.addArgument("file:target/data/tutorial");
         hsqldbSchema.setErrorStreamRedirected(true);
@@ -537,6 +554,41 @@ public class CoherenceHibernateCacheStoreFunctionalTests {
                     //best efforts
                 }
             }
+        }
+    }
+
+    /**
+     * Checks descriptor visibility in the actual Oracle Tools child JVM before starting storage.
+     */
+    public static class StorageServer {
+
+        public static void main(String[] args) throws Exception {
+            final String descriptor = "META-INF/coherence/security-config.xml";
+            boolean fixtureVisible = false;
+            for (var resource : Collections.list(StorageServer.class.getClassLoader().getResources(descriptor))) {
+                System.out.println("Storage server security descriptor: " + resource);
+                try (var input = resource.openStream()) {
+                    fixtureVisible |= new String(input.readAllBytes(), StandardCharsets.UTF_8)
+                            .contains("org.hibernate.tutorial.domain.Person");
+                }
+            }
+            if (!fixtureVisible) {
+                throw new IllegalStateException("Storage server cannot see the cache-store fixture permissions");
+            }
+            System.out.println("Storage server Coherence: " + CacheFactory.class.getProtectionDomain().getCodeSource());
+            System.out.println("Storage server Java: " + System.getProperty("java.version") + " at " + System.getProperty("java.home"));
+            if (!System.getProperty("java.home").equals(System.getProperty("fixture.expected.java.home"))) {
+                throw new IllegalStateException("Storage server Java does not match the parent test JVM");
+            }
+            System.out.println("Storage server security mode: " + System.getProperty("coherence.security.mode"));
+            if ("hardened".equals(System.getProperty("coherence.security.mode"))) {
+                final Class<?> mode = Class.forName("com.tangosol.internal.util.CoherenceMode");
+                if (!Boolean.TRUE.equals(mode.getMethod("isSecurityHardeningEnabled").invoke(null))) {
+                    throw new IllegalStateException("Storage server security hardening is disabled");
+                }
+                System.out.println("Storage server security hardening verified: true");
+            }
+            DefaultCacheServer.main(args);
         }
     }
 

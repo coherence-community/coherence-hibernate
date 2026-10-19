@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2026, Oracle and/or its affiliates.
+  Licensed under the Universal Permissive License v 1.0 as shown at
+  https://oss.oracle.com/licenses/upl.
+-->
+<security-config xmlns="http://xmlns.oracle.com/coherence/coherence-security-config" version="1.0">
+    <allowed-classes>
+        <!-- Application-owned keys used only by the test fixtures. -->
+        <class name="com.oracle.coherence.hibernate.cache.v7.CustomCacheKeysFactoryTests$WrappedKey" source="manual"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.CacheKeySemanticsTests$CompositeId" source="manual"/>
+        <!-- Application-owned custom version value, comparator, and its serialized policy. -->
+        <class name="com.oracle.coherence.hibernate.cache.v7.CoherenceClientSessionTests$DescendingVersion" source="manual"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.CoherenceClientSessionTests$DescendingVersionType" source="manual"/>
+        <class name="com.oracle.coherence.hibernate.cache.v7.CoherenceClientSessionTests$VersionOrder" source="manual"/>
+        <!-- Time-zone data in this fixture's Hibernate-generated GregorianCalendar versions. -->
+        <class name="sun.util.calendar.ZoneInfo" source="manual"/>
+    </allowed-classes>
+</security-config>
