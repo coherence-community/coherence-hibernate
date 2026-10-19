@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -21,6 +22,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -42,12 +44,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.Version;
+import org.hibernate.CacheMode;
 import org.hibernate.SessionFactory;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.NaturalIdCache;
 import org.hibernate.annotations.Type;
+import org.hibernate.cache.spi.entry.StandardCacheEntryImpl;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
@@ -60,6 +64,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -91,6 +96,11 @@ public class CoherenceClientSessionTests {
     @Test
     public void calendarVersionUsesMillisecondOrderingOverExtend() throws Exception {
         exerciseClient("calendar");
+    }
+
+    @Test
+    public void dateAndJdbcTemporalStateUsesSecondLevelCacheOverExtend() throws Exception {
+        exerciseClient("sql-temporal");
     }
 
     @Test
@@ -203,6 +213,7 @@ public class CoherenceClientSessionTests {
                 case "offset-date-time" -> OffsetDateTimeItem.class;
                 case "zoned-date-time" -> ZonedDateTimeItem.class;
                 case "calendar" -> CalendarItem.class;
+                case "sql-temporal" -> TemporalItem.class;
                 case "custom-version" -> CustomVersionItem.class;
                 default -> VersionedItem.class;
             };
@@ -229,6 +240,7 @@ public class CoherenceClientSessionTests {
                     case "offset-date-time" -> exerciseOffsetDateTimeVersion(sessions);
                     case "zoned-date-time" -> exerciseZonedDateTimeVersion(sessions);
                     case "calendar" -> exerciseCalendarVersion(sessions);
+                    case "sql-temporal" -> exerciseTemporalState(sessions);
                     case "custom-version" -> exerciseCustomVersion(sessions);
                     default -> {
                         exerciseHibernate(sessions);
@@ -377,6 +389,57 @@ public class CoherenceClientSessionTests {
             System.out.println("Calendar ORM load, cache hit, update, stale rejection and millisecond ordering passed");
         }
 
+        private static void exerciseTemporalState(SessionFactory sessions) {
+            final TemporalItem expected = new TemporalItem();
+            assertEquals(Date.class, expected.legacyDate.getClass(), "Exercise an ordinary java.util.Date mapping");
+            sessions.inTransaction((session) -> {
+                session.setCacheMode(CacheMode.IGNORE);
+                session.persist(expected);
+            });
+            sessions.getCache().evictAllRegions();
+            sessions.getStatistics().clear();
+            // Populate L2 from a database load, using Hibernate's real disassembly and Extend transport.
+            sessions.inTransaction((session) -> assertTemporalValues(expected, session.find(TemporalItem.class, 1L)));
+            assertEquals(1, sessions.getStatistics().getSecondLevelCacheMissCount());
+            assertEquals(1, sessions.getStatistics().getSecondLevelCachePutCount());
+
+            final SessionFactoryImplementor factory = (SessionFactoryImplementor) sessions;
+            final var persister = factory.getMappingMetamodel().getEntityDescriptor(TemporalItem.class);
+            final var access = persister.getCacheAccessStrategy();
+            sessions.inTransaction((session) -> {
+                final Object key = access.generateCacheKey(1L, persister, factory, null);
+                final var entry = assertInstanceOf(StandardCacheEntryImpl.class,
+                        access.get((SharedSessionContractImplementor) session, key));
+                final Serializable[] state = entry.getDisassembledState();
+                final List<String> properties = List.of(persister.getPropertyNames());
+                assertEquals(Timestamp.class, state[properties.indexOf("legacyDate")].getClass(),
+                        "Hibernate's default Date mapping disassembles to java.sql.Timestamp");
+                assertEquals(Timestamp.class, state[properties.indexOf("jdbcTimestamp")].getClass());
+                assertEquals(java.sql.Date.class, state[properties.indexOf("jdbcDate")].getClass());
+                assertEquals(java.sql.Time.class, state[properties.indexOf("jdbcTime")].getClass());
+                assertEquals(expected.legacyDate.getTime(), ((Timestamp) state[properties.indexOf("legacyDate")]).getTime());
+                assertEquals(expected.jdbcTimestamp, state[properties.indexOf("jdbcTimestamp")]);
+                assertEquals(expected.jdbcDate, state[properties.indexOf("jdbcDate")]);
+                assertEquals(expected.jdbcTime, state[properties.indexOf("jdbcTime")]);
+            });
+
+            final long statements = sessions.getStatistics().getPrepareStatementCount();
+            sessions.inTransaction((session) -> assertTemporalValues(expected, session.find(TemporalItem.class, 1L)));
+            assertEquals(1, sessions.getStatistics().getSecondLevelCacheHitCount());
+            assertEquals(1, sessions.getStatistics().getEntityLoadCount());
+            assertEquals(statements, sessions.getStatistics().getPrepareStatementCount(), "L2 hit must avoid SQL");
+            System.out.println("Date and JDBC temporal ORM disassembly, Extend cache hit and nanosecond precision passed");
+        }
+
+        private static void assertTemporalValues(TemporalItem expected, TemporalItem actual) {
+            assertNotNull(actual);
+            assertEquals(expected.legacyDate.getTime(), actual.legacyDate.getTime());
+            assertEquals(expected.jdbcTimestamp, actual.jdbcTimestamp);
+            assertEquals(123456789, actual.jdbcTimestamp.getNanos());
+            assertEquals(expected.jdbcDate.toLocalDate(), actual.jdbcDate.toLocalDate());
+            assertEquals(expected.jdbcTime.toLocalTime(), actual.jdbcTime.toLocalTime());
+        }
+
         private static void exerciseCustomVersion(SessionFactory sessions) {
             final CustomVersionItem item = new CustomVersionItem();
             sessions.inTransaction((session) -> session.persist(item));
@@ -504,6 +567,23 @@ public class CoherenceClientSessionTests {
         private Calendar version;
 
         private String name = "before";
+    }
+
+    @Entity(name = "ExtendTemporalItem")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    public static class TemporalItem {
+        @Id
+        private Long id = 1L;
+
+        @Column(secondPrecision = 3)
+        private Date legacyDate = new Date(Timestamp.valueOf("2026-10-19 10:20:30.123").getTime());
+
+        @Column(secondPrecision = 9)
+        private Timestamp jdbcTimestamp = Timestamp.valueOf("2026-10-19 10:20:30.123456789");
+
+        private java.sql.Date jdbcDate = java.sql.Date.valueOf("2026-10-19");
+
+        private java.sql.Time jdbcTime = java.sql.Time.valueOf("10:20:30");
     }
 
     @Entity(name = "ExtendCustomVersionItem")

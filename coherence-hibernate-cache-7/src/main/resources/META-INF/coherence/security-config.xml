@@ -20,12 +20,19 @@
         <!-- Hibernate 7.4 cache keys, disassembled entries and query results. -->
         <!-- Hibernate disassembles entity state into Serializable[]; each element is checked separately. -->
         <class name="java.io.Serializable" source="manual"/>
+        <!-- Hibernate's Date/JDBC temporal mutability plans produce these disassembled values. -->
+        <class name="java.sql.Timestamp" source="manual"/>
+        <class name="java.sql.Date" source="manual"/>
+        <class name="java.sql.Time" source="manual"/>
         <class name="org.hibernate.cache.internal.CacheKeyImplementation" source="manual"/>
         <class name="org.hibernate.cache.internal.BasicCacheKeyImplementation" source="manual"/>
         <class name="org.hibernate.cache.internal.NaturalIdCacheKey" source="manual"/>
         <class name="org.hibernate.cache.spi.QueryKey" source="manual"/>
         <class name="org.hibernate.query.internal.QueryParameterBindingsImpl$ParameterBindingsMementoImpl" source="manual"/>
         <class name="org.hibernate.cache.spi.entry.StandardCacheEntryImpl" source="manual"/>
+        <!-- Serializable singleton placeholders in Hibernate's disassembled entity state. -->
+        <class name="org.hibernate.bytecode.enhance.spi.LazyPropertyInitializer$1" source="manual"/>
+        <class name="org.hibernate.property.access.internal.PropertyAccessStrategyBackRefImpl$1" source="manual"/>
         <class name="org.hibernate.cache.spi.entry.CollectionCacheEntry" source="manual"/>
         <class name="org.hibernate.cache.internal.QueryResultsCacheImpl$CacheItem" source="manual"/>
         <!-- Captured by versioned read-write put-from-load operations. -->
