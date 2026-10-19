@@ -24,6 +24,8 @@
         <class name="java.sql.Timestamp" source="manual"/>
         <class name="java.sql.Date" source="manual"/>
         <class name="java.sql.Time" source="manual"/>
+        <!-- Time-zone data in Hibernate-generated GregorianCalendar versions. -->
+        <class name="sun.util.calendar.ZoneInfo" source="manual"/>
         <class name="org.hibernate.cache.internal.CacheKeyImplementation" source="manual"/>
         <class name="org.hibernate.cache.internal.BasicCacheKeyImplementation" source="manual"/>
         <class name="org.hibernate.cache.internal.NaturalIdCacheKey" source="manual"/>
