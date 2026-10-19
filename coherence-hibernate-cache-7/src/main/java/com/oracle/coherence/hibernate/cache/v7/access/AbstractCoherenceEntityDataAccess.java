@@ -9,6 +9,7 @@ package com.oracle.coherence.hibernate.cache.v7.access;
 import java.util.Comparator;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Supplier;
 
 import com.oracle.coherence.hibernate.cache.v7.access.processor.PutFromLoadProcessor;
 import com.oracle.coherence.hibernate.cache.v7.configuration.support.Assert;
@@ -52,6 +53,8 @@ public abstract class AbstractCoherenceEntityDataAccess {
     private final DomainDataStorageAccess domainDataStorageAccess;
 
     private Comparator<?> versionComparator;
+
+    private Supplier<Comparator<?>> versionComparatorAccess;
 
     /**
      * A sequence number for soft locks acquired by this AbstractCoherenceEntityDataAccess.
@@ -100,7 +103,11 @@ public abstract class AbstractCoherenceEntityDataAccess {
     }
 
     protected Comparator<?> getVersionComparator() {
-        return this.versionComparator;
+        return (this.versionComparatorAccess == null) ? this.versionComparator : this.versionComparatorAccess.get();
+    }
+
+    void setVersionComparatorAccess(Supplier<Comparator<?>> comparatorAccess) {
+        this.versionComparatorAccess = comparatorAccess;
     }
 
     protected CacheKeysFactory getCacheKeysFactory() {

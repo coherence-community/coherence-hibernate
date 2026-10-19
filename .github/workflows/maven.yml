@@ -77,7 +77,7 @@ jobs:
         find ~/.m2/repository -type d -name '*SNAPSHOT' | xargs rm -fr
 
   compatibility:
-    name: Hibernate ${{ matrix.hibernate-version }} / Coherence ${{ matrix.coherence-version }} / Java 17
+    name: Hibernate ${{ matrix.hibernate-version }} / Coherence ${{ matrix.coherence-version }} / Java ${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}
     if: github.ref_name == 'main' || github.base_ref == 'main'
     strategy:
       fail-fast: false
@@ -87,16 +87,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-    - name: Set up JDK 17
+    # The development snapshot is compiled for Java 21; released legs retain Java 17.
+    - name: Set up JDK
       uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
       with:
         distribution: 'temurin'
-        java-version: '17'
+        java-version: ${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}
     - name: Cache Maven packages
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-jdk-17-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-m2-${{ hashFiles('**/pom.xml') }}
+        key: ${{ runner.os }}-jdk-${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-m2-
     - name: Test Hibernate ${{ matrix.hibernate-version }} with Coherence ${{ matrix.coherence-version }}
@@ -107,4 +108,5 @@ jobs:
         -am
         -Dhibernate7.version=${{ matrix.hibernate-version }}
         -Dcoherence.version=${{ matrix.coherence-version }}
+        ${{ matrix.coherence-version == '26.10-SNAPSHOT' && '-Dcoherence.security.mode=hardened' || '' }}
         test

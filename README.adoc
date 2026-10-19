@@ -52,6 +52,21 @@ matrix tests Hibernate `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` with both
 The complete default-version reactor is tested separately on Java 17, 21, and 25. Hibernate and Coherence are provided
 dependencies, so applications must declare the versions appropriate for their tested deployment combination.
 
+=== Application serialization permissions
+
+The Hibernate 7 adapter packages Coherence serialization permissions for its processors, region values, and Hibernate
+cache payloads. When Coherence enforces serialization permissions, applications must supply permissions for their own
+serialized identifiers, custom `CacheKeysFactory` keys, cached values, and custom version types or comparators.
+Cache-store applications also serialize entity instances and their reachable object graphs. Ordinary second-level
+cache entries contain disassembled state; an entity mapping alone does not require admitting the entity class.
+
+Package exact class names in `META-INF/coherence/security-config.xml` on every participating client and storage server,
+or use `coherence.serialization.allowed` for data permissions. Custom remote operations also need executable permission;
+ordinary keys and values do not. Merge descriptors when building an all-in-one JAR, using Coherence's
+`SecurityConfigShadeTransformer` with Maven Shade. Spring Boot nested dependency JARs retain separate descriptors.
+See the website's serialization permissions section for an XML example. This descriptor is separate from the operational
+`<security-config>` used to configure identity transformers and identity asserters.
+
 === Coherence Hibernate {2x-release-version}
 
 Due to Hibernate Cache API changes, Coherence Hibernate `{2x-release-version}` provides dedicated Maven modules targeting

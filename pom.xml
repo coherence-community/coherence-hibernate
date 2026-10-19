@@ -199,7 +199,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>@{argLine} -Xms800m -Xmx800m -XX:+EnableDynamicAgentLoading</argLine>
+                    <argLine>@{argLine} -Xms800m -Xmx800m -XX:+EnableDynamicAgentLoading -Djava.net.preferIPv4Stack=true</argLine>
                     <includes>
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
@@ -207,7 +207,6 @@
                     <systemPropertyVariables>
                         <coherence.localhost>127.0.0.1</coherence.localhost>
                         <coherence.ttl>0</coherence.ttl>
-                        <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
                         <coherence.wka>127.0.0.1</coherence.wka>
                     </systemPropertyVariables>
                     <forkCount>1</forkCount>
