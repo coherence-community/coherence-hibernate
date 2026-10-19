@@ -13,7 +13,5 @@
         <class name="com.oracle.coherence.hibernate.cache.v7.CoherenceClientSessionTests$DescendingVersion" source="manual"/>
         <class name="com.oracle.coherence.hibernate.cache.v7.CoherenceClientSessionTests$DescendingVersionType" source="manual"/>
         <class name="com.oracle.coherence.hibernate.cache.v7.CoherenceClientSessionTests$VersionOrder" source="manual"/>
-        <!-- Time-zone data in this fixture's Hibernate-generated GregorianCalendar versions. -->
-        <class name="sun.util.calendar.ZoneInfo" source="manual"/>
     </allowed-classes>
 </security-config>
