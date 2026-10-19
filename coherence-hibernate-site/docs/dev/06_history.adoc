@@ -17,6 +17,19 @@
 The following sections outline Oracle Coherence Hibernate Integration changes in
 reverse chronological order.
 
+=== Current development (4.0.1-SNAPSHOT)
+
+* Keep the default dependencies at Hibernate `7.4.10.Final` and Coherence CE `15.1.1-0-5`.
+* Configure the default-version reactor on Java 17, 21, and 25, and the compatibility matrix for Hibernate
+  `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` against Coherence `15.1.1-0-5`, `26.07`, and `26.10-SNAPSHOT`.
+  Released compatibility legs use Java 17; the snapshot leg uses Java 21 and explicit hardened mode.
+* Package exact serialization permissions for adapter operations and Hibernate cache payloads, including JDBC
+  temporal state, lazy/back-reference markers, and Calendar time-zone data. Preserve built-in version comparator
+  ordering across serialization; application-owned custom comparators must be serializable and permitted.
+* Document the tested development snapshots' hardened default and application descriptor/packaging requirements.
+  Snapshot testing and workflow configuration do not establish completed hosted CI, deployment qualification, or
+  support for released Coherence `26.10` or later.
+
 === Version 4.0.0 (September 23, 2026)
 
 https://github.com/coherence-community/coherence-hibernate/releases/tag/v4.0.0

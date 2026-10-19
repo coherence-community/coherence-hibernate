@@ -31,9 +31,12 @@ are supported:
 |`7.4.x`
 |===
 
-The default `4.x` build uses Hibernate ORM `7.4.9.Final`. CI tests the supported `7.4.x` line with `7.4.1.Final`,
-`7.4.5.Final`, and `7.4.9.Final` against each compatibility-tested Coherence version on Java 17. The complete default
-dependency combination is tested separately on Java 17, 21, and 25.
+The default `4.x` build uses Hibernate ORM `7.4.10.Final`, as declared in the
+https://github.com/coherence-community/coherence-hibernate/blob/main/pom.xml[parent POM]. The
+https://github.com/coherence-community/coherence-hibernate/blob/main/.github/workflows/maven.yml[GitHub Actions workflow]
+configures compatibility jobs for `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final`: released Coherence legs use Java 17,
+and the `26.10-SNAPSHOT` leg uses Java 21 with explicit hardened mode. The complete default dependency combination
+has separate reactor jobs on Java 17, 21, and 25. These describe configured jobs, not completed hosted runs.
 
 IMPORTANT: Coherence Hibernate `4.x` supports Hibernate ORM `7.4.x` only. Hibernate `5.6.x` and `6.x` applications
 must use the matching `cache-53` or `cache-6` adapter from the Coherence Hibernate `3.x` maintenance line.
@@ -115,12 +118,31 @@ selected cache mode; Coherence must fully implement every provider SPI surface a
 
 === Supported Coherence Versions
 
-The default Coherence Hibernate `4.x` build uses Coherence CE `15.1.1-0-5`. CI also compatibility-tests Coherence CE
-`26.07`. Both versions are tested with Hibernate `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` on Java 17; the default
-`15.1.1-0-5` and Hibernate `7.4.9.Final` combination receives the complete Java 17, 21, and 25 reactor validation.
+The default Coherence Hibernate `4.x` build uses Coherence CE `15.1.1-0-5` with Hibernate `7.4.10.Final`. The workflow
+configures the complete default-version reactor on Java 17, 21, and 25. Its compatibility job, enabled for `main` and
+pull requests targeting `main`, configures every Hibernate/Coherence pairing in the following rows:
 
-Coherence and Hibernate are provided dependencies and must be declared by the application. Use one of the tested
-combinations unless you independently validate a different patch level.
+[cols="2,2,1,2", options="header"]
+|===
+|Hibernate ORM |Coherence CE |Java |Security mode
+
+|`7.4.1.Final`, `7.4.5.Final`, `7.4.9.Final`
+|`15.1.1-0-5`, `26.07`
+|`17`
+|Released default (compatibility)
+
+|`7.4.1.Final`, `7.4.5.Final`, `7.4.9.Final`
+|`26.10-SNAPSHOT`
+|`21`
+|Explicit `-Dcoherence.security.mode=hardened`
+|===
+
+The snapshot leg exercises development binaries and does not establish support for released Coherence `26.10` or
+later. Completed GitHub Actions runs and application deployment qualification must be assessed separately from this
+workflow configuration.
+
+Coherence and Hibernate are provided dependencies and must be declared by the application. Validate the selected
+combination in your deployment, including application-owned serialization permissions.
 
 === Overview
 
@@ -496,12 +518,24 @@ com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log.level: 9
 
 ==== Serialization permissions
 
+The tested `26.10` development snapshots default to `coherence.security.mode=hardened`. Coherence's
+`com.tangosol.internal.util.CoherenceMode` resolver enables serialization allowlists and remote executable checks
+in that mode; the tested `15.1.1-0-5` and `26.07` binaries default to compatibility mode. The snapshot workflow passes
+`-Dcoherence.security.mode=hardened` explicitly to keep enforcement independent of a floating snapshot's default.
+This describes the tested development binaries; released `26.10` and later binaries require separate validation.
+
 The adapter JAR includes `META-INF/coherence/security-config.xml` with exact permissions for its entry processors,
-region values, and supported Hibernate cache keys, entries, query results, and serializable version comparator.
+region values, supported Hibernate cache keys, entries, query results, and version comparators. It also grants exact
+data permissions for JDBC `Timestamp`/`Date`/`Time` values produced by Hibernate disassembly, Hibernate's lazy-property
+and back-reference markers, and `sun.util.calendar.ZoneInfo` nested in Calendar versions. These are adapter-owned
+permissions; applications do not need to duplicate them. `GregorianCalendar` itself is already admitted by the tested
+Coherence policies.
+
 When Coherence enforces serialization permissions, package application-owned permissions at the same resource path
 on every client and storage server. Include custom identifiers, custom `CacheKeysFactory` keys, disassembled values,
 and custom version types or comparators that actually cross a serialization boundary. Comparators captured by
-read-write put-from-load operations must also be serializable. A mapped entity normally contributes disassembled
+read-write put-from-load operations must implement `java.io.Serializable`, with permitted serialized state; granting
+a class permission does not make it serializable. A mapped entity normally contributes disassembled
 state to the second-level cache; cache-store applications serialize the entity and its reachable object graph directly.
 
 For example, an application with a custom cache key and value can supply:

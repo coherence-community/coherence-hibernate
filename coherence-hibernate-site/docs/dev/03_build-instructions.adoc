@@ -25,6 +25,25 @@ Once you have these installed building the entire source tree is as simple as ex
 ./mvnw clean package
 ----
 
+The parent POM defaults to Hibernate `7.4.10.Final` and Coherence `15.1.1-0-5`; Java 17 remains the bytecode baseline.
+The GitHub Actions workflow configures this default reactor on Java 17, 21, and 25. Its `main` compatibility job
+configures Hibernate `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` against Coherence `15.1.1-0-5` and `26.07` on
+Java 17, and against `26.10-SNAPSHOT` on Java 21 with explicit hardened mode.
+
+To exercise the development snapshot locally, select JDK 21 through `JAVA_HOME` and `PATH`, then run:
+
+[source,bash]
+----
+./mvnw --settings .mvn/coherence-snapshots-settings.xml \
+  -Dcoherence.version=26.10-SNAPSHOT -Dcoherence.security.mode=hardened \
+  -pl coherence-hibernate-cache-7,coherence-hibernate-cache-store-tests -am test
+----
+
+This uses the default Hibernate `7.4.10.Final`; add `-Dhibernate7.version=<version>` to select a compatibility version.
+The workflow currently supplies the snapshot settings file to all compatibility legs. The tested snapshot requires
+Java 21, while the adapter still targets Java 17. Snapshot tests do not qualify released `26.10` or later binaries,
+and a configured workflow does not establish a completed hosted run or deployment qualification.
+
 For detailed instructions, please see the main
 https://github.com/coherence-community/coherence-hibernate/blob/main/README.adoc[README] of the Coherence Hibernate
 source code repository.
