@@ -1,0 +1,49 @@
+= Packaged security regression tests
+
+The normal root `./mvnw clean package` and CI `./mvnw clean verify -Pcoverage`
+both execute these checks. This test-only POM module depends on the adapter and
+all three executable samples, so Maven finishes their `jar`, `shade` and Boot
+`repackage` executions first, including with parallel reactor builds. Its explicit
+Surefire `packaged-security` execution runs `SecurityPackagingIT` at `package`
+and fails if no tests are found. The module is neither installed nor deployed.
+
+`test` runs the adapter's `SecurityDescriptorTests`, including in the existing
+compatibility CI jobs. It compiles this module's tests but does not inspect JARs.
+`package` and `verify` additionally inspect actual final artifacts; no source
+directory is accepted as a substitute for a missing JAR. `-DskipTests` and
+`-Dmaven.test.skip=true` retain their usual Maven meanings.
+
+The adapter tests inventory concrete serializable classes in the processor and
+region transport packages, including private comparator enums. They derive
+executable permission from `EntryProcessor`, and data requirements from classes
+actually written by Java serialization of representative Hibernate entity state,
+cache keys, collections, query mementos/results and versioned processors. This
+bounded inventory does not grant permissions or scan application types,
+configuration enums or every Hibernate class. Real ORM/Extend tests separately
+cover SQL temporal disassembly, enhanced lazy/back-reference markers, and Calendar
+versions. Test descriptor entries must belong to compiled test classes and cannot
+duplicate or supply a production requirement.
+
+Package checks compare the adapter descriptor with production resources, require
+unique exact entries, reject fixture classes, and verify Java 17 adapter bytecode.
+They check the shaded sample's complete adapter, Coherence and application permission union and
+both flags, and the exact descriptors inside both Boot applications' nested
+adapter and Coherence JARs.
+
+A child JVM uses the current JDK with explicit production JAR paths and only two
+copied probe classes. It requires exactly the adapter and Coherence descriptors,
+explicit hardened mode, successful temporal/marker/lock/processor round trips,
+and rejection of unapproved data. Seven additional JVMs each use a temporary copy
+of the adapter JAR missing one SQL temporal, marker, ZoneInfo or processor grant;
+each must report the corresponding filter denial. Maven's shared test resources
+and local dependency-cache JARs are never modified. JUnit removes the temporary
+copies and logs after each test; successful probe output is retained in Surefire
+reports.
+
+These checks cover resource preservation and isolated serialization, alongside
+the existing ORM fixtures. They do not run the Boot applications, Kubernetes,
+rolling upgrades, persisted-data migration, or deployment-specific classloaders.
+Adding a new transport package or application-specific serialized value requires
+an explicit review of its ownership and an appropriate fixture. The ZoneInfo
+probe intentionally exercises the OpenJDK time-zone graph used by the supported
+Temurin CI JDKs. Hosted CI is required to qualify other runner environments.
