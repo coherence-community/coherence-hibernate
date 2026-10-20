@@ -40,9 +40,23 @@ To exercise the development snapshot locally, select JDK 21 through `JAVA_HOME` 
 ----
 
 This uses the default Hibernate `7.4.10.Final`; add `-Dhibernate7.version=<version>` to select a compatibility version.
-The workflow currently supplies the snapshot settings file to all compatibility legs. The tested snapshot requires
-Java 21, while the adapter still targets Java 17. Snapshot tests do not qualify released `26.10` or later binaries,
-and a configured workflow does not establish a completed hosted run or deployment qualification.
+The settings file checks for updated snapshot metadata on every Maven invocation. Both snapshot repositories
+disallow releases; the plugin repository also supplies the sample's snapshot security-config Shade transformer.
+Locally installed snapshots can still take precedence.
+To test published artifacts without local installations, select an empty, dedicated Maven repository with
+`-Dmaven.repo.local=/path/to/temporary-repository`, and remove that repository when finished.
+
+CI supplies these settings only to snapshot compatibility legs. Each leg discards only the restored
+`com.oracle.coherence.ce:coherence:26.10-SNAPSHOT` cache directory before testing, so it resolves the latest published
+snapshot independently. Cache keys and restore prefixes separate the default build from compatibility jobs and
+separate JDK/Hibernate/Coherence combinations; POM and `.mvn` changes invalidate the exact cache key.
+
+A publication during the workflow can change the snapshot between jobs. This policy keeps a current development
+signal rather than pinning a qualification build, and a later rerun may resolve different bytes.
+
+The tested snapshot requires Java 21, while the adapter still targets Java 17. Compatibility jobs still stop at
+`test`; the default reactor's `verify` includes the packaged security checks. Snapshot tests do not qualify released
+`26.10` or later binaries, and a configured workflow does not establish a completed hosted run or deployment qualification.
 
 For detailed instructions, please see the main
 https://github.com/coherence-community/coherence-hibernate/blob/main/README.adoc[README] of the Coherence Hibernate
