@@ -34,9 +34,9 @@ jobs:
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-jdk-${{ matrix.java-version }}-m2-${{ hashFiles('**/pom.xml') }}
+        key: ${{ runner.os }}-maven-v2-build-jdk-${{ matrix.java-version }}-${{ hashFiles('**/pom.xml', '.mvn/**') }}
         restore-keys: |
-          ${{ runner.os }}-m2-
+          ${{ runner.os }}-maven-v2-build-jdk-${{ matrix.java-version }}-
     - name: Build - Hibernate 7.4.x on Java ${{ matrix.java-version }}
       run: ./mvnw clean verify -B -Pcoverage
     - name: Verify Java 17 bytecode baseline
@@ -97,13 +97,18 @@ jobs:
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-jdk-${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-m2-${{ hashFiles('**/pom.xml') }}
+        key: ${{ runner.os }}-maven-v2-compatibility-jdk-${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-${{ hashFiles('**/pom.xml', '.mvn/**') }}
         restore-keys: |
-          ${{ runner.os }}-m2-
+          ${{ runner.os }}-maven-v2-compatibility-jdk-${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-
+    # A locally installed SNAPSHOT alias can win even when remote metadata is refreshed.
+    # Discard only this dependency/version from the restored, runner-local cache.
+    - name: Refresh Coherence snapshot
+      if: matrix.coherence-version == '26.10-SNAPSHOT'
+      run: rm -rf -- "$HOME/.m2/repository/com/oracle/coherence/ce/coherence/26.10-SNAPSHOT"
     - name: Test Hibernate ${{ matrix.hibernate-version }} with Coherence ${{ matrix.coherence-version }}
       run: >
         ./mvnw -B
-        --settings .mvn/coherence-snapshots-settings.xml
+        ${{ matrix.coherence-version == '26.10-SNAPSHOT' && '--settings .mvn/coherence-snapshots-settings.xml' || '' }}
         -pl coherence-hibernate-cache-7,coherence-hibernate-cache-store-tests
         -am
         -Dhibernate7.version=${{ matrix.hibernate-version }}
