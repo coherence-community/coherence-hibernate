@@ -33,6 +33,7 @@ import com.oracle.coherence.hibernate.cache.v7.access.processor.PutFromLoadProce
 import com.oracle.coherence.hibernate.cache.v7.access.processor.ReadWritePutFromLoadProcessor;
 import com.oracle.coherence.hibernate.cache.v7.configuration.support.CoherenceHibernateProperties;
 import com.oracle.coherence.hibernate.cache.v7.region.CoherenceRegionValue;
+import com.oracle.coherence.hibernate.cache.v7.support.UniqueCoherenceClusterExtension;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.CacheService;
 import com.tangosol.net.Coherence;
@@ -59,6 +60,8 @@ import org.hibernate.internal.util.compare.CalendarComparator;
 import org.hibernate.internal.util.compare.RowVersionComparator;
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.usertype.UserVersionType;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -73,7 +76,40 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Exercises a region factory in a separate client JVM against a real Extend proxy.
  */
+@UniqueCoherenceClusterExtension.ClassScoped
 public class CoherenceClientSessionTests {
+
+    private static Coherence server;
+    private static String previousProxyEnabled;
+    private static String previousLocalStorage;
+
+    @BeforeAll
+    static void startStorage() throws Exception {
+        previousProxyEnabled = System.getProperty("coherence.proxy.enabled");
+        previousLocalStorage = System.getProperty("coherence.distributed.localstorage");
+        System.setProperty("coherence.proxy.enabled", "true");
+        System.setProperty("coherence.distributed.localstorage", "true");
+        // Keep one storage cluster for this class. Restarting it while changing identity
+        // lets NameService threads reload configuration for the preceding test.
+        server = Coherence.clusterMember();
+        server.start().get(60, TimeUnit.SECONDS);
+    }
+
+    @AfterAll
+    static void stopStorage() {
+        try {
+            Coherence.closeAll();
+        }
+        finally {
+            try {
+                CacheFactory.shutdown();
+            }
+            finally {
+                restoreProperty("coherence.proxy.enabled", previousProxyEnabled);
+                restoreProperty("coherence.distributed.localstorage", previousLocalStorage);
+            }
+        }
+    }
 
     @TempDir
     Path temporaryDirectory;
@@ -113,60 +149,46 @@ public class CoherenceClientSessionTests {
     }
 
     private void exerciseClient(String workload) throws Exception {
-        final String previousProxyEnabled = System.getProperty("coherence.proxy.enabled");
-        final String previousLocalStorage = System.getProperty("coherence.distributed.localstorage");
-        System.setProperty("coherence.proxy.enabled", "true");
-        System.setProperty("coherence.distributed.localstorage", "true");
-
         verifySecurityConfiguration();
         System.out.println("Extend storage JVM: " + ProcessHandle.current().pid() + " / " + System.getProperty("java.home"));
-        try (Coherence server = Coherence.clusterMember()) {
-            server.start().get(60, TimeUnit.SECONDS);
-            assertEquals(System.getProperty("coherence.cluster"), server.getCluster().getClusterName());
-            assertEquals(Integer.parseInt(System.getProperty("coherence.clusterport")),
-                    server.getCluster().getDependencies().getGroupPort());
-            final Path clientLog = this.temporaryDirectory.resolve("client.log");
-            final List<String> command = new ArrayList<>(List.of(
-                    Path.of(System.getProperty("java.home"), "bin", "java").toString(),
-                    "-Dcoherence.cluster=" + System.getProperty("coherence.cluster"),
-                    "-Dcoherence.clusterport=" + System.getProperty("coherence.clusterport"),
-                    "-Dcoherence.wka.port=" + System.getProperty("coherence.clusterport"),
-                    "-Dcoherence.wka=127.0.0.1", "-Dcoherence.localhost=127.0.0.1",
-                    "-Djava.net.preferIPv4Stack=true",
-                    "-cp", System.getProperty("java.class.path"), ExtendClient.class.getName(), workload));
-            if (System.getProperty("coherence.security.mode") != null) {
-                command.add(1, "-Dcoherence.security.mode=" + System.getProperty("coherence.security.mode"));
+        assertEquals(System.getProperty("coherence.cluster"), server.getCluster().getClusterName());
+        assertEquals(Integer.parseInt(System.getProperty("coherence.clusterport")),
+                server.getCluster().getDependencies().getGroupPort());
+        // Every workload must write this value itself, even with shared storage.
+        server.getSession().getCache("client-mode-test").remove("key");
+        final Path clientLog = this.temporaryDirectory.resolve("client.log");
+        final List<String> command = new ArrayList<>(List.of(
+                Path.of(System.getProperty("java.home"), "bin", "java").toString(),
+                "-Dcoherence.cluster=" + System.getProperty("coherence.cluster"),
+                "-Dcoherence.clusterport=" + System.getProperty("coherence.clusterport"),
+                "-Dcoherence.wka.port=" + System.getProperty("coherence.clusterport"),
+                "-Dcoherence.wka=127.0.0.1", "-Dcoherence.localhost=127.0.0.1",
+                "-Djava.net.preferIPv4Stack=true",
+                "-cp", System.getProperty("java.class.path"), ExtendClient.class.getName(), workload));
+        if (System.getProperty("coherence.security.mode") != null) {
+            command.add(1, "-Dcoherence.security.mode=" + System.getProperty("coherence.security.mode"));
+        }
+        final Process client = new ProcessBuilder(command)
+                .redirectErrorStream(true).redirectOutput(clientLog.toFile()).start();
+        try {
+            assertTrue(client.waitFor(60, TimeUnit.SECONDS), "Extend client timed out:\n" + Files.readString(clientLog));
+            final String output = Files.readString(clientLog);
+            assertEquals(0, client.exitValue(), output);
+            assertTrue(output.contains(" / " + System.getProperty("java.home")), "Child must use the parent JDK");
+            if ("hardened".equals(System.getProperty("coherence.security.mode"))) {
+                assertTrue(output.contains("Extend security hardening verified: true"), output);
             }
-            final Process client = new ProcessBuilder(command)
-                    .redirectErrorStream(true).redirectOutput(clientLog.toFile()).start();
-            try {
-                assertTrue(client.waitFor(60, TimeUnit.SECONDS), "Extend client timed out:\n" + Files.readString(clientLog));
-                final String output = Files.readString(clientLog);
-                assertEquals(0, client.exitValue(), output);
-                assertTrue(output.contains(" / " + System.getProperty("java.home")), "Child must use the parent JDK");
-                if ("hardened".equals(System.getProperty("coherence.security.mode"))) {
-                    assertTrue(output.contains("Extend security hardening verified: true"), output);
-                }
-                output.lines().filter((line) -> line.startsWith("Extend application JVM:")
-                        || line.startsWith("Extend security hardening verified:") || line.endsWith(" passed"))
-                        .forEach(System.out::println);
-                if ("standard".equals(workload)) {
-                    assertEquals("from-client", server.getSession().getCache("client-mode-test").get("key"));
-                }
-                assertEquals(1, CacheFactory.getCluster().getMemberSet().size());
+            output.lines().filter((line) -> line.startsWith("Extend application JVM:")
+                    || line.startsWith("Extend security hardening verified:") || line.endsWith(" passed"))
+                    .forEach(System.out::println);
+            if ("standard".equals(workload)) {
+                assertEquals("from-client", server.getSession().getCache("client-mode-test").get("key"));
             }
-            finally {
-                client.destroyForcibly();
-                client.waitFor(10, TimeUnit.SECONDS);
-            }
+            assertEquals(1, CacheFactory.getCluster().getMemberSet().size());
         }
         finally {
-            // Close the system-session monitor too, so it cannot restart the old cluster
-            // while the next test changes its cluster identity and discovery port.
-            Coherence.closeAll();
-            CacheFactory.shutdown();
-            restoreProperty("coherence.proxy.enabled", previousProxyEnabled);
-            restoreProperty("coherence.distributed.localstorage", previousLocalStorage);
+            client.destroyForcibly();
+            client.waitFor(10, TimeUnit.SECONDS);
         }
     }
 
