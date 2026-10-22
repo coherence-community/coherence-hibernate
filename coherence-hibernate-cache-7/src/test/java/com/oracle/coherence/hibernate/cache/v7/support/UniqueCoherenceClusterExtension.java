@@ -7,17 +7,32 @@
 package com.oracle.coherence.hibernate.cache.v7.support;
 
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
- * Gives each test a distinct cluster identity and a discovery port checked for both TCP and UDP availability.
+ * Gives each test method (or opted-in class) a distinct cluster identity and a discovery port
+ * checked for both TCP and UDP availability.
  */
-public class UniqueCoherenceClusterExtension implements BeforeEachCallback {
+public class UniqueCoherenceClusterExtension implements BeforeAllCallback, BeforeEachCallback {
+
+    /**
+     * Selects one identity before class setup for fixtures that share a running cluster.
+     * Such fixtures must shut down Coherence after all tests, rather than between methods.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    public @interface ClassScoped {
+    }
 
     private static final String CLUSTER_NAME_PROPERTY = "coherence.cluster";
     private static final String CLUSTER_PORT_PROPERTY = "coherence.clusterport";
@@ -27,7 +42,24 @@ public class UniqueCoherenceClusterExtension implements BeforeEachCallback {
     private static final int MAXIMUM_PORT_ATTEMPTS = 64;
 
     @Override
+    public void beforeAll(ExtensionContext context) {
+        if (isClassScoped(context)) {
+            configureCluster(context);
+        }
+    }
+
+    @Override
     public void beforeEach(ExtensionContext context) {
+        if (!isClassScoped(context)) {
+            configureCluster(context);
+        }
+    }
+
+    private static boolean isClassScoped(ExtensionContext context) {
+        return context.getRequiredTestClass().isAnnotationPresent(ClassScoped.class);
+    }
+
+    private static void configureCluster(ExtensionContext context) {
         final long processId = ProcessHandle.current().pid();
         final String testId = Integer.toUnsignedString(context.getUniqueId().hashCode());
         final String clusterName = String.format("coherence-hibernate-%d-%s", processId, testId);
