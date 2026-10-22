@@ -78,7 +78,10 @@ jobs:
 
   compatibility:
     name: Hibernate ${{ matrix.hibernate-version }} / Coherence ${{ matrix.coherence-version }} / Java ${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}
-    if: github.ref_name == 'main' || github.base_ref == 'main'
+    if: >-
+      github.ref_name == 'main' ||
+      github.base_ref == 'main' ||
+      github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
       matrix:
