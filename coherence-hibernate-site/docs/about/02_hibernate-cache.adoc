@@ -119,8 +119,8 @@ selected cache mode; Coherence must fully implement every provider SPI surface a
 === Supported Coherence Versions
 
 The default Coherence Hibernate `4.x` build uses Coherence CE `15.1.1-0-5` with Hibernate `7.4.10.Final`. The workflow
-configures the complete default-version reactor on Java 17, 21, and 25. Its compatibility job, enabled for `main` and
-pull requests targeting `main`, configures every Hibernate/Coherence pairing in the following rows:
+configures the complete default-version reactor on Java 17, 21, and 25. Its compatibility job runs on `main`, for
+pull requests targeting `main`, and for manual workflow runs. It configures every Hibernate/Coherence pairing below:
 
 [cols="2,2,1,2", options="header"]
 |===
