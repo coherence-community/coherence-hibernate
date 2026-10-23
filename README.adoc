@@ -1,5 +1,5 @@
 :main-release-version: 4.0.0
-:main-snapshot-version: 4.0.1-SNAPSHOT
+:main-snapshot-version: 4.1.0-SNAPSHOT
 :3x-release-version: 3.0.3
 :3x-snapshot-version: 3.0.4-SNAPSHOT
 :2x-release-version: 2.3.5
