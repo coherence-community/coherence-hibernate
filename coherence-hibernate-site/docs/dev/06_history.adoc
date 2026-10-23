@@ -17,7 +17,7 @@
 The following sections outline Oracle Coherence Hibernate Integration changes in
 reverse chronological order.
 
-=== Current development (4.0.1-SNAPSHOT)
+=== Current development (4.1.0-SNAPSHOT)
 
 * Keep the default dependencies at Hibernate `7.4.10.Final` and Coherence CE `15.1.1-0-5`.
 * Configure the default-version reactor on Java 17, 21, and 25, and the compatibility matrix for Hibernate
