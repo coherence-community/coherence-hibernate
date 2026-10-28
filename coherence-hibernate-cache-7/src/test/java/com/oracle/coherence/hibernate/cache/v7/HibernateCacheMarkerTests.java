@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import com.oracle.coherence.hibernate.cache.v7.configuration.support.CoherenceHibernateProperties;
 import com.oracle.coherence.hibernate.cache.v7.region.CoherenceRegionValue;
 import com.oracle.coherence.hibernate.cache.v7.support.LazyMarkerItem;
+import com.oracle.coherence.hibernate.cache.v7.support.UniqueCoherenceClusterExtension;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.CacheService;
 import com.tangosol.net.Coherence;
@@ -41,6 +42,8 @@ import org.hibernate.engine.spi.PersistentAttributeInterceptable;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.property.access.internal.PropertyAccessStrategyBackRefImpl;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -57,7 +60,41 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Hibernate placeholders must survive hardened serialization and retain their singleton identity.
  */
+@UniqueCoherenceClusterExtension.ClassScoped
 public class HibernateCacheMarkerTests {
+
+    private static Coherence server;
+    private static String previousProxy;
+    private static String previousStorage;
+
+    @BeforeAll
+    static void startStorage() throws Exception {
+        previousProxy = System.getProperty("coherence.proxy.enabled");
+        previousStorage = System.getProperty("coherence.distributed.localstorage");
+        System.setProperty("coherence.proxy.enabled", "true");
+        System.setProperty("coherence.distributed.localstorage", "true");
+        verifyHardening();
+        // Keep the cluster identity and server stable between client workloads.
+        // NameService threads can reload the preceding configuration during shutdown.
+        server = Coherence.clusterMember();
+        server.start().get(60, TimeUnit.SECONDS);
+    }
+
+    @AfterAll
+    static void stopStorage() {
+        try {
+            Coherence.closeAll();
+        }
+        finally {
+            try {
+                CacheFactory.shutdown();
+            }
+            finally {
+                restoreProperty("coherence.proxy.enabled", previousProxy);
+                restoreProperty("coherence.distributed.localstorage", previousStorage);
+            }
+        }
+    }
 
     @TempDir
     Path temporaryDirectory;
@@ -98,50 +135,37 @@ public class HibernateCacheMarkerTests {
     }
 
     private void exerciseClient(String workload) throws Exception {
-        final String previousProxy = System.getProperty("coherence.proxy.enabled");
-        final String previousStorage = System.getProperty("coherence.distributed.localstorage");
-        System.setProperty("coherence.proxy.enabled", "true");
-        System.setProperty("coherence.distributed.localstorage", "true");
         verifyHardening();
-        try (Coherence server = Coherence.clusterMember()) {
-            server.start().get(60, TimeUnit.SECONDS);
-            assertEquals(System.getProperty("coherence.cluster"), server.getCluster().getClusterName());
-            assertEquals(Integer.parseInt(System.getProperty("coherence.clusterport")),
-                    server.getCluster().getDependencies().getGroupPort());
-            final Path log = this.temporaryDirectory.resolve(workload + ".log");
-            final List<String> command = new ArrayList<>(List.of(
-                    Path.of(System.getProperty("java.home"), "bin", "java").toString(),
-                    "-Dcoherence.cluster=" + System.getProperty("coherence.cluster"),
-                    "-Dcoherence.clusterport=" + System.getProperty("coherence.clusterport"),
-                    "-Dcoherence.wka.port=" + System.getProperty("coherence.clusterport"),
-                    "-Dcoherence.wka=127.0.0.1", "-Dcoherence.localhost=127.0.0.1",
-                    "-Djava.net.preferIPv4Stack=true",
-                    "-cp", System.getProperty("java.class.path"), MarkerClient.class.getName(), workload));
-            if (System.getProperty("coherence.security.mode") != null) {
-                command.add(1, "-Dcoherence.security.mode=" + System.getProperty("coherence.security.mode"));
+        assertEquals(System.getProperty("coherence.cluster"), server.getCluster().getClusterName());
+        assertEquals(Integer.parseInt(System.getProperty("coherence.clusterport")),
+                server.getCluster().getDependencies().getGroupPort());
+        final Path log = this.temporaryDirectory.resolve(workload + ".log");
+        final List<String> command = new ArrayList<>(List.of(
+                Path.of(System.getProperty("java.home"), "bin", "java").toString(),
+                "-Dcoherence.cluster=" + System.getProperty("coherence.cluster"),
+                "-Dcoherence.clusterport=" + System.getProperty("coherence.clusterport"),
+                "-Dcoherence.wka.port=" + System.getProperty("coherence.clusterport"),
+                "-Dcoherence.wka=127.0.0.1", "-Dcoherence.localhost=127.0.0.1",
+                "-Djava.net.preferIPv4Stack=true",
+                "-cp", System.getProperty("java.class.path"), MarkerClient.class.getName(), workload));
+        if (System.getProperty("coherence.security.mode") != null) {
+            command.add(1, "-Dcoherence.security.mode=" + System.getProperty("coherence.security.mode"));
+        }
+        final Process client = new ProcessBuilder(command).redirectErrorStream(true).redirectOutput(log.toFile()).start();
+        try {
+            assertTrue(client.waitFor(60, TimeUnit.SECONDS), "Marker client timed out:\n" + Files.readString(log));
+            final String output = Files.readString(log);
+            assertEquals(0, client.exitValue(), output);
+            assertTrue(output.contains("Marker client Java home: " + System.getProperty("java.home")), output);
+            if ("hardened".equals(System.getProperty("coherence.security.mode"))) {
+                assertTrue(output.contains("Marker security hardening verified: true"), output);
             }
-            final Process client = new ProcessBuilder(command).redirectErrorStream(true).redirectOutput(log.toFile()).start();
-            try {
-                assertTrue(client.waitFor(60, TimeUnit.SECONDS), "Marker client timed out:\n" + Files.readString(log));
-                final String output = Files.readString(log);
-                assertEquals(0, client.exitValue(), output);
-                assertTrue(output.contains("Marker client Java home: " + System.getProperty("java.home")), output);
-                if ("hardened".equals(System.getProperty("coherence.security.mode"))) {
-                    assertTrue(output.contains("Marker security hardening verified: true"), output);
-                }
-                output.lines().filter((line) -> line.startsWith("Marker ")).forEach(System.out::println);
-                assertEquals(1, server.getCluster().getMemberSet().size());
-            }
-            finally {
-                client.destroyForcibly();
-                client.waitFor(10, TimeUnit.SECONDS);
-            }
+            output.lines().filter((line) -> line.startsWith("Marker ")).forEach(System.out::println);
+            assertEquals(1, server.getCluster().getMemberSet().size());
         }
         finally {
-            Coherence.closeAll();
-            CacheFactory.shutdown();
-            restoreProperty("coherence.proxy.enabled", previousProxy);
-            restoreProperty("coherence.distributed.localstorage", previousStorage);
+            client.destroyForcibly();
+            client.waitFor(10, TimeUnit.SECONDS);
         }
     }
 
