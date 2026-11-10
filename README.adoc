@@ -32,7 +32,7 @@ continue to support Java EE.
 |===
 |Coherence Hibernate | Java | Coherence CE | Hibernate     | Jakarta | Git Branch/Tag
 
-|*4.x*               | `17`, `21`, `25` | `15.1.1-0-5`, `26.07` | `7.4.x`       | ✔       | `main`
+|*4.x*               | `17`, `21`, `25` | `15.1.1-0-6`, `26.10` | `7.4.x`       | ✔       | `main`
 |*3.0.x*             | `17` | `24.09`      | `5.6`, `6.x`  | ✔       | `3.0.x`
 |*2.3.x*             | `11` | `22.06`      | `4.3` - `5.6` |         | `2.3.x`
 |===
@@ -47,12 +47,12 @@ Coherence Hibernate `4.x` supports Hibernate ORM `7.4.x` only. Use the following
 Applications on Hibernate `5.6.x` or `6.x` must remain on the Coherence Hibernate `3.x` maintenance line. The `3.x`
 line provides `coherence-hibernate-cache-53` for Hibernate `5.6.x` and `coherence-hibernate-cache-6` for Hibernate `6.x`.
 
-The default `4.x` build uses Hibernate ORM `7.4.10.Final` and Coherence CE `15.1.1-0-5`. CI configures the default
-dependency combination on Java 17, 21, and 25, with released Coherence compatibility tests on Java 17. Development
-compatibility tests use `26.10-SNAPSHOT` in hardened mode on Java 21. Hibernate and Coherence are provided dependencies,
+The default `4.x` build uses Hibernate ORM `7.4.10.Final` and Coherence CE `15.1.1-0-6`. CI configures the default
+dependency combination on Java 17, 21, and 25, with Coherence `15.1.1-0-6` compatibility tests on Java 17.
+Coherence `26.10` compatibility tests use hardened mode on Java 21. Hibernate and Coherence are provided dependencies,
 so applications must declare the versions appropriate for their validated deployment.
 See the link:coherence-hibernate-site/docs/dev/03_build-instructions.adoc[Build Instructions] for the full CI matrix
-and snapshot build details.
+and Coherence `26.10` build details.
 
 === Application serialization permissions
 
@@ -95,11 +95,13 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |===
 |Coherence Hibernate       | Java | Coherence CE | Jakarta EE | Git Branch/Tag
 
-|*{main-snapshot-version}* | `17`, `21`, `25` | `15.1.1-0-5`, `26.07` | ✅       | `main`
-|*{main-release-version}*  | `17`, `21`, `25` | `15.1.1-0-5`, `26.07` | ✅ | `v{main-release-version}`
+|*{main-snapshot-version}* | `17`, `21`, `25` | `15.1.1-0-6`, `26.10` | ✅       | `main`
+|*{main-release-version}*  | `17`, `21`, `25` | `15.1.1-0-6` | ✅ | `v{main-release-version}`
 |*{2x-release-version}*    | `11` | `22.06.7`    |            | `v{2x-release-version}`
 |*{2x-snapshot-version}*   | `11` | `22.06.7`    |            | `2.3.x`
 |===
+
+Coherence `26.10` requires Java 21 or later. Java 17 remains supported with Coherence `15.1.1-0-6`.
 
 == Supported Hibernate Versions
 
@@ -120,8 +122,8 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |===
 
 The default Hibernate version is `7.4.10.Final`. The configured compatibility matrix separately covers
-`7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final`: released Coherence legs use Java 17 and the hardened
-`26.10-SNAPSHOT` leg uses Java 21. The default dependency combination has complete-reactor jobs on Java 17, 21, and 25;
+`7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final`: Coherence `15.1.1-0-6` uses Java 17, and the hardened
+`26.10` leg uses Java 21. The default dependency combination has complete-reactor jobs on Java 17, 21, and 25;
 the project's bytecode baseline remains Java 17.
 
 == Samples

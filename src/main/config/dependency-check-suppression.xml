@@ -9,13 +9,13 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-        Coherence CE 15.1.1-0-5 is patch 5, including security fixes:
-        https://github.com/oracle/coherence/releases/tag/15.1.1-0-5
-        Dependency-Check associates this artifact with the base-release
+        Coherence CE 15.1.1-0-6 is patch 6, including security fixes:
+        https://github.com/oracle/coherence/releases/tag/15.1.1-0-6
+        Dependency-Check can associate patched artifacts with the base-release
         CPE 15.1.1.0.0. Suppress only that incorrect CPE for this patch;
-        retain findings against the actual 15.1.1.0.5 CPE.
+        retain findings against the actual 15.1.1.0.6 CPE.
         ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.oracle\.coherence\.ce/coherence@15\.1\.1-0-5$</packageUrl>
+        <packageUrl regex="true">^pkg:maven/com\.oracle\.coherence\.ce/coherence@15\.1\.1-0-6$</packageUrl>
         <cpe>cpe:/a:oracle:coherence:15.1.1.0.0</cpe>
     </suppress>
 </suppressions>

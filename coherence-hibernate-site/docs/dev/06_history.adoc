@@ -19,16 +19,17 @@ reverse chronological order.
 
 === Current development (4.1.0-SNAPSHOT)
 
-* Keep the default dependencies at Hibernate `7.4.10.Final` and Coherence CE `15.1.1-0-5`.
+* Use Hibernate `7.4.10.Final` and Coherence CE `15.1.1-0-6` as the default dependencies.
 * Configure the default-version reactor on Java 17, 21, and 25, and the compatibility matrix for Hibernate
-  `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` against Coherence `15.1.1-0-5`, `26.07`, and `26.10-SNAPSHOT`.
-  Released compatibility legs use Java 17; the snapshot leg uses Java 21 and explicit hardened mode.
+  `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` against Coherence `15.1.1-0-6` and `26.10`.
+  Coherence `15.1.1-0-6` uses Java 17; `26.10` uses Java 21 and explicit hardened mode.
+* Replace the Coherence development dependency with the released `26.10` artifacts in the compatibility matrix,
+  and remove snapshot repository settings and cache-refresh steps.
 * Package exact serialization permissions for adapter operations and Hibernate cache payloads, including JDBC
   temporal state, lazy/back-reference markers, and Calendar time-zone data. Preserve built-in version comparator
   ordering across serialization; application-owned custom comparators must be serializable and permitted.
-* Document the tested development snapshots' hardened default and application descriptor/packaging requirements.
-  Snapshot testing and workflow configuration do not establish completed hosted CI, deployment qualification, or
-  support for released Coherence `26.10` or later.
+* Document Coherence `26.10`'s hardened default and application descriptor/packaging requirements.
+  Workflow configuration does not establish completed hosted CI or deployment qualification.
 
 === Version 4.0.0 (September 23, 2026)
 
@@ -44,8 +45,8 @@ https://github.com/coherence-community/coherence-hibernate/releases/tag/v4.0.0
 * Keep Hibernate `5.6.x` and `6.x` support on the Coherence Hibernate `3.x` maintenance line.
 * Remove the obsolete `coherence14_1_1` Maven profile and Coherence 14.1.1 compatibility code. Create sessions using
   `SessionConfiguration`; Coherence 14.1.1 is not supported by the 4.x release.
-* Compatibility-test Hibernate `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` with Coherence CE `15.1.1-0-5` and
-  `26.07` on the Java 17 bytecode baseline, in addition to the complete default-version reactor on Java 17, 21, and 25.
+* Compatibility-test Hibernate `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` on the Java 17 bytecode baseline,
+  in addition to the complete default-version reactor on Java 17, 21, and 25.
 
 === Version 3.0.3 (October 6, 2024)
 

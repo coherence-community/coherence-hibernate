@@ -25,39 +25,39 @@ Once you have these installed building the entire source tree is as simple as ex
 ./mvnw clean package
 ----
 
-The parent POM defaults to Hibernate `7.4.10.Final` and Coherence `15.1.1-0-5`; Java 17 remains the bytecode baseline.
+The parent POM defaults to Hibernate `7.4.10.Final` and Coherence `15.1.1-0-6`; Java 17 remains the bytecode baseline.
 The GitHub Actions workflow configures this default reactor on Java 17, 21, and 25. Its compatibility job
-configures Hibernate `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` against Coherence `15.1.1-0-5` and `26.07` on
-Java 17, and against `26.10-SNAPSHOT` on Java 21 with explicit hardened mode.
+configures Hibernate `7.4.1.Final`, `7.4.5.Final`, and `7.4.9.Final` against Coherence `15.1.1-0-6` on
+Java 17, and against `26.10` on Java 21 with explicit hardened mode.
 The compatibility job runs on `main`, for pull requests targeting `main`, and for manual workflow runs.
 
-To exercise the development snapshot locally, select JDK 21 through `JAVA_HOME` and `PATH`, then run:
+To test with Coherence `26.10` locally, select JDK 21 through `JAVA_HOME` and `PATH`, then run:
 
 [source,bash]
 ----
-./mvnw --settings .mvn/coherence-snapshots-settings.xml \
-  -Dcoherence.version=26.10-SNAPSHOT -Dcoherence.security.mode=hardened \
+./mvnw -Dcoherence.version=26.10 -Dcoherence.security.mode=hardened \
   -pl coherence-hibernate-cache-7,coherence-hibernate-cache-store-tests -am test
 ----
 
 This uses the default Hibernate `7.4.10.Final`; add `-Dhibernate7.version=<version>` to select a compatibility version.
-The settings file checks for updated snapshot metadata on every Maven invocation. Both snapshot repositories
-disallow releases; the plugin repository also supplies the sample's snapshot security-config Shade transformer.
-Locally installed snapshots can still take precedence.
-To test published artifacts without local installations, select an empty, dedicated Maven repository with
-`-Dmaven.repo.local=/path/to/temporary-repository`, and remove that repository when finished.
+The build uses standard Maven release repositories for Coherence `26.10` and its matching security-config Shade
+transformer; no snapshot repository settings or snapshot cache refresh are needed. To test published artifacts without
+local installations, select an empty, dedicated Maven repository with `-Dmaven.repo.local=/path/to/temporary-repository`,
+and remove that repository when finished.
 
-CI supplies these settings only to snapshot compatibility legs. Each leg discards only the restored
-`com.oracle.coherence.ce:coherence:26.10-SNAPSHOT` cache directory before testing, so it resolves the latest published
-snapshot independently. Cache keys and restore prefixes separate the default build from compatibility jobs and
-separate JDK/Hibernate/Coherence combinations; POM and `.mvn` changes invalidate the exact cache key.
+CI cache keys and restore prefixes separate the default build from compatibility jobs and separate
+JDK/Hibernate/Coherence combinations; POM and `.mvn` changes invalidate the exact cache key.
 
-A publication during the workflow can change the snapshot between jobs. This policy keeps a current development
-signal rather than pinning a qualification build, and a later rerun may resolve different bytes.
+Coherence `26.10` requires Java 21, while the adapter still targets Java 17. Compatibility jobs stop at `test`;
+the default reactor's `verify` includes the packaged security checks. To include those checks and build the samples
+and documentation with Coherence `26.10`, run the full reactor:
 
-The tested snapshot requires Java 21, while the adapter still targets Java 17. Compatibility jobs still stop at
-`test`; the default reactor's `verify` includes the packaged security checks. Snapshot tests do not qualify released
-`26.10` or later binaries, and a configured workflow does not establish a completed hosted run or deployment qualification.
+[source,bash]
+----
+./mvnw -Dcoherence.version=26.10 -Dcoherence.security.mode=hardened clean verify
+----
+
+A configured workflow does not establish a completed hosted run or deployment qualification.
 
 For detailed instructions, please see the main
 https://github.com/coherence-community/coherence-hibernate/blob/main/README.adoc[README] of the Coherence Hibernate
