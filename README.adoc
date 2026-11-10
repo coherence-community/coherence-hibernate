@@ -1,5 +1,5 @@
-:main-release-version: 4.0.0
-:main-snapshot-version: 4.1.0-SNAPSHOT
+:main-release-version: 4.1.0
+:main-snapshot-version: 4.1.1-SNAPSHOT
 :3x-release-version: 3.0.3
 :3x-snapshot-version: 3.0.4-SNAPSHOT
 :2x-release-version: 2.3.5
@@ -33,7 +33,7 @@ continue to support Java EE.
 |Coherence Hibernate | Java | Coherence CE | Hibernate     | Jakarta | Git Branch/Tag
 
 |*{main-snapshot-version}* | `17`, `21`, `25` | `15.1.1-0-6`, `26.10` | `7.4.x` | ✔ | `main`
-|*{main-release-version}*  | `17`, `21`, `25` | `15.1.1-0-5` | `7.4.x` | ✔ | `v{main-release-version}`
+|*{main-release-version}*  | `17`, `21`, `25` | `15.1.1-0-6`, `26.10` | `7.4.x` | ✔ | `v{main-release-version}`
 |*3.0.x*             | `17` | `24.09`      | `5.6`, `6.x`  | ✔       | `3.0.x`
 |*2.3.x*             | `11` | `22.06`      | `4.3` - `5.6` |         | `2.3.x`
 |===
@@ -48,7 +48,7 @@ Coherence Hibernate `4.x` supports Hibernate ORM `7.4.x` only. Use the following
 Applications on Hibernate `5.6.x` or `6.x` must remain on the Coherence Hibernate `3.x` maintenance line. The `3.x`
 line provides `coherence-hibernate-cache-53` for Hibernate `5.6.x` and `coherence-hibernate-cache-6` for Hibernate `6.x`.
 
-The default `{main-snapshot-version}` build uses Hibernate ORM `7.4.10.Final` and Coherence CE `15.1.1-0-6`.
+The default `{main-release-version}` build uses Hibernate ORM `7.4.10.Final` and Coherence CE `15.1.1-0-6`.
 CI configures the default dependency combination on Java 17, 21, and 25, with Coherence `15.1.1-0-6`
 compatibility tests on Java 17.
 Coherence `26.10` compatibility tests use hardened mode on Java 21. Hibernate and Coherence are provided dependencies,
@@ -58,13 +58,13 @@ and Coherence `26.10` build details.
 
 ==== Differences between 4.0.0 and 4.1.0
 
-Coherence Hibernate `{main-snapshot-version}` adds serialization hardening and version-comparator fixes to the
-`{main-release-version}` baseline. Both use Hibernate ORM `7.4.x`, the same `coherence-hibernate-cache-7` adapter
+Coherence Hibernate `4.1.0` adds serialization hardening and version-comparator fixes to the
+`4.0.0` baseline. Both use Hibernate ORM `7.4.x`, the same `coherence-hibernate-cache-7` adapter
 and region factory, and a Java 17 bytecode baseline.
 
 [cols="1,2,2", options="header"]
 |===
-|Area |{main-release-version} |{main-snapshot-version}
+|Area |4.0.0 |4.1.0
 
 |Default Hibernate ORM
 |`7.4.9.Final`
@@ -123,8 +123,9 @@ as well as extensive JavaDoc for the Coherence Hibernate source code.
 |*{2x-snapshot-version}* | {website}{2x-snapshot-version}/[Website] | {website}{2x-snapshot-version}/api/index.html[API Doc.]
 |=======
 
-NOTE: The http://maven.apache.org[Apache Maven]-based snapshots and releases for this project are published to
-https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
+NOTE: The http://maven.apache.org[Apache Maven]-based releases for this project are published to
+https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central]. Snapshots are published to the
+https://central.sonatype.com/repository/maven-snapshots/[Central snapshot repository].
 
 == Supported Java & Coherence Versions
 
@@ -133,7 +134,7 @@ https://repo1.maven.org/maven2/com/oracle/coherence/hibernate/[Maven Central].
 |Coherence Hibernate       | Java | Coherence CE | Jakarta EE | Git Branch/Tag
 
 |*{main-snapshot-version}* | `17`, `21`, `25` | `15.1.1-0-6`, `26.10` | ✅       | `main`
-|*{main-release-version}*  | `17`, `21`, `25` | `15.1.1-0-5` | ✅ | `v{main-release-version}`
+|*{main-release-version}*  | `17`, `21`, `25` | `15.1.1-0-6`, `26.10` | ✅ | `v{main-release-version}`
 |*{2x-release-version}*    | `11` | `22.06.7`    |            | `v{2x-release-version}`
 |*{2x-snapshot-version}*   | `11` | `22.06.7`    |            | `2.3.x`
 |===

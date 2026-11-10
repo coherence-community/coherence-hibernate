@@ -119,12 +119,12 @@ Add the Hibernate 7 adapter to your `pom.xml`:
 <dependency>
     <groupId>com.oracle.coherence.hibernate</groupId>
     <artifactId>coherence-hibernate-cache-7</artifactId>
-    <version>4.0.0</version>
+    <version>4.1.0</version>
 </dependency>
 <dependency>
     <groupId>org.hibernate.orm</groupId>
     <artifactId>hibernate-core</artifactId>
-    <version>7.4.9.Final</version>
+    <version>7.4.10.Final</version>
 </dependency>
 ----
 
