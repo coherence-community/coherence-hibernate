@@ -10,13 +10,18 @@ reverse chronological order.</p>
 <div class="section">
 <ul class="ulist">
 <li>
-<p>Keep the default dependencies at Hibernate <code>7.4.10.Final</code> and Coherence CE <code>15.1.1-0-5</code>.</p>
+<p>Use Hibernate <code>7.4.10.Final</code> and Coherence CE <code>15.1.1-0-6</code> as the default dependencies.</p>
 
 </li>
 <li>
 <p>Configure the default-version reactor on Java 17, 21, and 25, and the compatibility matrix for Hibernate
-<code>7.4.1.Final</code>, <code>7.4.5.Final</code>, and <code>7.4.9.Final</code> against Coherence <code>15.1.1-0-5</code>, <code>26.07</code>, and <code>26.10-SNAPSHOT</code>.
-Released compatibility legs use Java 17; the snapshot leg uses Java 21 and explicit hardened mode.</p>
+<code>7.4.1.Final</code>, <code>7.4.5.Final</code>, and <code>7.4.9.Final</code> against Coherence <code>15.1.1-0-6</code> and <code>26.10</code>.
+Coherence <code>15.1.1-0-6</code> uses Java 17; <code>26.10</code> uses Java 21 and explicit hardened mode.</p>
+
+</li>
+<li>
+<p>Replace the Coherence development dependency with the released <code>26.10</code> artifacts in the compatibility matrix,
+and remove snapshot repository settings and cache-refresh steps.</p>
 
 </li>
 <li>
@@ -26,9 +31,8 @@ ordering across serialization; application-owned custom comparators must be seri
 
 </li>
 <li>
-<p>Document the tested development snapshots' hardened default and application descriptor/packaging requirements.
-Snapshot testing and workflow configuration do not establish completed hosted CI, deployment qualification, or
-support for released Coherence <code>26.10</code> or later.</p>
+<p>Document Coherence `26.10&#8217;s hardened default and application descriptor/packaging requirements.
+Workflow configuration does not establish completed hosted CI or deployment qualification.</p>
 
 </li>
 </ul>
@@ -70,8 +74,8 @@ regions. Do not mix members using different key formats in the same regions.</p>
 
 </li>
 <li>
-<p>Compatibility-test Hibernate <code>7.4.1.Final</code>, <code>7.4.5.Final</code>, and <code>7.4.9.Final</code> with Coherence CE <code>15.1.1-0-5</code> and
-<code>26.07</code> on the Java 17 bytecode baseline, in addition to the complete default-version reactor on Java 17, 21, and 25.</p>
+<p>Compatibility-test Hibernate <code>7.4.1.Final</code>, <code>7.4.5.Final</code>, and <code>7.4.9.Final</code> on the Java 17 bytecode baseline,
+in addition to the complete default-version reactor on Java 17, 21, and 25.</p>
 
 </li>
 </ul>

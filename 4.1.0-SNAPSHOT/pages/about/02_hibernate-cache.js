@@ -42,8 +42,8 @@ are supported:</p>
 <p>The default <code>4.x</code> build uses Hibernate ORM <code>7.4.10.Final</code>, as declared in the
 <a target="_blank" href="https://github.com/coherence-community/coherence-hibernate/blob/main/pom.xml">parent POM</a>. The
 <a target="_blank" href="https://github.com/coherence-community/coherence-hibernate/blob/main/.github/workflows/maven.yml">GitHub Actions workflow</a>
-configures compatibility jobs for <code>7.4.1.Final</code>, <code>7.4.5.Final</code>, and <code>7.4.9.Final</code>: released Coherence legs use Java 17,
-and the <code>26.10-SNAPSHOT</code> leg uses Java 21 with explicit hardened mode. The complete default dependency combination
+configures compatibility jobs for <code>7.4.1.Final</code>, <code>7.4.5.Final</code>, and <code>7.4.9.Final</code>: Coherence <code>15.1.1-0-6</code>
+uses Java 17, and the <code>26.10</code> leg uses Java 21 with explicit hardened mode. The complete default dependency combination
 has separate reactor jobs on Java 17, 21, and 25. These describe configured jobs, not completed hosted runs.</p>
 
 <div class="admonition important">
@@ -175,7 +175,7 @@ selected cache mode; Coherence must fully implement every provider SPI surface a
 
 <h3 id="_supported_coherence_versions">Supported Coherence Versions</h3>
 <div class="section">
-<p>The default Coherence Hibernate <code>4.x</code> build uses Coherence CE <code>15.1.1-0-5</code> with Hibernate <code>7.4.10.Final</code>. The workflow
+<p>The default Coherence Hibernate <code>4.x</code> build uses Coherence CE <code>15.1.1-0-6</code> with Hibernate <code>7.4.10.Final</code>. The workflow
 configures the complete default-version reactor on Java 17, 21, and 25. Its compatibility job runs on <code>main</code>, for
 pull requests targeting <code>main</code>, and for manual workflow runs. It configures every Hibernate/Coherence pairing below:</p>
 
@@ -199,13 +199,13 @@ pull requests targeting <code>main</code>, and for manual workflow runs. It conf
 <tbody>
 <tr>
 <td class=""><code>7.4.1.Final</code>, <code>7.4.5.Final</code>, <code>7.4.9.Final</code></td>
-<td class=""><code>15.1.1-0-5</code>, <code>26.07</code></td>
+<td class=""><code>15.1.1-0-6</code></td>
 <td class=""><code>17</code></td>
 <td class="">Released default (compatibility)</td>
 </tr>
 <tr>
 <td class=""><code>7.4.1.Final</code>, <code>7.4.5.Final</code>, <code>7.4.9.Final</code></td>
-<td class=""><code>26.10-SNAPSHOT</code></td>
+<td class=""><code>26.10</code></td>
 <td class=""><code>21</code></td>
 <td class="">Explicit <code>-Dcoherence.security.mode=hardened</code></td>
 </tr>
@@ -213,9 +213,8 @@ pull requests targeting <code>main</code>, and for manual workflow runs. It conf
 </table>
 </div>
 
-<p>The snapshot leg exercises development binaries and does not establish support for released Coherence <code>26.10</code> or
-later. Completed GitHub Actions runs and application deployment qualification must be assessed separately from this
-workflow configuration.</p>
+<p>The Coherence <code>26.10</code> leg selects the release version through the standard Maven release repositories. Completed
+GitHub Actions runs and application deployment qualification must be assessed separately from this workflow configuration.</p>
 
 <p>Coherence and Hibernate are provided dependencies and must be declared by the application. Validate the selected
 combination in your deployment, including application-owned serialization permissions.</p>
@@ -722,11 +721,9 @@ com.oracle.coherence.hibernate.cache.coherence_properties.coherence.log.level: 9
 
 <h4 id="_serialization_permissions">Serialization permissions</h4>
 <div class="section">
-<p>The tested <code>26.10</code> development snapshots default to <code>coherence.security.mode=hardened</code>. Coherence&#8217;s
-<code>com.tangosol.internal.util.CoherenceMode</code> resolver enables serialization allowlists and remote executable checks
-in that mode; the tested <code>15.1.1-0-5</code> and <code>26.07</code> binaries default to compatibility mode. The snapshot workflow passes
-<code>-Dcoherence.security.mode=hardened</code> explicitly to keep enforcement independent of a floating snapshot&#8217;s default.
-This describes the tested development binaries; released <code>26.10</code> and later binaries require separate validation.</p>
+<p>Coherence <code>26.10</code> defaults to <code>coherence.security.mode=hardened</code>, enabling serialization allowlists and remote
+executable checks. Coherence <code>15.1.1-0-6</code> defaults to compatibility mode. The Coherence <code>26.10</code>
+compatibility jobs explicitly set <code>-Dcoherence.security.mode=hardened</code> to exercise serialization enforcement.</p>
 
 <p>The adapter JAR includes <code>META-INF/coherence/security-config.xml</code> with exact permissions for its entry processors,
 region values, supported Hibernate cache keys, entries, query results, and version comparators. It also grants exact
