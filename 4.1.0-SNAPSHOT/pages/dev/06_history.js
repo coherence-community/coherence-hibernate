@@ -6,8 +6,10 @@
 reverse chronological order.</p>
 
 
-<h3 id="_current_development_4_1_0_snapshot">Current development (4.1.0-SNAPSHOT)</h3>
+<h3 id="_version_4_1_0">Version 4.1.0</h3>
 <div class="section">
+<p><a target="_blank" href="https://github.com/coherence-community/coherence-hibernate/releases/tag/v4.1.0" class="bare">https://github.com/coherence-community/coherence-hibernate/releases/tag/v4.1.0</a></p>
+
 <ul class="ulist">
 <li>
 <p>Use Hibernate <code>7.4.10.Final</code> and Coherence CE <code>15.1.1-0-6</code> as the default dependencies.</p>
