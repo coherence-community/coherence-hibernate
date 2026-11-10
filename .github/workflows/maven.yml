@@ -67,7 +67,7 @@ jobs:
         find ~/.m2/repository -type d -name '*SNAPSHOT' | xargs rm -fr
 
   compatibility:
-    name: Hibernate ${{ matrix.hibernate-version }} / Coherence ${{ matrix.coherence-version }} / Java ${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}
+    name: Hibernate ${{ matrix.hibernate-version }} / Coherence ${{ matrix.coherence-version }} / Java ${{ matrix.coherence-version == '26.10' && '21' || '17' }}
     if: >-
       github.ref_name == 'main' ||
       github.base_ref == 'main' ||
@@ -76,37 +76,31 @@ jobs:
       fail-fast: false
       matrix:
         hibernate-version: [ '7.4.1.Final', '7.4.5.Final', '7.4.9.Final' ]
-        coherence-version: [ '15.1.1-0-5', '26.07', '26.10-SNAPSHOT' ]
+        coherence-version: [ '15.1.1-0-6', '26.10' ]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-    # The development snapshot is compiled for Java 21; released legs retain Java 17.
+    # Coherence 26.10 requires Java 21; 15.1.1-0-6 uses Java 17.
     - name: Set up JDK
       uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
       with:
         distribution: 'temurin'
-        java-version: ${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}
+        java-version: ${{ matrix.coherence-version == '26.10' && '21' || '17' }}
     - name: Cache Maven packages
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-v2-compatibility-jdk-${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-${{ hashFiles('**/pom.xml', '.mvn/**') }}
+        key: ${{ runner.os }}-maven-v2-compatibility-jdk-${{ matrix.coherence-version == '26.10' && '21' || '17' }}-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-${{ hashFiles('**/pom.xml', '.mvn/**') }}
         restore-keys: |
-          ${{ runner.os }}-maven-v2-compatibility-jdk-${{ matrix.coherence-version == '26.10-SNAPSHOT' && '21' || '17' }}-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-
-    # A locally installed SNAPSHOT alias can win even when remote metadata is refreshed.
-    # Discard only this dependency/version from the restored, runner-local cache.
-    - name: Refresh Coherence snapshot
-      if: matrix.coherence-version == '26.10-SNAPSHOT'
-      run: rm -rf -- "$HOME/.m2/repository/com/oracle/coherence/ce/coherence/26.10-SNAPSHOT"
+          ${{ runner.os }}-maven-v2-compatibility-jdk-${{ matrix.coherence-version == '26.10' && '21' || '17' }}-hibernate-${{ matrix.hibernate-version }}-coherence-${{ matrix.coherence-version }}-
     - name: Test Hibernate ${{ matrix.hibernate-version }} with Coherence ${{ matrix.coherence-version }}
       run: >
         ./mvnw -B
-        ${{ matrix.coherence-version == '26.10-SNAPSHOT' && '--settings .mvn/coherence-snapshots-settings.xml' || '' }}
         -pl coherence-hibernate-cache-7,coherence-hibernate-cache-store-tests
         -am
         -Dhibernate7.version=${{ matrix.hibernate-version }}
         -Dcoherence.version=${{ matrix.coherence-version }}
-        ${{ matrix.coherence-version == '26.10-SNAPSHOT' && '-Dcoherence.security.mode=hardened' || '' }}
+        ${{ matrix.coherence-version == '26.10' && '-Dcoherence.security.mode=hardened' || '' }}
         test
 
   deploy:
